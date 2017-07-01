@@ -1,0 +1,224 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fa_IR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.6\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: www/partials/home.html:55
+msgid "Account"
+msgstr "کاربر"
+
+#: www/partials/metrics/metricGroupRepeater.html:45
+msgid "Add row"
+msgstr "سطر جدید"
+
+#. <reference path="../../scripts/typings/ionic/ionic.d.ts" />, <reference path="../../scripts/typings/angularjs/angular-route.d.ts" />
+#: www/scripts/appBundle.js:111
+msgid "Are you sure you want to close the application?"
+msgstr "آیا می خواهید از برنامه خارج شوید؟"
+
+#: www/scripts/controllers/surveyController.js:88
+msgid "Are you sure you want to delete this survey?"
+msgstr "آیا مطمئن هستید می‌خواهید این فرم را حذف کنید؟"
+
+#: www/partials/survey.html:38
+msgid "Back to page"
+msgstr "بازگشت به صفحه"
+
+#: www/partials/drafts.html:26
+msgid "Continue"
+msgstr "تکمیل"
+
+#: www/partials/drafts.html:12
+msgid "Created:"
+msgstr "ایجاد شده در:"
+
+#: www/partials/drafts.html:21
+msgid "Delete"
+msgstr "حذف"
+
+#: www/partials/drafts.html:3
+msgid "Drafts"
+msgstr "پیش نویس ها"
+
+#: www/scripts/controllers/surveyController.js:91
+msgid "Error in deleting the survey:"
+msgstr "خطا در حذف فرم تکمیل شده"
+
+#: www/partials/survey.html:23
+msgid "Error in entering"
+msgstr "خطا در وارد کردن"
+
+#: www/scripts/controllers/selectProjectController.js:10
+msgid "Error in loading projects:"
+msgstr "خطا در بارگذاری لیست پروژه ها"
+
+#: www/scripts/controllers/surveyController.js:151
+msgid "Error in loading the survey:"
+msgstr "خطا در بارگذاری فرم تکمیل شده"
+
+#: www/scripts/controllers/surveyController.js:80
+msgid "Error in saving the survey:"
+msgstr "خطا در ذخیره سازی فرم تکمیل شده"
+
+#: www/scripts/controllers/selectProjectController.js:16
+msgid "Error in setting active projects:"
+msgstr "خطا در فعال سازی پروژه انتخاب شده"
+
+#: www/scripts/controllers/surveyController.js:118
+msgid "Error in submitting the survey:"
+msgstr "خطا در ارسال فرم تکمیل شده"
+
+#. <reference path="../../scripts/typings/ionic/ionic.d.ts" />, <reference path="../../scripts/typings/angularjs/angular-route.d.ts" />
+#: www/scripts/appBundle.js:110
+msgid "Exit"
+msgstr "خروج"
+
+#: www/partials/drafts.html:15
+msgid "Last Updated:"
+msgstr "ویرایش شده در:"
+
+#: www/partials/home.html:67
+msgid "Logout"
+msgstr "خروج"
+
+#: www/partials/selectProject.html:3
+msgid "Projects"
+msgstr "پروژه‌ها"
+
+#: www/partials/home.html:48
+msgid "Refresh forms"
+msgstr "دریافت فرم"
+
+#: www/partials/selectProject.html:6
+msgid "Select your active project"
+msgstr "پروژه جاری خود را انتخاب کنید"
+
+#: www/partials/home.html:44
+msgid "Server connection"
+msgstr "ارتباط با سرور"
+
+#: www/partials/metrics/metricGroupRepeater.html:42
+msgid "Show more"
+msgstr "بیشتر"
+
+#: www/partials/home.html:23
+msgid "Start"
+msgstr "شروع"
+
+#: www/partials/survey.html:31
+msgid "Submit"
+msgstr "ارسال فرم"
+
+#: www/partials/survey.html:3
+msgid "Survey"
+msgstr "تکمیل فرم"
+
+#: www/scripts/controllers/surveyController.js:79
+msgid "Survey saved successfully!"
+msgstr "اطلاعات با موفقیت ذخیره شد!"
+
+#: www/partials/home.html:63
+msgid "Switch user"
+msgstr "تغییر کاربر"
+
+#: www/partials/metrics/freeTextMetric.html:14
+msgid "The length must be less than {{metric.maxLength}}"
+msgstr "متن وارد شده باید کوتاه تر از {{metric.maxLength}} کاراکتر باشد."
+
+#: www/partials/metrics/freeTextMetric.html:13
+msgid "The length must be more than {{metric.minLength}}"
+msgstr "متن وارد شده باید بیشتر از {{metric.minLength}} کاراکتر باشد."
+
+#: www/partials/metrics/numericMetric.html:7
+msgid "The value must be bigger than {{metric.minVal}}"
+msgstr "مقدار ورودی باید بیشتر از {{metric.minVal}} باشد."
+
+#: www/partials/metrics/numericMetric.html:8
+msgid "The value must be less than {{metric.maxVal}}"
+msgstr "مقدار ورودی باید کمتر از {{metric.maxVal}} باشد."
+
+#: www/partials/metrics/dateMetric.html:12
+#: www/partials/metrics/dichotomousMetric.html:6
+#: www/partials/metrics/freeTextMetric.html:12
+#: www/partials/metrics/numericMetric.html:6
+msgid "This is required"
+msgstr "لطفا تکمیل کنید"
+
+#: www/partials/home.html:52
+msgid "Upload surveys"
+msgstr "ارسال فرم ها"
+
+#: www/partials/home.html:35
+msgid "Welcome {{currentContext.userEmail}}"
+msgstr "{{currentContext.userEmail}} خوش آمدید"
+
+#: www/scripts/controllers/draftsController.js:26
+msgid "error in deleting survey:"
+msgstr "خطا در حذف فرم تکمیل شده"
+
+#: www/scripts/controllers/draftsController.js:12
+msgid "error in loading saved surveys:"
+msgstr "خطا در بارگذاری فرم تکمیل شده"
+
+#: www/scripts/controllers/draftsController.js:42
+msgid "error in loading the form template:"
+msgstr "خطا در بارگذاری فرم"
+
+#: www/partials/survey.html:6
+msgid "of"
+msgstr "از"
+
+#: www/partials/home.html:19
+msgid "{{form.draftsNumber}} draft(s)"
+msgstr "{{form.draftsNumber}} پیش نویس"
+
+#~ msgid "Created: {{dateToString(draft.dateCreated)}}"
+#~ msgstr "ایجاد شده در: {{dateToString(draft.dateCreated)}}"
+
+#~ msgid "Home"
+#~ msgstr "خانه"
+
+#~ msgid "Last Updated: {{dateToString(draft.dateUpdated)}}"
+#~ msgstr "ویرایش شده در: {{dateToString(draft.dateUpdated)}}"
+
+#~ msgid "Settings"
+#~ msgstr "تنظیمات"
+
+#~ msgid "Start a new survey"
+#~ msgstr "تکمیل فرم جدید"
+
+#~ msgid "Welcome {{authentication.userName}}"
+#~ msgstr "خوش آمدید به {{authentication.userName}}"
+
+#~ msgid "Email"
+#~ msgstr "ایمیل"
+
+#~ msgid "Email address is mandatory!"
+#~ msgstr "وارد کردن ایمیل الزامی است!"
+
+#~ msgid "Log in"
+#~ msgstr "ورود"
+
+#~ msgid "Login"
+#~ msgstr "ورود"
+
+#~ msgid "Password"
+#~ msgstr "رمز عبور"
+
+#~ msgid "Password is mandatory!"
+#~ msgstr "رمز عبور الزامی است!"
+
+#~ msgid "Select profile"
+#~ msgstr "کاربر مورد نظر را انتخاب کنید"
+
+#~ msgid "Back to page {{currentPage}}"
+#~ msgstr "بازگشت به صفحه {{currentPage}}"

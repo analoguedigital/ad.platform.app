@@ -1,0 +1,197 @@
+/// <reference path="../../../scripts/typings/angularjs/angular.d.ts" />
+/// <reference path="userservice.ts" />
+
+module App.Services {
+    "use strict";
+
+
+    export interface IHttpService {
+        getAuthenticationToken(loginData: ILoginData): angular.IPromise<any>;
+        getUserInfo(): angular.IPromise<string>;
+        getFormTemplate(id: string): angular.IPromise<angular.IHttpPromiseCallbackArg<Models.FormTemplate>>;
+        getFormTemplates(): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.FormTemplate>>>;
+        getProjects(): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.Project>>>;
+        uploadSurvey(survey: Models.Survey): angular.IPromise<angular.IHttpPromiseCallbackArg<any>>;
+        register(registerData: IRegisterData): ng.IPromise<any>;
+        deleteFormTemplate(id: string): ng.IPromise<any>;
+        uploadFile(attchment: Models.Attachment): angular.IPromise<string>
+    }
+
+    export class HttpService implements IHttpService {
+
+        public static serviceBase: string = 'https://docit.analogue.digital/';
+
+        static $inject: string[] = ['$http', 'authService', '$q'];
+        constructor(
+            private $http: ng.IHttpService,
+            private authService: IAuthService,
+            private $q: ng.IQService) { }
+
+
+        getAuthenticationToken(loginData: ILoginData): ng.IPromise<any> {
+
+            var deferred = this.$q.defer();
+            var data = "grant_type=password&username=" + loginData.email + "&password=" + loginData.password;
+
+            this.$http.post(HttpService.serviceBase + 'token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+                .success((value) => { deferred.resolve(value); })
+                .error((value, status) => { deferred.reject(this.onError(value, status)); });
+
+            return deferred.promise;
+        }
+
+        register(registerData: IRegisterData): ng.IPromise<any> {
+
+            var deferred = this.$q.defer();
+
+            this.$http.post(HttpService.serviceBase + 'api/account/register', JSON.stringify(registerData))
+                .success((value) => { deferred.resolve(value); })
+                .error((value, status) => { deferred.reject(this.onError(value, status)); });
+
+            return deferred.promise;
+        }
+
+        getUserInfo(): angular.IPromise<angular.IHttpPromiseCallbackArg<any>> {
+
+            var deferred = this.$q.defer();
+
+            this.$http.get(HttpService.serviceBase + 'api/account/userinfo/')
+                .success((data) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        getProjects(): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.Project>>> {
+
+            var deferred = this.$q.defer();
+
+            this.$http.get(HttpService.serviceBase + 'api/projects/')
+                .success((data) => {
+                    deferred.resolve(data);
+                })
+                .error((data, status) => {
+                    deferred.reject(this.onError(data, status));
+                });
+
+            return deferred.promise;
+        }
+
+        getFormTemplates(): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.FormTemplate>>> {
+
+            var deferred = this.$q.defer();
+
+            this.$http.get(HttpService.serviceBase + 'api/formtemplates/')
+                .success((data) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+
+        getFormTemplate(id: string): angular.IPromise<angular.IHttpPromiseCallbackArg<Models.FormTemplate>> {
+
+            var deferred = this.$q.defer();
+
+            this.$http.get(HttpService.serviceBase + 'api/formtemplates/' + id)
+                .success((data) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        cloneFormTemplate(id: string, title: string, colour: string, projectId: string) {
+            var deferred = this.$q.defer();
+
+            this.$http.post(HttpService.serviceBase + 'api/formtemplates/' + id + '/clone',
+                JSON.stringify({ title: title, colour: colour, projectId: projectId }))
+                .success((data) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        editFormTemplate(formTemplate: Models.FormTemplate) {
+            var deferred = this.$q.defer();
+
+            this.$http.put(HttpService.serviceBase + 'api/formtemplates/' + formTemplate.id + '/details',
+                JSON.stringify(formTemplate))
+                .success((data) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        deleteFormTemplate(id: string): ng.IPromise<any> {
+            var deferred = this.$q.defer();
+
+            this.$http.delete(HttpService.serviceBase + 'api/formtemplates/' + id + '/publish')
+                .success((data) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+
+        uploadSurvey(survey: Models.Survey): angular.IPromise<angular.IHttpPromiseCallbackArg<any>> {
+
+            var deferred = this.$q.defer();
+
+            this.$http.post(HttpService.serviceBase + 'api/surveys/', JSON.stringify(survey))
+                .success((data) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        uploadFile(attchment: Models.Attachment): angular.IPromise<string> {
+
+            var deferred = this.$q.defer<string>();
+
+            var options = <FileUploadOptions>{};
+            options.fileKey = "file";
+            options.fileName = attchment.fileUri.substr(attchment.fileUri.lastIndexOf('/') + 1);
+            options.mimeType = attchment.type;
+            options.params = {};
+            options.httpMethod = "POST";
+            var headers: any = {};
+            options.headers = headers;
+            options.headers['timezoneOffset'] = new Date().getTimezoneOffset();
+
+            var authData = this.authService.getExistingAuthData();
+            if (authData) {
+                options.headers['Authorization'] = 'Bearer ' + authData.token;
+            }
+
+            var ft = new FileTransfer();
+            ft.upload(attchment.fileUri, encodeURI(HttpService.serviceBase + 'api/files'),
+                (response: FileUploadResult) => {
+                    deferred.resolve(response.response.replace(/\"/g, ""));
+                },
+                (err) => {
+                    deferred.reject(err);
+                },
+                options);
+
+            return deferred.promise;
+
+        }
+
+        onError(err: any, status: number) {
+
+            if (err) {
+                if (err.error_description) {
+                    return err.error_description;
+                }
+                else {
+                    return err;
+                }
+            }
+            else {
+                return status + ': Server connection failed!';
+            }
+        }
+    }
+
+    angular.module('lm.surveys').service("httpService", HttpService);
+}

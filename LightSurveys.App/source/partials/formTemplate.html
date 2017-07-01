@@ -1,0 +1,25 @@
+<ion-view title="Thread Details" id="FormTemplate">
+    <ion-content class="content padding" ng-cloak>
+        <form name="cloneForm" novalidate="novalidate">
+            <div class="list list-inset">
+                <label class="item item-input">
+                    <span class="input-label">Title</span>
+                    <div class="item-input">
+                        <input name="title" type="text" ng-model="vm.title" placeholder="Title" required autofocus>
+                    </div>
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Color</span>
+                    <button class="button" header-footer-class="bar-positive" color-picker="" model-mode="" color-mode="name" ng-model="vm.colour" modal-title="Choose!" color-box="{{vm.colour}}">
+                        {{vm.colour || &apos;Choose a colour&apos; }}
+                    </button>
+                </label>
+            </div>
+            <div class="">
+                <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="submit()">
+                    Submit
+                </button>
+            </div>
+        </form>
+    </ion-content>
+</ion-view>

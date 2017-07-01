@@ -1,0 +1,51 @@
+﻿
+/** { text-shadow: none !important; -webkit-box-shadow: none !important; -webkit-border-radius: 0 !important; -webkit-border-top-left-radius: 0 !important; -webkit-border-bottom-left-radius: 0 !important; -webkit-border-bottom-right-radius: 0 !important; -webkit-border-top-right-radius: 0 !important; }*/
+
+/*body .main-container { background-color: #f6f6f6; background-image: url(../images/box_background.png); background-position: bottom right; background-repeat: no-repeat; }*/
+
+/*select { width: 65%; padding: 5px; border: 0; border-bottom: 2px solid grey; background-color: transparent; }*/
+input[persianDatePicker] { color: inherit !important; background-color: #f0f0f0; }
+.persianCalendar { width: 100%; direction: ltr; }
+
+div.card { max-width: 900px; margin-left: auto; margin-right: auto; }
+.padding .card { margin-left: auto; margin-right: auto; }
+
+table.repeater { width: 100%; border: 1px solid #f0f0f0; }
+table.repeater tr.alt { background-color: #fafafa; }
+table.repeater th, table td { padding: 4px 10px; border: 1px solid #f0f0f0; }
+table.repeater th { background-color: #0c63ee; color: white; border: 0; font-size: 19px; line-height: 44px; }
+table.repeater th select { width: 100%; background-color: #0c63ee; color: white; border: 0; border-bottom: 2px solid white; }
+table.repeater th select option { font-size: 120%; }
+table.repeater td { border-bottom: 0; border-top: 0; }
+table.repeater td .icon { font-size: 32px; line-height: 32px; }
+
+.errors { color: red; font-size: 70%; border: 0; padding-top: 0; padding-bottom: 0; display: block; }
+.ng-invalid .errors { color: grey; }
+.ng-pristine .errors { display: none; }
+
+
+
+/* Workaround to to have radio buttons working in RTL*/
+/*.item-radio input[type="radio"], .item-radio input[type="checkbox"] { display: none; }
+.item.item-radio, .item.item-checkbox { display: inline-block; border: none; margin: 0 10px; }*/
+
+body[dir=rtl] .item-checkbox { padding-right: 60px; padding-left: 0; }
+body[dir=rtl] .item-radio .radio.icon { left: 0; right: inherit; }
+body[dir=rtl] .item-radio .item-content { padding: 16px 49px 16px 16px; }
+body[dir=rtl] .bar .buttons { left: 5px; right: auto; min-width: 60px; }
+body[dir=rtl] .menu { right: 0; }
+
+/*.bar h1, .bar h2 { line-height: 2.5em; right: 5px !important; }
+.bar.with-button h1, .bar.with-button h2 { right: 40px !important; left: 40px !important; }*/
+/******************************************************/
+
+
+.item.metric { border: 0; }
+
+/*.download-icon { font-size: 150%; text-align: center; color: #888; }*/
+
+
+/* Docit */
+/*.bar { height: 54px; }
+.bar .title { height: 53px; line-height: 54px; }
+.has-header { top: 54px; }*/

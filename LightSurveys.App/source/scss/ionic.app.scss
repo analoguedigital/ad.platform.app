@@ -1,0 +1,110 @@
+﻿// The path for our ionicons font files, relative to the built CSS in www/css
+$ionicons-font-path: "../../www/fonts" !default;
+
+$light: #fdfdfd !default;
+$positive: #459597 !default;
+$energized: #df592c !default;
+$dark: #1d2331 !default;
+
+$button-font-size: 16px !default;
+$button-height: 60px !default;
+
+$button-icon-size: 30px !default;
+
+$bar-height: 60px !default;
+$button-border-width: 0px !default;
+$item-dark-border: lighten($dark,8);
+$item-positive-border: lighten($positive,4);
+$item-padding: 12px;
+
+$menu-bg: #459597 !default;
+$menu-side-shadow: 0;
+$content-padding: 14px !default;
+
+$base-background-color: #1d2331 !default;
+
+// Include all of Ionic
+@import "../../bower_components/ionic/scss/ionic.scss";
+
+.bar { border-width: 0; height: 61px; background-image: none !important; }
+.row { margin: 0 !important; }
+.item-icon-left .icon.fa, .item-icon-right .icon.fa { font-size: 20px; }
+.right-side { float: right; }
+.no-margin-top { margin-top: 0 !important; }
+
+
+.register { background-color: $positive; }
+.fa { color: lighten($dark,40); font-size: 20px !important; }
+
+mwl-calendar.survey-calendar {
+    .cal-row-head { color: $light; }
+    .cal-month-box { border: 0;
+        .cal-row-fluid { border: 3px solid transparent; color: $light; }
+        .cal-month-day { background-color: black; padding: 5px; }
+        [class*=cal-cell] { border-right: 6px solid transparent; }
+        .cal-day-today { background-color: $positive; }
+        .cal-slide-content { padding: 14px; color: #fff; background-color: lighten($dark,10); -webkit-box-shadow: inset 0 0 0 0 rgba(0,0,0,.5); box-shadow: inset 0 0 0 0 rgba(0,0,0,.5); }
+        span[data-cal-date] { opacity: 1; }
+    }
+    .cal-day-box .cal-day-hour-part .cal-day-hour-part-time { color: white; }
+    .cal-day-box .cal-day-hour:nth-child(odd) { background-color: transparent; }
+    .cal-day-box .cal-day-panel { border: 0; }
+    .cal-month-day .cal-events-num { margin-left: 0; margin-top: 0; }
+    span[data-cal-date] { margin-top: 0; margin-right: 0; }
+}
+
+.bar.calendar button { height: 50px; }
+.bar.timeline {
+    button { height: 50px; }
+    .title { left: 0 !important; right: 0 !important; }
+}
+
+.bar .button.button-icon:before, .bar .button .icon:before, .bar .button.icon:before, .bar .button.icon-left:before, .bar .button.icon-right:before, .bar button.button-icon:before, .bar button .icon:before, .bar button.icon:before, .bar button.icon-left:before, .bar button.icon-right:before { padding-left: 5px; padding-right: 5px; }
+
+.metric label.item.item-input { border-bottom: 0; }
+
+.progress-bar { margin-bottom: 0; }
+.card.draft { background-color: lightyellow;
+    .item { background-color: transparent; }
+}
+
+.login { background-color: $positive;
+    &.pane { background-color: $positive }
+    h1 { font-size: 350%; }
+    h2 { font-size: 140%; font-weight: normal; }
+}
+
+
+/*
+ * Credits to https://forum.ionicframework.com/t/actionsheets-android-ugly-styling-need-help/18462/12
+ */
+.platform-android {
+    .action-sheet-backdrop.active { background-color: rgba(0, 0, 0, 0.1); }
+    .action-sheet { align-content: center; margin: auto; max-width: 96vw; border-radius: 5px; margin-bottom: 10px;
+        .action-sheet-title, .platform-android .action-sheet .button { text-align: left; font-size: 16px; color: inherit; }
+        .action-sheet-title { font-size: 14px; padding: 16px; color: #666; }
+        .button { border-color: #e2e2e2; padding-left: 16px; color: #104e89; }
+        .button.destructive { color: red; }
+        .button.active, .platform-android .action-sheet .button.activated { background: #e8e8e8; }
+    }
+    .action-sheet-group { border-radius: 0; background-color: #fafafa; }
+    .action-sheet-cancel { display: none; }
+    .action-sheet-has-icons {
+        .button { padding-left: 56px; }
+    }
+}
+
+
+.thumbnails { flex-wrap: wrap; display: flex; align-content: flex-start;
+    .thumbnail { width: 80px; vertical-align: central; height: 80px; margin: 5px; overflow: hidden;
+        &.add { }
+        img, video { max-width: 100% }
+    }
+}
+
+.image-modal { width: 100% !important; height: 100%; top: 0 !important; left: 0 !important; background-color: transparent !important;
+    .fullscreen-image { max-width: 90%; max-height: 75%; bottom: 0; left: 0; margin: auto; overflow: auto; position: fixed; right: 0; top: 0; }
+    .slider { width: 100%; height: 100%; }
+}
+
+.modal-backdrop { background-color: rgba(0,0,0,0.5) !important }

@@ -1,0 +1,8 @@
+﻿<ul class="list">
+    <li class="item item-checkbox" ng-repeat="fValue in formValues">
+        <label class="checkbox">
+            <input readonly type="checkbox" ng-model="fValue.boolValue">
+        </label>
+        {{getText(fValue.guidValue)}}
+    </li>
+</ul>

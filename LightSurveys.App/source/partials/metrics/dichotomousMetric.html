@@ -1,0 +1,10 @@
+<h3 ng-hide="isCompact"> {{::metric.description}} </h3>
+<div class="item item-checkbox" ng-controller="dichotomousMetricController" >
+    
+    <label class="checkbox">
+        <input type="checkbox" ng-model="formValue.boolValue" ng-required="metric.mandatory" name="{{::metric.inputName}}">
+    </label>
+    <div class="errors" ng-messages="{{inputError}}">
+        <div ng-message="required"><span translate>This is required</span></div>
+    </div>
+</div>

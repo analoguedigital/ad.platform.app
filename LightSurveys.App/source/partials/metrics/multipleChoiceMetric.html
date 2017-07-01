@@ -1,0 +1,5 @@
+<h3 ng-hide="isCompact"> {{metric.description}} </h3>
+<div ng-controller="multipleChoiceMetricController">
+    <div ng-if="!metric.isMultipleAnswer" ng-include="'partials/metrics/multipleChoiceMetric_radio.html'"></div>
+    <div ng-if="metric.isMultipleAnswer" ng-include="'partials/metrics/multipleChoiceMetric_check.html'"></div>
+</div>

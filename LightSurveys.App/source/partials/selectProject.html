@@ -1,0 +1,17 @@
+<ion-header-bar class="bar bar-header bar-positive bar-stable with-button">
+    <button class="button button-icon button-clear ion-android-arrow-{{getBack()}}" ng-click="back()" ng-show="isBackAvailable"></button>
+    <h1 class="title" translate>Projects</h1>
+</ion-header-bar>
+<ion-header-bar class="bar bar-subheader bar-light">
+    <h2 class="title" translate>Select your active project</h2>
+</ion-header-bar>
+<ion-view>
+    <ion-content class="content has-subheader padding" ng-cloak>
+        <div class="list">
+            <a class="item item-icon-{{getLeft()}}" ng-repeat="project in projects" ng-click="selectProject(project)">
+                <i class="icon ion-folder"></i>
+                {{project.name}}
+            </a>
+        </div>
+    </ion-content>
+</ion-view>

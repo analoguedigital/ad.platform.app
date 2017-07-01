@@ -1,0 +1,11 @@
+<h3 ng-hide="isCompact"> {{::metric.description}} </h3>
+<div ng-controller="timeMetricController">
+
+    <label class="item item-input">
+        <input type="time" name="{{::metric.inputName}}" ng-required="metric.mandatory" ng-model="formValue.timeValue">
+    </label>
+    <div class="errors" ng-messages="{{inputError}}">
+        <div ng-message="required"><span translate>This is required</span></div>
+    </div>
+
+</div>

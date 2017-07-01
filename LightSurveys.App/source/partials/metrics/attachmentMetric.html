@@ -1,0 +1,74 @@
+﻿<h3 ng-hide="isCompact"> {{::metric.description}} </h3>
+<div ng-controller="attachmentMetricController">
+
+    <div class="thumbnails">
+        <div class="thumbnail" ng-repeat="attachment in formValue.attachments" on-hold="deleteAttachment(attachment)" ng-click="showImages($index)">
+            <img ng-if="attachment.mediaType==='image'" ng-src="{{attachment.fileUri}}" />
+            <video ng-if="attachment.mediaType==='video'" ng-src="{{attachment.fileUri}}" />
+            <div ng-if="attachment.mediaType!=='image' && attachment.mediaType!=='video'" ng-src="{{attachment.fileUri}}" class="fullscreen-image">{{attachment.mediaType}}</div>
+        </div>
+        <div class="thumbnail add button button-stable" ng-click="startCapture()">
+            <i class="fa fa-3x fa-plus"></i>
+        </div>
+    </div>
+
+
+
+    <!--<table>
+        <tbody>
+            <tr ng-repeat='attachment in formValue.attachments | filter: {isDeleted: false} track by $index'>
+                <td class='file-name'>
+                    {{attachment.fileName}}
+                </td>
+                <td>
+                    <div class='info'>
+                        {{attachment.typeString}}{{attachment.fileSize}}
+                    </div>
+                </td>
+                <td>
+                    <a ng-click="deleteAttachment(attachment)"><i class="fa fa-trash-o"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table>
+        <tbody>
+            <tr ng-repeat='f in files'>
+                <td class='file-name'>
+                    <div class="alert-danger fa fa-exclamation" ng-if="f.hasError"></div>{{f.name}}
+                </td>
+                <td>
+                    <div class='progress'>
+                        <div class='progress-bar ' role='progressbar' aria-valuenow='{{f.progress}}' aria-valuemin='0' aria-valuemax='100' style='min-width: 2em; width: {{f.progress}}%'>{{(f.progress || 0) + '%'}}</div>
+                    </div>
+                </td>
+                <td>
+                    <a href='#' ng-click='abortForOneFile($index);' ng-hide="!f.error && f.progress === 100">X</a>
+                    <a ng-click="deleteFile($index)" ng-show="f.progress === 100"><i class="fa fa-trash-o"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="item-input">
+        <div class="button"
+             ng-model="files"
+             ngf-accept="'audio/*,video/*,image/*'"
+             ngf-capture="'camera'"
+             ngf-select="uploadFiles()"
+             ngf-keep="true"
+             ngf-multiple="true"
+             ngf-validate-fn="validate($file)">
+            Select file
+        </div>
+        <div ng-repeat='f in files'>
+            <img class="thumb" ngf-thumbnail="!f.$error && f" />
+            <audio class="thumb" controls ngf-src="!f.$error && f"></audio>
+            <video class="thumb" controls ngf-src="!f.$error && f"></video>
+        </div>
+    </div>-->
+
+    <div class="errors" ng-messages="{{inputError}}">
+        <div ng-message="required"><span translate>This is required</span></div>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+<h3 ng-hide="isCompact"> {{::metric.description}} </h3>
+<div ng-controller="dateMetricController">
+    <div class="item item-input" ng-if="isPersian">
+        <div class="persianDateInput">{{dateToString(formValue.dateValue)}}</div>
+    </div>
+    <div class="item item-input" ng-if="!isPersian">
+        <div>{{formValue.dateValue | date : 'longDate'}}</div>
+    </div>
+</div>

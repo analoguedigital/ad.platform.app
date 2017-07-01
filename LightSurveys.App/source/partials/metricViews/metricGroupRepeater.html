@@ -1,0 +1,44 @@
+﻿<div ng-controller="metricGroupRepeaterController">
+    <div class="item item-text-wrap">
+        <h3>{{::metricGroup.title}}</h3>
+    </div>
+    <div class="item item-text-wrap">
+        <table class="repeater">
+            <tr>
+                <th></th>
+                <th ng-if="isDataList" ng-repeat="title in relationshipTitles"><div class="table-header-wrapper">{{::title}}</div></th>
+                <th ng-repeat="metric in ::metricGroup.metrics">
+                    <div class="table-header-wrapper"> {{::metric.shortTitle}}</div>
+                </th>
+                <th ng-if="!isDataList"></th>
+            </tr>
+            <tr ng-if="isDataList">
+                <th></th>
+                <th ng-repeat="title in relationshipTitles">
+                    <div class="table-header-wrapper">
+                        <select ng-model="search[title]">
+                            <option ng-repeat="val in relationships[title]" value="{{::val}}">{{::val}}</option>
+                        </select>
+                    </div>
+                </th>
+                <th ng-repeat="metric in ::metricGroup.metrics">
+                </th>
+            </tr>
+            <tr ng-if="isDataList && $index<maxRow" ng-repeat="dataListItem in filtered = (metricGroup.dataList.items | filter:attrFilter(search))" ng-init="rowNumber = $index + 1" ng-class="$index % 2 != 0 ? 'alt' : ''">
+                <td>{{dataListItem.text}}</td>
+                <td ng-repeat="attr in dataListItem.attributes">{{attr.value}}</td>
+                <td ng-repeat="metric in metricGroup.metrics" ng-include="'partials/metricViews/'+metric.type+'.html'"></td>
+            </tr>
+            <tr ng-if="!isDataList" ng-repeat="row in rows" ng-init="rowNumber = $index + 1" ng-class="$index % 2 != 0 ? 'alt' : ''">
+                <td>{{$index + 1}}</td>
+                <td ng-repeat="metric in metricGroup.metrics" ng-include="'partials/metricViews/'+metric.type+'.html'"></td>
+                <td>
+                </td>
+            </tr>
+
+        </table>
+        <a ng-if="isDataList && maxRow < filtered.length" class="button button-block button-stable" ng-click="showAll()">
+            <span translate>Show more</span>
+        </a>
+    </div>
+</div>

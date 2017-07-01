@@ -1,0 +1,5 @@
+<h3 ng-hide="isCompact"> {{::metric.description}} </h3>
+<div class="range range-positive" ng-controller="rateMetricController">
+    <input readonly type="range" aria-label="{{::metric.shortTitle}}" min="{{::metric.minValue}}" max="{{::metric.maxValue}}" ng-model="formvalue.numericvalue">
+    {{formValue.numericValue}}
+</div>
