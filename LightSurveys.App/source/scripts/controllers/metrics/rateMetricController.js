@@ -5,12 +5,24 @@ angular.module('lm.surveys').controller('rateMetricController', ['$scope', '$con
 
     if (_.isEmpty($scope.formValues)) {
         $scope.formValue = $scope.addFormValue($scope.metric, $scope.dataListItem, $scope.rowNumber);
-        $scope.formValue.numericValue =  $scope.metric.minValue;
+        // set default value
+        $scope.formValue.numericValue = $scope.metric.minValue;
+        if ($scope.metric.defaultValue)
+            $scope.formValue.numericValue = $scope.metric.defaultValue;
     }
     else {
         $scope.formValue = $scope.formValues[0];
     }
 
+    $scope.getStepLabel = function() {
+        var value = $scope.formValue.numericValue;
+        if ($scope.metric.isAdHoc) {
+            var item = _.find($scope.metric.adHocItems, function (item) { return item.value == value });
+            return item.text;
+        }
+
+        return value;
+    }
 }]);
 
 angular.module('lm.surveys').directive('ngMin', function () {
