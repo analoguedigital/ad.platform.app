@@ -333,7 +333,15 @@ module App.Services {
 
 
         getSurvey(id: string): ng.IPromise<Models.Survey> {
-            return this.storageService.getObj(this.SURVEY_OBJECT_TYPE, id);
+            var d = this.$q.defer();
+            this.storageService.getObj(this.SURVEY_OBJECT_TYPE, id).then((survey: Models.Survey) => {
+                this.getDescription(survey).then((data) => {
+                    survey.description = data || '';
+                    d.resolve(survey);
+                });
+            });
+
+            return d.promise;
         }
 
         deleteFormTemplate(formTemplate: Models.FormTemplate) {
