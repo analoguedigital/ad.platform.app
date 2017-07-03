@@ -22,6 +22,9 @@ module App.Models {
         public calendarDateMeticId: string;
         public timelineBarMetricId: string;
 
+        public descriptionFormat: string;
+        public metricGroups: Models.MetricGroup[];
+
         public survey: Survey;
     }
 
@@ -39,6 +42,7 @@ module App.Models {
         public formTemplateId: string;
         public formTemplate: FormTemplate;
         public formValues: FormValue[];
+        public description: string;
 
         public isSubmitted: boolean;
 
@@ -67,7 +71,10 @@ module App.Models {
     }
 
     export class FormValue {
+        public metricId: string;
         public textValue: string;
+        public dateValue: Date;
+        public numericValue: number;
         public attachments: Attachment[];
     }
 
@@ -82,5 +89,53 @@ module App.Models {
             public accuracy: number,
             public error: string,
             public event: string) { }
+    }
+
+    export class Metric {
+        public id: string;
+        public type: string;
+        public shortTitle: string;
+        public description: string;
+        public metricGroupId: string;
+        public mandatory: boolean;
+        public sectionTitle: string;
+        public order: number;
+        public isDeleted: boolean;
+    }
+
+    export class MetricGroup {
+        public id: string;
+        public title: string;
+        public page: number;
+        public helpContext: string;
+        public isRepeater: boolean;
+        public isDataListRepeater: boolean;
+        public isAdHoc: boolean;
+        public adHocItems: DataListItem[];
+        public type: string;
+        public dataListId: string;
+        public numberOfRows: number;
+        public canAddMoreRows: boolean;
+        public order: number;
+        public formTemplateId: string;
+        public metrics: Metric[];
+        public isDeleted: boolean;
+    }
+
+    export class DataListItem {
+        public id: string;
+        public text: string;
+        public description: string;
+        public value: number;
+        public order: number;
+        public attributes: DataListItemAttr[];
+
+        public isDeleted: boolean;
+    }
+
+    export class DataListItemAttr {
+        public id: string;
+        public relationshipId: string;
+        public valueId: string;
     }
 }

@@ -5,64 +5,13 @@ angular.module('lm.surveys').controller('draftsController', ['$scope', '$state',
         $scope.formTemplateId = $stateParams.id;
         $scope.formTemplate = {};
         $scope.drafts = [];
-        $scope.descriptionMetrics = [];
-
-        function getDescriptionMetrics(formTemplate) {
-            var descFormat = formTemplate.descriptionFormat;
-            if (descFormat && descFormat.length) {
-                var rxp = /{{([^}]+)}}/g;
-                var titles = [];
-                var currentMatch = undefined;
-                while (currentMatch = rxp.exec(descFormat)) {
-                    titles.push(currentMatch[1]);
-                }
-
-                var foundMetrics = [];
-                _.forEach(formTemplate.metricGroups, function (metricGroup) {
-                    _.forEach(metricGroup.metrics, function (metric) {
-                        var shortTitle = _.toLower(metric.shortTitle);
-                        if (_.includes(titles, shortTitle)) {
-                            foundMetrics.push(metric);
-                        }
-                    });
-                });
-
-                return foundMetrics;
-            }
-
-            return [];
-        }
-
-        function getValueText(formValue) {
-            if (formValue.hasOwnProperty('textValue'))
-                return formValue.textValue;
-
-            if (formValue.hasOwnProperty('dateValue'))
-            {
-                var date = new Date(formValue.dateValue);
-                return $scope.dateToString(date);
-            }
-
-            if (formValue.hasOwnProperty('numericValue'))
-                return formValue.numericValue;
-        }
-
-        function getDescription(survey) {
-            var values = [];
-            _.forEach($scope.descriptionMetrics, function (metric) {
-                var formValue = _.find(survey.formValues, function (fv) { return fv.metricId == metric.id; });
-                values.push(getValueText(formValue));
-            });
-
-            return values.join(' - ');
-        }
 
         var reload = function () {
             surveyService.getAllSavedSurveys($scope.formTemplateId).then(
                 function (drafts) {
                     $scope.drafts = [];
                     angular.forEach(drafts, function (draft) {
-                        draft.description = getDescription(draft);
+                        draft.description = surveyService.getDescription($scope.formTemplate, draft);
 
                         var attachmentGroups = _.groupBy(_.flatMap(draft.formValues, function (formValue) { return formValue.attachments === undefined ? [] : formValue.attachments; }), function (attachment) { return attachment.mediaType; });
                         draft.attachments = '';
@@ -104,7 +53,6 @@ angular.module('lm.surveys').controller('draftsController', ['$scope', '$state',
         surveyService.getFormTemplate($scope.formTemplateId).then(
             function (formTemplate) {
                 $scope.formTemplate = formTemplate;
-                $scope.descriptionMetrics = getDescriptionMetrics(formTemplate);
             },
             function (err) { alertService.show(gettext('error in loading the form template: ') + err); });
 
