@@ -19,7 +19,6 @@ module App.Services {
         getAllSavedSurveys(formTemplateId: string): ng.IPromise<Array<Models.Survey>>;
         getProjects(): ng.IPromise<Array<Models.Project>>;
         getTemplateWithValues(surveyId: string): ng.IPromise<Models.FormTemplate>;
-        getDescription(formTemplate: Models.FormTemplate, survey: Models.Survey): string;
     }
 
     export class UploadProgress {
@@ -472,7 +471,12 @@ module App.Services {
 
             this.storageService.getAll(this.SURVEY_OBJECT_TYPE, formTemplateId)
                 .then((surveys: Array<Models.Survey>) => {
-                    q.resolve(_.filter(surveys, { 'projectId': this.userService.current.project.id }));
+                    var result = _.filter(surveys, { 'projectId': this.userService.current.project.id });
+                    _.forEach(result, (survey: Models.Survey) => {
+                        this.getDescription(survey).then((data) => { survey.description = data; });
+                    });
+
+                    q.resolve(result);
                 });
 
             return q.promise;
@@ -598,21 +602,30 @@ module App.Services {
                 return formValue.numericValue.toString();
         }
 
-        getDescription(formTemplate: Models.FormTemplate, survey: Models.Survey): string {
-            var self = this;
-            var result = formTemplate.descriptionFormat;
-            var descMetrics = this.getDescriptionMetrics(formTemplate);
+        getDescription(survey: Models.Survey): ng.IPromise<string> {
+            let self = this;
+            let formTemplate: Models.FormTemplate;
+            let q = this.$q.defer();
 
-            _.forEach(descMetrics, (metric: Models.Metric) => {
-                let formValue = _.find(survey.formValues, (fv) => { return fv.metricId == metric.id; });
-                if (formValue) {
-                    let value = self.getValueText(formValue);
-                    let segment = "{{" + _.toLower(metric.shortTitle) + "}}";
-                    result = _.replace(result, segment, value);
-                }
+            this.getFormTemplate(survey.formTemplateId).then((template) => {
+                formTemplate = template;
+
+                var descFormat = formTemplate.descriptionFormat;
+                var descMetrics = this.getDescriptionMetrics(formTemplate);
+
+                _.forEach(descMetrics, (metric: Models.Metric) => {
+                    let formValue = _.find(survey.formValues, (fv) => { return fv.metricId == metric.id; });
+                    if (formValue) {
+                        let value = self.getValueText(formValue);
+                        let segment = "{{" + _.toLower(metric.shortTitle) + "}}";
+                        descFormat = _.replace(descFormat, segment, value);
+                    }
+                });
+
+                q.resolve(descFormat);
             });
 
-            return result;
+            return q.promise;
         }
     }
 

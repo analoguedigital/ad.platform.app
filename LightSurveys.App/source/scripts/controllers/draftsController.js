@@ -11,8 +11,6 @@ angular.module('lm.surveys').controller('draftsController', ['$scope', '$state',
                 function (drafts) {
                     $scope.drafts = [];
                     angular.forEach(drafts, function (draft) {
-                        draft.description = surveyService.getDescription($scope.formTemplate, draft);
-
                         var attachmentGroups = _.groupBy(_.flatMap(draft.formValues, function (formValue) { return formValue.attachments === undefined ? [] : formValue.attachments; }), function (attachment) { return attachment.mediaType; });
                         draft.attachments = '';
                         angular.forEach(Object.keys(attachmentGroups), function (key) {
