@@ -638,8 +638,6 @@ module App.Services {
             });
 
             if (result === descriptionMetrics.descriptionFormat) result = '';
-
-            console.log('result', result);
             return result;
         }
     }
