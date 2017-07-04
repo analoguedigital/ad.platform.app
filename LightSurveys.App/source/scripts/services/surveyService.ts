@@ -335,8 +335,8 @@ module App.Services {
         getSurvey(id: string): ng.IPromise<Models.Survey> {
             var d = this.$q.defer();
             this.storageService.getObj(this.SURVEY_OBJECT_TYPE, id).then((survey: Models.Survey) => {
-                this.getDescription(survey).then((data) => {
-                    survey.description = data || '';
+                this.getDescirptionMetrics(survey.formTemplateId).then((descMetrics) => {
+                    survey.description = this.getDescription(survey, descMetrics);
                     d.resolve(survey);
                 });
             });
@@ -479,9 +479,12 @@ module App.Services {
 
             this.storageService.getAll(this.SURVEY_OBJECT_TYPE, formTemplateId)
                 .then((surveys: Array<Models.Survey>) => {
-                    var result = _.filter(surveys, { 'projectId': this.userService.current.project.id });
-                    _.forEach(result, (survey: Models.Survey) => {
-                        this.getDescription(survey).then((data) => { survey.description = data; });
+                    let result = _.filter(surveys, { 'projectId': this.userService.current.project.id });
+
+                    this.getDescirptionMetrics(formTemplateId).then((descMetrics) => {
+                        _.forEach(result, (survey: Models.Survey) => {
+                            survey.description = this.getDescription(survey, descMetrics);
+                        });
                     });
 
                     q.resolve(result);
@@ -570,34 +573,7 @@ module App.Services {
             return q.promise;
         }
 
-        getDescriptionMetrics(formTemplate: Models.FormTemplate): Models.Metric[] {
-            let format = formTemplate.descriptionFormat;
-            if (format && format.length) {
-                let descMetrics = [];
-                let pattern = /{{([^}]+)}}/g;
-                let titles = [];
-                let currentMatch = undefined;
-                while (currentMatch = pattern.exec(format)) {
-                    titles.push(currentMatch[1]);
-                }
-
-                let foundMetrics = [];
-                _.forEach(formTemplate.metricGroups, (metricGroup: Models.MetricGroup) => {
-                    _.forEach(metricGroup.metrics, (metric: Models.Metric) => {
-                        let shortTitle = _.toLower(metric.shortTitle);
-                        if (_.includes(titles, shortTitle)) {
-                            foundMetrics.push(metric);
-                        }
-                    });
-                });
-
-                return foundMetrics;
-            }
-
-            return [];
-        }
-
-        getValueText(formValue: Models.FormValue): string {
+        getFormValueText(formValue: Models.FormValue): string {
             if (formValue.textValue)
                 return formValue.textValue;
 
@@ -610,30 +586,61 @@ module App.Services {
                 return formValue.numericValue.toString();
         }
 
-        getDescription(survey: Models.Survey): ng.IPromise<string> {
-            let self = this;
-            let formTemplate: Models.FormTemplate;
-            let q = this.$q.defer();
+        getDescirptionMetrics(formTemplateId: string): ng.IPromise<Models.IGetDescriptionMetricsDTO> {
+            let d = this.$q.defer();
 
-            this.getFormTemplate(survey.formTemplateId).then((template) => {
-                formTemplate = template;
-
-                var descFormat = formTemplate.descriptionFormat;
-                var descMetrics = this.getDescriptionMetrics(formTemplate);
-
-                _.forEach(descMetrics, (metric: Models.Metric) => {
-                    let formValue = _.find(survey.formValues, (fv) => { return fv.metricId == metric.id; });
-                    if (formValue) {
-                        let value = self.getValueText(formValue);
-                        let segment = "{{" + _.toLower(metric.shortTitle) + "}}";
-                        descFormat = _.replace(descFormat, segment, value);
+            this.getFormTemplate(formTemplateId).then((template) => {
+                let descFormat = template.descriptionFormat;
+                if (descFormat && descFormat.length) {
+                    let descMetrics = [];
+                    let pattern = /{{([^}]+)}}/g;
+                    let titles = [];
+                    let currentMatch = undefined;
+                    while (currentMatch = pattern.exec(descFormat)) {
+                        titles.push(currentMatch[1]);
                     }
-                });
 
-                q.resolve(descFormat);
+                    let foundMetrics = [];
+                    _.forEach(template.metricGroups, (metricGroup: Models.MetricGroup) => {
+                        _.forEach(metricGroup.metrics, (metric: Models.Metric) => {
+                            let shortTitle = _.toLower(metric.shortTitle);
+                            if (_.includes(titles, shortTitle)) {
+                                foundMetrics.push(metric);
+                            }
+                        });
+                    });
+
+                    let result: Models.IGetDescriptionMetricsDTO = {
+                        descriptionFormat: descFormat,
+                        descriptionMetrics: foundMetrics
+                    };
+
+                    d.resolve(result);
+                }
             });
 
-            return q.promise;
+            return d.promise;
+        }
+
+        getDescription(survey: Models.Survey, descriptionMetrics: Models.IGetDescriptionMetricsDTO): string {
+            let self = this;
+            let q = this.$q.defer();
+
+            let result: string = descriptionMetrics.descriptionFormat;
+            _.forEach(descriptionMetrics.descriptionMetrics, (metric: Models.Metric) => {
+                let formValue = _.find(survey.formValues, (fv) => { return fv.metricId == metric.id; });
+                if (formValue) {
+                    let value = self.getFormValueText(formValue);
+                    if (value == undefined) value = '';
+                    let segment = "{{" + _.toLower(metric.shortTitle) + "}}";
+                    result = _.replace(result, segment, value);
+                }
+            });
+
+            if (result === descriptionMetrics.descriptionFormat) result = '';
+
+            console.log('result', result);
+            return result;
         }
     }
 

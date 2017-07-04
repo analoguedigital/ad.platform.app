@@ -138,4 +138,9 @@ module App.Models {
         public relationshipId: string;
         public valueId: string;
     }
+
+    export interface IGetDescriptionMetricsDTO {
+        descriptionFormat: string;
+        descriptionMetrics: Metric[];
+    }
 }
