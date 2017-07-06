@@ -1,11 +1,13 @@
 ﻿<ion-modal-view>
     <ion-header-bar class="bar-positive">
-        <button class="button button-clear icon-left ion-ios-download-outline" ng-click="savePasscode()"></button>
-        <h1 class="title">Set passcode</h1>
-        <button class="button button-clear icon-right ion-ios-close-outline" ng-click="closeModal()"></button>
+        <button class="button button-clear icon-left ion-ios-download-outline" ng-click="savePasscode()" ng-hide="passcodeLoginMode"></button>
+        <h1 class="title" ng-hide="passcodeLoginMode">Set passcode</h1>
+        <h1 class="title" ng-show="passcodeLoginMode">Enter passcode</h1>
+        <button class="button button-clear icon-right ion-ios-close-outline" ng-click="closeModal()" ng-hide="passcodeLoginMode"></button>
     </ion-header-bar>
     <ion-content class="content passcode-screen">
-        <p>Enter four-digit code and hit save</p>
+        <p ng-hide="passcodeLoginMode">Enter four-digit code and hit save</p>
+        <p ng-show="passcodeLoginMode">Enter four-digit code to sign in</p>
 
         <div id="passcode-container">
             <div class="row" style="text-align: center">

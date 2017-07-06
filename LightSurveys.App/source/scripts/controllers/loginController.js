@@ -1,6 +1,10 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHistory', '$state', '$stateParams', 'userService', 'alertService', 'ngProgress', 'surveyService',
-    function ($scope, $ionicHistory, $state, $stateParams, userService, alertService, ngProgress, surveyService) {
+angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHistory', '$state', '$stateParams', '$timeout', '$ionicModal', 'userService', 'alertService', 'ngProgress', 'surveyService',
+    function ($scope, $ionicHistory, $state, $stateParams, $timeout, $ionicModal, userService, alertService, ngProgress, surveyService) {
+        $scope.passcodeModal = undefined;
+        $scope.passcode = '';
+        $scope.passcodeLoginMode = true;
+        $scope.profile = undefined;
 
         var rejected = $stateParams.rejected === 'true';
 
@@ -18,17 +22,6 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHis
 
         $scope.isQuickLoginActive = false;
         $scope.isQuickLoginAvailable = false;
-
-
-        userService.getExistingProfiles()
-            .then(function (profiles) {
-                $scope.existingProfiles = profiles;
-                if (profiles.length > 0) {
-                    $scope.isQuickLoginActive = true;
-                    $scope.isQuickLoginAvailable = true;
-                }
-            });
-
 
         $scope.login = function () {
             if (!$scope.loginData.email) {
@@ -84,5 +77,67 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHis
         $scope.loginWithExistingAccounts = function () {
             $scope.isQuickLoginActive = true;
         }
+
+        $scope.closeModal = function () {
+            $scope.passcodeModal.hide();
+        }
+
+        $scope.$on('$destroy', function () {
+            $scope.passcodeModal.remove();
+        });
+
+        $scope.addDigit = function (value) {
+            if ($scope.passcode.length < 4) {
+                $scope.passcode = $scope.passcode + value;
+                if ($scope.passcode.length == 4) {
+                    $scope.validatePasscode();
+                }
+            }
+        }
+
+        $scope.removeDigit = function () {
+            if ($scope.passcode.length > 0) {
+                $scope.passcode = $scope.passcode.substring(0, $scope.passcode.length - 1);
+            }
+        }
+
+        $scope.validatePasscode = function () {
+            var passcode = $scope.passcode;
+            if (passcode.length == 4) {
+                if (passcode === $scope.profile.settings.passcodeText) {
+                    $timeout(function () {
+                        $scope.closeModal();
+                        $scope.activateProfile($scope.profile);
+                    }, 500);
+                } else {
+                    alertService.show('Invalid code!');
+                }
+            }
+        }
+
+        $scope.activate = function () {
+            $ionicModal.fromTemplateUrl('partials/passcode-modal.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.passcodeModal = modal;
+
+                userService.getExistingProfiles()
+                    .then(function (profiles) {
+                        $scope.existingProfiles = profiles;
+                        if (profiles.length > 0) {
+                            $scope.profile = profiles[0];
+
+                            $scope.isQuickLoginActive = true;
+                            $scope.isQuickLoginAvailable = true;
+
+                            var settings = profiles[0].settings;
+                            if (settings.passcodeEnabled === true)
+                                $scope.passcodeModal.show();
+                        }
+                    });
+            });
+        }
+        $scope.activate();
 
     }]);
