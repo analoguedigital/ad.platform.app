@@ -108,3 +108,87 @@ mwl-calendar.survey-calendar {
 }
 
 .modal-backdrop { background-color: rgba(0,0,0,0.5) !important }
+
+.list > .item.item-toggle {
+    background-color: inherit;
+    border-color: $base-background-color;
+    color: #ddd;
+}
+
+.toast-bottom-center {
+    bottom: 20px !important;
+}
+
+.passcode-screen {
+    background-color: $base-background-color;
+    color: #ddd;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-direction: normal;
+    -moz-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -moz-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-align-content: stretch;
+    -ms-flex-line-pack: stretch;
+    align-content: stretch;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.passcode-screen > * {
+    -webkit-box-ordinal-group: 1;
+    -moz-box-ordinal-group: 1;
+    -ms-flex-order: 0;
+    order: 0;
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    -ms-flex-item-align: auto;
+    align-self: auto;
+}
+
+.passcode-screen p {
+    font-size: 18px;
+    text-align: center;
+    padding-bottom: 35px;
+}
+
+.passcode-screen .button-stretch {
+    width: 100%;
+    background: inherit !important;
+    border: 2px solid #555 !important;
+    color: #aaa !important;
+    border-radius: 100% !important;
+}
+
+.passcode-screen .button-stretch.activated {
+    color: yellow !important;
+    border: 2px solid yellow !important;
+}
+
+.passcode-screen .col.first-digit {
+    margin-left: 15%;
+}
+
+.passcode-screen .col.digit-box {
+    border-bottom: 2px solid #555 !important;
+    font-size: 24px;
+    padding-bottom: 10px;
+    color: yellow;
+}

@@ -1,0 +1,71 @@
+﻿<ion-modal-view>
+    <ion-header-bar class="bar-positive">
+        <button class="button button-clear icon-left ion-ios-download-outline" ng-click="savePasscode()"></button>
+        <h1 class="title">Set passcode</h1>
+        <button class="button button-clear icon-right ion-ios-close-outline" ng-click="closeModal()"></button>
+    </ion-header-bar>
+    <ion-content class="content passcode-screen">
+        <p>Enter four-digit code and hit save</p>
+
+        <div id="passcode-container">
+            <div class="row" style="text-align: center">
+                <div class="col col-10 col-offset-10 digit-box first-digit">
+                    {{passcode.substring(0, 1)}}
+                </div>
+                <div class="col col-10 col-offset-10 digit-box">
+                    {{passcode.substring(1, 2)}}
+                </div>
+                <div class="col col-10 col-offset-10 digit-box">
+                    {{passcode.substring(2, 3)}}
+                </div>
+                <div class="col col-10 col-offset-10 digit-box">
+                    {{passcode.substring(3, 4)}}
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 50px">
+            <div class="row">
+                <div class="col col-20 col-offset-20">
+                    <button class="button button-stretch" ng-click="addDigit(1)">1</button>
+                </div>
+                <div class="col col-20">
+                    <button class="button button-stretch" ng-click="addDigit(2)">2</button>
+                </div>
+                <div class="col col-20">
+                    <button class="button button-stretch" ng-click="addDigit(3)">3</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-20 col-offset-20">
+                    <button class="button button-stretch" ng-click="addDigit(4)">4</button>
+                </div>
+                <div class="col col-20">
+                    <button class="button button-stretch" ng-click="addDigit(5)">5</button>
+                </div>
+                <div class="col col-20">
+                    <button class="button button-stretch" ng-click="addDigit(6)">6</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-20 col-offset-20">
+                    <button class="button button-stretch" ng-click="addDigit(7)">7</button>
+                </div>
+                <div class="col col-20">
+                    <button class="button button-stretch" ng-click="addDigit(8)">8</button>
+                </div>
+                <div class="col col-20">
+                    <button class="button button-stretch" ng-click="addDigit(9)">9</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-20 col-offset-20"></div>
+                <div class="col col-20">
+                    <button class="button button-stretch" ng-click="addDigit(0)">0</button>
+                </div>
+                <div class="col col-20">
+                    <button class="button icon ion-arrow-left-a button-stretch" ng-click="removeDigit()"></button>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>

@@ -1,0 +1,24 @@
+﻿<ion-view title="Settings" id="settingsPage">
+    <ion-content class="content padding settings" ng-cloak>
+        <ul class="list">
+            <li class="item item-toggle">
+                Passcode
+                <label class="toggle toggle-positive">
+                    <input type="checkbox" ng-model="model.passCodeEnabled">
+                    <span class="track">
+                        <span class="handle"></span>
+                    </span>
+                </label>
+            </li>
+            <li class="item item-toggle">
+                Fingerprint/Touch ID
+                <label class="toggle toggle-positive">
+                    <input type="checkbox" ng-model="model.fingerPrintEnabled">
+                    <span class="track">
+                        <span class="handle"></span>
+                    </span>
+                </label>
+            </li>
+        </ul>
+    </ion-content>
+</ion-view>
