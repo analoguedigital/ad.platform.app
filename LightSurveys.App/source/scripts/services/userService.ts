@@ -35,6 +35,13 @@ module App.Services {
         currentProject: Models.Project;
         authenticationData: AuthData;
         lastRefreshTemplate: Date;
+        settings: ISettings;
+    }
+
+    interface ISettings {
+        passcodeEnabled: boolean;
+        fingerprintEnabled: boolean;
+        passcodeText: string;
     }
 
     class AppContext {
@@ -152,6 +159,11 @@ module App.Services {
                         email: authenticationData.email,
                         authenticationData: authenticationData,
                         userInfo: userinfo,
+                        settings: <ISettings>{
+                            passcodeEnabled: false,
+                            fingerprintEnabled: false,
+                            passcodeText: ''
+                        }
                     };
 
                     deferred.resolve(profile);
