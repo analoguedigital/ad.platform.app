@@ -1,6 +1,5 @@
 ﻿<ion-modal-view ng-controller="passcodeModalController">
     <ion-header-bar class="bar-positive">
-        <button class="button button-clear icon-left ion-ios-download-outline" ng-click="savePasscode()" ng-hide="passcodeLoginMode"></button>
         <h1 class="title" ng-hide="passcodeLoginMode">Set passcode</h1>
         <h1 class="title" ng-show="passcodeLoginMode">Enter passcode</h1>
         <button class="button button-clear icon-right ion-ios-close-outline" ng-click="closeModal()" ng-hide="passcodeLoginMode"></button>
@@ -59,13 +58,24 @@
                     <button class="button button-stretch" ng-click="addDigit(9)">9</button>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" ng-show="passcodeLoginMode">
                 <div class="col col-20 col-offset-20"></div>
                 <div class="col col-20">
                     <button class="button button-stretch" ng-click="addDigit(0)">0</button>
                 </div>
                 <div class="col col-20">
-                    <button class="button icon ion-arrow-left-a button-stretch" ng-click="removeDigit()"></button>
+                    <button class="button icon ion-ios-arrow-thin-left button-stretch" ng-click="removeDigit()"></button>
+                </div>
+            </div>
+            <div class="row" ng-show="!passcodeLoginMode">
+                <div class="col col-20 col-offset-20">
+                    <button class="button icon ion-ios-arrow-thin-left button-stretch" ng-click="removeDigit()"></button>
+                </div>
+                <div class="col col-20">
+                    <button class="button button-stretch" ng-click="addDigit(0)">0</button>
+                </div>
+                <div class="col col-20">
+                    <button class="button icon ion-ios-checkmark-outline button-stretch" ng-click="savePasscode()"></button>
                 </div>
             </div>
         </div>
