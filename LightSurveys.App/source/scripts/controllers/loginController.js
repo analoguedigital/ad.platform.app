@@ -2,8 +2,9 @@
 angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHistory', '$state', '$stateParams', '$timeout', '$ionicModal', 'userService', 'alertService', 'ngProgress', 'surveyService',
     function ($scope, $ionicHistory, $state, $stateParams, $timeout, $ionicModal, userService, alertService, ngProgress, surveyService) {
         $scope.passcodeModal = undefined;
-        $scope.passcode = '';
         $scope.passcodeLoginMode = true;
+
+        $scope.existingProfiles = [];
         $scope.profile = undefined;
 
         var rejected = $stateParams.rejected === 'true';
@@ -78,42 +79,23 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHis
             $scope.isQuickLoginActive = true;
         }
 
-        $scope.closeModal = function () {
-            $scope.passcodeModal.hide();
-        }
-
         $scope.$on('$destroy', function () {
             $scope.passcodeModal.remove();
         });
 
-        $scope.addDigit = function (value) {
-            if ($scope.passcode.length < 4) {
-                $scope.passcode = $scope.passcode + value;
-                if ($scope.passcode.length == 4) {
-                    $scope.validatePasscode();
-                }
-            }
-        }
-
-        $scope.removeDigit = function () {
-            if ($scope.passcode.length > 0) {
-                $scope.passcode = $scope.passcode.substring(0, $scope.passcode.length - 1);
-            }
-        }
-
-        $scope.validatePasscode = function () {
-            var passcode = $scope.passcode;
-            if (passcode.length == 4) {
+        $scope.$on('passcode-entered', function (ev, args) {
+            var passcode = args;
+            if (passcode && passcode.length == 4) {
                 if (passcode === $scope.profile.settings.passcodeText) {
                     $timeout(function () {
-                        $scope.closeModal();
+                        $scope.passcodeModal.hide();
                         $scope.activateProfile($scope.profile);
                     }, 500);
                 } else {
                     alertService.show('Invalid code!');
                 }
             }
-        }
+        });
 
         $scope.activate = function () {
             $ionicModal.fromTemplateUrl('partials/passcode-modal.html', {
