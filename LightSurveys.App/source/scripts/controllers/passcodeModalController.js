@@ -18,6 +18,10 @@ angular.module('lm.surveys').controller('passcodeModalController', ['$scope', '$
             }
         }
 
+        $scope.$on('passcode-clear', function (ev, args) {
+            $scope.passcode = '';
+        });
+
         $scope.savePasscode = function () {
             if ($scope.passcode.length < 4) {
                 alertService.show('Please enter a passcode first');

@@ -1,6 +1,6 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('settingsController', ['$scope', '$state', '$timeout', '$ionicModal', '$ionicPopup', 'alertService', 'userService',
-    function ($scope, $state, $timeout, $ionicModal, $ionicPopup, alertService, userService) {
+angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootScope', '$state', '$timeout', '$ionicModal', '$ionicPopup', 'alertService', 'userService',
+    function ($scope, $rootScope, $state, $timeout, $ionicModal, $ionicPopup, alertService, userService) {
         $scope.passcodeModal = undefined;
         $scope.profile = undefined;
         $scope.passcodeSaved = false;
@@ -13,7 +13,10 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$state
         $scope.$watch('model.passcodeEnabled', function (newValue, oldValue) {
             if (oldValue === false && newValue === true) {
                 if (!$scope.passcodeSaved && !$scope.profile.settings.passcodeEnabled)
+                {
+                    $rootScope.$broadcast('passcode-clear');
                     $scope.passcodeModal.show();
+                }
             }
             else if (oldValue === true && newValue === false) {
                 if ($scope.passcodeSaved && $scope.profile.settings.passcodeEnabled) {
