@@ -1,6 +1,6 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('settingsController', ['$scope', '$state', '$timeout', '$ionicModal', 'alertService', 'userService',
-    function ($scope, $state, $timeout, $ionicModal, alertService, userService) {
+angular.module('lm.surveys').controller('settingsController', ['$scope', '$state', '$timeout', '$ionicModal', '$ionicPopup', 'alertService', 'userService',
+    function ($scope, $state, $timeout, $ionicModal, $ionicPopup, alertService, userService) {
         $scope.passcodeModal = undefined;
         $scope.profile = undefined;
         $scope.passcodeSaved = false;
@@ -11,12 +11,29 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$state
         };
 
         $scope.$watch('model.passcodeEnabled', function (newValue, oldValue) {
-            if (oldValue === false && newValue === true)
-                $scope.passcodeModal.show();
+            if (oldValue === false && newValue === true) {
+                if (!$scope.passcodeSaved && !$scope.profile.settings.passcodeEnabled)
+                    $scope.passcodeModal.show();
+            }
             else if (oldValue === true && newValue === false) {
-                $scope.profile.settings.passcodeEnabled = false;
-                $scope.profile.settings.passcodeText = '';
-                userService.saveProfile($scope.profile).then(function () { });
+                if ($scope.passcodeSaved && $scope.profile.settings.passcodeEnabled) {
+                    var confirmPopup = $ionicPopup.confirm({
+                        title: 'Disable PIN Login',
+                        template: 'Are you sure you want to disable your passcode?'
+                    });
+
+                    confirmPopup.then(function (res) {
+                        if (res) {
+                            $scope.profile.settings.passcodeEnabled = false;
+                            $scope.profile.settings.passcodeText = '';
+                            $scope.passcodeSaved = false;
+
+                            userService.saveProfile($scope.profile).then(function () { });
+                        } else {
+                            $scope.model.passcodeEnabled = true;
+                        }
+                    });
+                }
             }
         });
 
@@ -64,6 +81,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$state
 
                         $scope.model.passcodeEnabled = profile.settings.passcodeEnabled;
                         $scope.model.fingerprintEnabled = profile.settings.fingerprintEnabled;
+                        $scope.passcodeSaved = profile.settings.passcodeEnabled;
                     }
                 });
             });
