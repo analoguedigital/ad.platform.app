@@ -27,6 +27,10 @@ angular.module('lm.surveys').controller('passcodeModalController', ['$scope', '$
             $rootScope.$broadcast('passcode-save-button-clicked', $scope.passcode);
         }
 
+        $scope.forgotPasscode = function () {
+            $rootScope.$broadcast('passcode-forgot-pin');
+        }
+
         $scope.closeModal = function () {
             $rootScope.$broadcast('passcode-modal-closed', $scope.passcode);
         }

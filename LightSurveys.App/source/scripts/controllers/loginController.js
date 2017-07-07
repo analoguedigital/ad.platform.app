@@ -36,6 +36,9 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHis
 
                 userService.login($scope.loginData)
                     .then(function () {
+                        if ($scope.profile) 
+                            userService.activateProfile($scope.profile);
+
                         surveyService.refreshData()
                             .then(function () {
                                 ngProgress.complete();
@@ -95,6 +98,11 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHis
                     alertService.show('Invalid code!');
                 }
             }
+        });
+
+        $scope.$on('passcode-forgot-pin', function (ev, args) {
+            $scope.isQuickLoginActive = false;
+            $scope.passcodeModal.hide();
         });
 
         $scope.activate = function () {

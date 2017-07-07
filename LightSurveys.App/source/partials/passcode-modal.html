@@ -25,7 +25,7 @@
                 </div>
             </div>
         </div>
-        <div style="margin-top: 50px">
+        <div class="digits-panel">
             <div class="row">
                 <div class="col col-20 col-offset-20">
                     <button class="button button-stretch" ng-click="addDigit(1)">1</button>
@@ -68,6 +68,9 @@
                     <button class="button icon ion-arrow-left-a button-stretch" ng-click="removeDigit()"></button>
                 </div>
             </div>
+        </div>
+        <div class="forgot-pass-container" ng-show="passcodeLoginMode">
+            <button class="button button-clear button-positive icon-left ion-help-circled" ng-click="forgotPasscode()">Forgot your PIN code?</button>
         </div>
     </ion-content>
 </ion-modal-view>
