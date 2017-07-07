@@ -166,15 +166,15 @@ mwl-calendar.survey-calendar {
 .passcode-screen p {
     font-size: 18px;
     text-align: center;
-    padding-bottom: 35px;
+    padding-bottom: 10px;
+    padding-top: 30px;
 }
 
 .passcode-screen .button-stretch {
-    width: 100%;
+    /*width: 100%;*/
     background: inherit !important;
     border: 2px solid #555 !important;
     color: #aaa !important;
-    border-radius: 100% !important;
 }
 
 .passcode-screen .button-stretch.activated {
