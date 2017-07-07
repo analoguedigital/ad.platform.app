@@ -296,6 +296,25 @@ module App.Services {
             });
         }
 
+        getFormTemplateMetadata(formTemplate: Models.FormTemplate): ng.IPromise<Models.FormTemplate> {
+            var d = this.$q.defer();
+
+            angular.forEach(formTemplate.metricGroups, function (group) {
+                if (!group.isRepeater) {
+                    angular.forEach(group.metrics, function (metric) {
+                        if (_.includes(metric.type.toLowerCase(), 'time')) {
+                            formTemplate.timeMetricId = metric.id;
+                            console.log('formTemplate.timeMetricId', metric.id);
+                        }
+                    });
+                }
+            });
+
+            d.resolve(formTemplate);
+
+            return d.promise;
+        }
+
         getFormTemplates(): ng.IPromise<Array<Models.FormTemplate>> {
 
             var q = this.$q.defer<Array<Models.FormTemplate>>();
@@ -303,11 +322,21 @@ module App.Services {
                 this.storageService.getAll(this.FORM_TEMPLATE_OBJECT_TYPE, null)
                     .then((templates: Array<Models.FormTemplate>) => {
                         this.formTemplates = templates;
-                        q.resolve(this.filterForProject(this.formTemplates));
+                        let result = this.filterForProject(this.formTemplates);
+                        _.forEach(result, (template) => {
+                            this.getFormTemplateMetadata(template).then((t) => { template = t; });
+                        });
+
+                        q.resolve(result);
                     }, (err) => { q.reject(err); });
             }
             else {
-                q.resolve(this.filterForProject(this.formTemplates));
+                let templates = this.filterForProject(this.formTemplates);
+                _.forEach(templates, (template) => {
+                    this.getFormTemplateMetadata(template).then((t) => { template = t; });
+                });
+
+                q.resolve(templates);
             }
 
             return q.promise;
@@ -315,14 +344,24 @@ module App.Services {
 
 
         getFormTemplate(id: string): ng.IPromise<Models.FormTemplate> {
+            var q = this.$q.defer<Models.FormTemplate>();
 
             if (this.formTemplates !== undefined) {
-                var q = this.$q.defer<Models.FormTemplate>();
-                q.resolve(_.find(this.formTemplates, { 'id': id }));
+                let template = _.find(this.formTemplates, { 'id': id });
+                this.getFormTemplateMetadata(template).then((t) => { template = t; });
+                q.resolve(template);
+
                 return q.promise;
             }
 
-            return this.storageService.getObj(this.FORM_TEMPLATE_OBJECT_TYPE, id);
+            this.storageService.getObj(this.FORM_TEMPLATE_OBJECT_TYPE, id).then((formTemplate: Models.FormTemplate) => {
+                this.getFormTemplateMetadata(formTemplate).then((template) => {
+                    formTemplate = template;
+                    q.resolve(template);
+                });
+            });
+
+            return q.promise;
         }
 
 
@@ -331,13 +370,11 @@ module App.Services {
             return this.storageService.save(this.SURVEY_OBJECT_TYPE, template.id, survey.id, survey);
         }
 
-
         getSurvey(id: string): ng.IPromise<Models.Survey> {
             var d = this.$q.defer();
             this.storageService.getObj(this.SURVEY_OBJECT_TYPE, id).then((survey: Models.Survey) => {
-                this.getDescirptionMetrics(survey.formTemplateId).then((descMetrics) => {
-                    survey.description = this.getDescription(survey, descMetrics);
-                    d.resolve(survey);
+                this.getSurveyMetadata(survey).then((s) => {
+                    d.resolve(s);
                 });
             });
 
@@ -481,9 +518,9 @@ module App.Services {
                 .then((surveys: Array<Models.Survey>) => {
                     let result = _.filter(surveys, { 'projectId': this.userService.current.project.id });
 
-                    this.getDescirptionMetrics(formTemplateId).then((descMetrics) => {
-                        _.forEach(result, (survey: Models.Survey) => {
-                            survey.description = this.getDescription(survey, descMetrics);
+                    _.forEach(result, (survey: Models.Survey) => {
+                        this.getSurveyMetadata(survey).then((record) => {
+                            survey = record;
                         });
                     });
 
@@ -586,38 +623,36 @@ module App.Services {
                 return formValue.numericValue.toString();
         }
 
-        getDescirptionMetrics(formTemplateId: string): ng.IPromise<Models.IGetDescriptionMetricsDTO> {
+        getDescirptionMetrics(formTemplate: Models.FormTemplate): ng.IPromise<Models.IGetDescriptionMetricsDTO> {
             let d = this.$q.defer();
 
-            this.getFormTemplate(formTemplateId).then((template) => {
-                let descFormat = template.descriptionFormat;
-                if (descFormat && descFormat.length) {
-                    let descMetrics = [];
-                    let pattern = /{{([^}]+)}}/g;
-                    let titles = [];
-                    let currentMatch = undefined;
-                    while (currentMatch = pattern.exec(descFormat)) {
-                        titles.push(currentMatch[1]);
-                    }
-
-                    let foundMetrics = [];
-                    _.forEach(template.metricGroups, (metricGroup: Models.MetricGroup) => {
-                        _.forEach(metricGroup.metrics, (metric: Models.Metric) => {
-                            let shortTitle = _.toLower(metric.shortTitle);
-                            if (_.includes(titles, shortTitle)) {
-                                foundMetrics.push(metric);
-                            }
-                        });
-                    });
-
-                    let result: Models.IGetDescriptionMetricsDTO = {
-                        descriptionFormat: descFormat,
-                        descriptionMetrics: foundMetrics
-                    };
-
-                    d.resolve(result);
+            let descFormat = formTemplate.descriptionFormat;
+            if (descFormat && descFormat.length) {
+                let descMetrics = [];
+                let pattern = /{{([^}]+)}}/g;
+                let titles = [];
+                let currentMatch = undefined;
+                while (currentMatch = pattern.exec(descFormat)) {
+                    titles.push(currentMatch[1]);
                 }
-            });
+
+                let foundMetrics = [];
+                _.forEach(formTemplate.metricGroups, (metricGroup: Models.MetricGroup) => {
+                    _.forEach(metricGroup.metrics, (metric: Models.Metric) => {
+                        let shortTitle = _.toLower(metric.shortTitle);
+                        if (_.includes(titles, shortTitle)) {
+                            foundMetrics.push(metric);
+                        }
+                    });
+                });
+
+                let result: Models.IGetDescriptionMetricsDTO = {
+                    descriptionFormat: descFormat,
+                    descriptionMetrics: foundMetrics
+                };
+
+                d.resolve(result);
+            }
 
             return d.promise;
         }
@@ -639,6 +674,33 @@ module App.Services {
 
             if (result === descriptionMetrics.descriptionFormat) result = '';
             return result;
+        }
+
+        getSurveyMetadata(survey: Models.Survey): ng.IPromise<Models.Survey> {
+            var d = this.$q.defer();
+
+            this.getFormTemplate(survey.formTemplateId).then((template) => {
+                this.getDescirptionMetrics(template).then((descMetrics) => {
+                    survey.description = this.getDescription(survey, descMetrics);
+                });
+
+                var date = new Date(survey.surveyDate);
+
+                var dateFormValue = _.find(survey.formValues, { 'metricId': template.calendarDateMetricId });
+                if (dateFormValue)
+                    date = new Date(dateFormValue.dateValue);
+
+                var timeFormValue = _.find(survey.formValues, { 'metricId': template.timeMetricId });
+                if (timeFormValue !== undefined) {
+                    date.setHours(new Date(timeFormValue.timeValue).getHours(), new Date(timeFormValue.timeValue).getMinutes());
+                }
+
+                survey.surveyDate = date;
+            });
+
+            d.resolve(survey);
+
+            return d.promise;
         }
     }
 

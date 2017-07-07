@@ -18,34 +18,12 @@ angular.module('lm.surveys').controller('calendarController', ['$scope', '$state
         surveyService.getFormTemplates()
             .then(function (templates) {
                 angular.forEach(templates, function (template) {
-
-                    angular.forEach(template.metricGroups, function (group) {
-                        if (!group.isRepeater) {
-                            angular.forEach(group.metrics, function (metric) {
-
-                                if (metric.type.toLowerCase().includes('time'))
-                                    template.timeMetricId = metric.id;
-                            });
-                        }
-                    });
-
                     surveyService.getSubmittedSurveys(template.id)
                         .then(function (surveys) {
                             angular.forEach(surveys, function (survey) {
-                                var date = new Date(survey.surveyDate);
-
-                                var dateFormValue = _.find(survey.formValues, { 'metricId': template.calendarDateMetricId });
-                                if (dateFormValue)
-                                    date = new Date(dateFormValue.dateValue);
-
-                                var timeFormValue = _.find(survey.formValues, { 'metricId': template.timeMetricId });
-                                if (timeFormValue !== undefined) {
-                                    date.setHours(new Date(timeFormValue.timeValue).getHours(), new Date(timeFormValue.timeValue).getMinutes());
-                                }
-
                                 $scope.cal.events.push({
                                     title: template.title,
-                                    startsAt: date,
+                                    startsAt: survey.surveyDate,
                                     surveyId: survey.id,
                                     color: { primary: template.colour, secondary: $scope.shadeColor(template.colour, 0.6) }
                                 });

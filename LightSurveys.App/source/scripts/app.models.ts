@@ -19,7 +19,8 @@ module App.Models {
         public isPublished: boolean;
 
         public colour: string;
-        public calendarDateMeticId: string;
+        public calendarDateMetricId: string;
+        public timeMetricId: string;
         public timelineBarMetricId: string;
 
         public descriptionFormat: string;
@@ -75,6 +76,7 @@ module App.Models {
         public textValue: string;
         public dateValue: Date;
         public numericValue: number;
+        public timeValue: number;
         public attachments: Attachment[];
     }
 
