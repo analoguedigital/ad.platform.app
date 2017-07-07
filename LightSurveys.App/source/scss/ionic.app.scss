@@ -121,7 +121,7 @@ mwl-calendar.survey-calendar {
 
 .passcode-screen {
     background-color: $base-background-color;
-    color: #ddd;
+    color: white;
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -163,34 +163,59 @@ mwl-calendar.survey-calendar {
     align-self: auto;
 }
 
-.passcode-screen p {
-    font-size: 18px;
+.passcode-screen h3 {
+    color: white;
     text-align: center;
-    padding-bottom: 10px;
+}
+
+.passcode-screen p {
+    text-align: center;
     padding-top: 30px;
 }
 
 .passcode-screen .button-stretch {
-    /*width: 100%;*/
     background: inherit !important;
-    border: 2px solid #555 !important;
-    color: #aaa !important;
+    border: 2px solid $positive !important;
+    border-radius: 50%;
+    color: white;
+    font-size: 18px;
+
+    min-width: 55px;
+    min-height: 55px;
+    height: 55px;
+    width: 55px;
+    line-height: 50px;
 }
 
 .passcode-screen .button-stretch.activated {
-    color: yellow !important;
-    border: 2px solid yellow !important;
+    border: 2px solid white !important;
+}
+
+.passcode-screen .button-white {
+    color: white;
+    font-size: inherit;
+}
+
+.passcode-screen .button.icon.ion-ios-arrow-back::before {
+    line-height: 50px;
+}
+
+.passcode-screen .button-save-passcode::before {
+    line-height: 50px;
 }
 
 .passcode-screen .col.first-digit {
     margin-left: 15%;
 }
 
-.passcode-screen .col.digit-box {
+.passcode-screen .bullet {
+    font-size: 26px;
+}
+
+.passcode-screen .digit-box {
     border-bottom: 2px solid #555 !important;
-    font-size: 24px;
+    font-size: 22px;
     padding-bottom: 10px;
-    color: yellow;
 }
 
 .passcode-screen .digits-panel {

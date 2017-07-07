@@ -1,15 +1,19 @@
 ﻿<ion-modal-view ng-controller="passcodeModalController">
-    <ion-header-bar class="bar-positive">
-        <h1 class="title" ng-hide="passcodeLoginMode">Set passcode</h1>
-        <h1 class="title" ng-show="passcodeLoginMode">Enter passcode</h1>
+    <ion-header-bar class="bar-positive" ng-hide="passcodeLoginMode">
+        <h1 class="title">Set Passcode</h1>
         <button class="button button-clear icon-right ion-ios-close-outline" ng-click="closeModal()" ng-hide="passcodeLoginMode"></button>
     </ion-header-bar>
     <ion-content class="content passcode-screen">
-        <p ng-hide="passcodeLoginMode">Enter four-digit code and hit save</p>
-        <p ng-show="passcodeLoginMode">Enter four-digit code to sign in</p>
+        <div ng-show="passcodeLoginMode">
+            <h3>Welcome back</h3>
+            <p>Please enter your passcode</p>
+        </div>
+        <div ng-show="!passcodeLoginMode">
+            <p>Enter a new passcode</p>
+        </div>
 
         <div id="passcode-container">
-            <div class="row" style="text-align: center">
+            <div class="row" style="text-align: center" ng-if="!passcodeLoginMode">
                 <div class="col col-10 col-offset-10 digit-box first-digit">
                     {{passcode.substring(0, 1)}}
                 </div>
@@ -21,6 +25,21 @@
                 </div>
                 <div class="col col-10 col-offset-10 digit-box">
                     {{passcode.substring(3, 4)}}
+                </div>
+            </div>
+            <div class="row" style="text-align: center" ng-if="passcodeLoginMode">
+                <div class="col col-10 col-offset-10 first-digit">
+                    <span class="bullet" ng-if="passcode.substring(0,1).length">&bull;</span>
+                </div>
+
+                <div class="col col-10 col-offset-10">
+                    <span class="bullet" ng-if="passcode.substring(1,2).length">&bull;</span>
+                </div>
+                <div class="col col-10 col-offset-10">
+                    <span class="bullet" ng-if="passcode.substring(2,3).length">&bull;</span>
+                </div>
+                <div class="col col-10 col-offset-10">
+                    <span class="bullet" ng-if="passcode.substring(3,4).length">&bull;</span>
                 </div>
             </div>
         </div>
@@ -64,23 +83,23 @@
                     <button class="button button-stretch" ng-click="addDigit(0)">0</button>
                 </div>
                 <div class="col col-20">
-                    <button class="button icon ion-ios-arrow-thin-left button-stretch" ng-click="removeDigit()"></button>
+                    <button class="button icon ion-ios-arrow-back button-stretch" ng-click="removeDigit()"></button>
                 </div>
             </div>
             <div class="row" ng-show="!passcodeLoginMode">
                 <div class="col col-20 col-offset-20">
-                    <button class="button icon ion-ios-arrow-thin-left button-stretch" ng-click="removeDigit()"></button>
+                    <button class="button icon ion-ios-arrow-back button-stretch" ng-click="removeDigit()"></button>
                 </div>
                 <div class="col col-20">
                     <button class="button button-stretch" ng-click="addDigit(0)">0</button>
                 </div>
                 <div class="col col-20">
-                    <button class="button icon ion-ios-checkmark-outline button-stretch" ng-click="savePasscode()"></button>
+                    <button class="button icon ion-checkmark button-stretch button-save-passcode" ng-click="savePasscode()"></button>
                 </div>
             </div>
         </div>
         <div class="forgot-pass-container" ng-show="passcodeLoginMode">
-            <button class="button button-clear button-positive icon-left ion-help-circled" ng-click="forgotPasscode()">Forgot your PIN code?</button>
+            <button class="button button-clear button-white" ng-click="forgotPasscode()">Forgot your passcode?</button>
         </div>
     </ion-content>
 </ion-modal-view>
