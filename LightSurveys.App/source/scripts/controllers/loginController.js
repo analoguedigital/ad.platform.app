@@ -1,6 +1,7 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHistory', '$state', '$stateParams', '$timeout', '$ionicModal', 'userService', 'alertService', 'ngProgress', 'surveyService',
-    function ($scope, $ionicHistory, $state, $stateParams, $timeout, $ionicModal, userService, alertService, ngProgress, surveyService) {
+angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHistory', '$state', '$stateParams', '$timeout', '$ionicModal',
+    'userService', 'alertService', 'ngProgress', 'surveyService', 'fingerprintService',
+    function ($scope, $ionicHistory, $state, $stateParams, $timeout, $ionicModal, userService, alertService, ngProgress, surveyService, fingerprintService) {
         $scope.passcodeModal = undefined;
         $scope.passcodeLoginMode = true;
 
@@ -36,7 +37,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHis
 
                 userService.login($scope.loginData)
                     .then(function () {
-                        if ($scope.profile) 
+                        if ($scope.profile)
                             userService.activateProfile($scope.profile);
 
                         surveyService.refreshData()
@@ -101,33 +102,48 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHis
         });
 
         $scope.$on('passcode-forgot-pin', function (ev, args) {
+            userService.logOut();
             $scope.isQuickLoginActive = false;
+            $scope.isQuickLoginAvailable = false;
             $scope.passcodeModal.hide();
         });
 
         $scope.activate = function () {
-            $ionicModal.fromTemplateUrl('partials/passcode-modal.html', {
-                scope: $scope,
-                animation: 'slide-in-up'
-            }).then(function (modal) {
-                $scope.passcodeModal = modal;
+            userService.getExistingProfiles()
+                .then(function (profiles) {
+                    $scope.existingProfiles = profiles;
+                    if (profiles.length > 0) {
+                        $scope.profile = profiles[0];
 
-                userService.getExistingProfiles()
-                    .then(function (profiles) {
-                        $scope.existingProfiles = profiles;
-                        if (profiles.length > 0) {
-                            $scope.profile = profiles[0];
+                        $scope.isQuickLoginActive = true;
+                        $scope.isQuickLoginAvailable = true;
 
-                            $scope.isQuickLoginActive = true;
-                            $scope.isQuickLoginAvailable = true;
-
-                            var settings = profiles[0].settings;
-                            if (settings.passcodeEnabled === true)
-                                $scope.passcodeModal.show();
-                        }
-                    });
-            });
+                        var settings = profiles[0].settings;
+                        fingerprintService.isAvailable().then((isAvailable) => {
+                            if (isAvailable && settings.fingerprintEnabled === true) {
+                                fingerprintService.verify().then(function (result) {
+                                    if (result.success === true) {
+                                        $scope.activateProfile($scope.profile);
+                                    } else {
+                                        userService.logOut();
+                                        $scope.isQuickLoginActive = false;
+                                        $scope.isQuickLoginAvailable = false;
+                                    }
+                                });
+                            } else {
+                                if (settings.passcodeEnabled === true) {
+                                    $ionicModal.fromTemplateUrl('partials/passcode-modal.html', {
+                                        scope: $scope,
+                                        animation: 'slide-in-up'
+                                    }).then(function (modal) {
+                                        $scope.passcodeModal = modal;
+                                        $scope.passcodeModal.show();
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
         }
         $scope.activate();
-
     }]);
