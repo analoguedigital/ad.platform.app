@@ -1,4 +1,5 @@
 ﻿declare var FingerprintAuth: any;
+declare var ionic: any;
 
 module App.Services {
     "use strict";
@@ -29,30 +30,43 @@ module App.Services {
     }
 
     class FingerprintService implements IFingerprintService {
-        static $inject: string[] = ['$q', 'storageService', 'authService', 'httpService'];
+        static $inject: string[] = ['$q', 'storageService', 'authService', 'httpService', '$cordovaTouchID'];
 
         constructor(
             private $q: angular.IQService,
             private storageService: IStorageService,
             private authService: IAuthService,
-            private httpService: IHttpService) { }
+            private httpService: IHttpService,
+            private $cordovaTouchID: any) { }
 
         isAvailable(): ng.IPromise<boolean> {
             let d = this.$q.defer();
 
-            if (window.cordova && FingerprintAuth) {
-                FingerprintAuth.isAvailable((result) => {
-                    console.log('FingerprintAuth available: ' + JSON.stringify(result));
+            if (ionic.Platform.isIOS()) {
+                this.$cordovaTouchID.checkSupport().then(function () {
+                    console.log('apple touch-id is available');
                     d.resolve(true);
-                }, (error) => {
-                    console.log('isAvailableError(): ' + error);
+                }, function (error) {
+                    console.warn('apple touch-id is not supported');
                     d.resolve(false);
                 });
-            } else {
-                console.warn('fingerprint is not supported');
-                d.resolve(false);
             }
 
+            if (ionic.Platform.isAndroid()) {
+                if (window.cordova && FingerprintAuth) {
+                    FingerprintAuth.isAvailable((result) => {
+                        console.log('FingerprintAuth available: ' + JSON.stringify(result));
+                        d.resolve(true);
+                    }, (error) => {
+                        console.log('isAvailableError(): ' + error);
+                        d.resolve(false);
+                    });
+                } else {
+                    console.warn('fingerprint is not supported');
+                    d.resolve(false);
+                }
+            }
+            
             return d.promise;
         }
 
@@ -65,29 +79,44 @@ module App.Services {
                 result: {}
             };
 
-            let config: IEncryptConfig = { clientId: 'LightSurveys.App', };
-            FingerprintAuth.encrypt(config, (result) => {
-                response.success = true;
-                response.result = result;
-
-                if (result.withFingerprint)
-                    response.message = 'Successfully encrypted credentials.';
-                else if (result.withBackup)
-                    response.message = 'Authenticated with backup password.';
-
-                d.resolve(response);
-            }, (error) => {
-                if (error === FingerprintAuth.ERRORS.FINGERPRINT_CANCELLED)
-                    response.message = 'FingerprintAuth Dialog Cancelled!';
-                else if (error === FingerprintAuth.ERRORS.ILLEGAL_BLOCK_SIZE_EXCEPTION) {
+            if (ionic.Platform.isIOS()) {
+                this.$cordovaTouchID.authenticate("You must authenticate").then(function (result) {
                     response.success = true;
-                    response.message = "PIN code is valid. but plugins throws errors?!"
-                }
-                else
-                    response.message = 'FingerprintAuth Error: ' + error;
+                    response.message = 'Touch ID authentication successful';
+                    response.result = result;
 
-                d.resolve(response);
-            });
+                    d.resolve(response);
+                }, function (error) {
+                    response.message = JSON.stringify(error);
+                    d.resolve(response);
+                });
+            }
+
+            if (ionic.Platform.isAndroid()) {
+                let config: IEncryptConfig = { clientId: 'LightSurveys.App', };
+                FingerprintAuth.encrypt(config, (result) => {
+                    response.success = true;
+                    response.result = result;
+
+                    if (result.withFingerprint)
+                        response.message = 'Successfully encrypted credentials.';
+                    else if (result.withBackup)
+                        response.message = 'Authenticated with backup password.';
+
+                    d.resolve(response);
+                }, (error) => {
+                    if (error === FingerprintAuth.ERRORS.FINGERPRINT_CANCELLED)
+                        response.message = 'FingerprintAuth Dialog Cancelled!';
+                    else if (error === FingerprintAuth.ERRORS.ILLEGAL_BLOCK_SIZE_EXCEPTION) {
+                        response.success = true;
+                        response.message = "PIN code is valid. but plugins throws errors?!"
+                    }
+                    else
+                        response.message = 'FingerprintAuth Error: ' + error;
+
+                    d.resolve(response);
+                });
+            }
 
             return d.promise;
         }
