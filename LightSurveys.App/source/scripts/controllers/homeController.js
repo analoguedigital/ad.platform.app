@@ -1,6 +1,6 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('homeController', ['$scope', '$state', 'surveyService', 'userService', 'alertService', 'ngProgress',
-    function ($scope, $state, surveyService, userService, alertService, ngProgress) {
+angular.module('lm.surveys').controller('homeController', ['$scope', '$state', '$ionicPlatform', '$ionicSideMenuDelegate', '$ionicPopup', 'surveyService', 'userService', 'alertService', 'ngProgress',
+    function ($scope, $state, $ionicPlatform, $ionicSideMenuDelegate, $ionicPopup, surveyService, userService, alertService, ngProgress) {
 
         $scope.currentContext = userService.current;
         $scope.formTemplates = [];
@@ -79,5 +79,24 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$state', '
         if (userService.current.project !== undefined)
             _loadList();
 
+        $ionicPlatform.registerBackButtonAction(function (event) {
+            if ($state.current.name === 'home') {
+                if ($ionicSideMenuDelegate.isOpen()) {
+                    $ionicSideMenuDelegate.toggleLeft(false);
+                    $ionicSideMenuDelegate.toggleRight(false);
+                } else {
+                    var popup = $ionicPopup.confirm({
+                        title: 'Exit Docit',
+                        template: 'Are you sure you want to close the application?'
+                    });
+
+                    popup.then(function (res) {
+                        if (res) {
+                            navigator.app.exitApp();
+                        }
+                    });
+                }
+            }
+        }, 999);
     }]);
 

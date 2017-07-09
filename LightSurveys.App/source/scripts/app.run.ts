@@ -23,28 +23,5 @@ interface Navigator {
                 window.StatusBar.styleDefault();
             }
         });
-
-        $ionicPlatform.registerBackButtonAction(function () {
-
-            var currentTemplate = $route.current.templateUrl;
-
-            if (currentTemplate == "partials/home.html") {
-                if ($ionicSideMenuDelegate.isOpen()) {
-                    $ionicSideMenuDelegate.toggleLeft(false);
-                    $ionicSideMenuDelegate.toggleRight(false);
-                } else {
-                    var popup = $ionicPopup.confirm({
-                        title: gettext('Exit'),
-                        template: gettext('Are you sure you want to close the application?')
-                    });
-
-                    popup.then(function (res) {
-                        if (res) {
-                            navigator.app.exitApp();
-                        }
-                    });
-                }
-            } 
-        }, 100);
     }
 })();
