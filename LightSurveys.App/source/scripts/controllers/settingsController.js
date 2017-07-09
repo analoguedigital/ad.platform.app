@@ -12,8 +12,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
 
         $scope.$watch('model.passcodeEnabled', function (newValue, oldValue) {
             if (oldValue === false && newValue === true) {
-                if (!$scope.passcodeSaved && !$scope.profile.settings.passcodeEnabled)
-                {
+                if (!$scope.passcodeSaved && !$scope.profile.settings.passcodeEnabled) {
                     $rootScope.$broadcast('passcode-clear');
                     $scope.passcodeModal.show();
                 }
@@ -21,8 +20,8 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
             else if (oldValue === true && newValue === false) {
                 if ($scope.passcodeSaved && $scope.profile.settings.passcodeEnabled) {
                     var confirmPopup = $ionicPopup.confirm({
-                        title: 'Disable PIN Login',
-                        template: 'Are you sure you want to disable your passcode?'
+                        title: 'Disable Local Passcode',
+                        template: 'Are you sure you want to disable your local PIN login?'
                     });
 
                     confirmPopup.then(function (res) {
@@ -46,7 +45,9 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
             else if (oldValue === true && newValue === false)
                 $scope.profile.settings.fingerprintEnabled = false;
 
-            userService.saveProfile($scope.profile).then(function () { });
+            if ($scope.profile) {
+                userService.saveProfile($scope.profile).then(function () { });
+            }
         });
 
         $scope.$on('passcode-save-button-clicked', function (ev, args) {

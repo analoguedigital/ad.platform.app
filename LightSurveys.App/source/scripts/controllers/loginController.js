@@ -1,9 +1,10 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHistory', '$state', '$stateParams', '$timeout', '$ionicModal',
+angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScope', '$ionicHistory', '$ionicPlatform', '$state', '$stateParams', '$timeout', '$ionicModal',
     'userService', 'alertService', 'ngProgress', 'surveyService', 'fingerprintService',
-    function ($scope, $ionicHistory, $state, $stateParams, $timeout, $ionicModal, userService, alertService, ngProgress, surveyService, fingerprintService) {
+    function ($scope, $rootScope, $ionicHistory, $ionicPlatform, $state, $stateParams, $timeout, $ionicModal, userService, alertService, ngProgress, surveyService, fingerprintService) {
         $scope.passcodeModal = undefined;
         $scope.passcodeLoginMode = true;
+        $scope.loginValidated = false;
 
         $scope.existingProfiles = [];
         $scope.profile = undefined;
@@ -37,6 +38,8 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHis
 
                 userService.login($scope.loginData)
                     .then(function () {
+                        $scope.loginValidated = true;
+
                         if ($scope.profile)
                             userService.activateProfile($scope.profile);
 
@@ -64,6 +67,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHis
 
             userService.activateProfile(profile);
             $ionicHistory.clearHistory();
+            $scope.loginValidated = true;
             $state.go('home');
             ngProgress.complete();
         };
@@ -83,16 +87,12 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHis
             $scope.isQuickLoginActive = true;
         }
 
-        $scope.$on('$destroy', function () {
-            if ($scope.passcodeModal)
-                $scope.passcodeModal.remove();
-        });
-
         $scope.$on('passcode-entered', function (ev, args) {
             var passcode = args;
             if (passcode && passcode.length == 4) {
                 if (passcode === $scope.profile.settings.passcodeText) {
                     $timeout(function () {
+                        $scope.loginValidated = true;
                         $scope.passcodeModal.hide();
                         $scope.activateProfile($scope.profile);
                     }, 500);
@@ -124,9 +124,10 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHis
                             if (isAvailable && settings.fingerprintEnabled === true) {
                                 fingerprintService.verify().then(function (result) {
                                     if (result.success === true) {
+                                        $scope.loginValidated = true;
                                         $scope.activateProfile($scope.profile);
                                     } else {
-                                        userService.logOut();
+                                        userService.clearCurrent();
                                         $scope.isQuickLoginActive = false;
                                         $scope.isQuickLoginAvailable = false;
                                     }
@@ -147,4 +148,27 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHis
                 });
         }
         $scope.activate();
+
+        $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+            if (toState.name == 'home' && !$scope.loginValidated) {
+                event.preventDefault();
+            }
+        });
+
+        $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+            if (fromState.name == 'home' && toState.name == 'login') {
+                if (userService.currentProfile !== null) {
+                    event.preventDefault();
+                }
+            }
+        });
+
+        $scope.$on('$destroy', function () {
+            if ($scope.passcodeModal)
+                $scope.passcodeModal.remove();
+        });
+
+        $ionicPlatform.registerBackButtonAction(function (event) {
+            event.preventDefault();
+        }, 888);
     }]);
