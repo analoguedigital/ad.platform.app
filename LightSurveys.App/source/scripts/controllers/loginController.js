@@ -84,7 +84,8 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$ionicHis
         }
 
         $scope.$on('$destroy', function () {
-            $scope.passcodeModal.remove();
+            if ($scope.passcodeModal)
+                $scope.passcodeModal.remove();
         });
 
         $scope.$on('passcode-entered', function (ev, args) {

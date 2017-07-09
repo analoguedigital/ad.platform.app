@@ -79,6 +79,10 @@ module App.Services {
             }, (error) => {
                 if (error === FingerprintAuth.ERRORS.FINGERPRINT_CANCELLED)
                     response.message = 'FingerprintAuth Dialog Cancelled!';
+                else if (error === FingerprintAuth.ERRORS.ILLEGAL_BLOCK_SIZE_EXCEPTION) {
+                    response.success = true;
+                    response.message = "PIN code is valid. but plugins throws errors?!"
+                }
                 else
                     response.message = 'FingerprintAuth Error: ' + error;
 

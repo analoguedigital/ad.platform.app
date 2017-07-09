@@ -163,6 +163,10 @@ mwl-calendar.survey-calendar {
     align-self: auto;
 }
 
+.passcode-screen .passcode-modal-heading {
+    padding-top: 60px;
+}
+
 .passcode-screen h3 {
     color: white;
     text-align: center;
@@ -170,7 +174,6 @@ mwl-calendar.survey-calendar {
 
 .passcode-screen p {
     text-align: center;
-    padding-top: 30px;
 }
 
 .passcode-screen .button-stretch {
