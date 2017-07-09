@@ -10,8 +10,10 @@ interface Navigator {
     angular.module("lm.surveys")
         .run(RunIonic);
 
-    RunIonic.$inject = ["$ionicPlatform", "$route", "$ionicSideMenuDelegate", "$ionicPopup", "gettext"];
-    function RunIonic($ionicPlatform: ionic.platform.IonicPlatformService,
+    RunIonic.$inject = ["$rootScope", "$ionicPlatform", "$route", "$ionicSideMenuDelegate", "$ionicPopup", "gettext"];
+    function RunIonic(
+        $rootScope: ng.IRootScopeService,
+        $ionicPlatform: ionic.platform.IonicPlatformService,
         $route: ng.route.IRouteService,
         $ionicSideMenuDelegate: ionic.sideMenu.IonicSideMenuDelegate,
         $ionicPopup: ionic.popup.IonicPopupService,
@@ -22,6 +24,18 @@ interface Navigator {
                 // org.apache.cordova.statusbar required
                 window.StatusBar.styleDefault();
             }
+
+            document.addEventListener('deviceready', onDeviceReady, false);
         });
+
+        function onDeviceReady() {
+            document.addEventListener('pause', function (event) {
+                $rootScope.$broadcast('cordovaPauseEvent');
+            });
+
+            document.addEventListener('resume', function (event) {
+                $rootScope.$broadcast('cordovaResumeEvent');
+            });
+        }
     }
 })();

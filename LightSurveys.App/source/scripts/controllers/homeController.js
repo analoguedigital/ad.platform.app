@@ -1,6 +1,6 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('homeController', ['$scope', '$state', '$ionicPlatform', '$ionicSideMenuDelegate', '$ionicPopup', 'surveyService', 'userService', 'alertService', 'ngProgress',
-    function ($scope, $state, $ionicPlatform, $ionicSideMenuDelegate, $ionicPopup, surveyService, userService, alertService, ngProgress) {
+angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicPlatform', '$ionicSideMenuDelegate', '$ionicPopup', 'surveyService', 'userService', 'alertService', 'ngProgress',
+    function ($scope, $rootScope, $state, $stateParams, $ionicPlatform, $ionicSideMenuDelegate, $ionicPopup, surveyService, userService, alertService, ngProgress) {
 
         $scope.currentContext = userService.current;
         $scope.formTemplates = [];
@@ -98,5 +98,15 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$state', '
                 }
             }
         }, 999);
+
+        $rootScope.$on('cordovaPauseEvent', function (e) {
+            // cordova pause event
+        });
+
+        $rootScope.$on('cordovaResumeEvent', function (e) {
+            userService.clearCurrent();
+            $state.go('login');
+        });
+
     }]);
 
