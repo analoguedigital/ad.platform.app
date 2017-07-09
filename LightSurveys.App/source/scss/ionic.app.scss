@@ -109,7 +109,7 @@ mwl-calendar.survey-calendar {
 
 .modal-backdrop { background-color: rgba(0,0,0,0.5) !important }
 
-.list > .item.item-toggle {
+.list .item-toggle {
     background-color: inherit;
     border-color: $base-background-color;
     color: #ddd;
