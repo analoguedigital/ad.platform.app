@@ -79,30 +79,6 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         if (userService.current.project !== undefined)
             _loadList();
 
-        $ionicPlatform.registerBackButtonAction(function (event) {
-            if ($state.current.name === 'home') {
-                if ($ionicSideMenuDelegate.isOpen()) {
-                    $ionicSideMenuDelegate.toggleLeft(false);
-                    $ionicSideMenuDelegate.toggleRight(false);
-                } else {
-                    var popup = $ionicPopup.confirm({
-                        title: 'Exit Docit',
-                        template: 'Are you sure you want to close the application?'
-                    });
-
-                    popup.then(function (res) {
-                        if (res) {
-                            navigator.app.exitApp();
-                        }
-                    });
-                }
-            }
-        }, 999);
-
-        $rootScope.$on('cordovaPauseEvent', function (e) {
-            // cordova pause event
-        });
-
         $rootScope.$on('cordovaResumeEvent', function (e) {
             userService.clearCurrent();
             $state.go('login');

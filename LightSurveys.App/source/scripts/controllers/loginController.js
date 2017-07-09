@@ -136,7 +136,9 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                                 if (settings.passcodeEnabled === true) {
                                     $ionicModal.fromTemplateUrl('partials/passcode-modal.html', {
                                         scope: $scope,
-                                        animation: 'slide-in-up'
+                                        animation: 'slide-in-up',
+                                        backdropClickToClose: false,
+                                        hardwareBackButtonClose: false
                                     }).then(function (modal) {
                                         $scope.passcodeModal = modal;
                                         $scope.passcodeModal.show();
@@ -149,17 +151,15 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
         }
         $scope.activate();
 
-        $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-            if (toState.name == 'home' && !$scope.loginValidated) {
+        $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+            if (fromState.name == 'login' && toState.name == 'home' && !$scope.loginValidated) {
                 event.preventDefault();
             }
         });
 
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-            if (fromState.name == 'home' && toState.name == 'login') {
-                if (userService.currentProfile !== null) {
-                    event.preventDefault();
-                }
+            if (toState.name == 'login' && userService.currentProfile !== null) {
+                event.preventDefault();
             }
         });
 
@@ -167,8 +167,4 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
             if ($scope.passcodeModal)
                 $scope.passcodeModal.remove();
         });
-
-        $ionicPlatform.registerBackButtonAction(function (event) {
-            event.preventDefault();
-        }, 888);
     }]);
