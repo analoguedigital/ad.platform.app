@@ -98,6 +98,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                     }, 500);
                 } else {
                     alertService.show('Invalid code!');
+                    $scope.$broadcast('passcode-clear');
                 }
             }
         });
