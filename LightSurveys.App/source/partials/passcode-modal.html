@@ -13,21 +13,7 @@
         </div>
 
         <div id="passcode-container">
-            <div class="row" style="text-align: center" ng-if="!passcodeLoginMode">
-                <div class="col col-10 col-offset-10 digit-box first-digit">
-                    {{passcode.substring(0, 1)}}
-                </div>
-                <div class="col col-10 col-offset-10 digit-box">
-                    {{passcode.substring(1, 2)}}
-                </div>
-                <div class="col col-10 col-offset-10 digit-box">
-                    {{passcode.substring(2, 3)}}
-                </div>
-                <div class="col col-10 col-offset-10 digit-box">
-                    {{passcode.substring(3, 4)}}
-                </div>
-            </div>
-            <div class="row" style="text-align: center" ng-if="passcodeLoginMode">
+            <div class="row" style="text-align: center">
                 <div class="col col-10 col-offset-10 first-digit">
                     <span class="bullet" ng-if="passcode.substring(0,1).length">&bull;</span>
                 </div>
