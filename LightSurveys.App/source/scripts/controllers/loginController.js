@@ -109,6 +109,22 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
             $scope.passcodeModal.hide();
         });
 
+        $scope.showPasscodeDialog = function () {
+            if ($scope.passcodeModal)
+                $scope.passcodeModal.show();
+            else {
+                $ionicModal.fromTemplateUrl('partials/passcode-modal.html', {
+                    scope: $scope,
+                    animation: 'slide-in-up',
+                    backdropClickToClose: false,
+                    hardwareBackButtonClose: false
+                }).then(function (modal) {
+                    $scope.passcodeModal = modal;
+                    $scope.passcodeModal.show();
+                });
+            }
+        }
+
         $scope.activate = function () {
             userService.getExistingProfiles()
                 .then(function (profiles) {
@@ -116,40 +132,45 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                     if (profiles.length > 0) {
                         $scope.profile = profiles[0];
 
-                        $scope.isQuickLoginActive = true;
-                        $scope.isQuickLoginAvailable = true;
-
                         var settings = profiles[0].settings;
-                        fingerprintService.isAvailable().then((isAvailable) => {
-                            if (isAvailable && settings.fingerprintEnabled === true) {
-                                fingerprintService.verify().then(function (result) {
-                                    if (result.success === true) {
-                                        $scope.loginValidated = true;
-                                        $scope.activateProfile($scope.profile);
+                        if (settings.fingerprintEnabled || settings.passcodeEnabled) {
+                            if (settings.fingerprintEnabled == true) {
+                                fingerprintService.isAvailable().then((isAvailable) => {
+                                    if (isAvailable) {
+                                        // verify fingerprint
+                                        fingerprintService.verify().then(function (result) {
+                                            if (result.success === true) {
+                                                $scope.loginValidated = true;
+                                                $scope.activateProfile($scope.profile);
+                                            } else {
+                                                if (settings.passcodeEnabled == true) {
+                                                    $scope.showPasscodeDialog();
+                                                } else {
+                                                    userService.clearCurrent();
+                                                }
+                                            }
+                                        }, function (error) {
+                                            if (settings.passcodeEnabled == true) {
+                                                $scope.showPasscodeDialog();
+                                            } else {
+                                                userService.clearCurrent();
+                                            }
+                                        });
                                     } else {
-                                        userService.clearCurrent();
-                                        $scope.isQuickLoginActive = false;
-                                        $scope.isQuickLoginAvailable = false;
+                                        // fingerprint not available
+                                        if (settings.passcodeEnabled == true)
+                                            $scope.showPasscodeDialog();
+                                        else
+                                            userService.clearCurrent();
                                     }
-                                }, function (error) {
-                                    userService.clearCurrent();
-                                    $scope.isQuickLoginActive = false;
-                                    $scope.isQuickLoginAvailable = false;
                                 });
-                            } else {
-                                if (settings.passcodeEnabled === true) {
-                                    $ionicModal.fromTemplateUrl('partials/passcode-modal.html', {
-                                        scope: $scope,
-                                        animation: 'slide-in-up',
-                                        backdropClickToClose: false,
-                                        hardwareBackButtonClose: false
-                                    }).then(function (modal) {
-                                        $scope.passcodeModal = modal;
-                                        $scope.passcodeModal.show();
-                                    });
-                                }
+                            } else if (settings.passcodeEnabled == true) {
+                                $scope.showPasscodeDialog();
                             }
-                        });
+                        } else {
+                            $scope.isQuickLoginActive = true;
+                            $scope.isQuickLoginAvailable = true;
+                        }
                     }
                 });
         }
