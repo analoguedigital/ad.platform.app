@@ -131,6 +131,10 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                                         $scope.isQuickLoginActive = false;
                                         $scope.isQuickLoginAvailable = false;
                                     }
+                                }, function (error) {
+                                    userService.clearCurrent();
+                                    $scope.isQuickLoginActive = false;
+                                    $scope.isQuickLoginAvailable = false;
                                 });
                             } else {
                                 if (settings.passcodeEnabled === true) {

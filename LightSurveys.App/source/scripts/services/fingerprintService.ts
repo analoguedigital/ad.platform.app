@@ -56,7 +56,7 @@ module App.Services {
                 if (window.cordova && FingerprintAuth) {
                     FingerprintAuth.isAvailable((result) => {
                         console.log('FingerprintAuth available: ' + JSON.stringify(result));
-                        d.resolve(true);
+                        d.resolve(result.isAvailable);
                     }, (error) => {
                         console.log('isAvailableError(): ' + error);
                         d.resolve(false);
@@ -66,7 +66,7 @@ module App.Services {
                     d.resolve(false);
                 }
             }
-            
+
             return d.promise;
         }
 
@@ -93,7 +93,12 @@ module App.Services {
             }
 
             if (ionic.Platform.isAndroid()) {
-                let config: IEncryptConfig = { clientId: 'LightSurveys.App', };
+                console.log('platform: android');
+                let config: IEncryptConfig = {
+                    clientId: 'LightSurveys.App',
+                    disableBackup: true
+                };
+
                 FingerprintAuth.encrypt(config, (result) => {
                     response.success = true;
                     response.result = result;
@@ -107,10 +112,6 @@ module App.Services {
                 }, (error) => {
                     if (error === FingerprintAuth.ERRORS.FINGERPRINT_CANCELLED)
                         response.message = 'FingerprintAuth Dialog Cancelled!';
-                    else if (error === FingerprintAuth.ERRORS.ILLEGAL_BLOCK_SIZE_EXCEPTION) {
-                        response.success = true;
-                        response.message = "PIN code is valid. but plugins throws errors?!"
-                    }
                     else
                         response.message = 'FingerprintAuth Error: ' + error;
 
