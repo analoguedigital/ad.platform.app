@@ -79,10 +79,5 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         if (userService.current.project !== undefined)
             _loadList();
 
-        $rootScope.$on('cordovaResumeEvent', function (e) {
-            userService.clearCurrent();
-            $state.go('login');
-        });
-
     }]);
 

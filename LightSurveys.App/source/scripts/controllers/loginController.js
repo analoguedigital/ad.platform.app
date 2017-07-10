@@ -177,19 +177,28 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
         $scope.activate();
 
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-            if (fromState.name == 'login' && toState.name == 'home' && !$scope.loginValidated) {
+            if (toState.name == 'login' && userService.currentProfile !== null) {
+                event.preventDefault();
+            }
+
+            if (fromState.name == 'login' && !$scope.loginValidated) {
                 event.preventDefault();
             }
         });
 
-        $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-            if (toState.name == 'login' && userService.currentProfile !== null) {
-                event.preventDefault();
-            }
+        $rootScope.$on('cordovaResumeEvent', function () {
+            $state.go('login');
+        });
+
+        $rootScope.$on('cordovaPauseEvent', function () {
+            $ionicHistory.clearHistory();
+            $ionicHistory.clearCache();
+            userService.clearCurrent();
         });
 
         $scope.$on('$destroy', function () {
             if ($scope.passcodeModal)
                 $scope.passcodeModal.remove();
         });
+
     }]);
