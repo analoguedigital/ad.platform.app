@@ -3,7 +3,7 @@
 module App.Services {
     "use strict";
 
-    interface IAlertService {
+    export interface IAlertService {
         show(msg: string): void;
     }
 

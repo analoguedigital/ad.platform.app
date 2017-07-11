@@ -30,26 +30,20 @@ module App.Services {
     }
 
     class FingerprintService implements IFingerprintService {
-        static $inject: string[] = ['$q', 'storageService', 'authService', 'httpService', '$cordovaTouchID'];
+        static $inject: string[] = ['$q', 'storageService', 'authService', 'httpService'];
 
         constructor(
             private $q: angular.IQService,
             private storageService: IStorageService,
             private authService: IAuthService,
-            private httpService: IHttpService,
-            private $cordovaTouchID: any) { }
+            private httpService: IHttpService) { }
 
         isAvailable(): ng.IPromise<boolean> {
             let d = this.$q.defer();
 
             if (ionic.Platform.isIOS()) {
-                this.$cordovaTouchID.checkSupport().then(function () {
-                    console.log('apple touch-id is available');
-                    d.resolve(true);
-                }, function (error) {
-                    console.warn('apple touch-id is not supported');
-                    d.resolve(false);
-                });
+                console.warn('IOS TOUCH ID NOT IMPLEMENTED!');
+                d.resolve(false);
             }
 
             if (ionic.Platform.isAndroid()) {
@@ -80,20 +74,11 @@ module App.Services {
             };
 
             if (ionic.Platform.isIOS()) {
-                this.$cordovaTouchID.authenticate("You must authenticate").then(function (result) {
-                    response.success = true;
-                    response.message = 'Touch ID authentication successful';
-                    response.result = result;
-
-                    d.resolve(response);
-                }, function (error) {
-                    response.message = JSON.stringify(error);
-                    d.resolve(response);
-                });
+                response.message = 'IOS TOUCH ID VERIFICATION NOT IMPLEMENTED!';
+                d.resolve(response);
             }
 
             if (ionic.Platform.isAndroid()) {
-                console.log('platform: android');
                 let config: IEncryptConfig = {
                     clientId: 'LightSurveys.App',
                     disableBackup: true

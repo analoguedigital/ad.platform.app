@@ -46,23 +46,6 @@
                         <a ng-click="loginWithExistingAccounts()" class="button button-clear button-full button-light">Login to an existing profiles</a>
                     </div>
                 </form>
-
-
-
-                <div class="padding-top" ng-show="isQuickLoginAvailable && isQuickLoginActive">
-                    <div class="padding light">
-                        Select an existing profile
-                    </div>
-                    <div class="list">
-                        <a class="item item-icon-left" ng-repeat="profile in existingProfiles" ng-click="activateProfile(profile)">
-                            <i class="icon ion-ios-person"></i>
-                            {{profile.authenticationData.email}}
-                        </a>
-                    </div>
-                    <div class="light">
-                        <a ng-click="loginWithDifferentAccount()" class="button button-clear button-full button-light">login to a different account</a>
-                    </div>
-                </div>
             </div>
         </div>
     </ion-content>
