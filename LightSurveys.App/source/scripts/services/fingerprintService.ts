@@ -1,6 +1,10 @@
 ﻿declare var FingerprintAuth: any;
 declare var ionic: any;
 
+interface Plugins {
+    touchid: any;
+}
+
 module App.Services {
     "use strict";
 
@@ -42,8 +46,17 @@ module App.Services {
             let d = this.$q.defer();
 
             if (ionic.Platform.isIOS()) {
-                console.warn('IOS TOUCH ID NOT IMPLEMENTED!');
-                d.resolve(false);
+                if (window.plugins && window.plugins.touchid) {
+                    window.plugins.touchid.isAvailable((result) => {
+                        console.log('plugins.touchid RESULT', result);
+                        d.resolve(true);
+                    }, (error) => {
+                        console.log('plugins.touchid ERROR', error);
+                        d.resolve(false);
+                    });
+                } else {
+                    d.resolve(false);
+                }
             }
 
             if (ionic.Platform.isAndroid()) {
@@ -74,8 +87,22 @@ module App.Services {
             };
 
             if (ionic.Platform.isIOS()) {
-                response.message = 'IOS TOUCH ID VERIFICATION NOT IMPLEMENTED!';
-                d.resolve(response);
+                if (window.plugins && window.plugins.touchid) {
+                    window.plugins.touchid.authenticate((result) => {
+                        console.log('touchid.authenticate RESULT', result);
+
+                        response.success = true;
+                        response.message = JSON.stringify(result);
+                        d.resolve(response);
+                    }, (error) => {
+                        console.log('touchid.authenticate() ERROR', error);
+                        response.message = JSON.stringify(error);
+                        d.resolve(response);
+                    });
+                } else {
+                    response.message = 'window.plugins.touchid is not defined!';
+                    d.resolve(response);
+                };
             }
 
             if (ionic.Platform.isAndroid()) {
