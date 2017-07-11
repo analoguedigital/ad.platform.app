@@ -11,7 +11,7 @@ interface Navigator {
         .run(RunIonic);
 
     RunIonic.$inject = ["$rootScope", "$state", "$ionicPlatform", "$ionicHistory", "$route",
-        "$ionicSideMenuDelegate", "$ionicPopup", "gettext"];
+        "$ionicSideMenuDelegate", "$ionicPopup", "gettext", "userService"];
     function RunIonic(
         $rootScope: ng.IRootScopeService,
         $state: ng.ui.IStateService,
@@ -20,7 +20,8 @@ interface Navigator {
         $route: ng.route.IRouteService,
         $ionicSideMenuDelegate: ionic.sideMenu.IonicSideMenuDelegate,
         $ionicPopup: ionic.popup.IonicPopupService,
-        gettext: any) {
+        gettext: any,
+        userService: App.Services.IUserService) {
 
         $ionicPlatform.ready(function () {
             if (window.StatusBar) {
@@ -53,11 +54,13 @@ interface Navigator {
 
         function onDeviceReady() {
             document.addEventListener('pause', function (event) {
-                $rootScope.$broadcast('cordovaPauseEvent');
+                $ionicHistory.clearHistory();
+                $ionicHistory.clearCache();
+                userService.clearCurrent();
             });
 
             document.addEventListener('resume', function (event) {
-                $rootScope.$broadcast('cordovaResumeEvent');
+                $state.go('login');
             });
         }
     }

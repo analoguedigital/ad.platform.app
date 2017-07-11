@@ -61,6 +61,7 @@ module App.Services {
         getExistingProfiles: () => ng.IPromise<IProfile[]>;
         setCurrentProject: (project: Models.Project) => void;
         register(registerData: IRegisterData): angular.IPromise<void>;
+        clearCurrent: () => void;
     }
 
     class UserService implements IUserService {

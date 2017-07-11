@@ -104,16 +104,6 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
             }
         });
 
-        $rootScope.$on('cordovaResumeEvent', function () {
-            $state.go('login');
-        });
-
-        $rootScope.$on('cordovaPauseEvent', function () {
-            $ionicHistory.clearHistory();
-            $ionicHistory.clearCache();
-            userService.clearCurrent();
-        });
-
         $scope.activate = function () {
             userService.getExistingProfiles()
                 .then(function (profiles) {
