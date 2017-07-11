@@ -15,6 +15,7 @@ module App.Services {
             private toastr: Toastr) { }
 
         show(msg: string) {
+            this.toastr.clear();
             this.toastr.info(msg, '', { allowHtml: true, positionClass: 'toast-bottom-center' });
         }
     }
