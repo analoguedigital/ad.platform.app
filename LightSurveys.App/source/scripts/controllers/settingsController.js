@@ -13,12 +13,12 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         $scope.$watch('model.passcodeEnabled', function (newValue, oldValue) {
             if (oldValue === false && newValue === true) {
                 if (!$scope.passcodeSaved && !$scope.profile.settings.passcodeEnabled) {
-                    passcodeModalService.showDialog();
+                    passcodeModalService.showDialog(false, 'Enable local passcode');
                 }
             }
             else if (oldValue === true && newValue === false) {
                 if ($scope.passcodeSaved && $scope.profile.settings.passcodeEnabled) {
-                    passcodeModalService.showDialog(true);
+                    passcodeModalService.showDialog(true, 'Confirm to disable');
                 }
             }
         });

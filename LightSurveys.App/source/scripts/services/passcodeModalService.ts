@@ -14,6 +14,7 @@ module App.Services {
         passcode: string;
         firstPasscode: string;
         loginMode: boolean;
+        headingText: string;
 
         addDigit: (value: number) => void;
         removeDigit: () => void;
@@ -33,13 +34,17 @@ module App.Services {
             private httpService: IHttpService,
             private alertService: App.Services.IAlertService) { }
 
-        showDialog(loginMode: boolean = false) {
+        showDialog(loginMode: boolean = false, header: string = 'Welcome back') {
             let self = this;
 
             if (this.modalInstance) {
                 this.modalScope.loginMode = loginMode;
                 this.modalScope.passcode = '';
                 this.modalScope.firstPasscode = '';
+
+                if (header && header.length)
+                    this.modalScope.headingText = header;
+
                 this.modalInstance.show();
             }
             else {
@@ -47,6 +52,8 @@ module App.Services {
                 this.modalScope.passcode = '';
                 this.modalScope.firstPasscode = '';
                 this.modalScope.loginMode = loginMode;
+                if (header && header.length)
+                    this.modalScope.headingText = header;
 
                 this.modalScope.addDigit = (value: number) => {
                     if (self.modalScope.passcode.length < 4) {
