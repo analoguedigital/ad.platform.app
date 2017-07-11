@@ -1,8 +1,8 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScope', '$ionicHistory', '$ionicPlatform', '$state', '$stateParams', '$timeout', '$ionicModal',
-    'userService', 'alertService', 'ngProgress', 'surveyService', 'fingerprintService', 'passcodeModalService',
+    'userService', 'alertService', 'ngProgress', 'surveyService', 'fingerprintService', 'passcodeModalService', 'md5',
     function ($scope, $rootScope, $ionicHistory, $ionicPlatform, $state, $stateParams, $timeout, $ionicModal, userService,
-        alertService, ngProgress, surveyService, fingerprintService, passcodeModalService) {
+        alertService, ngProgress, surveyService, fingerprintService, passcodeModalService, md5) {
         $scope.existingProfiles = [];
         $scope.profile = undefined;
         $scope.loginValidated = false;
@@ -76,7 +76,8 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
         $scope.$on('passcode-modal-pin-entered', function (ev, args) {
             var passcode = args;
             if (passcode && passcode.length == 4) {
-                if (passcode === $scope.profile.settings.passcodeText) {
+                var hashed = md5.createHash(passcode || '');
+                if (hashed === $scope.profile.settings.passcodeText) {
                     $timeout(function () {
                         $scope.loginValidated = true;
                         passcodeModalService.hideDialog();

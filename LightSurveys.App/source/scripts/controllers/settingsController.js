@@ -1,7 +1,7 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootScope', '$state', '$timeout', '$ionicModal',
-    '$ionicPopup', 'alertService', 'userService', 'passcodeModalService',
-    function ($scope, $rootScope, $state, $timeout, $ionicModal, $ionicPopup, alertService, userService, passcodeModalService) {
+    '$ionicPopup', 'alertService', 'userService', 'passcodeModalService', 'md5',
+    function ($scope, $rootScope, $state, $timeout, $ionicModal, $ionicPopup, alertService, userService, passcodeModalService, md5) {
         $scope.profile = undefined;
         $scope.passcodeSaved = false;
 
@@ -35,7 +35,8 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         });
 
         $scope.$on('passcode-modal-pin-entered', function (ev, args) {
-            if (args === $scope.profile.settings.passcodeText) {
+            var hashed = md5.createHash(args || '');
+            if (hashed === $scope.profile.settings.passcodeText) {
                 $scope.profile.settings.passcodeEnabled = false;
                 $scope.profile.settings.passcodeText = '';
                 $scope.passcodeSaved = false;
@@ -59,7 +60,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
 
         $scope.$on('passcode-modal-pin-confirmed', function (ev, args) {
             $scope.profile.settings.passcodeEnabled = true;
-            $scope.profile.settings.passcodeText = args;
+            $scope.profile.settings.passcodeText = md5.createHash(args || '');
 
             userService.saveProfile($scope.profile).then(function () {
                 alertService.show('Passcode set!');
