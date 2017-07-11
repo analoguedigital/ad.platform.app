@@ -18,22 +18,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
             }
             else if (oldValue === true && newValue === false) {
                 if ($scope.passcodeSaved && $scope.profile.settings.passcodeEnabled) {
-                    var confirmPopup = $ionicPopup.confirm({
-                        title: 'Disable Local Passcode',
-                        template: 'Are you sure you want to disable your local PIN login?'
-                    });
-
-                    confirmPopup.then(function (res) {
-                        if (res) {
-                            $scope.profile.settings.passcodeEnabled = false;
-                            $scope.profile.settings.passcodeText = '';
-                            $scope.passcodeSaved = false;
-
-                            userService.saveProfile($scope.profile).then(function () { });
-                        } else {
-                            $scope.model.passcodeEnabled = true;
-                        }
-                    });
+                    passcodeModalService.showDialog(true);
                 }
             }
         });
@@ -47,6 +32,29 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
             if ($scope.profile) {
                 userService.saveProfile($scope.profile).then(function () { });
             }
+        });
+
+        $scope.$on('passcode-modal-pin-entered', function (ev, args) {
+            if (args === $scope.profile.settings.passcodeText) {
+                $scope.profile.settings.passcodeEnabled = false;
+                $scope.profile.settings.passcodeText = '';
+                $scope.passcodeSaved = false;
+
+                userService.saveProfile($scope.profile).then(function () {
+                    passcodeModalService.hideDialog();
+                    alertService.show('Passcode disabled');
+                });
+            } else {
+                passcodeModalService.hideDialog();
+                $scope.model.passcodeEnabled = true;
+                alertService.show('Invalid passcode!');
+            }
+        });
+
+        $scope.$on('passcode-modal-forgot-pin', function (ev, args) {
+            userService.clearCurrent();
+            passcodeModalService.hideDialog();
+            $state.go('login');
         });
 
         $scope.$on('passcode-modal-pin-confirmed', function (ev, args) {
