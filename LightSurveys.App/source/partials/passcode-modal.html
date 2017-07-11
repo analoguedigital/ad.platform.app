@@ -63,24 +63,13 @@
                     <button class="button button-stretch" ng-click="addDigit(9)">9</button>
                 </div>
             </div>
-            <div class="row" ng-show="loginMode">
+            <div class="row">
                 <div class="col col-20 col-offset-20"></div>
                 <div class="col col-20">
                     <button class="button button-stretch" ng-click="addDigit(0)">0</button>
                 </div>
                 <div class="col col-20">
                     <button class="button icon ion-ios-arrow-back button-stretch" ng-click="removeDigit()"></button>
-                </div>
-            </div>
-            <div class="row" ng-show="!loginMode">
-                <div class="col col-20 col-offset-20">
-                    <button class="button icon ion-ios-arrow-back button-stretch" ng-click="removeDigit()"></button>
-                </div>
-                <div class="col col-20">
-                    <button class="button button-stretch" ng-click="addDigit(0)">0</button>
-                </div>
-                <div class="col col-20">
-                    <button class="button icon ion-checkmark button-stretch button-save-passcode" ng-click="savePasscode()"></button>
                 </div>
             </div>
         </div>

@@ -49,7 +49,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
             }
         });
 
-        $scope.$on('passcode-modal-save-button-clicked', function (ev, args) {
+        $scope.$on('passcode-modal-pin-confirmed', function (ev, args) {
             $scope.profile.settings.passcodeEnabled = true;
             $scope.profile.settings.passcodeText = args;
 

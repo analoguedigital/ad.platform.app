@@ -12,6 +12,7 @@ module App.Services {
 
     interface IPasscodeModalScope extends ng.IScope {
         passcode: string;
+        firstPasscode: string;
         loginMode: boolean;
 
         addDigit: (value: number) => void;
@@ -38,11 +39,13 @@ module App.Services {
             if (this.modalInstance) {
                 this.modalScope.loginMode = loginMode;
                 this.modalScope.passcode = '';
+                this.modalScope.firstPasscode = '';
                 this.modalInstance.show();
             }
             else {
                 this.modalScope = <IPasscodeModalScope>this.$rootScope.$new(true);
                 this.modalScope.passcode = '';
+                this.modalScope.firstPasscode = '';
                 this.modalScope.loginMode = loginMode;
 
                 this.modalScope.addDigit = (value: number) => {
@@ -50,24 +53,32 @@ module App.Services {
                         self.modalScope.passcode = self.modalScope.passcode + value;
 
                         if (self.modalScope.passcode.length == 4) {
-                            self.$rootScope.$broadcast('passcode-modal-pin-entered', self.modalScope.passcode);
+                            if (self.modalScope.loginMode)
+                                self.$rootScope.$broadcast('passcode-modal-pin-entered', self.modalScope.passcode);
+                            else {
+                                if (self.modalScope.firstPasscode.length == 0) {
+                                    self.alertService.show('please confirm your passcode');
+                                    self.modalScope.firstPasscode = self.modalScope.passcode;
+                                    self.reset();
+                                } else {
+                                    if (self.modalScope.firstPasscode !== self.modalScope.passcode) {
+                                        self.alertService.show('Passcodes did not match! try again');
+                                        self.reset();
+                                        self.modalScope.firstPasscode = '';
+                                    } else {
+                                        // passcode confirmed
+                                        self.$rootScope.$broadcast('passcode-modal-pin-confirmed', self.modalScope.passcode);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-                
+
                 this.modalScope.removeDigit = () => {
                     if (self.modalScope.passcode.length > 0) {
                         self.modalScope.passcode = self.modalScope.passcode.substring(0, self.modalScope.passcode.length - 1);
                     }
-                }
-
-                this.modalScope.savePasscode = function () {
-                    if (self.modalScope.passcode.length < 4) {
-                        self.alertService.show('Please enter a passcode first');
-                        return;
-                    }
-
-                    self.$rootScope.$broadcast('passcode-modal-save-button-clicked', self.modalScope.passcode);
                 }
 
                 this.modalScope.forgotPasscode = function () {
@@ -82,7 +93,7 @@ module App.Services {
                     if (self.modalInstance)
                         self.modalInstance.remove();
                 });
-                
+
                 this.$ionicModal.fromTemplateUrl('partials/passcode-modal.html', {
                     scope: this.modalScope,
                     animation: 'slide-in-up',
