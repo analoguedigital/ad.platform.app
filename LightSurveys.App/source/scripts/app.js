@@ -14,7 +14,6 @@ angular.module('lm.surveys', [
     'mwl.calendar',
     'ngFileUpload',
     'tc.chartjs',
-    'ionic-color-picker',
-    'ngCordova'
+    'ionic-color-picker'
 ]);
 
