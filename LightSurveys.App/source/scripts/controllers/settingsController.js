@@ -37,6 +37,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         $scope.$on('passcode-modal-pin-entered', function (ev, args) {
             var hashed = md5.createHash(args || '');
             if (hashed === $scope.profile.settings.passcodeText) {
+                // disable local passcode
                 $scope.profile.settings.passcodeEnabled = false;
                 $scope.profile.settings.passcodeText = '';
                 $scope.passcodeSaved = false;
@@ -70,7 +71,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         });
 
         $scope.$on('passcode-modal-closed', function (ev, args) {
-            if ($scope.passcodeSaved == false)
+            if ($scope.passcodeSaved === false)
                 $scope.model.passcodeEnabled = false;
 
             passcodeModalService.hideDialog();
@@ -87,7 +88,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                     $scope.passcodeSaved = profile.settings.passcodeEnabled;
                 }
             });
-        }
+        };
         $scope.activate();
 
     }]);

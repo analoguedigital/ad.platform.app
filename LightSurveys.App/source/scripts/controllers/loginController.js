@@ -11,7 +11,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
 
         if (rejected) {
             userService.logOut();
-            alertService.show("login timeout expired! Please login again.")
+            alertService.show("login timeout expired! Please login again.");
         }
 
         $scope.loginData = {
@@ -71,11 +71,11 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
             ngProgress.start();
             $state.go('register');
             ngProgress.complete();
-        }
+        };
 
         $scope.$on('passcode-modal-pin-entered', function (ev, args) {
             var passcode = args;
-            if (passcode && passcode.length == 4) {
+            if (passcode && passcode.length === 4) {
                 var hashed = md5.createHash(passcode || '');
                 if (hashed === $scope.profile.settings.passcodeText) {
                     $timeout(function () {
@@ -91,19 +91,25 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
         });
 
         $scope.$on('passcode-modal-forgot-pin', function (ev, args) {
-            userService.logOut();
+            userService.clearCurrent();
             passcodeModalService.hideDialog();
         });
 
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-            if (toState.name == 'login' && userService.currentProfile !== null) {
+            if (toState.name === 'login' && userService.currentProfile !== null) {
                 event.preventDefault();
             }
 
-            if (fromState.name == 'login' && !$scope.loginValidated) {
+            if (fromState.name === 'login' && !$scope.loginValidated) {
                 event.preventDefault();
             }
         });
+
+        $scope.fallbackToPasscode = function () {
+            userService.clearCurrent();
+            if ($scope.profile.settings.passcodeEnabled === true)
+                passcodeModalService.showDialog(true);
+        };
 
         $scope.activate = function () {
             userService.getExistingProfiles()
@@ -114,7 +120,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
 
                         var settings = profiles[0].settings;
                         if (settings.fingerprintEnabled || settings.passcodeEnabled) {
-                            if (settings.fingerprintEnabled == true) {
+                            if (settings.fingerprintEnabled === true) {
                                 fingerprintService.isAvailable().then((isAvailable) => {
                                     if (isAvailable) {
                                         // verify fingerprint
@@ -123,34 +129,23 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                                                 $scope.loginValidated = true;
                                                 $scope.activateProfile($scope.profile);
                                             } else {
-                                                if (settings.passcodeEnabled == true) {
-                                                    passcodeModalService.showDialog(true);
-                                                } else {
-                                                    userService.clearCurrent();
-                                                }
+                                                $scope.fallbackToPasscode();
                                             }
                                         }, function (error) {
-                                            if (settings.passcodeEnabled == true) {
-                                                passcodeModalService.showDialog(true);
-                                            } else {
-                                                userService.clearCurrent();
-                                            }
+                                            $scope.fallbackToPasscode();
                                         });
                                     } else {
                                         // fingerprint not available
-                                        if (settings.passcodeEnabled == true)
-                                            passcodeModalService.showDialog(true);
-                                        else
-                                            userService.clearCurrent();
+                                        $scope.fallbackToPasscode();
                                     }
                                 });
-                            } else if (settings.passcodeEnabled == true) {
+                            } else if (settings.passcodeEnabled === true) {
                                 passcodeModalService.showDialog(true);
                             }
                         }
                     }
                 });
-        }
+        };
         $scope.activate();
 
     }]);
