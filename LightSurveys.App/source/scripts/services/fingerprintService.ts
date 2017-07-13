@@ -30,6 +30,7 @@ module App.Services {
 
     export interface IFingerprintService {
         isAvailable: () => ng.IPromise<boolean>;
+        isHardwareDetected: () => ng.IPromise<boolean>;
         verify: () => ng.IPromise<IVerifyFingerprintResult>;
     }
 
@@ -48,10 +49,8 @@ module App.Services {
             if (ionic.Platform.isIOS()) {
                 if (window.plugins && window.plugins.touchid) {
                     window.plugins.touchid.isAvailable((result) => {
-                        console.log('plugins.touchid RESULT', result);
                         d.resolve(true);
                     }, (error) => {
-                        console.log('plugins.touchid ERROR', error);
                         d.resolve(false);
                     });
                 } else {
@@ -62,14 +61,42 @@ module App.Services {
             if (ionic.Platform.isAndroid()) {
                 if (window.cordova && FingerprintAuth) {
                     FingerprintAuth.isAvailable((result) => {
-                        console.log('FingerprintAuth available: ' + JSON.stringify(result));
                         d.resolve(result.isAvailable);
                     }, (error) => {
                         console.log('isAvailableError(): ' + error);
                         d.resolve(false);
                     });
                 } else {
-                    console.warn('fingerprint is not supported');
+                    d.resolve(false);
+                }
+            }
+
+            return d.promise;
+        }
+
+        isHardwareDetected(): ng.IPromise<boolean> {
+            let d = this.$q.defer();
+
+            if (ionic.Platform.isIOS()) {
+                if (window.plugins && window.plugins.touchid) {
+                    window.plugins.touchid.isAvailable((result) => {
+                        d.resolve(true);
+                    }, (error) => {
+                        d.resolve(false);
+                    });
+                } else {
+                    d.resolve(false);
+                }
+            }
+
+            if (ionic.Platform.isAndroid()) {
+                if (window.cordova && FingerprintAuth) {
+                    FingerprintAuth.isAvailable((result) => {
+                        d.resolve(result.isHardwareDetected);
+                    }, (error) => {
+                        d.resolve(false);
+                    });
+                } else {
                     d.resolve(false);
                 }
             }

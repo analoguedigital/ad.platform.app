@@ -13,7 +13,7 @@
             <li class="item item-toggle">
                 Fingerprint/Touch ID
                 <label class="toggle toggle-positive">
-                    <input type="checkbox" ng-model="model.fingerprintEnabled">
+                    <input type="checkbox" ng-model="model.fingerprintEnabled" ng-disabled="!fingerprintHardwareDetected">
                     <span class="track">
                         <span class="handle"></span>
                     </span>

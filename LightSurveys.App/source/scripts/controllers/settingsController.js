@@ -1,9 +1,10 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootScope', '$state', '$timeout', '$ionicModal',
-    '$ionicPopup', 'alertService', 'userService', 'passcodeModalService', 'md5',
-    function ($scope, $rootScope, $state, $timeout, $ionicModal, $ionicPopup, alertService, userService, passcodeModalService, md5) {
+    '$ionicPopup', 'alertService', 'userService', 'passcodeModalService', 'md5', 'fingerprintService',
+    function ($scope, $rootScope, $state, $timeout, $ionicModal, $ionicPopup, alertService, userService, passcodeModalService, md5, fingerprintService) {
         $scope.profile = undefined;
         $scope.passcodeSaved = false;
+        $scope.fingerprintHardwareDetected = false;
 
         $scope.model = {
             passcodeEnabled: false,
@@ -78,6 +79,11 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         });
 
         $scope.activate = function () {
+            fingerprintService.isHardwareDetected()
+                .then(function (result) {
+                    $scope.fingerprintHardwareDetected = result;
+                });
+
             userService.getExistingProfiles().then(function (profiles) {
                 if (profiles.length) {
                     var profile = profiles[0];
