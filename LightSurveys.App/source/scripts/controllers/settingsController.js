@@ -1,7 +1,7 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootScope', '$state', '$timeout', '$ionicModal',
-    '$ionicPopup', 'alertService', 'userService', 'passcodeModalService', 'md5', 'fingerprintService',
-    function ($scope, $rootScope, $state, $timeout, $ionicModal, $ionicPopup, alertService, userService, passcodeModalService, md5, fingerprintService) {
+    '$ionicPopup', 'alertService', 'userService', 'passcodeModalService', 'md5', 'fingerprintService', 'alternateIconService',
+    function ($scope, $rootScope, $state, $timeout, $ionicModal, $ionicPopup, alertService, userService, passcodeModalService, md5, fingerprintService, alternateIconService) {
         $scope.profile = undefined;
         $scope.passcodeSaved = false;
         $scope.fingerprintHardwareDetected = false;
@@ -77,6 +77,23 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
 
             passcodeModalService.hideDialog();
         });
+
+        $scope.changeAppIcon = function () {
+            alternateIconService.isSupported()
+                .then((supported) => {
+                    if (supported) {
+                        alternateIconService.changeIcon('icon-meeting', true)
+                            .then((success) => {
+                                if (success)
+                                    this.alertService.show('App icon changed, hooray!');
+                                else
+                                    this.alertService.show('App icon not changed. check your console!');
+                            });
+                    } else {
+                        alertService.show('AppIconChanger is not available');
+                    }
+                });
+        };
 
         $scope.activate = function () {
             fingerprintService.isHardwareDetected()
