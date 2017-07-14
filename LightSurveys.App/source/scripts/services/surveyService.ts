@@ -1,4 +1,5 @@
-﻿
+﻿declare var moment: any;
+
 module App.Services {
     "use strict";
 
@@ -610,13 +611,16 @@ module App.Services {
             return q.promise;
         }
 
-        getFormValueText(formValue: Models.FormValue): string {
+        getFormValueText(formValue: Models.FormValue, metric: Models.Metric): string {
             if (formValue.textValue)
                 return formValue.textValue;
 
             if (formValue.dateValue) {
-                var date = new Date(formValue.dateValue);
-                return date.toLocaleDateString();
+                if (metric.hasTimeValue !== null && metric.hasTimeValue) {
+                    return moment(formValue.dateValue).format('DD/MM/YYYY hh:mm a');
+                }
+
+                return new Date(formValue.dateValue).toLocaleDateString();
             }
 
             if (formValue.numericValue)
@@ -665,7 +669,7 @@ module App.Services {
             _.forEach(descriptionMetrics.descriptionMetrics, (metric: Models.Metric) => {
                 let formValue = _.find(survey.formValues, (fv) => { return fv.metricId == metric.id; });
                 if (formValue) {
-                    let value = self.getFormValueText(formValue);
+                    let value = self.getFormValueText(formValue, metric);
                     if (value == undefined) value = '';
                     let segment = "{{" + _.toLower(metric.shortTitle) + "}}";
                     result = _.replace(result, segment, value);
@@ -684,18 +688,9 @@ module App.Services {
                     survey.description = this.getDescription(survey, descMetrics);
                 });
 
-                var date = new Date(survey.surveyDate);
-
                 var dateFormValue = _.find(survey.formValues, { 'metricId': template.calendarDateMetricId });
                 if (dateFormValue)
-                    date = new Date(dateFormValue.dateValue);
-
-                var timeFormValue = _.find(survey.formValues, { 'metricId': template.timeMetricId });
-                if (timeFormValue !== undefined) {
-                    date.setHours(new Date(timeFormValue.timeValue).getHours(), new Date(timeFormValue.timeValue).getMinutes());
-                }
-
-                survey.surveyDate = date;
+                    survey.surveyDate = dateFormValue.dateValue;
             });
 
             d.resolve(survey);

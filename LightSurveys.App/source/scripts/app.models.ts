@@ -103,6 +103,7 @@ module App.Models {
         public sectionTitle: string;
         public order: number;
         public isDeleted: boolean;
+        public hasTimeValue?: boolean;
     }
 
     export class MetricGroup {
