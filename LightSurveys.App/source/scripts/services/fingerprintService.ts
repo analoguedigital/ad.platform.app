@@ -115,11 +115,11 @@ module App.Services {
 
             if (ionic.Platform.isIOS()) {
                 if (window.plugins && window.plugins.touchid) {
-                    window.plugins.touchid.authenticate((result) => {
+                    window.plugins.touchid.verifyFingerprint((result) => {
                         console.log('touchid.authenticate RESULT', result);
 
                         response.success = true;
-                        response.message = JSON.stringify(result);
+                        response.message = result;
                         d.resolve(response);
                     }, (error) => {
                         console.log('touchid.authenticate() ERROR', error);
