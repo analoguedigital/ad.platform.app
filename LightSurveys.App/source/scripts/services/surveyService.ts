@@ -405,6 +405,31 @@ module App.Services {
 
                     var promises: Array<ng.IPromise<void>> = [];
 
+                    let template = this.getFormTemplate(survey.formTemplateId)
+                        .then((template) => {
+                            _.forEach(survey.formValues, (fv: Models.FormValue) => {
+                                if (fv.dateValue) {
+                                    let deferred = this.$q.defer<void>();
+                                    promises.push(deferred.promise);
+
+                                    let dateMetric: Models.Metric = undefined;
+                                    _.forEach(template.metricGroups, (metricGroup) => {
+                                        dateMetric = _.find(metricGroup.metrics, (metric) => { return metric.id == fv.metricId });
+                                    });
+
+                                    if (dateMetric && !dateMetric.hasTimeValue) {
+                                        var dateValue = fv.dateValue;
+                                        dateValue.setHours(0);
+                                        dateValue.setMinutes(0);
+                                        dateValue.setSeconds(0);
+
+                                        fv.dateValue = dateValue;
+                                        deferred.resolve();
+                                    }
+                                }
+                            });
+                        });
+
                     survey.formValues.forEach((formValue) => {
                         if (!formValue.attachments) return;
 
@@ -616,8 +641,8 @@ module App.Services {
                 return formValue.textValue;
 
             if (formValue.dateValue) {
-                if (metric.hasTimeValue !== null && metric.hasTimeValue) {
-                    return moment(formValue.dateValue).format('DD/MM/YYYY hh:mm a');
+                if (metric.hasTimeValue === true) {
+                    return moment(formValue.dateValue).format('DD/MM/YYYY hh:mm A');
                 }
 
                 return new Date(formValue.dateValue).toLocaleDateString();

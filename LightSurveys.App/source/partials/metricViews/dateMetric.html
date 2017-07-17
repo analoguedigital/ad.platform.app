@@ -4,6 +4,6 @@
         <div class="persianDateInput">{{dateToString(formValue.dateValue)}}</div>
     </div>
     <div class="item item-input" ng-if="!isPersian">
-        <div>{{formValue.dateValue | date : 'longDate'}}</div>
+        <lm-date-time value="formValue.dateValue"></lm-date-time>
     </div>
 </div>
