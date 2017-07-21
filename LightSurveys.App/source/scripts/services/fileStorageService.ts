@@ -138,8 +138,7 @@ module App.Services {
                     this.getDirEntry(objectType, category).then
                         ((dirEntry) => {
                             fileEntry.copyTo(dirEntry, null,
-                                (entry: FileEntry) =>
-                                {
+                                (entry: FileEntry) => {
                                     var url = entry.toURL();
                                     q.resolve(url);
                                 },
@@ -192,7 +191,30 @@ module App.Services {
 
             this.getFileEntryByTypeAndKey(objectType, key)
                 .then((fileEntry) => { return this.cordovaFileService.readFileAsText(fileEntry); })
-                .then((text) => { q.resolve(JSON.parse(text)); }, (err) => { q.reject(err); });
+                .then((text) => {
+                    var json = JSON.parse(text);
+                    if (json.formValues && json.formValues.length) {
+                        _.forEach(json.formValues, (fv) => {
+                            if (fv.dateValue) {
+                                var utcDate = moment.utc(fv.dateValue);
+                                var hours = utcDate.hour();
+                                var minutes = utcDate.minutes();
+
+                                var localDate = utcDate.local().toDate();
+                                if (hours === 0 && minutes === 0) {
+                                    localDate.setHours(0);
+                                    localDate.setMinutes(0);
+                                    localDate.setSeconds(0);
+                                    localDate.setMilliseconds(0);
+                                }
+
+                                fv.dateValue = localDate;
+                            }
+                        });
+                    }
+
+                    q.resolve(json);
+                }, (err) => { q.reject(err); });
 
             return q.promise;
         }

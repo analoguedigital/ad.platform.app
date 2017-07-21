@@ -10,14 +10,9 @@
             var dateValue = new Date(scope.value);
             var hours = dateValue.getHours();
             var minutes = dateValue.getMinutes();
-            var result = '';
+            var formatString = (hours > 0 || minutes > 0) ? 'L LT' : 'L';
 
-            if (hours > 0 || minutes > 0)
-                result = moment(scope.value).format('DD/MM/YYYY hh:mm A');
-            else
-                result = moment(scope.value).format('DD/MM/YYYY');
-
-            scope.resultString = result;
+            scope.resultString = moment(scope.value).format(formatString);
         }
     }
 }]);

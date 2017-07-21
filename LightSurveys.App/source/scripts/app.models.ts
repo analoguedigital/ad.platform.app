@@ -34,8 +34,8 @@ module App.Models {
         public error: string;
         public locations: Position[] = [];
 
-        public dateCreated: number;
-        public dateUpdated: number;
+        public dateCreated: Date;
+        public dateUpdated: Date;
         public surveyDate: Date;
         public filledById: string;
         public projectId: string;
@@ -50,9 +50,12 @@ module App.Models {
         constructor(filledById: string, projectId: string, formTemplateId: string) {
 
             this.id = _.now().toString();
-            this.dateCreated = _.now();
-            this.dateUpdated = _.now();
-            this.surveyDate = new Date();
+
+            var utcNow = new Date(new Date().toISOString());
+            this.dateCreated = utcNow;
+            this.dateUpdated = utcNow;
+            this.surveyDate = utcNow;
+
             this.formValues = [];
             this.isSubmitted = false;
 

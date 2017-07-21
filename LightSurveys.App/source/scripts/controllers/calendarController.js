@@ -21,9 +21,12 @@ angular.module('lm.surveys').controller('calendarController', ['$scope', '$state
                     surveyService.getSubmittedSurveys(template.id)
                         .then(function (surveys) {
                             angular.forEach(surveys, function (survey) {
+                                var utcDate = moment.utc(survey.surveyDate);
+                                var localDate = utcDate.local().toDate();
+
                                 $scope.cal.events.push({
                                     title: template.title,
-                                    startsAt: survey.surveyDate,
+                                    startsAt: localDate,
                                     surveyId: survey.id,
                                     color: { primary: template.colour, secondary: $scope.shadeColor(template.colour, 0.6) }
                                 });

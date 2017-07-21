@@ -397,39 +397,41 @@ module App.Services {
         }
 
         saveSurvey(survey: Models.Survey): ng.IPromise<Models.Survey> {
-
             var q = this.$q.defer();
+            var promises: Array<ng.IPromise<void>> = [];
+
+            let template = this.getFormTemplate(survey.formTemplateId)
+                .then((template) => {
+                    _.forEach(survey.formValues, (fv: Models.FormValue) => {
+                        if (fv.dateValue) {
+                            let deferred = this.$q.defer<void>();
+                            promises.push(deferred.promise);
+
+                            let dateMetric: Models.Metric = undefined;
+                            _.forEach(template.metricGroups, (metricGroup) => {
+                                dateMetric = _.find(metricGroup.metrics, (metric) => { return metric.id == fv.metricId });
+                            });
+
+                            if (dateMetric) {
+                                var dateValue = new Date(fv.dateValue);
+                                if (!dateMetric.hasTimeValue) {
+                                    dateValue.setUTCHours(0);
+                                    dateValue.setUTCMinutes(0);
+                                    dateValue.setUTCSeconds(0);
+                                    dateValue.setUTCMilliseconds(0);
+                                }
+
+                                var isoString = dateValue.toISOString();
+                                fv.dateValue = new Date(isoString);
+
+                                deferred.resolve();
+                            }
+                        }
+                    });
+                });
 
             this.storageService.save(this.SURVEY_OBJECT_TYPE, survey.formTemplateId, survey.id, survey)
                 .then((survey) => {
-
-                    var promises: Array<ng.IPromise<void>> = [];
-
-                    let template = this.getFormTemplate(survey.formTemplateId)
-                        .then((template) => {
-                            _.forEach(survey.formValues, (fv: Models.FormValue) => {
-                                if (fv.dateValue) {
-                                    let deferred = this.$q.defer<void>();
-                                    promises.push(deferred.promise);
-
-                                    let dateMetric: Models.Metric = undefined;
-                                    _.forEach(template.metricGroups, (metricGroup) => {
-                                        dateMetric = _.find(metricGroup.metrics, (metric) => { return metric.id == fv.metricId });
-                                    });
-
-                                    if (dateMetric && !dateMetric.hasTimeValue) {
-                                        var dateValue = fv.dateValue;
-                                        dateValue.setHours(0);
-                                        dateValue.setMinutes(0);
-                                        dateValue.setSeconds(0);
-
-                                        fv.dateValue = dateValue;
-                                        deferred.resolve();
-                                    }
-                                }
-                            });
-                        });
-
                     survey.formValues.forEach((formValue) => {
                         if (!formValue.attachments) return;
 
@@ -447,7 +449,6 @@ module App.Services {
                                 },
                                 (err) => { deferred.reject(deferred); });;
                         });
-
                     });
 
                     this.$q.all(promises).then
@@ -467,7 +468,7 @@ module App.Services {
 
 
         saveDraft(survey: Models.Survey): ng.IPromise<Models.Survey> {
-            survey.dateUpdated = _.now();
+            survey.dateUpdated = new Date(new Date().toISOString());
             survey.projectId = this.userService.current.project.id;
             return this.saveSurvey(survey);
         }
@@ -476,7 +477,7 @@ module App.Services {
         submitSurvey(survey: Models.Survey): ng.IPromise<Models.Survey> {
 
             var q = this.$q.defer();
-            survey.dateUpdated = _.now();
+            survey.dateUpdated = new Date(new Date().toISOString());
             survey.projectId = this.userService.current.project.id;
             survey.isSubmitted = true;
             this.saveSurvey(survey).then((survey) => {
@@ -620,7 +621,6 @@ module App.Services {
             this.getSurvey(surveyId)
                 .then(
                 (survey) => {
-
                     var formValues = survey.formValues;
 
                     this.getFormTemplate(survey.formTemplateId)
@@ -714,8 +714,11 @@ module App.Services {
                 });
 
                 var dateFormValue = _.find(survey.formValues, { 'metricId': template.calendarDateMetricId });
-                if (dateFormValue)
-                    survey.surveyDate = dateFormValue.dateValue;
+                if (dateFormValue) {
+                    var utcDate = moment.utc(dateFormValue.dateValue);
+                    var localDate = utcDate.local().toDate();
+                    survey.surveyDate = localDate;
+                }
             });
 
             d.resolve(survey);

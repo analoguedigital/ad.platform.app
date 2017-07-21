@@ -37,13 +37,15 @@ angular.module('lm.surveys').controller('draftsController', ['$scope', '$state',
                 function (err) { alertService.show(gettext('error in deleting survey: ') + err); });
         };
 
-        $scope.dateToString = function (milliseconds) {
+        $scope.dateToString = function (isoString) {
+            var utcDate = moment.utc(isoString);
+            var localDate = utcDate.local();
+
             if (userService.current.calendar === "Gregorian") {
-                var dateValue = new Date(milliseconds);
-                return dateValue.toLocaleString('en-GB');
+                return localDate.format('L LT');
             }
             else {
-                var dateVal = persianDate(milliseconds);
+                var dateVal = persianDate(localDate.toDate());
                 return dateVal.format("LLLL");
             }
         };
