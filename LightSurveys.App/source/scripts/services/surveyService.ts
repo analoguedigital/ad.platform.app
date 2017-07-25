@@ -716,7 +716,31 @@ module App.Services {
                 var dateFormValue = _.find(survey.formValues, { 'metricId': template.calendarDateMetricId });
                 if (dateFormValue) {
                     var utcDate = moment.utc(dateFormValue.dateValue);
+                    var hours = utcDate.hour();
+                    var minutes = utcDate.minutes();
+
                     var localDate = utcDate.local().toDate();
+                    if (hours == 0 && minutes == 0) {
+                        localDate.setHours(0);
+                        localDate.setMinutes(0);
+                        localDate.setSeconds(0);
+                        localDate.setMilliseconds(0);
+                    }
+
+                    survey.surveyDate = localDate;
+                } else {
+                    var utcDate = moment.utc(survey.surveyDate);
+                    var hours = utcDate.hour();
+                    var minutes = utcDate.minutes();
+
+                    var localDate = utcDate.local().toDate();
+                    if (hours == 0 && minutes == 0) {
+                        localDate.setHours(0);
+                        localDate.setMinutes(0);
+                        localDate.setSeconds(0);
+                        localDate.setMilliseconds(0);
+                    }
+
                     survey.surveyDate = localDate;
                 }
             });
