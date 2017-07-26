@@ -31,8 +31,6 @@ angular.module('lm.surveys').controller('timelineController', ['$scope', 'survey
                 var data = [];
                 var records = _.filter($scope.surveys, (survey) => { return survey.formTemplateId == template.id });
 
-                console.log('records', records);
-
                 _.forEach(days, (day) => {
                     var foundSurveys = _.filter(records, (record) => {
                         if (moment(day).format('MM-DD-YYYY') === moment(record.surveyDate).format('MM-DD-YYYY')) {
@@ -41,8 +39,6 @@ angular.module('lm.surveys').controller('timelineController', ['$scope', 'survey
                     });
 
                     if (foundSurveys.length) {
-                        console.log('found on ' + moment(day).format('MM-DD'), foundSurveys.length);
-
                         let impactSum = 0;
                         _.forEach(foundSurveys, (survey) => {
                             var timelineBarFormValue = _.filter(survey.formValues, { 'metricId': survey.formTemplate.timelineBarMetricId })[0];
