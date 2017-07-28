@@ -151,6 +151,8 @@ angular.module('lm.surveys').controller('timelineController', ['$scope', 'survey
 
                     $scope.templates = templates;
                     $scope.surveys = surveys;
+
+                    $scope.generateChart();
                 });
         }
 
