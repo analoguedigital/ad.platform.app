@@ -105,6 +105,7 @@
                     scales: {
                         xAxes: [{
                             display: true,
+                            barThickness: 20,
                             time: {
                                 unit: 'day',
                                 displayFormats: {
@@ -124,6 +125,48 @@
                                 max: 100
                             }
                         }]
+                    },
+                    hover: {
+                        animationDuration: 0
+                    },
+                    animation: {
+                        duration: 1,
+                        onComplete: function () {
+                            var chartInstance = this.chart;
+                            var ctx = chartInstance.ctx;
+
+                            ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'bottom';
+
+                            this.data.datasets.forEach(function (dataset, i) {
+                                var meta = chartInstance.controller.getDatasetMeta(i);
+
+                                if (meta.hidden === null || meta.hidden === false) {
+                                    meta.data.forEach(function (bar, index) {
+                                        var data = dataset.data[index];
+                                        var impact = parseInt(data);
+
+                                        if (impact > 0) {
+                                            var centerX = bar._model.x;
+                                            var centerY = bar._model.y;
+                                            var radius = 10;
+
+                                            ctx.beginPath();
+                                            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+                                            ctx.fillStyle = 'white';
+                                            ctx.fill();
+                                            ctx.lineWidth = 1;
+                                            ctx.strokeStyle = 'white';
+                                            ctx.stroke();
+
+                                            ctx.fillStyle = dataset.backgroundColor;
+                                            ctx.fillText(data, bar._model.x, bar._model.y + 7);
+                                        }
+                                    });
+                                }
+                            });
+                        }
                     }
                 };
 
