@@ -1,4 +1,4 @@
-﻿angular.module('lm.surveys').directive('lmTimeline', ['$rootScope', function ($rootScope) {
+﻿angular.module('lm.surveys').directive('lmTimeline', ['$rootScope', '$timeout', function ($rootScope, $timeout) {
     return {
         restrict: "E",
         replace: true,
@@ -8,7 +8,20 @@
             surveys: '='
         },
         link: function (scope, element, attrs) {
+            function getScreenOrientation() {
+                var orientation = screen.orientation || screen.mozOrientation || screen.msOrientation;
+
+                if (orientation.type === "landscape-primary") {
+                    return 'landscape';
+                } else if (orientation.type === "landscape-secondary") {
+                    return 'landscape';
+                } else if (orientation.type === "portrait-secondary" || orientation.type === "portrait-primary") {
+                    return 'portrait';
+                }
+            }
+
             scope.currentDate = new Date();
+            scope.screenOrientation = getScreenOrientation();
 
             function generateXAxesTicks() {
                 var xAxesTicks = [];
@@ -37,7 +50,7 @@
                 });
                 occurences = _.sortBy(occurences, 'day');
 
-                if (currentMonthSurveys.length < 1 || occurences.length > 10) {
+                if (currentMonthSurveys.length < 1 || occurences.length > 10 || scope.screenOrientation !== 'portrait') {
                     // display ticks from 1st to last day of month
                     xAxesTicks.push(firstDayOfMonth);
                     for (var i = 2; i < daysInMonth; i++) {
@@ -230,7 +243,7 @@
                 return result;
             }
 
-            function onTooltipsLabelCallback (item, data) {
+            function onTooltipsLabelCallback(item, data) {
                 var label = data.datasets[item.datasetIndex].label;
                 return `${label}: ${item.yLabel}`;
             }
@@ -238,6 +251,7 @@
             function renderTimelineChart() {
                 var canvas = element[0];
                 var parent = element.closest('.content');
+
                 var ctx = canvas.getContext('2d');
                 ctx.canvas.height = parent.height();
 
@@ -246,7 +260,9 @@
                 _.forEach(scope.chartDatasets, (ds) => {
                     dataPoints.push.apply(dataPoints, ds.data);
                 });
-                var maxImpact = _.max(dataPoints) + 10;
+
+                var maxImpact = _.max(dataPoints);
+                if (scope.screenOrientation === 'portrait') maxImpact += 10;
 
                 var chartOptions = {
                     responsive: true,
@@ -332,6 +348,18 @@
             $rootScope.$on('timeline-previous-month', () => {
                 scope.timelinePreviousMonth();
             });
+
+            window.onresize = function () {
+                $timeout(function () {
+                    scope.screenOrientation = getScreenOrientation();
+
+                    if (scope.timelineChart)
+                        scope.timelineChart.destroy();
+
+                    generateTimelineData();
+                    renderTimelineChart();
+                }, 100);
+            }
         }
     }
 }]);
