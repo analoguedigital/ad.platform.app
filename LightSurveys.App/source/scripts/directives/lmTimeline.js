@@ -126,6 +126,7 @@
 
                     var ds = {
                         label: template.title,
+                        formTemplateId: template.id,
                         backgroundColor: template.colour,
                         borderColor: template.colour,
                         borderWidth: 2,
@@ -147,6 +148,7 @@
             }
 
             function onChartAnimationComplete() {
+                var chartSelf = this;
                 var chartInstance = this.chart;
                 var ctx = chartInstance.ctx;
 
@@ -161,26 +163,52 @@
                         var barSize = meta.controller._ruler.barSize;
                         var minBarSize = 15;
 
+                        var currentDay = moment(scope.currentDate).date();
+                        var firstDayOfMonth = moment(scope.currentDate).add(-(currentDay - 1), 'day').toDate();
+
                         if (barSize >= minBarSize) {
                             meta.data.forEach(function (bar, index) {
                                 var data = dataset.data[index];
                                 var impact = parseInt(data);
 
                                 if (impact > 0) {
-                                    var centerX = bar._model.x;
-                                    var centerY = bar._model.y;
-                                    var radius = barSize / 2;
+                                    var foundTemplate = _.filter(scope.formTemplates, (template) => { return template.id === dataset.formTemplateId; });
+                                    if (foundTemplate.length) {
+                                        var template = foundTemplate[0];
+                                        var records = _.filter(scope.surveys, (survey) => { return survey.formTemplateId == template.id });
 
-                                    ctx.beginPath();
-                                    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-                                    ctx.fillStyle = 'white';
-                                    ctx.fill();
-                                    ctx.lineWidth = 1;
-                                    ctx.strokeStyle = 'white';
-                                    ctx.stroke();
+                                        var x_axis = chartSelf.scales['x-axis-0'];
+                                        var tickLabel = x_axis.ticks[index];
 
-                                    ctx.fillStyle = '#1D2331';
-                                    ctx.fillText(data, bar._model.x, bar._model.y + 7);
+                                        var dayString = tickLabel.substr(3, x_tick.length - 2);
+                                        var dayNumber = parseInt(dayString);
+
+                                        var daysToAdd = -(currentDay - dayNumber);
+                                        var foundDate = moment(scope.currentDate).add(daysToAdd, 'day').toDate();
+
+                                        var foundSurveys = _.filter(records, (record) => {
+                                            if (moment(foundDate).format('MM-DD-YYYY') === moment(record.surveyDate).format('MM-DD-YYYY')) {
+                                                return record;
+                                            }
+                                        });
+
+                                        if (foundSurveys.length) {
+                                            var centerX = bar._model.x;
+                                            var centerY = bar._model.y;
+                                            var radius = barSize / 2;
+
+                                            ctx.beginPath();
+                                            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+                                            ctx.fillStyle = 'white';
+                                            ctx.fill();
+                                            ctx.lineWidth = 1;
+                                            ctx.strokeStyle = 'white';
+                                            ctx.stroke();
+
+                                            ctx.fillStyle = '#1D2331';
+                                            ctx.fillText(foundSurveys.length, bar._model.x, bar._model.y + 7);
+                                        }
+                                    }
                                 }
                             });
                         }
