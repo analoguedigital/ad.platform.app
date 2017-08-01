@@ -180,7 +180,7 @@
                                         var x_axis = chartSelf.scales['x-axis-0'];
                                         var tickLabel = x_axis.ticks[index];
 
-                                        var dayString = tickLabel.substr(3, x_tick.length - 2);
+                                        var dayString = tickLabel.substr(3, tickLabel.length - 2);
                                         var dayNumber = parseInt(dayString);
 
                                         var daysToAdd = -(currentDay - dayNumber);
