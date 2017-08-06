@@ -285,6 +285,7 @@
                 scales: {
                     xAxes: [{
                         display: true,
+                        stacked: true,
                         gridLines: {
                             display: false
                         },
@@ -302,6 +303,7 @@
                         }
                     }],
                     yAxes: [{
+                        stacked: true,
                         gridLines: {
                             display: false
                         },
@@ -321,7 +323,7 @@
             };
 
             var config = {
-                type: 'groupableBar',
+                type: 'bar',
                 data: {
                     labels: scope.chartLabels,
                     datasets: scope.chartDatasets
