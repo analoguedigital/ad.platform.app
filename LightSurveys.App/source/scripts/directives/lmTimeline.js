@@ -432,6 +432,12 @@
 
         function onTooltipsLabelCallback(item, data) {
             var label = data.datasets[item.datasetIndex].label;
+            var dataset = data.datasets[item.datasetIndex];
+            var dataPoint = dataset.data[item.index];
+
+            if (dataPoint === 0)
+                return '';
+
             return `${label}: ${item.yLabel}`;
         }
 
