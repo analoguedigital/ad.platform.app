@@ -1,4 +1,5 @@
-﻿
+﻿declare var moment: any;
+
 module App.Services {
     "use strict";
 
@@ -296,6 +297,25 @@ module App.Services {
             });
         }
 
+        getFormTemplateMetadata(formTemplate: Models.FormTemplate): ng.IPromise<Models.FormTemplate> {
+            var d = this.$q.defer();
+
+            angular.forEach(formTemplate.metricGroups, function (group) {
+                if (!group.isRepeater) {
+                    angular.forEach(group.metrics, function (metric) {
+                        if (_.includes(metric.type.toLowerCase(), 'time')) {
+                            formTemplate.timeMetricId = metric.id;
+                            console.log('formTemplate.timeMetricId', metric.id);
+                        }
+                    });
+                }
+            });
+
+            d.resolve(formTemplate);
+
+            return d.promise;
+        }
+
         getFormTemplates(): ng.IPromise<Array<Models.FormTemplate>> {
 
             var q = this.$q.defer<Array<Models.FormTemplate>>();
@@ -303,11 +323,21 @@ module App.Services {
                 this.storageService.getAll(this.FORM_TEMPLATE_OBJECT_TYPE, null)
                     .then((templates: Array<Models.FormTemplate>) => {
                         this.formTemplates = templates;
-                        q.resolve(this.filterForProject(this.formTemplates));
+                        let result = this.filterForProject(this.formTemplates);
+                        _.forEach(result, (template) => {
+                            this.getFormTemplateMetadata(template).then((t) => { template = t; });
+                        });
+
+                        q.resolve(result);
                     }, (err) => { q.reject(err); });
             }
             else {
-                q.resolve(this.filterForProject(this.formTemplates));
+                let templates = this.filterForProject(this.formTemplates);
+                _.forEach(templates, (template) => {
+                    this.getFormTemplateMetadata(template).then((t) => { template = t; });
+                });
+
+                q.resolve(templates);
             }
 
             return q.promise;
@@ -315,14 +345,24 @@ module App.Services {
 
 
         getFormTemplate(id: string): ng.IPromise<Models.FormTemplate> {
+            var q = this.$q.defer<Models.FormTemplate>();
 
             if (this.formTemplates !== undefined) {
-                var q = this.$q.defer<Models.FormTemplate>();
-                q.resolve(_.find(this.formTemplates, { 'id': id }));
+                let template = _.find(this.formTemplates, { 'id': id });
+                this.getFormTemplateMetadata(template).then((t) => { template = t; });
+                q.resolve(template);
+
                 return q.promise;
             }
 
-            return this.storageService.getObj(this.FORM_TEMPLATE_OBJECT_TYPE, id);
+            this.storageService.getObj(this.FORM_TEMPLATE_OBJECT_TYPE, id).then((formTemplate: Models.FormTemplate) => {
+                this.getFormTemplateMetadata(formTemplate).then((template) => {
+                    formTemplate = template;
+                    q.resolve(template);
+                });
+            });
+
+            return q.promise;
         }
 
 
@@ -331,9 +371,15 @@ module App.Services {
             return this.storageService.save(this.SURVEY_OBJECT_TYPE, template.id, survey.id, survey);
         }
 
-
         getSurvey(id: string): ng.IPromise<Models.Survey> {
-            return this.storageService.getObj(this.SURVEY_OBJECT_TYPE, id);
+            var d = this.$q.defer();
+            this.storageService.getObj(this.SURVEY_OBJECT_TYPE, id).then((survey: Models.Survey) => {
+                this.getSurveyMetadata(survey).then((s) => {
+                    d.resolve(s);
+                });
+            });
+
+            return d.promise;
         }
 
         deleteFormTemplate(formTemplate: Models.FormTemplate) {
@@ -351,14 +397,41 @@ module App.Services {
         }
 
         saveSurvey(survey: Models.Survey): ng.IPromise<Models.Survey> {
-
             var q = this.$q.defer();
+            var promises: Array<ng.IPromise<void>> = [];
+
+            let template = this.getFormTemplate(survey.formTemplateId)
+                .then((template) => {
+                    _.forEach(survey.formValues, (fv: Models.FormValue) => {
+                        if (fv.dateValue) {
+                            let deferred = this.$q.defer<void>();
+                            promises.push(deferred.promise);
+
+                            let dateMetric: Models.Metric = undefined;
+                            _.forEach(template.metricGroups, (metricGroup) => {
+                                dateMetric = _.find(metricGroup.metrics, (metric) => { return metric.id == fv.metricId });
+                            });
+
+                            if (dateMetric) {
+                                var dateValue = new Date(fv.dateValue);
+                                if (!dateMetric.hasTimeValue) {
+                                    dateValue.setUTCHours(0);
+                                    dateValue.setUTCMinutes(0);
+                                    dateValue.setUTCSeconds(0);
+                                    dateValue.setUTCMilliseconds(0);
+                                }
+
+                                var isoString = dateValue.toISOString();
+                                fv.dateValue = new Date(isoString);
+
+                                deferred.resolve();
+                            }
+                        }
+                    });
+                });
 
             this.storageService.save(this.SURVEY_OBJECT_TYPE, survey.formTemplateId, survey.id, survey)
                 .then((survey) => {
-
-                    var promises: Array<ng.IPromise<void>> = [];
-
                     survey.formValues.forEach((formValue) => {
                         if (!formValue.attachments) return;
 
@@ -376,7 +449,6 @@ module App.Services {
                                 },
                                 (err) => { deferred.reject(deferred); });;
                         });
-
                     });
 
                     this.$q.all(promises).then
@@ -396,7 +468,7 @@ module App.Services {
 
 
         saveDraft(survey: Models.Survey): ng.IPromise<Models.Survey> {
-            survey.dateUpdated = _.now();
+            survey.dateUpdated = new Date(new Date().toISOString());
             survey.projectId = this.userService.current.project.id;
             return this.saveSurvey(survey);
         }
@@ -405,7 +477,7 @@ module App.Services {
         submitSurvey(survey: Models.Survey): ng.IPromise<Models.Survey> {
 
             var q = this.$q.defer();
-            survey.dateUpdated = _.now();
+            survey.dateUpdated = new Date(new Date().toISOString());
             survey.projectId = this.userService.current.project.id;
             survey.isSubmitted = true;
             this.saveSurvey(survey).then((survey) => {
@@ -471,7 +543,15 @@ module App.Services {
 
             this.storageService.getAll(this.SURVEY_OBJECT_TYPE, formTemplateId)
                 .then((surveys: Array<Models.Survey>) => {
-                    q.resolve(_.filter(surveys, { 'projectId': this.userService.current.project.id }));
+                    let result = _.filter(surveys, { 'projectId': this.userService.current.project.id });
+
+                    _.forEach(result, (survey: Models.Survey) => {
+                        this.getSurveyMetadata(survey).then((record) => {
+                            survey = record;
+                        });
+                    });
+
+                    q.resolve(result);
                 });
 
             return q.promise;
@@ -541,7 +621,6 @@ module App.Services {
             this.getSurvey(surveyId)
                 .then(
                 (survey) => {
-
                     var formValues = survey.formValues;
 
                     this.getFormTemplate(survey.formTemplateId)
@@ -555,6 +634,120 @@ module App.Services {
                 (err) => { q.reject(err); });
 
             return q.promise;
+        }
+
+        getFormValueText(formValue: Models.FormValue, metric: Models.Metric): string {
+            if (formValue.textValue)
+                return formValue.textValue;
+
+            if (formValue.dateValue) {
+                if (metric.hasTimeValue === true) {
+                    return moment(formValue.dateValue).format('DD/MM/YYYY hh:mm A');
+                }
+
+                return new Date(formValue.dateValue).toLocaleDateString();
+            }
+
+            if (formValue.numericValue)
+                return formValue.numericValue.toString();
+        }
+
+        getDescirptionMetrics(formTemplate: Models.FormTemplate): ng.IPromise<Models.IGetDescriptionMetricsDTO> {
+            let d = this.$q.defer();
+
+            let descFormat = formTemplate.descriptionFormat;
+            if (descFormat && descFormat.length) {
+                let descMetrics = [];
+                let pattern = /{{([^}]+)}}/g;
+                let titles = [];
+                let currentMatch = undefined;
+                while (currentMatch = pattern.exec(descFormat)) {
+                    titles.push(currentMatch[1]);
+                }
+
+                let foundMetrics = [];
+                _.forEach(formTemplate.metricGroups, (metricGroup: Models.MetricGroup) => {
+                    _.forEach(metricGroup.metrics, (metric: Models.Metric) => {
+                        let shortTitle = _.toLower(metric.shortTitle);
+                        if (_.includes(titles, shortTitle)) {
+                            foundMetrics.push(metric);
+                        }
+                    });
+                });
+
+                let result: Models.IGetDescriptionMetricsDTO = {
+                    descriptionFormat: descFormat,
+                    descriptionMetrics: foundMetrics
+                };
+
+                d.resolve(result);
+            }
+
+            return d.promise;
+        }
+
+        getDescription(survey: Models.Survey, descriptionMetrics: Models.IGetDescriptionMetricsDTO): string {
+            let self = this;
+            let q = this.$q.defer();
+
+            let result: string = descriptionMetrics.descriptionFormat;
+            _.forEach(descriptionMetrics.descriptionMetrics, (metric: Models.Metric) => {
+                let formValue = _.find(survey.formValues, (fv) => { return fv.metricId == metric.id; });
+                if (formValue) {
+                    let value = self.getFormValueText(formValue, metric);
+                    if (value == undefined) value = '';
+                    let segment = "{{" + _.toLower(metric.shortTitle) + "}}";
+                    result = _.replace(result, segment, value);
+                }
+            });
+
+            if (result === descriptionMetrics.descriptionFormat) result = '';
+            return result;
+        }
+
+        getSurveyMetadata(survey: Models.Survey): ng.IPromise<Models.Survey> {
+            var d = this.$q.defer();
+
+            this.getFormTemplate(survey.formTemplateId).then((template) => {
+                this.getDescirptionMetrics(template).then((descMetrics) => {
+                    survey.description = this.getDescription(survey, descMetrics);
+                });
+
+                var dateFormValue = _.find(survey.formValues, { 'metricId': template.calendarDateMetricId });
+                if (dateFormValue) {
+                    var utcDate = moment.utc(dateFormValue.dateValue);
+                    var hours = utcDate.hour();
+                    var minutes = utcDate.minutes();
+
+                    var localDate = utcDate.local().toDate();
+                    if (hours == 0 && minutes == 0) {
+                        localDate.setHours(0);
+                        localDate.setMinutes(0);
+                        localDate.setSeconds(0);
+                        localDate.setMilliseconds(0);
+                    }
+
+                    survey.surveyDate = localDate;
+                } else {
+                    var utcDate = moment.utc(survey.surveyDate);
+                    var hours = utcDate.hour();
+                    var minutes = utcDate.minutes();
+
+                    var localDate = utcDate.local().toDate();
+                    if (hours == 0 && minutes == 0) {
+                        localDate.setHours(0);
+                        localDate.setMinutes(0);
+                        localDate.setSeconds(0);
+                        localDate.setMilliseconds(0);
+                    }
+
+                    survey.surveyDate = localDate;
+                }
+            });
+
+            d.resolve(survey);
+
+            return d.promise;
         }
     }
 

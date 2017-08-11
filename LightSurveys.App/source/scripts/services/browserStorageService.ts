@@ -48,8 +48,32 @@ module App.Services {
             var q = this.$q.defer();
 
             var entryKey = _.find(this.localStorageService.keys(), entry => _.endsWith(entry, key));
+            var obj = this.localStorageService.get(entryKey);
 
-            q.resolve(this.localStorageService.get(entryKey));
+            var survey = <Models.Survey>obj;
+            if (survey) {
+                _.forEach(survey.formValues, (fv) => {
+                    if (fv.dateValue) {
+                        var utcDate = moment.utc(fv.dateValue);
+                        var hours = utcDate.hour();
+                        var minutes = utcDate.minutes();
+
+                        var localDate = utcDate.local().toDate();
+                        if (hours === 0 && minutes === 0) {
+                            localDate.setHours(0);
+                            localDate.setMinutes(0);
+                            localDate.setSeconds(0);
+                            localDate.setMilliseconds(0);
+                        }
+
+                        fv.dateValue = localDate;
+                    }
+                });
+
+                obj = survey;
+            }
+
+            q.resolve(obj);
             return q.promise;
         }
 

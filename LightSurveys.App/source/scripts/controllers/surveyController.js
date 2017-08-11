@@ -97,16 +97,15 @@ function ($scope, $ionicHistory, $stateParams, $state, userService, surveyServic
         }
     };
 
-    $scope.dateToString = function (milliseconds) {
-        if (!milliseconds.valueOf())
-            return "";
+    $scope.dateToString = function (isoString) {
+        var utcDate = moment(isoString);
+        var localDate = utcDate.local();
 
         if (userService.current.calendar === "Gregorian") {
-            var dateValue = new Date(milliseconds);
-            return dateValue.toLocaleString("eb-GB");
+            return localDate.format('L LT');
         }
         else {
-            var dateValue = persianDate(milliseconds)
+            var dateValue = persianDate(localDate.toDate());
             return dateValue.format("dddd, DD MMMM YYYY");
         }
     };

@@ -1,4 +1,6 @@
-﻿((): void => {
+﻿declare var Chart: any;
+
+((): void => {
     "use strict";
 
     angular.module("lm.surveys")

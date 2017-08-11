@@ -5,14 +5,14 @@
     <ion-content class="content has-subheader padding" ng-cloak>
         <div class="card" data-ng-repeat="draft in drafts | orderBy:'dateUpdated':true" ng-class="{'draft': !draft.isSubmitted}">
             <div class="item item-text-wrap">
-                <h3 ng-if="draft.title !== undefined">
-                    {{draft.title}}
+                <h3 ng-if="draft.description !== undefined">
+                    {{draft.description}}
                 </h3>
                 <h3 ng-if="draft.attachments !== ''">
                     Attachments: {{draft.attachments}}
                 </h3>
                 <h4 class="small">
-                    <span translate>Created at</span> {{dateToString(draft.dateCreated)}},
+                    <span translate>Created at</span> {{dateToString(draft.dateCreated)}}, 
                     <span translate>last Updated at</span> {{dateToString(draft.dateUpdated)}}
                 </h4>
             </div>
