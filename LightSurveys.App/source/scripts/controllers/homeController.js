@@ -1,6 +1,6 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('homeController', ['$scope', '$state', 'surveyService', 'userService', 'alertService', 'ngProgress',
-    function ($scope, $state, surveyService, userService, alertService, ngProgress) {
+angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicPlatform', '$ionicSideMenuDelegate', '$ionicPopup', 'surveyService', 'userService', 'alertService', 'ngProgress',
+    function ($scope, $rootScope, $state, $stateParams, $ionicPlatform, $ionicSideMenuDelegate, $ionicPopup, surveyService, userService, alertService, ngProgress) {
 
         $scope.currentContext = userService.current;
         $scope.formTemplates = [];

@@ -3,7 +3,7 @@
 module App.Services {
     "use strict";
 
-    interface IAlertService {
+    export interface IAlertService {
         show(msg: string): void;
     }
 
@@ -15,6 +15,7 @@ module App.Services {
             private toastr: Toastr) { }
 
         show(msg: string) {
+            this.toastr.clear();
             this.toastr.info(msg, '', { allowHtml: true, positionClass: 'toast-bottom-center' });
         }
     }

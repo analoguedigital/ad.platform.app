@@ -82,6 +82,12 @@
                 controller: "editTemplateController",
                 templateUrl: "partials/formTemplate.html"
             })
+            .state('settings', {
+                parent: 'menu',
+                url: "/settings",
+                controller: "settingsController",
+                templateUrl: "partials/settings.html"
+            });
 
         $urlRouterProvider.otherwise('/home');
     }
