@@ -95,16 +95,6 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
             passcodeModalService.hideDialog();
         });
 
-        $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-            if (toState.name === 'login' && userService.currentProfile !== null) {
-                event.preventDefault();
-            }
-
-            if (fromState.name === 'login' && !$scope.loginValidated) {
-                event.preventDefault();
-            }
-        });
-
         $scope.fallbackToPasscode = function () {
             userService.clearCurrent();
             if ($scope.profile.settings.passcodeEnabled === true)

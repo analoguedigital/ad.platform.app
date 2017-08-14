@@ -8,7 +8,8 @@ interface Navigator {
     "use strict";
 
     angular.module("lm.surveys")
-        .run(RunIonic);
+        .run(RunIonic)
+        .run(SetupLoginTransitionControls);
 
     RunIonic.$inject = ["$rootScope", "$state", "$ionicPlatform", "$ionicHistory", "$route",
         "$ionicSideMenuDelegate", "$ionicPopup", "gettext", "userService"];
@@ -29,7 +30,15 @@ interface Navigator {
                 window.StatusBar.styleDefault();
             }
 
-            document.addEventListener('deviceready', onDeviceReady, false);
+            document.addEventListener('pause', function (event) {
+                $ionicHistory.clearHistory();
+                $ionicHistory.clearCache();
+                userService.clearCurrent();
+            });
+
+            document.addEventListener('resume', function (event) {
+                $state.go('login');
+            });
         });
 
         $ionicPlatform.registerBackButtonAction(function (event) {
@@ -51,17 +60,26 @@ interface Navigator {
                 }
             }
         }, 101);
+    }
 
-        function onDeviceReady() {
-            document.addEventListener('pause', function (event) {
-                $ionicHistory.clearHistory();
-                $ionicHistory.clearCache();
-                userService.clearCurrent();
-            });
+    SetupLoginTransitionControls.$inject = ["$rootScope", "userService"];
+    function SetupLoginTransitionControls(
+        $rootScope: ng.IRootScopeService,
+        userService: App.Services.IUserService) {
 
-            document.addEventListener('resume', function (event) {
-                $state.go('login');
-            });
-        }
+        $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+            var publicStates = ['login', 'register'];
+
+            if (publicStates.indexOf(toState.name) !== -1 && publicStates.indexOf(fromState.name) !== -1)
+                return;
+
+            if (publicStates.indexOf(toState.name) !== -1 && userService.currentProfile !== null) {
+                event.preventDefault();
+            }
+
+            if (publicStates.indexOf(fromState.name) !== -1 && userService.currentProfile === null) {
+                event.preventDefault();
+            }
+        });
     }
 })();
