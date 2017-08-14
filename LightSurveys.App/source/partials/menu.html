@@ -18,8 +18,8 @@
         <ion-content class="has-subheader positive">
             <ion-list>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="home" menu-close="">
-                    <i class="icon ion-ios-home"></i>
-                    <span translate>Home</span>
+                    <i class="icon fa fa-home fa-fw"></i>
+                    <span translate> Home</span>
                 </ion-item>
                 <ion-item ng-if="numberOfAvailableProjects > 1" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="projects" menu-close="">
                     <i class="icon ion-android-folder-open"></i>
@@ -34,23 +34,27 @@
                     <span translate>Upload surveys</span>
                 </ion-item>-->
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="calendar" menu-close="">
-                    <i class="icon ion-calendar"></i>
-                    <span translate>Calendar</span>
+                    <i class="icon fa fa-calendar fa-fw"></i>
+                    <span translate> Calendar</span>
                 </ion-item>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="timeline" menu-close="">
-                    <i class="icon ion-ios-speedometer-outline"></i>
-                    <span translate>Timeline</span>
+                    <i class="icon fa fa-bar-chart fa-fw"></i>
+                    <span translate> Timeline</span>
                 </ion-item>
-                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getleft()}}" ui-sref="settings" menu-close="">
-                    <i class="icon ion-settings"></i>
+                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="settings" menu-close="">
+                    <i class="icon fa fa-cog fa-fw"></i>
                     <span translate> Settings</span>
                 </ion-item>
                 <!--<ion-item class="item item-positive item-icon-{{::getLeft()}}" ng-click="switchUser()">
                     <i class="icon ion-person-stalker"></i>
                     <span translate> Switch user</span>
                 </ion-item>-->
+                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="feedback" menu-close="">
+                    <i class="icon fa fa-comments fa-fw"></i>
+                    <span translate> Feedback</span>
+                </ion-item>
                 <ion-item class="item item-positive item-icon-{{::getLeft()}}" ng-click="logOut()">
-                    <i class="icon ion-log-out"></i>
+                    <i class="icon fa fa-sign-out fa-fw"></i>
                     <span translate> Logout</span>
                 </ion-item>
             </ion-list>

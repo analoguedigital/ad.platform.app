@@ -2,7 +2,7 @@
     <ion-content class="content padding settings" ng-cloak>
         <ul class="list">
             <li class="item item-toggle">
-                Passcode
+                Passcode Login
                 <label class="toggle toggle-positive">
                     <input type="checkbox" ng-model="model.passcodeEnabled">
                     <span class="track">
@@ -11,7 +11,7 @@
                 </label>
             </li>
             <li class="item item-toggle">
-                Fingerprint/Touch ID
+                Fingerprint Login
                 <label class="toggle toggle-positive">
                     <input type="checkbox" ng-model="model.fingerprintEnabled" ng-disabled="!fingerprintHardwareDetected">
                     <span class="track">

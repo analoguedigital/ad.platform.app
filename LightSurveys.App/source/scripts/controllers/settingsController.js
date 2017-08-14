@@ -14,12 +14,12 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         $scope.$watch('model.passcodeEnabled', function (newValue, oldValue) {
             if (oldValue === false && newValue === true) {
                 if (!$scope.passcodeSaved && !$scope.profile.settings.passcodeEnabled) {
-                    passcodeModalService.showDialog(false, 'Enable local passcode');
+                    passcodeModalService.showDialog(false, 'Enable login by passcode');
                 }
             }
             else if (oldValue === true && newValue === false) {
                 if ($scope.passcodeSaved && $scope.profile.settings.passcodeEnabled) {
-                    passcodeModalService.showDialog(true, 'Confirm to disable');
+                    passcodeModalService.showDialog(false, 'Disable login by passcode');
                 }
             }
         });
@@ -85,7 +85,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                         alternateIconService.changeIcon('icon-meeting', true)
                             .then((success) => {
                                 if (success)
-                                    this.alertService.show('App icon changed, hooray!');
+                                    this.alertService.show('App icon changed!');
                                 else
                                     this.alertService.show('App icon not changed. check your console!');
                             });

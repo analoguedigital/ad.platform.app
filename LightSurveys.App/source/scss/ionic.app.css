@@ -9818,10 +9818,9 @@ a.button {
 
 .register {
   background-color: #459597; }
-
-.fa {
-  color: #7081aa;
-  font-size: 20px !important; }
+  .register .fa {
+    color: #7081aa;
+    font-size: 20px !important; }
 
 mwl-calendar.survey-calendar .cal-row-head {
   color: #fdfdfd; }

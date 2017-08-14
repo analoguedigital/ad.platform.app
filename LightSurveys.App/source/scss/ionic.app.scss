@@ -33,8 +33,9 @@ $base-background-color: #1d2331 !default;
 .no-margin-top { margin-top: 0 !important; }
 
 
-.register { background-color: $positive; }
-.fa { color: lighten($dark,40); font-size: 20px !important; }
+.register { background-color: $positive;
+    .fa { color: lighten($dark,40); font-size: 20px !important; }
+}
 
 mwl-calendar.survey-calendar {
     .cal-row-head { color: $light; }
