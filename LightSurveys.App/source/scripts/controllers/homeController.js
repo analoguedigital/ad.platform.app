@@ -1,6 +1,12 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicPlatform', '$ionicSideMenuDelegate', '$ionicPopup', 'surveyService', 'userService', 'alertService', 'ngProgress',
-    function ($scope, $rootScope, $state, $stateParams, $ionicPlatform, $ionicSideMenuDelegate, $ionicPopup, surveyService, userService, alertService, ngProgress) {
+angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicPlatform', '$ionicSideMenuDelegate', '$ionicPopup', 'surveyService', 'userService', 'alertService', 'ngProgress', '$ionicNavBarDelegate',
+    function ($scope, $rootScope, $state, $stateParams, $ionicPlatform, $ionicSideMenuDelegate, $ionicPopup, surveyService, userService, alertService, ngProgress, $ionicNavBarDelegate) {
+
+        //solution to Navbar disappearance issue suggested here https://github.com/ionic-team/ionic/issues/3483
+        $scope.$on('$ionicView.enter', function (e) {
+            $ionicNavBarDelegate.showBar(true);
+        });
+
 
         $scope.currentContext = userService.current;
         $scope.formTemplates = [];
