@@ -9894,10 +9894,30 @@ mwl-calendar.survey-calendar span[data-cal-date] {
   .login.pane {
     background-color: #459597; }
   .login h1 {
-    font-size: 350%; }
+    font-size: 350%;
+    padding: 14px 0; }
   .login h2 {
     font-size: 140%;
     font-weight: normal; }
+  .login .slogan {
+    -webkit-transition: 0.4s;
+    transition: 0.4s; }
+  .login form {
+    -webkit-transition: 0.4s;
+    transition: 0.4s; }
+
+@media (max-height: 600px) {
+  .login h1 {
+    padding-bottom: 0;
+    margin-bottom: 0; }
+  .login .slogan {
+    height: 0;
+    overflow-y: hidden;
+    padding-top: 0;
+    padding-bottom: 0; }
+  .login .list {
+    margin-top: 0;
+    margin-bottom: 0; } }
 
 /*
  * Credits to https://forum.ionicframework.com/t/actionsheets-android-ugly-styling-need-help/18462/12
@@ -9973,4 +9993,136 @@ mwl-calendar.survey-calendar span[data-cal-date] {
 
 .modal-backdrop {
   background-color: rgba(0, 0, 0, 0.5) !important; }
+
+.list .item-toggle {
+  background-color: inherit;
+  border-color: #1d2331;
+  color: #ddd; }
+
+.toast {
+  padding: 15px 15px 15px 50px !important;
+  box-shadow: none !important; }
+
+.toast-bottom-center {
+  bottom: 20px !important; }
+
+.passcode-screen {
+  background-color: #1d2331;
+  color: white;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-content: stretch;
+  -ms-flex-line-pack: stretch;
+  align-content: stretch;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; }
+
+.passcode-screen > * {
+  -webkit-box-ordinal-group: 1;
+  -moz-box-ordinal-group: 1;
+  -ms-flex-order: 0;
+  order: 0;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -ms-flex-item-align: auto;
+  align-self: auto; }
+
+.passcode-screen .passcode-modal-heading {
+  padding-top: 60px; }
+
+.passcode-screen h3 {
+  color: white;
+  text-align: center; }
+
+.passcode-screen p {
+  text-align: center; }
+
+.passcode-screen .button-stretch {
+  background: inherit !important;
+  border: 2px solid #459597 !important;
+  border-radius: 50%;
+  color: white;
+  font-size: 18px;
+  min-width: 55px;
+  min-height: 55px;
+  height: 55px;
+  width: 55px;
+  line-height: 50px; }
+
+.passcode-screen .button-stretch.activated {
+  border: 2px solid white !important; }
+
+.passcode-screen .button-white {
+  color: white;
+  font-size: inherit; }
+
+.passcode-screen .button.icon.ion-ios-arrow-back::before {
+  line-height: 50px; }
+
+.passcode-screen .button-save-passcode::before {
+  line-height: 50px; }
+
+.passcode-screen .col.first-digit {
+  margin-left: 15%; }
+
+.passcode-screen .bullet {
+  font-size: 26px; }
+
+.passcode-screen .digit-box {
+  border-bottom: 2px solid #555 !important;
+  font-size: 22px;
+  padding-bottom: 10px; }
+
+.passcode-screen .digits-panel {
+  margin-top: 20px; }
+
+.passcode-screen .forgot-pass-container {
+  text-align: center; }
+
+/* timeline styles */
+canvas {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none; }
+
+#chartjs-tooltip {
+  opacity: 1;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: 3px;
+  -webkit-transition: all .1s ease;
+  transition: all .1s ease;
+  pointer-events: none;
+  -webkit-transform: translate(-50%, 0);
+  transform: translate(-50%, 0); }
+  #chartjs-tooltip table tbody tr td {
+    white-space: nowrap; }
+
+.chartjs-tooltip-key {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 10px; }
 
