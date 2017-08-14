@@ -55,6 +55,7 @@ module App.Services {
 
     export interface IUserService {
         current: AppContext;
+        currentProfile: IProfile;
         login: (ILoginData: ILoginData) => ng.IPromise<void>;
         logOut: () => void;
         activateProfile: (profile: IProfile) => void;
