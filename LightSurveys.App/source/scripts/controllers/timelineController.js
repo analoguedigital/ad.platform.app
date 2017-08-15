@@ -21,7 +21,7 @@ angular.module('lm.surveys').controller('timelineController', ['$scope', '$rootS
             surveyService.getAllSubmittedSurveys()
                 .then(function (surveys) {
                     // get unique form templates
-                    var templates = _.uniqBy(surveys, 'formTemplate').map((survey) => { return survey.formTemplate; });
+                    var templates = _.uniqBy(surveys, 'formTemplate').map(function (survey) { return survey.formTemplate; });
 
                     $scope.templates = templates;
                     $scope.surveys = surveys;

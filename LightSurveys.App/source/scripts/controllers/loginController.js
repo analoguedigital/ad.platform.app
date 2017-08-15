@@ -111,7 +111,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                         var settings = profiles[0].settings;
                         if (settings.fingerprintEnabled || settings.passcodeEnabled) {
                             if (settings.fingerprintEnabled === true) {
-                                fingerprintService.isAvailable().then((isAvailable) => {
+                                fingerprintService.isAvailable().then(function (isAvailable) {
                                     if (isAvailable) {
                                         // verify fingerprint
                                         fingerprintService.verify().then(function (result) {

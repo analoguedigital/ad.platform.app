@@ -65,7 +65,7 @@
                 $rootScope.$broadcast('timeline-in-snapshot-view');
 
                 // date range with padding
-                _.forEach(occurences, (oc) => {
+                _.forEach(occurences, function (oc) {
                     xAxesTicks.push(oc.day);
                 });
 
@@ -76,13 +76,13 @@
                 var missingTicks = Math.floor((maxTicks - occurences.length) / 2);
 
                 // padding to start
-                for (let i = 1; i <= missingTicks; i++) {
+                for (var i = 1; i <= missingTicks; i++) {
                     var date = moment(minDate).add(-i, 'days').toDate();
                     xAxesTicks.unshift(date);
                 }
 
                 // padding to end
-                for (let i = 1; i <= missingTicks; i++) {
+                for (var i = 1; i <= missingTicks; i++) {
                     var date = moment(maxDate).add(i, 'days').toDate();
                     xAxesTicks.push(date);
                 }
@@ -105,7 +105,7 @@
             var firstDayOfMonth = moment(scope.currentDate).add(-(currentDay - 1), 'day').toDate();
             var lastDayOfMonth = moment(scope.currentDate).add((daysInMonth - currentDay), 'day').toDate();
 
-            var currentMonthSurveys = _.filter(scope.surveys, (survey) => {
+            var currentMonthSurveys = _.filter(scope.surveys, function (survey) {
                 var currentMonth = moment(scope.currentDate).format('MM-YYYY');
                 var surveyMonth = moment(survey.surveyDate).format('MM-YYYY');
 
@@ -136,11 +136,11 @@
             }
             else {
                 // display 10 ticks only
-                var hasFirstDayOfMonth = _.filter(occurences, (oc) => {
+                var hasFirstDayOfMonth = _.filter(occurences, function (oc) {
                     return moment(oc.day).format('MM-DD-YYYY') === moment(firstDayOfMonth).format('MM-DD-YYYY');
                 }).length > 0;
 
-                var hasLastDayOfMonth = _.filter(occurences, (oc) => {
+                var hasLastDayOfMonth = _.filter(occurences, function (oc) {
                     return moment(oc.day).format('MM-DD-YYYY') === moment(lastDayOfMonth).format('MM-DD-YYYY');
                 }).length > 0;
 
@@ -158,7 +158,7 @@
 
                 // build ticks from 2nd day to last day
                 for (var i = 2; i <= daysInMonth; i++) {
-                    var hasData = _.filter(occurences, (oc) => {
+                    var hasData = _.filter(occurences, function (oc) {
                         return moment(oc.day).date() == i;
                     });
 
@@ -185,20 +185,20 @@
         function generateDatasets(xAxesTicks) {
             var datasets = [];
 
-            _.forEach(scope.formTemplates, (template) => {
+            _.forEach(scope.formTemplates, function (template) {
                 var data = [];
-                var records = _.filter(scope.surveys, (survey) => { return survey.formTemplateId == template.id });
+                var records = _.filter(scope.surveys, function (survey) { return survey.formTemplateId == template.id });
 
                 _.forEach(xAxesTicks, function (tick) {
-                    var foundSurveys = _.filter(records, (record) => {
+                    var foundSurveys = _.filter(records, function (record) {
                         if (moment(tick).format('MM-DD-YYYY') === moment(record.surveyDate).format('MM-DD-YYYY')) {
                             return record;
                         }
                     });
 
                     if (foundSurveys.length) {
-                        let impactSum = 0;
-                        _.forEach(foundSurveys, (survey) => {
+                        var impactSum = 0;
+                        _.forEach(foundSurveys, function (survey) {
                             var timelineBarFormValue = _.filter(survey.formValues, { 'metricId': template.timelineBarMetricId })[0];
                             if (timelineBarFormValue) {
                                 var value = timelineBarFormValue.numericValue;
@@ -349,7 +349,7 @@
 
             // compute yAxes max value.
             var dataPoints = [];
-            _.forEach(scope.chartDatasets, (ds) => {
+            _.forEach(scope.chartDatasets, function (ds) {
                 dataPoints.push.apply(dataPoints, ds.data);
             });
 
@@ -456,10 +456,10 @@
                             var impact = parseInt(data);
 
                             if (impact > 0) {
-                                var foundTemplate = _.filter(scope.formTemplates, (template) => { return template.id === dataset.formTemplateId; });
+                                var foundTemplate = _.filter(scope.formTemplates, function (template) { return template.id === dataset.formTemplateId; });
                                 if (foundTemplate.length) {
                                     var template = foundTemplate[0];
-                                    var records = _.filter(scope.surveys, (survey) => { return survey.formTemplateId == template.id });
+                                    var records = _.filter(scope.surveys, function (survey) { return survey.formTemplateId == template.id });
 
                                     var x_axis = chartSelf.scales['x-axis-0'];
                                     var tickLabel = x_axis.ticks[index];
@@ -475,7 +475,7 @@
 
                                     // refactor foundDate
 
-                                    var foundSurveys = _.filter(records, (record) => {
+                                    var foundSurveys = _.filter(records, function (record) {
                                         if (moment(d).format('MM-DD-YYYY') === moment(record.surveyDate).format('MM-DD-YYYY')) {
                                             return record;
                                         }
@@ -508,13 +508,13 @@
         function onTooltipsTitleCallback(items, data) {
             var xLabel = items[0].xLabel;
             var yValue = 0;
-            _.forEach(items, (item) => {
+            _.forEach(items, function (item) {
                 yValue += parseInt(item.yLabel);
             });
 
             var result = [];
             result.push(xLabel);
-            result.push(`Impact: ${yValue}`);
+            result.push('Impact: ' + yValue);
 
             return result;
         }
@@ -527,7 +527,7 @@
             if (dataPoint === 0)
                 return '';
 
-            return `${label}: ${item.yLabel}`;
+            return label + ': ' + item.yLabel;
         }
 
         scope.timelineNextMonth = function () {
@@ -538,21 +538,21 @@
             scope.currentDate = moment(scope.currentDate).subtract(1, 'months').toDate();
         }
 
-        scope.$watchGroup(['formTemplates', 'surveys'], (data) => {
+        scope.$watchGroup(['formTemplates', 'surveys'], function (data) {
             buildTimeline();
         });
 
-        scope.$watch('currentDate', (newValue, oldValue) => {
+        scope.$watch('currentDate', function (newValue, oldValue) {
             if (newValue !== oldValue) {
                 buildTimeline();
             }
         });
 
-        $rootScope.$on('timeline-next-month', () => {
+        $rootScope.$on('timeline-next-month', function () {
             scope.timelineNextMonth();
         });
 
-        $rootScope.$on('timeline-previous-month', () => {
+        $rootScope.$on('timeline-previous-month', function () {
             scope.timelinePreviousMonth();
         });
 

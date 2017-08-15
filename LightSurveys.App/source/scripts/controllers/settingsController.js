@@ -80,10 +80,10 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
 
         $scope.changeAppIcon = function () {
             alternateIconService.isSupported()
-                .then((supported) => {
+                .then(function (supported) {
                     if (supported) {
                         alternateIconService.changeIcon('icon-meeting', true)
-                            .then((success) => {
+                            .then(function (success) {
                                 if (success)
                                     this.alertService.show('App icon changed!');
                                 else
