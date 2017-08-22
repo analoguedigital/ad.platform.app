@@ -89,6 +89,12 @@
                 url: "/settings",
                 controller: "settingsController",
                 templateUrl: "partials/settings.html"
+            })
+            .state('feedback', {
+                parent: 'menu',
+                url: "/feedback",
+                controller: "feedbackController",
+                templateUrl: "partials/feedback.html"
             });
 
         $urlRouterProvider.otherwise('/home');

@@ -15,6 +15,7 @@ module App.Services {
         register(registerData: IRegisterData): ng.IPromise<any>;
         deleteFormTemplate(id: string): ng.IPromise<any>;
         uploadFile(attchment: Models.Attachment): angular.IPromise<string>
+        uploadFeedback(feedback: IFeedbackData): ng.IPromise<any>;
     }
 
     export class HttpService implements IHttpService {
@@ -175,6 +176,16 @@ module App.Services {
 
             return deferred.promise;
 
+        }
+
+        uploadFeedback(feedback: IFeedbackData): ng.IPromise<any> {
+            var deferred = this.$q.defer();
+
+            this.$http.post(HttpService.serviceBase + 'api/feedbacks', JSON.stringify(feedback))
+                .success((data) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
         }
 
         onError(err: any, status: number) {
