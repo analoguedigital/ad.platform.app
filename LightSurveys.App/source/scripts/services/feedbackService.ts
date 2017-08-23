@@ -13,26 +13,16 @@ module App.Services {
     }
 
     export interface IFeedbackService {
-        sendFeedback: (feedback: IFeedbackData) => ng.IPromise<any>;
+        sendFeedback: (feedback: IFeedbackData) => ng.IPromise<void>;
     }
 
     class FeedbackService implements IFeedbackService {
-        static $inject: string[] = ['$q', 'storageService', 'authService', 'httpService', 'gettextCatalog'];
+        static $inject: string[] = ['httpService'];
 
-        constructor(
-            private $q: angular.IQService,
-            private storageService: IStorageService,
-            private authService: IAuthService,
-            private httpService: IHttpService,
-            private gettextCatalog: any) { }
+        constructor(private httpService: IHttpService) { }
 
-        sendFeedback(feedback: IFeedbackData): ng.IPromise<any> {
-            var deferred = this.$q.defer();
-
-            this.httpService.uploadFeedback(feedback)
-                .then((response) => { deferred.resolve(response); }, (err) => { deferred.reject(err); });
-
-            return deferred.promise;
+        sendFeedback(feedback: IFeedbackData): ng.IPromise<void> {
+            return this.httpService.uploadFeedback(feedback);
         }
     }
 
