@@ -12,7 +12,7 @@ interface Navigator {
         .run(SetupLoginTransitionControls);
 
     RunIonic.$inject = ["$rootScope", "$state", "$ionicPlatform", "$ionicHistory", "$route",
-        "$ionicSideMenuDelegate", "$ionicPopup", "gettext", "userService"];
+        "$ionicSideMenuDelegate", "$ionicPopup", "gettext", "userService", "storageService"];
     function RunIonic(
         $rootScope: ng.IRootScopeService,
         $state: ng.ui.IStateService,
@@ -22,7 +22,8 @@ interface Navigator {
         $ionicSideMenuDelegate: ionic.sideMenu.IonicSideMenuDelegate,
         $ionicPopup: ionic.popup.IonicPopupService,
         gettext: any,
-        userService: App.Services.IUserService) {
+        userService: App.Services.IUserService,
+        storageService: App.Services.IStorageService) {
 
         $ionicPlatform.ready(function () {
             if (window.StatusBar) {
@@ -31,13 +32,28 @@ interface Navigator {
             }
 
             document.addEventListener('pause', function (event) {
-                $ionicHistory.clearHistory();
-                $ionicHistory.clearCache();
-                userService.clearCurrent();
+                storageService.getObj('media-capture-meta', 'capture-in-progress').then((result) => {
+                    if (result && result == 'true') {
+                        // media capture in progress
+                    } else {
+                        $ionicHistory.clearHistory();
+                        $ionicHistory.clearCache();
+                        userService.clearCurrent();
+                    }
+                });
             });
 
             document.addEventListener('resume', function (event) {
-                $state.go('login');
+                storageService.getObj('media-capture-meta', 'capture-in-progress').then((result) => {
+                    if (result && result == 'true') {
+                        // media capture ended
+                        storageService.save('media-capture-meta', 'metadata', 'capture-in-progress', 'false').then((res) => {
+                            console.log('falgged to false');
+                        });
+                    } else {
+                        $state.go('login');
+                    }
+                });
             });
         });
 

@@ -21,13 +21,12 @@ module App.Services {
         addFromLibrary(): ng.IPromise<Models.Attachment> {
             var q = this.$q.defer<Models.Attachment>();
 
-            var q = this.$q.defer<Models.Attachment>();
-
             if (!navigator.camera) {
                 q.resolve(null);
                 return q.promise;
             }
 
+            this.storageService.save('media-capture-meta', 'metadata', 'capture-in-progress', 'true').then((res) => { });
 
             navigator.camera.getPicture(
                 (fileUri: string) => {
@@ -85,6 +84,8 @@ module App.Services {
                 return q.promise;
             }
 
+            this.storageService.save('media-capture-meta', 'metadata', 'capture-in-progress', 'true').then((res) => { });
+
             navigator.device.capture.captureImage(
                 (mediaFiles) => {
                     var attachment = <Models.Attachment>{
@@ -109,6 +110,8 @@ module App.Services {
                 q.resolve(null);
                 return q.promise;
             }
+
+            this.storageService.save('media-capture-meta', 'metadata', 'capture-in-progress', 'true').then((res) => { });
 
             navigator.device.capture.captureVideo(
                 (mediaFiles) => {
