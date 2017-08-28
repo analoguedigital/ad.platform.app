@@ -67,6 +67,13 @@
                                 <textarea name="address" ng-model="registerData.address" placeholder="Address" rows="2" required></textarea>
                             </div>
                         </label>
+                        <label class="item item-checkbox terms-checkbox">
+                            <div class="checkbox">
+                                <input type="checkbox" ng-model="model.termsAgreed" class="terms-checkbox-input">
+                            </div>
+                            I agree to usage terms
+                        </label>
+                        <button class="button button-full button-calm button-small button-outline" ng-click="openTermsModal()">Read Agreement Terms</button>
                         <div class="">
                             <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="register()">
                                 Submit
