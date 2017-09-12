@@ -23,8 +23,9 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
             var hideSheet = $ionicActionSheet.show({
                 buttons: [
                     { text: 'Take photo' },
+                    { text: 'From library' },
                     { text: 'Record video' },
-                    { text: 'From library' }
+                    { text: 'Record audio' }
                 ],
                 titleText: 'Select source',
                 cancelText: 'Cancel',
@@ -38,11 +39,15 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
                             mediaService.captureImage().then($scope.addAttachment);
                             break;
                         case 1:
-                            mediaService.recordVideo().then($scope.addAttachment);
-                            break;
-                        case 2:
                             mediaService.addFromLibrary().then($scope.addAttachment);
                             break;
+                        case 2:
+                            mediaService.recordVideo().then($scope.addAttachment);
+                            break;
+                        case 3: {
+                            mediaService.recordAudio().then($scope.addAttachment);
+                            break;
+                        }
                     }
 
                     return true;
