@@ -12,6 +12,16 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
             $scope.formValue = $scope.formValues[0];
         }
 
+        $scope.playAudio = function (attachment) {
+            var media = new Media(attachment.fileUri, function () {
+                console.log('media success');
+            }, function (err) {
+                console.log('media error: ' + err);
+            });
+
+            media.play();
+        };
+
         var uploadInstance;
         var uploadIndex = 0;
 

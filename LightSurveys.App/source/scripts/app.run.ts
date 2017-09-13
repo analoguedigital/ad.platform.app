@@ -47,9 +47,7 @@ interface Navigator {
                 storageService.getObj('media-capture-meta', 'capture-in-progress').then((result) => {
                     if (result && result == 'true') {
                         // media capture ended
-                        storageService.save('media-capture-meta', 'metadata', 'capture-in-progress', 'false').then((res) => {
-                            console.log('falgged to false');
-                        });
+                        storageService.save('media-capture-meta', 'metadata', 'capture-in-progress', 'false').then((res) => { });
                     } else {
                         $state.go('login');
                     }
