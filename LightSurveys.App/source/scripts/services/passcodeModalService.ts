@@ -5,7 +5,7 @@ module App.Services {
     "use strict";
 
     export interface IPasscodeModalService {
-        showDialog: (loginMode: boolean) => void;
+        showDialog: (dialogMode: string, headerText: string) => void;
         hideDialog: () => void;
         reset: () => void;
     }
@@ -13,8 +13,8 @@ module App.Services {
     interface IPasscodeModalScope extends ng.IScope {
         passcode: string;
         firstPasscode: string;
-        loginMode: boolean;
         headingText: string;
+        dialogMode: string;
 
         addDigit: (value: number) => void;
         removeDigit: () => void;
@@ -34,16 +34,16 @@ module App.Services {
             private httpService: IHttpService,
             private alertService: App.Services.IAlertService) { }
 
-        showDialog(loginMode: boolean = false, header: string = 'Welcome back') {
+        showDialog(dialogMode: string, headerText: string = 'Welcome back') {
             let self = this;
 
             if (this.modalInstance) {
-                this.modalScope.loginMode = loginMode;
+                this.modalScope.dialogMode = dialogMode;
                 this.modalScope.passcode = '';
                 this.modalScope.firstPasscode = '';
 
-                if (header && header.length)
-                    this.modalScope.headingText = header;
+                if (headerText && headerText.length)
+                    this.modalScope.headingText = headerText;
 
                 this.modalInstance.show();
             }
@@ -51,32 +51,34 @@ module App.Services {
                 this.modalScope = <IPasscodeModalScope>this.$rootScope.$new(true);
                 this.modalScope.passcode = '';
                 this.modalScope.firstPasscode = '';
-                this.modalScope.loginMode = loginMode;
-                if (header && header.length)
-                    this.modalScope.headingText = header;
+                this.modalScope.dialogMode = dialogMode;
+                if (headerText && headerText.length)
+                    this.modalScope.headingText = headerText;
 
                 this.modalScope.addDigit = (value: number) => {
                     if (self.modalScope.passcode.length < 4) {
                         self.modalScope.passcode = self.modalScope.passcode + value;
 
-                        if (self.modalScope.passcode.length == 4) {
-                            if (self.modalScope.loginMode)
+                        if (self.modalScope.passcode.length === 4) {
+                            if (self.modalScope.dialogMode === 'login')
                                 self.$rootScope.$broadcast('passcode-modal-pin-entered', self.modalScope.passcode);
-                            else {
+                            else if (self.modalScope.dialogMode === 'setpasscode') {
                                 if (self.modalScope.firstPasscode.length == 0) {
                                     self.alertService.show('please confirm your passcode');
                                     self.modalScope.firstPasscode = self.modalScope.passcode;
                                     self.reset();
                                 } else {
                                     if (self.modalScope.firstPasscode !== self.modalScope.passcode) {
-                                        self.alertService.show('Passcodes did not match! try again');
-                                        self.reset();
                                         self.modalScope.firstPasscode = '';
+                                        self.reset();
+                                        self.alertService.show('Passcodes did not match! try again');
                                     } else {
                                         // passcode confirmed
                                         self.$rootScope.$broadcast('passcode-modal-pin-confirmed', self.modalScope.passcode);
                                     }
                                 }
+                            } else if (self.modalScope.dialogMode === 'disable') {
+                                self.$rootScope.$broadcast('passcode-modal-pin-disabled', self.modalScope.passcode);
                             }
                         }
                     }
