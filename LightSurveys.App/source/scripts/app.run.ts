@@ -32,6 +32,16 @@ interface Navigator {
             }
 
             document.addEventListener('pause', function (event) {
+                if ($rootScope.currentMedia) {
+                    $rootScope.currentMedia.stop();
+                    $rootScope.currentMedia.release();
+
+                    if ($rootScope.mediaModal) {
+                        $rootScope.mediaModal.hide();
+                        $rootScope.mediaModal.remove();
+                    }
+                }
+
                 storageService.getObj('media-capture-meta', 'capture-in-progress').then((result) => {
                     if (result && result == 'true') {
                         // media capture in progress

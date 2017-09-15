@@ -174,3 +174,17 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     text-align: center;
     margin: 7px 0;
 }
+
+.audio-controls-bar {
+    margin-top: 50%;
+
+    .button {
+        padding-top: 10px;
+    }
+}
+
+.audio-duration-label {
+    font-size: 20px;
+    color: white;
+    text-align: center;
+}

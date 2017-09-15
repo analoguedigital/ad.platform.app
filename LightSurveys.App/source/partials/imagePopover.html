@@ -3,9 +3,20 @@
         <ion-slide ng-repeat="attachment in formValue.attachments">
             <img ng-if="attachment.mediaType==='image'" ng-src="{{attachment.fileUri}}" class="fullscreen-image" />
             <video ng-if="attachment.mediaType==='video'" ng-src="{{attachment.fileUri}}" class="fullscreen-image" controls="controls"/>
-            <button ng-if="attachment.mediaType === 'audio'" class="button button-full button-positive" ng-click="playAudio(attachment); $event.stopPropagation();">
-                <i class="icon ion-play"></i>
-            </button>
+            
+            <div ng-if="attachment.mediaType === 'audio'">
+                <div class="button-bar audio-controls-bar">
+                    <button class="button button-positive" ng-click="playAudio(attachment); $event.stopPropagation();">
+                        <i class="icon ion-play"></i>
+                    </button>
+                    <button class="button button-positive" ng-click="pauseAudio(); $event.stopPropagation();">
+                        <i class="icon ion-pause"></i>
+                    </button>
+                </div>
+                <div class="audio-duration-label" ng-if="currentMediaDuration">
+                    <p>duration: {{currentMediaDuration}} sec.</p>
+                </div>
+            </div>
         </ion-slide>
     </ion-slide-box>
 </div>
