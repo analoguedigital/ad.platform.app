@@ -2,8 +2,8 @@
 $ionicons-font-path: "../../www/fonts" !default;
 
 $light: #fdfdfd !default;
-$positive: #459597 !default;
-$energized: #df592c !default;
+$positive: #1695a3 !default;
+$energized: #df5a2b !default;
 $dark: #1d2331 !default;
 
 $button-font-size: 16px !default;
@@ -17,11 +17,11 @@ $item-dark-border: lighten($dark,8);
 $item-positive-border: lighten($positive,4);
 $item-padding: 12px;
 
-$menu-bg: #459597 !default;
+$menu-bg: #1695a3 !default;
 $menu-side-shadow: 0;
 $content-padding: 14px !default;
 
-$base-background-color: #1d2331 !default;
+$base-background-color: #245278 !default;
 
 // Include all of Ionic
 @import "../../bower_components/ionic/scss/ionic.scss";
@@ -35,6 +35,7 @@ $base-background-color: #1d2331 !default;
 
 .register { background-color: $positive;
     .fa { color: lighten($dark,40); font-size: 20px !important; }
+    .item-input { padding-top: 1px; padding-bottom: 0 }
 }
 
 mwl-calendar.survey-calendar {
@@ -125,7 +126,7 @@ mwl-calendar.survey-calendar {
 
 .list .item-toggle { background-color: inherit; border-color: $base-background-color; color: #ddd; }
 
-.toast { padding: 15px 15px 15px 50px !important; box-shadow: none !important; }
+.toast { padding: 15px 15px 15px 50px !important; box-shadow: none !important;background-color:red }
 
 .toast-bottom-center { bottom: 20px !important; }
 

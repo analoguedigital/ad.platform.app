@@ -36,7 +36,7 @@ angular.module('lm.surveys').controller('registerController', ['$scope', '$state
                 alertService.show("Please enter your address");
             }
             else if ($scope.model.termsAgreed == false) {
-                alertService.show("Please agree to usage terms first");
+                alertService.show("Please agree to usage terms");
             }
             else {
                 ngProgress.start();
