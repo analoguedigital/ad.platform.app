@@ -7,7 +7,8 @@ module App.Services {
     export interface IMediaService {
         captureImage: () => ng.IPromise<Models.Attachment>;
         addFromLibrary: () => ng.IPromise<Models.Attachment>;
-        recordVideo: () => ng.IPromise<Models.Attachment>
+        recordVideo: () => ng.IPromise<Models.Attachment>;
+        recordAudio: () => ng.IPromise<Models.Attachment>;
     }
 
     class MediaService implements IMediaService {
@@ -126,6 +127,33 @@ module App.Services {
                 (message) => {
                     q.reject(message);
                 }, { limit: 1 });
+
+            return q.promise;
+        }
+
+        recordAudio(): ng.IPromise<Models.Attachment> {
+            var q = this.$q.defer<Models.Attachment>();
+
+            if (!navigator.device) {
+                q.resolve(null);
+                return q.promise;
+            }
+
+            this.storageService.save('media-capture-meta', 'metadata', 'capture-in-progress', 'true').then((res) => { });
+
+            navigator.device.capture.captureAudio(
+                (mediaFiles) => {
+                    var attachment = <Models.Attachment>{
+                        fileUri: mediaFiles[0].fullPath,
+                        tempStorage: true,
+                        type: mediaFiles[0].type,
+                        mediaType: _.split(mediaFiles[0].type, '/')[0]
+                    };
+                    q.resolve(attachment);
+                }, (message) => {
+                    q.reject(message);
+                }, { limit: 1 }
+            );
 
             return q.promise;
         }

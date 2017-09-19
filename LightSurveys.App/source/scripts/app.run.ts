@@ -32,6 +32,16 @@ interface Navigator {
             }
 
             document.addEventListener('pause', function (event) {
+                if ($rootScope.currentMedia) {
+                    $rootScope.currentMedia.stop();
+                    $rootScope.currentMedia.release();
+
+                    if ($rootScope.mediaModal) {
+                        $rootScope.mediaModal.hide();
+                        $rootScope.mediaModal.remove();
+                    }
+                }
+
                 storageService.getObj('media-capture-meta', 'capture-in-progress').then((result) => {
                     if (result && result == 'true') {
                         // media capture in progress
@@ -47,9 +57,7 @@ interface Navigator {
                 storageService.getObj('media-capture-meta', 'capture-in-progress').then((result) => {
                     if (result && result == 'true') {
                         // media capture ended
-                        storageService.save('media-capture-meta', 'metadata', 'capture-in-progress', 'false').then((res) => {
-                            console.log('falgged to false');
-                        });
+                        storageService.save('media-capture-meta', 'metadata', 'capture-in-progress', 'false').then((res) => { });
                     } else {
                         $state.go('login');
                     }

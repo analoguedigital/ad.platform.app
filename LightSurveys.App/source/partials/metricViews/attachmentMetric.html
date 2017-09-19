@@ -1,11 +1,13 @@
 ﻿<h3 ng-hide="isCompact"> {{::metric.description}} </h3>
 <div ng-controller="attachmentMetricController">
-
     <div class="thumbnails">
         <div class="thumbnail" ng-repeat="attachment in formValue.attachments" ng-click="showImages($index)">
             <img ng-if="attachment.mediaType==='image'" ng-src="{{attachment.fileUri}}" />
             <video ng-if="attachment.mediaType==='video'" ng-src="{{attachment.fileUri}}" />
-            <div ng-if="attachment.mediaType!=='image' && attachment.mediaType!=='video'" ng-src="{{attachment.fileUri}}" class="fullscreen-image">{{attachment.mediaType}}</div>
+            <div ng-if="attachment.mediaType==='audio'" class="audio-thumbnail">
+                <i class="icon ion-play"></i>
+            </div>
+            <div ng-if="attachment.mediaType!=='image' && attachment.mediaType!=='video' && attachment.mediaType !== 'audio'" ng-src="{{attachment.fileUri}}" class="fullscreen-image">{{attachment.mediaType}}</div>
         </div>
     </div>
 

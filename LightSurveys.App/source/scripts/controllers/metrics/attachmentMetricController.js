@@ -1,6 +1,6 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('attachmentMetricController', ['$scope', '$timeout', 'mediaService', '$ionicModal', '$ionicActionSheet', '$controller', 'userService', 'Upload',
-    function ($scope, $timeout, mediaService, $ionicModal, $ionicActionSheet, $controller, userService, Upload) {
+angular.module('lm.surveys').controller('attachmentMetricController', ['$scope', '$rootScope', '$timeout', 'mediaService', '$ionicModal', '$ionicActionSheet', '$controller', 'userService', 'Upload',
+    function ($scope, $rootScope, $timeout, mediaService, $ionicModal, $ionicActionSheet, $controller, userService, Upload) {
 
         $controller('metricController', { $scope: $scope });
 
@@ -10,6 +10,61 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
         }
         else {
             $scope.formValue = $scope.formValues[0];
+        }
+
+        $scope.currentMedia = undefined;
+        $scope.currentMediaDuration = undefined;
+
+        $scope.playAudio = function (attachment) {
+            if ($scope.currentMedia)
+                $scope.currentMedia.play();
+            else {
+                var media = new Media(attachment.fileUri, function () { }, function (err) { });
+
+                $scope.currentMedia = media;
+                $rootScope.currentMedia = media;
+                $rootScope.mediaModal = $scope.modal;
+
+                var counter = 0;
+                var timeDuration = setInterval(function () {
+                    counter = counter + 100;
+                    if (counter > 2000)
+                        clearInterval(timeDuration);
+
+                    var duration = media.getDuration();
+                    if (duration > 0) {
+                        clearInterval(timeDuration);
+                        $scope.currentMediaDuration = _.round(duration, 1);
+                    }
+                }, 100);
+
+                media.play();
+            }
+        };
+
+        $scope.pauseAudio = function () {
+            if ($scope.currentMedia)
+                $scope.currentMedia.pause();
+        }
+
+        $scope.stopPlayback = function () {
+            if ($scope.currentMedia) {
+                $scope.currentMedia.stop();
+                $scope.currentMedia.release();
+            }
+
+            $scope.currentMedia = undefined;
+            $scope.currentMediaDuration = undefined;
+        }
+
+        $scope.slideChanged = function (index) {
+            if ($scope.currentMedia) {
+                $scope.currentMedia.stop();
+                $scope.currentMedia.release();
+            }
+
+            $scope.currentMedia = undefined;
+            $scope.currentMediaDuration = undefined;
         }
 
         var uploadInstance;
@@ -23,8 +78,9 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
             var hideSheet = $ionicActionSheet.show({
                 buttons: [
                     { text: 'Take photo' },
+                    { text: 'From library' },
                     { text: 'Record video' },
-                    { text: 'From library' }
+                    { text: 'Record audio' }
                 ],
                 titleText: 'Select source',
                 cancelText: 'Cancel',
@@ -38,11 +94,15 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
                             mediaService.captureImage().then($scope.addAttachment);
                             break;
                         case 1:
-                            mediaService.recordVideo().then($scope.addAttachment);
-                            break;
-                        case 2:
                             mediaService.addFromLibrary().then($scope.addAttachment);
                             break;
+                        case 2:
+                            mediaService.recordVideo().then($scope.addAttachment);
+                            break;
+                        case 3: {
+                            mediaService.recordAudio().then($scope.addAttachment);
+                            break;
+                        }
                     }
 
                     return true;
@@ -69,6 +129,28 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
                 }
             });
         }
+
+        $scope.showImages = function (index) {
+            $scope.activeSlide = index;
+            $scope.showModal('partials/imagePopover.html');
+        }
+
+        $scope.showModal = function (templateUrl) {
+            $ionicModal.fromTemplateUrl(templateUrl, {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.modal = modal;
+                $scope.modal.show();
+            });
+        }
+
+        // Close the modal
+        $scope.closeModal = function () {
+            $scope.stopPlayback();
+            $scope.modal.hide();
+            $scope.modal.remove()
+        };
 
         //$scope.uploadFiles = function () {
         //    if (uploadIndex < $scope.files.length && !uploadInstance) {
@@ -131,26 +213,5 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
         //    _.remove(updatedGuids, function (g) { return g === file[0].guid; });
         //    $scope.formValue.textValue = updatedGuids.join(',');
         //};
-
-        $scope.showImages = function (index) {
-            $scope.activeSlide = index;
-            $scope.showModal('partials/imagePopover.html');
-        }
-
-        $scope.showModal = function (templateUrl) {
-            $ionicModal.fromTemplateUrl(templateUrl, {
-                scope: $scope,
-                animation: 'slide-in-up'
-            }).then(function (modal) {
-                $scope.modal = modal;
-                $scope.modal.show();
-            });
-        }
-
-        // Close the modal
-        $scope.closeModal = function () {
-            $scope.modal.hide();
-            $scope.modal.remove()
-        };
     }]);
 
