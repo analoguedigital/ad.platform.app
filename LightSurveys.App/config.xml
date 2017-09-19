@@ -6,7 +6,7 @@
   <vs:template-name>BlankJS</vs:template-name>
   <vs:toolsetVersion>6.3.1</vs:toolsetVersion>
   <engine name="android" spec="5.2.1" />
-  <engine name="ios" spec="4.2.0" />
+  <engine name="ios" spec="4.3.0" />
   <engine name="windows" spec="4.4.2" />
   <content src="index.html" />
   <access origin="*" />
