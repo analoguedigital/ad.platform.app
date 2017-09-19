@@ -9,6 +9,7 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
 
 
         $scope.currentContext = userService.current;
+        $scope.allFormTemplates = [];
         $scope.formTemplates = [];
 
         var _loadList = function () {
@@ -21,8 +22,8 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                             });
                     });
 
-                    var partitions = _.partition(results, function (template) { return !template.title.match(/feedback/i); });
-                    $scope.formTemplates = _.concat(partitions[0], partitions[1]);
+                    $scope.allFormTemplates = results;
+                    $scope.formTemplates = _.filter(results, function (formTemplate) { return formTemplate.createdById === userService.current.userId; });
 
                 }, function (err) {
                     alertService.show(err);
@@ -42,7 +43,7 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         };
 
         $scope.cloneTemplate = function () {
-            var recordingsTemplate = _.filter($scope.formTemplates, function (template) { return template.title.toLowerCase().includes('recording'); })[0];
+            var recordingsTemplate = _.filter($scope.allFormTemplates, function (template) { return template.title.toLowerCase().includes('recording'); })[0];
             $state.go("cloneTemplate", { id: recordingsTemplate.id });
         };
 
