@@ -14,7 +14,7 @@ angular.module('lm.surveys').controller('registerController', ['$scope', '$state
             birthdate: null,
             gender: "",
             address: "",
-            organisationName: "Docit"
+            organisationName: "OnRecord"
         };
 
         $scope.register = function () {
