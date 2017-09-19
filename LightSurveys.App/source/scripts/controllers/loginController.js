@@ -1,8 +1,8 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScope', '$ionicHistory', '$ionicPlatform', '$state', '$stateParams', '$timeout', '$ionicModal',
-    'userService', 'alertService', 'ngProgress', 'surveyService', 'fingerprintService', 'passcodeModalService', 'md5',
+    'userService', 'alertService', 'ngProgress', 'surveyService', 'fingerprintService', 'passcodeModalService', 'md5', 'toastr',
     function ($scope, $rootScope, $ionicHistory, $ionicPlatform, $state, $stateParams, $timeout, $ionicModal, userService,
-        alertService, ngProgress, surveyService, fingerprintService, passcodeModalService, md5) {
+        alertService, ngProgress, surveyService, fingerprintService, passcodeModalService, md5, toastr) {
         $scope.existingProfiles = [];
         $scope.profile = undefined;
         $scope.loginValidated = false;
@@ -78,6 +78,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
             if (passcode && passcode.length === 4) {
                 var hashed = md5.createHash(passcode || '');
                 if (hashed === $scope.profile.settings.passcodeText) {
+                    toastr.clear();
                     $timeout(function () {
                         $scope.loginValidated = true;
                         passcodeModalService.hideDialog();
@@ -98,7 +99,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
         $scope.fallbackToPasscode = function () {
             userService.clearCurrent();
             if ($scope.profile.settings.passcodeEnabled === true)
-                passcodeModalService.showDialog(true);
+                passcodeModalService.showDialog('login');
         };
 
         $scope.activate = function () {
@@ -129,8 +130,8 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                                         $scope.fallbackToPasscode();
                                     }
                                 });
-                            } else if (settings.passcodeEnabled === true) {
-                                passcodeModalService.showDialog(true);
+                            } else {
+                                $scope.fallbackToPasscode();
                             }
                         }
                     }

@@ -14,12 +14,12 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         $scope.$watch('model.passcodeEnabled', function (newValue, oldValue) {
             if (oldValue === false && newValue === true) {
                 if (!$scope.passcodeSaved && !$scope.profile.settings.passcodeEnabled) {
-                    passcodeModalService.showDialog(false, 'Enable login by passcode');
+                    passcodeModalService.showDialog('setpasscode', 'Enable login by passcode');
                 }
             }
             else if (oldValue === true && newValue === false) {
                 if ($scope.passcodeSaved && $scope.profile.settings.passcodeEnabled) {
-                    passcodeModalService.showDialog(false, 'Disable login by passcode');
+                    passcodeModalService.showDialog('disable', 'Disable login by passcode');
                 }
             }
         });
@@ -35,7 +35,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
             }
         });
 
-        $scope.$on('passcode-modal-pin-entered', function (ev, args) {
+        $scope.$on('passcode-modal-pin-disabled', function (ev, args) {
             var hashed = md5.createHash(args || '');
             if (hashed === $scope.profile.settings.passcodeText) {
                 // disable local passcode
@@ -74,10 +74,12 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         $scope.$on('passcode-modal-closed', function (ev, args) {
             if ($scope.passcodeSaved === false)
                 $scope.model.passcodeEnabled = false;
+            else
+                $scope.model.passcodeEnabled = true;
 
             passcodeModalService.hideDialog();
         });
-
+        
         $scope.changeAppIcon = function () {
             alternateIconService.isSupported()
                 .then(function (supported) {
