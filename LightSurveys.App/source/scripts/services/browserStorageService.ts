@@ -147,6 +147,21 @@ module App.Services {
             return q.promise;
         }
 
+        deleteAllObjectsOfType(objectType: string): ng.IPromise<void> {
+
+            var q = this.$q.defer<void>();
+            var keysPrefix = this.getMergedKey(objectType, null, null);
+
+            angular.forEach(this.localStorageService.keys(), (key: string) => {
+                if (_.startsWith(key, keysPrefix))
+                    this.localStorageService.remove(key);
+            });
+            q.resolve();
+
+            return q.promise;
+        }
+
+
         getFileEntryFromUri(fileUri: string): ng.IPromise<FileEntry> {
             var q = this.$q.defer<FileEntry>();
             q.reject("cannot use filesystem on browser");

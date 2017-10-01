@@ -16,6 +16,7 @@ module App.Services {
         deleteByCat(objectType: string, category: string, key: string): ng.IPromise<void>;
         getFileEntryFromUri(fileUri: string): ng.IPromise<FileEntry>;
         saveFile(objectType: string, category: string, fileUri: string): ng.IPromise<string>;
+        deleteAllObjectsOfType(objectType: string): ng.IPromise<void>;
     }
 
     StorageService.$inject = ['$window', '$injector'];

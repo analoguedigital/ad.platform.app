@@ -1,7 +1,9 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootScope', '$state', '$timeout', '$ionicModal',
-    '$ionicPopup', 'alertService', 'userService', 'passcodeModalService', 'md5', 'fingerprintService', 'alternateIconService',
-    function ($scope, $rootScope, $state, $timeout, $ionicModal, $ionicPopup, alertService, userService, passcodeModalService, md5, fingerprintService, alternateIconService) {
+    '$ionicPopup', 'alertService', 'userService', 'surveyService', 'passcodeModalService', 'md5', 'fingerprintService', 'alternateIconService',
+    function ($scope, $rootScope, $state, $timeout, $ionicModal,
+        $ionicPopup, alertService, userService, surveyService, passcodeModalService, md5, fingerprintService, alternateIconService) {
+
         $scope.profile = undefined;
         $scope.passcodeSaved = false;
         $scope.fingerprintHardwareDetected = false;
@@ -79,7 +81,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
 
             passcodeModalService.hideDialog();
         });
-        
+
         $scope.changeAppIcon = function () {
             alternateIconService.isSupported()
                 .then(function (supported) {
@@ -97,7 +99,24 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                 });
         };
 
+        $scope.deleteAllData = function () {
+            var confirmPopup = $ionicPopup.confirm({
+                title: 'Delete all data',
+                template: 'Are you sure you want to delete all data stored on the device?'
+            });
+
+            confirmPopup.then(function (res) {
+                if (res) {
+                    surveyService.deleteAllData().then(
+                        function () { alertService.show('All local data deleted successfully!'); },
+                        function (err) { alertService.show('Failed: ' + err); });
+                }
+            });
+        }
+
         $scope.activate = function () {
+
+            $scope.isIOS = ionic.Platform.isIOS();
             fingerprintService.isHardwareDetected()
                 .then(function (result) {
                     $scope.fingerprintHardwareDetected = result;
@@ -114,6 +133,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                 }
             });
         };
+
         $scope.activate();
 
     }]);

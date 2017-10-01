@@ -286,6 +286,28 @@ module App.Services {
             return q.promise;
         }
 
+        deleteAllObjectsOfType(objectType: string): ng.IPromise<void> {
+
+            var q = this.$q.defer<void>();
+
+            try {
+
+                this.getDirEntry(objectType, null)
+                    .then
+                    ((dir) => {
+                        return dir.removeRecursively(
+                            () => { q.resolve(); },
+                            (err: FileError) => { q.reject(err); });
+                    },
+                    (err) => { q.reject(err); });
+
+            } catch (e) {
+                q.reject(e);
+            }
+
+            return q.promise;
+        }
+
 
         softDelete(objectType: string, key: string): ng.IPromise<void> {
             var q = this.$q.defer<void>();

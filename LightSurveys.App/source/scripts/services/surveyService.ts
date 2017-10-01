@@ -525,6 +525,9 @@ module App.Services {
             return this.storageService.softDelete(this.SURVEY_OBJECT_TYPE, id);
         }
 
+        deleteAllData(): ng.IPromise<void> {
+            return this.storageService.deleteAllObjectsOfType(this.SURVEY_OBJECT_TYPE);
+        }
 
         getDraftsNumber(formTemplateId: string): ng.IPromise<number> {
             var q = this.$q.defer<number>();
