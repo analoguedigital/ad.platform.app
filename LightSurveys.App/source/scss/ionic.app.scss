@@ -1,10 +1,15 @@
-﻿// The path for our ionicons font files, relative to the built CSS in www/css
+﻿$color1: #1695A3;
+$color2: #DF5A2B;
+$color3: #245278;
+$color4: #1D2331;
+
+// The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../../www/fonts" !default;
 
 $light: #fdfdfd !default;
-$positive: #459597 !default;
-$energized: #df592c !default;
-$dark: #1d2331 !default;
+$positive: $color1 !default;
+$energized: $color2 !default;
+$dark: $color4 !default;
 
 $button-font-size: 16px !default;
 $button-height: 60px !default;
@@ -17,7 +22,7 @@ $item-dark-border: lighten($dark,8);
 $item-positive-border: lighten($positive,4);
 $item-padding: 12px;
 
-$menu-bg: #459597 !default;
+$menu-bg: $color1 !default;
 $menu-side-shadow: 0;
 $content-padding: 14px !default;
 
@@ -32,6 +37,10 @@ $base-background-color: #1d2331 !default;
 .right-side { float: right; }
 .no-margin-top { margin-top: 0 !important; }
 
+label.item,
+.item-select select {
+    background: white;
+}
 
 .register { background-color: $positive;
     .fa { color: lighten($dark,40); font-size: 20px !important; }
@@ -168,3 +177,25 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 }
 
 .chartjs-tooltip-key { display: inline-block; width: 10px; height: 10px; margin-right: 10px; }
+
+.login-header {
+    margin-top: 70px;
+
+    & .brand {
+        margin-left: -5px;
+        color: white;
+        padding-top: 55px;
+        font-size: 48px;
+        font-weight: bold;
+    }
+}
+
+.login-footer {
+    display: block;
+    height: 15px;
+    background: #245278;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}

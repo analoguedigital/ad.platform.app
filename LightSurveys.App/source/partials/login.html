@@ -1,19 +1,12 @@
 ﻿<ion-view view-title="Home" class="login">
     <ion-content class="content has-footer padding" ng-cloak>
-        <div>
+        <div class="padding-horizontal">
             <div class="padding-horizontal">
-                <div class="padding-horizontal">
-                    <div class="padding-horizontal text-center">
-                        <div class="padding-horizontal inline text-left">
-                            <h1 class="light">
-                                Docit
-                            </h1>
-                            <div class="slogan padding" style="border-left:4px solid white">
-                                <h2 class="light">Capture it</h2>
-                                <h2 class="light">Record it</h2>
-                                <h2 class="light">Timeline it</h2>
-                            </div>
-                        </div>
+                <div class="text-center">
+                    <div class="inline text-center login-header">
+                        <img class="pull-left" src="../source/images/art-on.png" alt="onrecord" width="130" />
+                        <span class="pull-left brand">RECORD</span>
+                        <div class="clearfix"></div>
                     </div>
                 </div>
             </div>
@@ -24,16 +17,16 @@
                     <div class="list list-inset">
                         <label class="item item-icon-left">
                             <i class="icon ion-ios-person-outline"></i>
-                            <div class="item-input">
-                                <input name="email" type="email" ng-model="loginData.email" placeholder="Email" required autofocus>
-                            </div>
+                            <span class="item-input">
+                                <input name="email" type="email" ng-model="loginData.email" placeholder="Email" required autofocus autocomplete="off">
+                            </span>
                         </label>
 
                         <label class="item item-icon-left">
                             <i class="icon ion-ios-locked-outline"></i>
-                            <div class="item-input">
-                                <input name="password" ng-model="loginData.password" placeholder="Password" type="password" required>
-                            </div>
+                            <span class="item-input">
+                                <input name="password" ng-model="loginData.password" placeholder="Password" type="password" required autocomplete="off">
+                            </span>
                         </label>
                         <div class="">
                             <button class="no-margin-top item button button-full button-energized " type="submit" ng-click="login()">
@@ -54,5 +47,6 @@
         <div class="title">
             <button class="button button-clear" ng-click="goRegister()">Create Account</button>
         </div>
+        <div class="login-footer"></div>
     </div>
 </ion-view>
