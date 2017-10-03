@@ -184,8 +184,8 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     & .brand {
         margin-left: -5px;
         color: white;
-        padding-top: 55px;
-        font-size: 48px;
+        padding-top: 40px;
+        font-size: 40px;
         font-weight: bold;
     }
 }
@@ -199,3 +199,18 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     left: 0;
     width: 100%;
 }
+
+.app-icons {
+    padding-bottom: 10px;
+
+    & .app-icon {
+        width: 60px;
+        border-radius: 2px;
+    }
+
+    & .button.active-icon img {
+        border: 2px solid yellow;
+        box-shadow: 0 1px 12px yellow;
+    }
+}
+
