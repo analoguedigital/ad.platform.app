@@ -43,7 +43,8 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
 
         $scope.cloneTemplate = function () {
             var recordingsTemplate = _.filter($scope.formTemplates, function (template) { return template.title.toLowerCase().includes('recording'); })[0];
-            $state.go("cloneTemplate", { id: recordingsTemplate.id });
+            if (recordingsTemplate)
+                $state.go("cloneTemplate", { id: recordingsTemplate.id });
         };
 
         $scope.deleteTemplate = function (formTemplate) {
