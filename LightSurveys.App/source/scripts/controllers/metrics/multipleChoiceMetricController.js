@@ -1,9 +1,21 @@
 'use strict';
-angular.module('lm.surveys').controller('multipleChoiceMetricController', ['$scope', '$controller', function ($scope, $controller) {
+angular.module('lm.surveys').controller('multipleChoiceMetricController', ['$scope', '$controller', 'httpService', function ($scope, $controller, httpService) {
 
     $controller('metricController', { $scope: $scope });
 
     $scope.metric.isMultipleAnswer = $scope.metric.viewType === "CheckBoxList";
+
+    if (!$scope.metric.isAdHoc) {
+        httpService.getDataList($scope.metric.dataListId)
+            .then((data) => {
+                $scope.metric.dataList = data;
+            }, (err) => {
+                console.error(err);
+            });
+    } else {
+        $scope.metric.dataList = { id: $scope.metric.dataListId, name: 'AdHoc DataList' };
+        $scope.metric.dataList.items = $scope.metric.adHocItems;
+    }
 
     if (_.isEmpty($scope.formValues)) {
         if ($scope.metric.isMultipleAnswer) {
@@ -28,6 +40,9 @@ angular.module('lm.surveys').controller('multipleChoiceMetricController', ['$sco
     }
 
     $scope.getText = function (dataListItemId) {
-        return _.find($scope.metric.dataList.items, { 'id': dataListItemId }).text;
+        if ($scope.metric.dataList && $scope.metric.dataList.items)
+            return _.find($scope.metric.dataList.items, { 'id': dataListItemId }).text;
+
+        return '';
     };
 }]);
