@@ -1,10 +1,15 @@
-﻿// The path for our ionicons font files, relative to the built CSS in www/css
+﻿$color1: #1695A3;
+$color2: #DF5A2B;
+$color3: #245278;
+$color4: #1D2331;
+
+// The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../../www/fonts" !default;
 
 $light: #fdfdfd !default;
-$positive: #1695a3 !default;
-$energized: #df5a2b !default;
-$dark: #1d2331 !default;
+$positive: $color1 !default;
+$energized: $color2 !default;
+$dark: $color4 !default;
 
 $button-font-size: 16px !default;
 $button-height: 60px !default;
@@ -17,7 +22,7 @@ $item-dark-border: lighten($dark,8);
 $item-positive-border: lighten($positive,4);
 $item-padding: 12px;
 
-$menu-bg: #1695a3 !default;
+$menu-bg: $color1 !default;
 $menu-side-shadow: 0;
 $content-padding: 14px !default;
 
@@ -32,6 +37,10 @@ $base-background-color: #245278 !default;
 .right-side { float: right; }
 .no-margin-top { margin-top: 0 !important; }
 
+label.item,
+.item-select select {
+    background: white;
+}
 
 .register { background-color: $positive;
     .fa { color: lighten($dark,40); font-size: 20px !important; }
@@ -170,36 +179,38 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 
 .chartjs-tooltip-key { display: inline-block; width: 10px; height: 10px; margin-right: 10px; }
 
-.terms-checkbox {
-    font-size: 14px !important;
-    width: 100% !important;
-}
+.login-header {
+    margin-top: 70px;
 
-.terms-checkbox-input {
-    display: inline-block !important;
-    margin-left: 0 !important;
-}
-
-.terms-modal-content {
-    padding: 0 20px;
-}
-
-.audio-thumbnail {
-    font-size: 40px;
-    text-align: center;
-    margin: 7px 0;
-}
-
-.audio-controls-bar {
-    margin-top: 50%;
-
-    .button {
-        padding-top: 10px;
+    & .brand {
+        margin-left: -5px;
+        color: white;
+        padding-top: 40px;
+        font-size: 40px;
+        font-weight: bold;
     }
 }
 
-.audio-duration-label {
-    font-size: 20px;
-    color: white;
-    text-align: center;
+.login-footer {
+    display: block;
+    height: 15px;
+    background: #245278;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.app-icons {
+    padding-bottom: 10px;
+
+    & .app-icon {
+        width: 60px;
+        border-radius: 2px;
+    }
+
+    & .button.active-icon img {
+        border: 2px solid yellow;
+        box-shadow: 0 1px 12px yellow;
+    }
 }

@@ -7,7 +7,9 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         $scope.profile = undefined;
         $scope.passcodeSaved = false;
         $scope.fingerprintHardwareDetected = false;
-
+        $scope.canChangeAppIcon = false;
+        $scope.selectedAppIcon = undefined;
+        
         $scope.model = {
             passcodeEnabled: false,
             fingerprintEnabled: false
@@ -82,21 +84,27 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
             passcodeModalService.hideDialog();
         });
 
-        $scope.changeAppIcon = function () {
-            alternateIconService.isSupported()
-                .then(function (supported) {
-                    if (supported) {
-                        alternateIconService.changeIcon('icon-meeting', true)
-                            .then(function (success) {
-                                if (success)
-                                    this.alertService.show('App icon changed!');
-                                else
-                                    this.alertService.show('App icon not changed. check your console!');
-                            });
-                    } else {
-                        alertService.show('AppIconChanger is not available');
-                    }
-                });
+        $scope.changeAppIcon = function (iconName) {
+            try {
+                alternateiconservice.issupported()
+                    .then(function (supported) {
+                        if (supported) {
+                            alternateiconservice.changeicon(iconName, true)
+                                .then(function (success) {
+                                    if (success) {
+                                        this.alertservice.show('app icon changed!');
+                                        $scope.selectedAppIcon = iconName;
+                                    }
+                                    else
+                                        this.alertservice.show('app icon not changed. check your console!');
+                                });
+                        } else {
+                            alertservice.show('appiconchanger is not available');
+                        }
+                    });
+            } catch (e) {
+                console.error(e);
+            }
         };
 
         $scope.deleteAllData = function () {
@@ -121,6 +129,9 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                 .then(function (result) {
                     $scope.fingerprintHardwareDetected = result;
                 });
+
+            if (ionic.Platform.isIOS())
+                $scope.canChangeAppIcon = true;
 
             userService.getExistingProfiles().then(function (profiles) {
                 if (profiles.length) {

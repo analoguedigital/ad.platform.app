@@ -1,5 +1,7 @@
 ﻿<ion-view title="Settings" id="settingsPage">
     <ion-content class="content padding settings" ng-cloak>
+        <h2 class="light">Privacy &amp; Security</h2>
+
         <ul class="list">
             <li class="item item-toggle">
                 Passcode Login
@@ -26,9 +28,41 @@
                 </button>
             </li>
         </ul>
+        <br />
 
-        <button class="button button-positive" ng-click="changeAppIcon()"  ng-show="isIOS">
-            <i class="icon ion-wand"></i> Change App Icon
-        </button>
+        <div ng-if="canChangeAppIcon">
+            <h2 class="light">Choose App Icon</h2>
+            <br />
+
+            <div class="button-bar app-icons">
+                <a class="button button-clear" ng-click="changeAppIcon('art-calculator')" ng-class="{ 'active-icon': selectedAppIcon == 'art-calculator' }">
+                    <img class="app-icon" src="images/art-calculator.png" alt="calculator" />
+                </a>
+                <a class="button button-clear" ng-click="changeAppIcon('art-camera')" ng-class="{ 'active-icon': selectedAppIcon == 'art-camera' }">
+                    <img class="app-icon" src="images/art-camera.png" alt="camera" />
+                </a>
+                <a class="button button-clear" ng-click="changeAppIcon('art-checker')" ng-class="{ 'active-icon': selectedAppIcon == 'art-checker' }">
+                    <img class="app-icon" src="images/art-checker.png" alt="checker" />
+                </a>
+                <a class="button button-clear" ng-click="changeAppIcon('art-paw')" ng-class="{ 'active-icon': selectedAppIcon == 'art-paw' }">
+                    <img class="app-icon" src="images/art-paw.png" alt="paw" />
+                </a>
+            </div>
+            
+            <div class="button-bar app-icons">
+                <a class="button button-clear" ng-click="changeAppIcon('art-signal')" ng-class="{ 'active-icon': selectedAppIcon == 'art-signal' }">
+                    <img class="app-icon" src="images/art-signal.png" alt="signal" />
+                </a>
+                <a class="button button-clear" ng-click="changeAppIcon('art-train')" ng-class="{ 'active-icon': selectedAppIcon == 'art-train' }">
+                    <img class="app-icon" src="images/art-train.png" alt="train" />
+                </a>
+                <a class="button button-clear" ng-click="changeAppIcon('art-onrecord')" ng-class="{ 'active-icon': selectedAppIcon == 'art-onrecord' }">
+                    <img class="app-icon" src="images/art-on.png" alt="on" />
+                </a>
+                <a class="button button-clear" ng-click="changeAppIcon('art-arrow-right')" ng-class="{ 'active-icon': selectedAppIcon == 'art-arrow-right' }">
+                    <img class="app-icon" src="images/art-arrow-right.png" alt="arrow-right" />
+                </a>
+            </div>
+        </div>
     </ion-content>
 </ion-view>
