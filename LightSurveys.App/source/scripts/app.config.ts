@@ -95,6 +95,36 @@
                 url: "/feedback",
                 controller: "feedbackController",
                 templateUrl: "partials/feedback.html"
+            })
+            .state('guidance', {
+                parent: 'menu',
+                url: '/guidance',
+                controller: 'guidanceController',
+                templateUrl: 'partials/guidance/index.html'
+            })
+            .state('userAgreement', {
+                parent: 'menu',
+                url: '/guidance/user-agreement',
+                controller: 'staticContentController',
+                templateUrl: 'partials/guidance/user-agreement.html'
+            })
+            .state('privacyPolicy', {
+                parent: 'menu',
+                url: '/guidance/privacy-policy',
+                controller: 'staticContentController',
+                templateUrl: 'partials/guidance/privacy-policy.html'
+            })
+            .state('gatherEvidence', {
+                parent: 'menu',
+                url: '/guidance/gather-evidence',
+                controller: 'staticContentController',
+                templateUrl: 'partials/guidance/gather-evidence.html'
+            })
+            .state('makingRecords', {
+                parent: 'menu',
+                url: '/guidance/making-records',
+                controller: 'staticContentController',
+                templateUrl: 'partials/guidance/making-records.html'
             });
 
         $urlRouterProvider.otherwise('/home');

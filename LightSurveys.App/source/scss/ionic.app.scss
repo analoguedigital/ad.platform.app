@@ -190,7 +190,22 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
         font-weight: bold;
     }
 }
+.guidance-content {
+    color: $light;
+  
+    & h1, h2 {
+        color: inherit;
+    }
 
+    & h3, h4 {
+        color: $light;
+    }
+
+    & ul {
+        list-style: disc;
+        padding-left: 30px;
+    }
+}
 .login-footer {
     display: block;
     height: 15px;
