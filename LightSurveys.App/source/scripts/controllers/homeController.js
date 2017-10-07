@@ -75,6 +75,7 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                     $scope.$broadcast('scroll.refreshComplete');
                     $scope.downloading = false;
                     ngProgress.complete();
+                    surveyService.uploadAllSurveys();
                 }, function (err) {
                     ngProgress.complete();
                     $scope.downloading = false;
