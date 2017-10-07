@@ -9,7 +9,7 @@ $ionicons-font-path: "../../www/fonts" !default;
 $light: #fdfdfd !default;
 $positive: $color1 !default;
 $energized: $color2 !default;
-$dark: $color4 !default;
+$dark: $color3 !default;
 
 $button-font-size: 16px !default;
 $button-height: 60px !default;
@@ -180,7 +180,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .chartjs-tooltip-key { display: inline-block; width: 10px; height: 10px; margin-right: 10px; }
 
 .login-header {
-    margin-top: 70px;
+    margin-top: 30px;
 
     & .brand {
         margin-left: -5px;
@@ -227,5 +227,19 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     & .button.active-icon img {
         border: 2px solid yellow;
         box-shadow: 0 1px 12px yellow;
+    }
+}
+
+.home{
+    .list{
+        .item{
+            .item-content:active{
+                background-color:$color3;
+            }
+            .desc{
+                margin-top:10px;
+                white-space:normal;
+            }
+        }
     }
 }
