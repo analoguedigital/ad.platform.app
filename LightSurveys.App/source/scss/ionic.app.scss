@@ -168,3 +168,21 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 }
 
 .chartjs-tooltip-key { display: inline-block; width: 10px; height: 10px; margin-right: 10px; }
+
+.guidance-content {
+    color: $light;
+    text-shadow: 1px 0 6px #000;
+
+    & h1, h2 {
+        color: inherit;
+    }
+
+    & h3, h4 {
+        color: $positive;
+    }
+
+    & ul {
+        list-style: disc;
+        padding-left: 30px;
+    }
+}

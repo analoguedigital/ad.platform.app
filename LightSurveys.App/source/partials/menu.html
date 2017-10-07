@@ -53,6 +53,10 @@
                     <i class="icon fa fa-comments fa-fw"></i>
                     <span translate> Feedback</span>
                 </ion-item>
+                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="guidance" menu-close="">
+                    <i class="icon fa fa-info-circle fa-fw"></i>
+                    <span translate> Guidance</span>
+                </ion-item>
                 <ion-item class="item item-positive item-icon-{{::getLeft()}}" ng-click="logOut()">
                     <i class="icon fa fa-sign-out fa-fw"></i>
                     <span translate> Logout</span>

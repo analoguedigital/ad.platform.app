@@ -89,6 +89,36 @@
                 url: "/settings",
                 controller: "settingsController",
                 templateUrl: "partials/settings.html"
+            })
+            .state('guidance', {
+                parent: 'menu',
+                url: '/guidance',
+                controller: 'guidanceController',
+                templateUrl: 'partials/guidance/index.html'
+            })
+            .state('userAgreement', {
+                parent: 'menu',
+                url: '/guidance/user-agreement',
+                controller: 'userAgreementController',
+                templateUrl: 'partials/guidance/user-agreement.html'
+            })
+            .state('privacyPolicy', {
+                parent: 'menu',
+                url: '/guidance/privacy-policy',
+                controller: 'privacyPolicyController',
+                templateUrl: 'partials/guidance/privacy-policy.html'
+            })
+            .state('gatherEvidence', {
+                parent: 'menu',
+                url: '/guidance/gather-evidence',
+                controller: 'gatherEvidenceController',
+                templateUrl: 'partials/guidance/gather-evidence.html'
+            })
+            .state('makingRecords', {
+                parent: 'menu',
+                url: '/guidance/making-records',
+                controller: 'makingRecordsController',
+                templateUrl: 'partials/guidance/making-records.html'
             });
 
         $urlRouterProvider.otherwise('/home');
