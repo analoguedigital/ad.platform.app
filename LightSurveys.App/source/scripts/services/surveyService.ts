@@ -42,6 +42,10 @@ module App.Services {
         formTemplates: Models.FormTemplate[];
         projects: Models.Project[];
 
+        config = {
+            keepUploadedSurveys: true,
+        };
+
         constructor(
             private $q: ng.IQService,
             private $timeout: ng.ITimeoutService,
@@ -135,8 +139,8 @@ module App.Services {
 
                         this.getSubmittedSurveys(template.id)
                             .then((surveys) => {
-
-                                this.uploadSurveys(surveys)
+                                var surveysToUpload = _.filter(surveys, (survey) => { return survey.dateUploaded === null; });
+                                this.uploadSurveys(surveysToUpload)
                                     .then(
                                     () => { deferred.resolve(); },
                                     (err) => { },
@@ -274,9 +278,17 @@ module App.Services {
                     this.httpService.uploadSurvey(updatedSurvey)
                         .then(
                         () => {
-                            // this.softDelete(survey.id)
-                            //     .then(() => { q.resolve(); });
-                            q.resolve();
+                            updatedSurvey.dateUploaded = new Date(new Date().toISOString());
+                            this.saveSurvey(updatedSurvey).then(
+                                () => {
+                                    if (!this.config.keepUploadedSurveys) {
+                                        this.softDelete(survey.id)
+                                            .then(() => { q.resolve(); });
+                                    }
+                                    q.resolve();
+                                },
+                                (err) => { });
+
                         },
                         (err) => {
                             survey.error = err;

@@ -36,6 +36,7 @@ module App.Models {
 
         public dateCreated: Date;
         public dateUpdated: Date;
+        public dateUploaded: Date;
         public surveyDate: Date;
         public filledById: string;
         public projectId: string;
@@ -55,6 +56,7 @@ module App.Models {
             this.dateCreated = utcNow;
             this.dateUpdated = utcNow;
             this.surveyDate = utcNow;
+            this.dateUploaded = null;
 
             this.formValues = [];
             this.isSubmitted = false;
