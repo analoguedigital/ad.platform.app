@@ -1,14 +1,14 @@
-<h3 ng-hide="isCompact"> {{::metric.description}} </h3>
+<h3 ng-hide="metricGroup.isRepeater"> {{::metric.description}} </h3>
 <div ng-controller="freeTextMetricController">
-    
     <label class="item item-input" ng-if="metric.numberOfLine==1">
         <input type="text" name="{{::metric.inputName}}" maxlength="{{::metric.maxLength}}" minlength="{{::metric.minLength}}" ng-show="metric.numberOfLine==1"
-               ng-required="metric.mandatory" ng-model="formValue.textValue">
+               ng-required="metric.mandatory" ng-model="formValue.textValue" placeholder="{{::metric.shortTitle}}">
     </label>
     <label class="item item-input" ng-if="metric.numberOfLine > 1">
         <textarea name="{{::metric.inputName}}" rows="{{::metric.numberOfLine}}" maxlength="{{::metric.maxLength}}" minlength="{{::metric.minLength}}"
                   ng-required="metric.mandatory"
-                  ng-model="formValue.textValue"></textarea>
+                  ng-model="formValue.textValue"
+                  placeholder="{{::metric.shortTitle}}"></textarea>
     </label>
     <div class="errors" ng-messages="{{inputError}}">
         <div ng-message="required"><span translate>This is required</span></div>

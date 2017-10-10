@@ -1,9 +1,9 @@
-<h3 ng-hide="isCompact"> {{::metric.description}} </h3>
+<h3 ng-hide="metricGroup.isRepeater"> {{::metric.description}} </h3>
 <div ng-controller="dateMetricController">
     <div class="item item-input" ng-if="isPersian">
         <div class="persianDateInput">{{dateToString(formValue.dateValue)}}</div>
     </div>
     <div class="item item-input" ng-if="!isPersian">
-        <lm-date-time value="formValue.dateValue"></lm-date-time>
+        <lm-date-time value="formValue.dateValue" ng-class="{ 'small-datetime': metricGroup.isRepeater }"></lm-date-time>
     </div>
 </div>
