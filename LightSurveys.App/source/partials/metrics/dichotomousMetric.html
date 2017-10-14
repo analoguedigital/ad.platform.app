@@ -1,10 +1,21 @@
 <h3 ng-hide="metricGroup.isRepeater"> {{::metric.description}} </h3>
-<div class="item item-checkbox" ng-controller="dichotomousMetricController" >
-    
-    <label class="checkbox">
-        <input type="checkbox" ng-model="formValue.boolValue" ng-required="metric.mandatory" name="{{::metric.inputName}}">
+<div class="list" ng-controller="dichotomousMetricController">
+    <label class="item item-radio">
+        <input type="radio" name="{{::metric.inputName}}-yes-radio" ng-model="formValue.boolValue" value="true" />
+        <div class="radio-content">
+            <div class="item-content">Yes</div>
+            <i class="radio-icon ion-checkmark"></i>
+        </div>
     </label>
-    <div class="errors" ng-messages="{{inputError}}">
-        <div ng-message="required"><span translate>This is required</span></div>
-    </div>
+    <label class="item item-radio">
+        <input type="radio" name="{{::metric.inputName}}-no-radio" ng-model="formValue.boolValue" value="false" />
+        <div class="radio-content">
+            <div class="item-content">No</div>
+            <i class="radio-icon ion-checkmark"></i>
+        </div>
+    </label>
+</div>
+
+<div class="errors" ng-messages="{{inputError}}">
+    <div ng-message="required"><span translate>This is required</span></div>
 </div>
