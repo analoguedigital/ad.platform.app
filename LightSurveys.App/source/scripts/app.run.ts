@@ -9,6 +9,7 @@ interface Navigator {
 
     angular.module("lm.surveys")
         .run(RunIonic)
+        .run(configAngularMoment)
         .run(SetupLoginTransitionControls);
 
     RunIonic.$inject = ["$rootScope", "$state", "$ionicPlatform", "$ionicHistory", "$route",
@@ -105,5 +106,10 @@ interface Navigator {
                 event.preventDefault();
             }
         });
+    }
+
+    configAngularMoment.$inject = ["amMoment", "$locale"];
+    function configAngularMoment(amMoment, $locale) {
+        amMoment.changeLocale("en-GB");
     }
 })();

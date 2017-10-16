@@ -15,6 +15,7 @@ angular.module('lm.surveys', [
     'ngFileUpload',
     'tc.chartjs',
     'ionic-color-picker',
+    "angularMoment",
     'angular-md5'
 ]);
 
