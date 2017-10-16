@@ -44,21 +44,21 @@ interface Navigator {
                 }
 
                 if (mediaService.isCaptureInProgress()) {
-                        // media capture in progress
-                    } else {
-                        $ionicHistory.clearHistory();
-                        $ionicHistory.clearCache();
-                        userService.clearCurrent();
-                    }
+                    // media capture in progress
+                } else {
+                    $ionicHistory.clearHistory();
+                    $ionicHistory.clearCache();
+                    userService.clearCurrent();
+                }
 
             });
 
             document.addEventListener('resume', function (event) {
                 if (!mediaService.isCaptureInProgress()) {
-                        $state.go('login');
-                    }
-                });
+                    $state.go('login');
+                }
             });
+        });
 
         $ionicPlatform.registerBackButtonAction(function (event) {
             if ($state.current.name === 'home') {
@@ -67,7 +67,7 @@ interface Navigator {
                     $ionicSideMenuDelegate.toggleRight(false);
                 } else {
                     var popup = $ionicPopup.confirm({
-                        title: 'Exit Docit',
+                        title: 'Exit',
                         template: 'Are you sure you want to close the application?'
                     });
 
