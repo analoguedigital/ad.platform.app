@@ -115,17 +115,18 @@ module App.Services {
 
             if (ionic.Platform.isIOS()) {
                 if (window.plugins && window.plugins.touchid) {
-                    window.plugins.touchid.verifyFingerprint((result) => {
-                        console.log('touchid.authenticate RESULT', result);
+                    window.plugins.touchid.verifyFingerprint('Scan your fingerprint please',
+                        (result) => {
+                            console.log('touchid.authenticate RESULT', result);
 
-                        response.success = true;
-                        response.message = result;
-                        d.resolve(response);
-                    }, (error) => {
-                        console.log('touchid.authenticate() ERROR', error);
-                        response.message = JSON.stringify(error);
-                        d.resolve(response);
-                    });
+                            response.success = true;
+                            response.message = result;
+                            d.resolve(response);
+                        }, (error) => {
+                            console.log('touchid.authenticate() ERROR', error);
+                            response.message = JSON.stringify(error);
+                            d.resolve(response);
+                        });
                 } else {
                     response.message = 'window.plugins.touchid is not defined!';
                     d.resolve(response);
