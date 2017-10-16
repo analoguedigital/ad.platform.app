@@ -9,7 +9,7 @@ module App.Services {
 
     export interface IAlternateIconService {
         isSupported: () => ng.IPromise<boolean>;
-        changeIcon: (iconName: string, suppressUserNotification: boolean) => ng.IPromise<boolean>;
+        changeIcon: (iconName: string, suppressUserNotification: boolean) => ng.IPromise<void>;
     }
 
     class AlternateIconService implements IAlternateIconService {
@@ -43,8 +43,8 @@ module App.Services {
             return d.promise;
         }
 
-        changeIcon(iconName: string, suppressUserNotification: boolean): ng.IPromise<boolean> {
-            let d = this.$q.defer();
+        changeIcon(iconName: string, suppressUserNotification: boolean): ng.IPromise<void> {
+            let d = this.$q.defer<void>();
 
             AppIconChanger.changeIcon(
                 {
@@ -52,11 +52,10 @@ module App.Services {
                     suppressUserNotification: suppressUserNotification
                 },
                 () => {
-                    d.resolve(true);
+                    d.resolve();
                 },
                 (err) => {
-                    console.log('AlternateIconService.ChangeIcon() ERROR', err);
-                    d.resolve(false);
+                    d.reject(err);
                 }
             );
 
