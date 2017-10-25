@@ -211,8 +211,6 @@
                             }
                         });
 
-                        if (impactSum === 0) impactSum = 0.9;
-
                         data.push(impactSum);
                     } else {
                         data.push(0);
@@ -364,6 +362,15 @@
             else
                 ctx.canvas.height = parent.height();
 
+            // compute yAxis max, and add a little padding
+            var dataPoints = [];
+            _.forEach(scope.chartDatasets, (ds) => {
+                dataPoints.push.apply(dataPoints, ds.data);
+            });
+
+            var maxImpact = _.max(dataPoints) + 1;
+            var minImpact = _.min(dataPoints) + -1;
+
             var chartOptions = {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -402,10 +409,13 @@
                     yAxes: [{
                         stacked: true,
                         gridLines: {
-                            display: false
+                            display: true,
+                            drawBorder: false
                         },
                         ticks: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            max: maxImpact,
+                            min: minImpact
                         },
                         scaleLabel: {
                             display: true,
