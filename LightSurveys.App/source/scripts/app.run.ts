@@ -92,7 +92,7 @@ interface Navigator {
         userService: App.Services.IUserService) {
 
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-            var publicStates = ['login', 'register'];
+            var publicStates = ['login', 'register', 'forgotPassword', 'resetPassword'];
 
             if (publicStates.indexOf(toState.name) !== -1 && publicStates.indexOf(fromState.name) !== -1)
                 return;
