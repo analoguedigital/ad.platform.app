@@ -267,6 +267,7 @@ module App.Services {
         }
 
         private uploadSurvey(survey: Models.Survey): ng.IPromise<void> {
+            var self = this;
             var q = this.$q.defer<void>();
 
             this.uploadAttachments(survey).then(
@@ -276,6 +277,18 @@ module App.Services {
                         () => {
                             // this.softDelete(survey.id)
                             //     .then(() => { q.resolve(); });
+
+                            self.userService.getExistingProfiles().then(function (profiles) {
+                                if (profiles.length) {
+                                    var profile = profiles[0];
+                                    var noStoreEnabled = profile.settings.noStoreEnabled;
+
+                                    if (noStoreEnabled) {
+                                        self.delete(survey.id);
+                                    }
+                                }
+                            });
+
                             q.resolve();
                         },
                         (err) => {
