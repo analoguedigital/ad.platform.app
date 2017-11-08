@@ -9,10 +9,11 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         $scope.fingerprintHardwareDetected = false;
         $scope.canChangeAppIcon = false;
         $scope.selectedAppIcon = undefined;
-        
+
         $scope.model = {
             passcodeEnabled: false,
-            fingerprintEnabled: false
+            fingerprintEnabled: false,
+            noStoreEnabled: false
         };
 
         $scope.$watch('model.passcodeEnabled', function (newValue, oldValue) {
@@ -37,6 +38,11 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
             if ($scope.profile) {
                 userService.saveProfile($scope.profile).then(function () { });
             }
+        });
+
+        $scope.$watch('model.noStoreEnabled', function (newValue, oldValue) {
+            $scope.profile.settings.noStoreEnabled = newValue;
+            userService.saveProfile($scope.profile).then(function () { });
         });
 
         $scope.$on('passcode-modal-pin-disabled', function (ev, args) {
@@ -141,6 +147,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                     $scope.model.passcodeEnabled = profile.settings.passcodeEnabled;
                     $scope.model.fingerprintEnabled = profile.settings.fingerprintEnabled;
                     $scope.passcodeSaved = profile.settings.passcodeEnabled;
+                    $scope.model.noStoreEnabled = profile.settings.noStoreEnabled;
                 }
             });
         };

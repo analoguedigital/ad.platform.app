@@ -42,6 +42,7 @@ module App.Services {
         passcodeEnabled: boolean;
         fingerprintEnabled: boolean;
         passcodeText: string;
+        noStoreEnabled: boolean;
     }
 
     class AppContext {
@@ -164,7 +165,8 @@ module App.Services {
                         settings: <ISettings>{
                             passcodeEnabled: false,
                             fingerprintEnabled: false,
-                            passcodeText: ''
+                            passcodeText: '',
+                            noStoreEnabled: false
                         }
                     };
 
