@@ -1,8 +1,3 @@
-﻿<ul class="list">
-    <li class="item item-checkbox" ng-repeat="fValue in formValues">
-        <label class="checkbox">
-            <input type="checkbox" ng-model="fValue.boolValue">
-        </label>
-        {{getText(fValue.guidValue)}}
-    </li>
-</ul>
+﻿<ion-list>
+    <ion-checkbox ng-repeat="fValue in formValues" ng-model="fValue.boolValue">{{getText(fValue.guidValue)}}</ion-checkbox>
+</ion-list>

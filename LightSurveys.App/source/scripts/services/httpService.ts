@@ -18,6 +18,7 @@ module App.Services {
         uploadFeedback(feedback: IFeedbackData): ng.IPromise<void>;
         forgotPassword(model: Models.IForgotPasswordModel): ng.IPromise<void>;
         resetPassword(model: Models.IResetPasswordModel): ng.IPromise<void>;
+        getDataList(id: string): angular.IPromise<angular.IHttpPromiseCallbackArg<Models.DataListItem[]>>;
     }
 
     export class HttpService implements IHttpService {
@@ -205,6 +206,21 @@ module App.Services {
             this.$http.post(HttpService.serviceBase + 'api/feedbacks', JSON.stringify(feedback))
                 .success((data) => { deferred.resolve(); })
                 .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        getDataList(id: string): angular.IPromise<angular.IHttpPromiseCallbackArg<Models.DataListItem[]>> {
+            var deferred = this.$q.defer();
+
+            var url = HttpService.serviceBase + "api/dataLists/" + id;
+            this.$http.get(url)
+                .success((data) => {
+                    deferred.resolve(data);
+                })
+                .error((data, status) => {
+                    deferred.reject(this.onError(data, status));
+                });
 
             return deferred.promise;
         }

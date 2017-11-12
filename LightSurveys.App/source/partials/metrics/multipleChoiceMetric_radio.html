@@ -1,5 +1,5 @@
-﻿<div class="list" >
-    <label ng-if="metric.viewType === 'RadioButtonList'" class="item item-radio" ng-repeat="item in ::metric.dataList.items">
+﻿<div class="list" ng-if="metric.viewType === 'RadioButtonList'">
+    <label class="item item-radio" ng-repeat="item in ::metric.dataList.items">
         <input type="radio" name="{{::metric.inputName}}" ng-model="formValue.guidValue" value="{{::item.id}}">
         <div class="radio-content">
             <div class="item-content">
@@ -8,10 +8,13 @@
             <i class="radio-icon ion-checkmark"></i>
         </div>
     </label>
+</div>
 
-    <label ng-if="metric.viewType === 'DropDown'" class="item">
-        <select ng-model="formValue.guidValue" ng-options="item.id as item.text for item in metric.dataList.items">
+<div class="list" ng-if="metric.viewType === 'DropDown'">
+    <label class="item item-input item-select">
+        <div class="input-label">Choose an option</div>
+        <select ng-model="formValue.guidValue">
+            <option ng-repeat="item in ::metric.dataList.items" value="{{::item.id}}" selected="{{item.id === formValue.guidValue}}">{{::item.text}}</option>
         </select>
     </label>
-
 </div>
