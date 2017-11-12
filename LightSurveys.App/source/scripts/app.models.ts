@@ -149,4 +149,15 @@ module App.Models {
         descriptionFormat: string;
         descriptionMetrics: Metric[];
     }
+
+    export interface IForgotPasswordModel {
+        email: string;
+    }
+
+    export interface IResetPasswordModel {
+        email: string;
+        code: string;
+        password: string;
+        confirmPassword: string;
+    }
 }

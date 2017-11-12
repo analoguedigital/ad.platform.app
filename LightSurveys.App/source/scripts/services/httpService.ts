@@ -7,7 +7,7 @@ module App.Services {
 
     export interface IHttpService {
         getAuthenticationToken(loginData: ILoginData): angular.IPromise<any>;
-        getUserInfo(): angular.IPromise<string>;
+        getUserInfo(): angular.IPromise<any>;
         getFormTemplate(id: string): angular.IPromise<angular.IHttpPromiseCallbackArg<Models.FormTemplate>>;
         getFormTemplates(): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.FormTemplate>>>;
         getProjects(): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.Project>>>;
@@ -16,6 +16,8 @@ module App.Services {
         deleteFormTemplate(id: string): ng.IPromise<any>;
         uploadFile(attchment: Models.Attachment): angular.IPromise<string>
         uploadFeedback(feedback: IFeedbackData): ng.IPromise<void>;
+        forgotPassword(model: Models.IForgotPasswordModel): ng.IPromise<void>;
+        resetPassword(model: Models.IResetPasswordModel): ng.IPromise<void>;
     }
 
     export class HttpService implements IHttpService {
@@ -28,6 +30,25 @@ module App.Services {
             private authService: IAuthService,
             private $q: ng.IQService) { }
 
+        forgotPassword(model: Models.IForgotPasswordModel): ng.IPromise<void> {
+            var deferred = this.$q.defer<void>();
+
+            this.$http.post(HttpService.serviceBase + 'api/account/forgotpassword', JSON.stringify(model))
+                .success((data) => { deferred.resolve(); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        resetPassword(model: Models.IResetPasswordModel): ng.IPromise<void> {
+            var deferred = this.$q.defer<void>();
+
+            this.$http.post(HttpService.serviceBase + 'api/account/resetpassword', JSON.stringify(model))
+                .success((data) => { deferred.resolve(); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
 
         getAuthenticationToken(loginData: ILoginData): ng.IPromise<any> {
 
