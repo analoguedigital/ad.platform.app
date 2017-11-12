@@ -1,4 +1,14 @@
-﻿$color1: #1695A3;
+﻿$screen-xs: 480px !default;
+$screen-sm: 768px !default;
+$screen-md: 992px !default;
+$screen-mobile: 320px !default;
+
+$medium-screen: "(min-width: #{$screen-sm}) and (max-width: #{$screen-md})";
+$small-screen: "only screen and (max-width: #{$screen-sm})";
+$xs-screen: "only screen and (max-width: #{$screen-xs})";
+$mobile-screen: "only screen and (max-width: #{$screen-mobile})";
+
+$color1: #1695A3;
 $color2: #DF5A2B;
 $color3: #245278;
 $color4: #1D2331;
@@ -189,6 +199,12 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
         font-size: 40px;
         font-weight: bold;
     }
+
+    @media #{$mobile-screen} {
+        & .brand {
+            font-size: 36px;
+        }
+    }
 }
 
 .login-footer {
@@ -230,5 +246,15 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     & ul {
         list-style: disc;
         padding-left: 30px;
+    }
+}
+
+.terms-modal-content {
+    padding: 0 15px;
+}
+
+.terms-checkbox {
+    & .terms-checkbox-input {
+        margin-left: 0 !important;
     }
 }
