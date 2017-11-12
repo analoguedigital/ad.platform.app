@@ -21,6 +21,15 @@
                     </span>
                 </label>
             </li>
+            <li class="item item-toggle">
+                Do not store surveys
+                <label class="toggle toggle-positive">
+                    <input type="checkbox" ng-model="model.noStoreEnabled" />
+                    <span class="track">
+                        <span class="handle"></span>
+                    </span>
+                </label>
+            </li>
             <li class="item item-button-right">
                 Delete all local data
                 <button class="button button-assertive" ng-click="deleteAllData()">

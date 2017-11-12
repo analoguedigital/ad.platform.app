@@ -1,6 +1,6 @@
 'use strict';
-angular.module('lm.surveys').controller('surveyController', ['$scope', '$ionicHistory', '$stateParams', '$state', 'userService', 'surveyService', 'alertService', 'gettext',
-function ($scope, $ionicHistory, $stateParams, $state, userService, surveyService, alertService, gettext) {
+angular.module('lm.surveys').controller('surveyController', ['$scope', '$ionicHistory', '$stateParams', '$state', 'userService', 'surveyService', 'alertService', 'gettext', '$timeout', 
+function ($scope, $ionicHistory, $stateParams, $state, userService, surveyService, alertService, gettext, $timeout) {
 
     $scope.surveyId = $stateParams.id;
     $scope.formTemplate = null;
@@ -118,7 +118,13 @@ function ($scope, $ionicHistory, $stateParams, $state, userService, surveyServic
         $scope.survey.formValues = $scope.allFormValues;
 
         surveyService.submitSurvey($scope.survey).then(
-            function () { alertService.show("Recording submitted successfully!"); $ionicHistory.goBack(); },
+            function () {
+                alertService.show("Recording submitted successfully!");
+
+                $timeout(function () {
+                    $ionicHistory.goBack();
+                }, 1000);
+            },
             function (err) { alertService.show(gettext("Error in submitting the recording: ") + err); });
     };
 
