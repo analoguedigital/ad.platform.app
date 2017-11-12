@@ -1,7 +1,8 @@
-<h3 ng-hide="isCompact"> {{::metric.description}} </h3>
-<div class="item item-checkbox" ng-controller="dichotomousMetricController" >
-    
-    <label class="checkbox">
-        <input readonly type="checkbox" ng-model="formValue.boolValue" ng-required="metric.mandatory" name="{{::metric.inputName}}">
-    </label>
+<h3 ng-hide="metricGroup.isRepeater"> {{::metric.description}} </h3>
+<div ng-controller="dichotomousMetricController">
+    <div class="item item-checkbox">
+        <label class="checkbox">
+            <input type="checkbox" readonly disabled ng-model="formValue.boolValue" ng-checked="formValue.boolValue === 'true'" />
+        </label>
+    </div>
 </div>

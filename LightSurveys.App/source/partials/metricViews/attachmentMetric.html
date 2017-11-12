@@ -1,4 +1,4 @@
-﻿<h3 ng-hide="isCompact"> {{::metric.description}} </h3>
+﻿<h3 ng-hide="metricGroup.isRepeater"> {{::metric.description}} </h3>
 <div ng-controller="attachmentMetricController">
     <div class="thumbnails">
         <div class="thumbnail" ng-repeat="attachment in formValue.attachments" ng-click="showImages($index)">
