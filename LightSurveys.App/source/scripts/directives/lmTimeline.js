@@ -211,6 +211,8 @@
                             }
                         });
 
+                        if (impactSum === 0) impactSum = 0.1;
+
                         data.push(impactSum);
                     } else {
                         data.push(0);
@@ -230,7 +232,7 @@
                 datasets.push(ds);
             });
 
-            return datasets;
+            return datasets.reverse();
         }
 
         function generateTimelineData() {
@@ -362,14 +364,14 @@
             else
                 ctx.canvas.height = parent.height();
 
-            // compute yAxes max value.
+            // compute yAxis max, and add a little padding
             var dataPoints = [];
-            _.forEach(scope.chartDatasets, function (ds) {
+            _.forEach(scope.chartDatasets, (ds) => {
                 dataPoints.push.apply(dataPoints, ds.data);
             });
 
-            var maxImpact = _.max(dataPoints) + 10;
-            if (scope.orientation === 'portrait') maxImpact += 10;
+            var maxImpact = _.max(dataPoints) + 1;
+            var minImpact = _.min(dataPoints) + -1;
 
             var chartOptions = {
                 responsive: true,
@@ -409,11 +411,17 @@
                     yAxes: [{
                         stacked: true,
                         gridLines: {
-                            display: false
+                            display: true,
+                            drawBorder: false
                         },
                         ticks: {
                             beginAtZero: true,
-                            max: maxImpact
+                            max: maxImpact,
+                            min: minImpact
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Impact'
                         }
                     }]
                 },
@@ -466,32 +474,32 @@
                             var data = dataset.data[index];
                             var impact = parseInt(data);
 
-                            if (impact > 0) {
-                                var foundTemplate = _.filter(scope.formTemplates, function (template) { return template.id === dataset.formTemplateId; });
-                                if (foundTemplate.length) {
-                                    var template = foundTemplate[0];
-                                    var tickData = scope.tickData[index];
+                            var foundTemplate = _.filter(scope.formTemplates, function (template) { return template.id === dataset.formTemplateId; });
+                            if (foundTemplate.length) {
+                                var template = foundTemplate[0];
+                                var tickData = scope.tickData[index];
 
-                                    var records = _.filter(tickData.data, function (record) {
-                                        return record.formTemplateId == template.id;
-                                    });
+                                var records = _.filter(tickData.data, function (record) {
+                                    return record.formTemplateId == template.id;
+                                });
 
-                                    if (records.length) {
-                                        var centerX = bar._model.x;
-                                        var centerY = bar._model.y;
-                                        var radius = barSize / 2;
+                                if (records.length) {
+                                    var centerX = bar._model.x;
+                                    var centerY = bar._model.y;
+                                    var radius = barSize / 2;
+                                    var fillColour = impact === 0 ? 'orange' : 'white';
+                                    var strokeColor = impact === 0 ? 'darkorange' : 'gray';
 
-                                        ctx.beginPath();
-                                        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-                                        ctx.fillStyle = 'white';
-                                        ctx.fill();
-                                        ctx.lineWidth = 1;
-                                        ctx.strokeStyle = 'white';
-                                        ctx.stroke();
+                                    ctx.beginPath();
+                                    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+                                    ctx.fillStyle = fillColour;
+                                    ctx.fill();
+                                    ctx.lineWidth = 1;
+                                    ctx.strokeStyle = strokeColor;
+                                    ctx.stroke();
 
-                                        ctx.fillStyle = '#1D2331';
-                                        ctx.fillText(records.length, bar._model.x, bar._model.y + 7);
-                                    }
+                                    ctx.fillStyle = '#1D2331';
+                                    ctx.fillText(records.length, bar._model.x, bar._model.y + 7);
                                 }
                             }
                         });
@@ -519,8 +527,8 @@
             var dataset = data.datasets[item.datasetIndex];
             var dataPoint = dataset.data[item.index];
 
-            if (dataPoint === 0)
-                return '';
+            if (item.yLabel === 0.1)
+                item.yLabel = 0;
 
             return label + ': ' + item.yLabel;
         }
