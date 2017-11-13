@@ -1,0 +1,18 @@
+<h3 ng-hide="metricGroup.isRepeater"> {{::metric.description}} </h3>
+<div ng-controller="dateMetricController">
+
+    <div class="item item-input" ng-if="isPersian">
+        <input type="text" name="{{::metric.inputName}}" ng-required="metric.mandatory" class="persianDateInput" readonly value="{{dateToString(formValue.dateValue)}}" />
+    </div>
+    <div class="item item-input" ng-if="isPersian">
+        <div class="persianCalendar" persiandatepicker="formValue.dateValue"></div>
+    </div>
+    <label class="item item-input" ng-if="!isPersian">
+        <input type="date" name="{{::metric.inputName}}" ng-required="metric.mandatory" ng-model="formValue.dateValue" ng-if="!metric.hasTimeValue">
+        <input type="datetime-local" name="{{::metric.inputName}}" ng-required="metric.mandatory" ng-model="formValue.dateValue" ng-if="metric.hasTimeValue">
+    </label>
+    <div class="errors" ng-messages="{{inputError}}">
+        <div ng-message="required"><span translate>This is required</span></div>
+    </div>
+
+</div>

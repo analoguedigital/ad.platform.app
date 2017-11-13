@@ -1,0 +1,22 @@
+<ion-view title="Review" id="surveyViewPage">
+    <ion-header-bar align-title="{{::getLeft()}}" class="bar bar-subheader bar-light">
+        <h2 class="title">{{::formTemplate.title}} :<span>{{currentPageIndex+1}} <span translate>of</span> {{numberOfPages}}</span></h2>
+    </ion-header-bar>
+    <ion-content class="has-subheader has-footer padding" ng-cloak>
+        <form name="surveyForm" novalidate="novalidate" ng-submit="submitSurvey()">
+            <div class="list card">
+                <div ng-repeat="metricGroup in activeGroups" ng-controller="metricGroupController">
+                    <div ng-if="!metricGroup.isRepeater" ng-include="'partials/metricViews/metricGroup.html'" ng-show="isCurrentPage(metricGroup)"></div>
+                    <div ng-if="metricGroup.isRepeater" ng-include="'partials/metricViews/metricGroupRepeater.html'" ng-show="isCurrentPage(metricGroup)"></div>
+                </div>
+            </div>
+        </form>
+    </ion-content>
+    <div class="bar bar-footer tabs bar-dark row">
+        <a class="tab-item " ng-show="!isFirstPage()" ng-click="goToPreviousPage()"><span translate>Back to page</span> {{currentPageIndex}}</a>
+        <a class="tab-item"></a>
+        <a class='tab-item item-icon-{{getRight()}}' ng-disabled="surveyForm.$invalid" ng-click="goToNextPage()" ng-show="!isLastPage()">
+            <i class="icon ion-arrow-{{getRight()}}-a"></i>
+        </a>
+    </div>
+</ion-view>

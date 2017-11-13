@@ -1,0 +1,145 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: \n"
+
+#: source/partials/home.html:55
+msgid "Account"
+msgstr ""
+
+#: source/partials/metrics/metricGroupRepeater.html:40
+msgid "Add row"
+msgstr ""
+
+#: source/scripts/controllers/surveyController.js:84
+msgid "Are you sure you want to delete this survey?"
+msgstr ""
+
+#: source/partials/survey.html:25
+msgid "Back to page"
+msgstr ""
+
+#: source/partials/drafts.html:26
+msgid "Continue"
+msgstr ""
+
+#: source/partials/drafts.html:12
+msgid "Created:"
+msgstr ""
+
+#: source/partials/drafts.html:21
+msgid "Delete"
+msgstr ""
+
+#: source/partials/drafts.html:3
+msgid "Drafts"
+msgstr ""
+
+#: source/scripts/controllers/surveyController.js:87
+msgid "Error in deleting the survey:"
+msgstr ""
+
+#: source/partials/metrics/metricGroup.html:13
+#: source/partials/metrics/metricGroupRepeater.html:47
+msgid "Error in entering"
+msgstr ""
+
+#: source/scripts/controllers/selectProjectController.js:10
+msgid "Error in loading projects:"
+msgstr ""
+
+#: source/scripts/controllers/surveyController.js:147
+msgid "Error in loading the survey:"
+msgstr ""
+
+#: source/scripts/controllers/surveyController.js:76
+msgid "Error in saving the survey:"
+msgstr ""
+
+#: source/scripts/controllers/selectProjectController.js:16
+msgid "Error in setting active projects:"
+msgstr ""
+
+#: source/scripts/controllers/surveyController.js:114
+msgid "Error in submitting the survey:"
+msgstr ""
+
+#: source/partials/drafts.html:15
+msgid "Last Updated:"
+msgstr ""
+
+#: source/partials/home.html:67
+msgid "Logout"
+msgstr ""
+
+#: source/partials/selectProject.html:3
+msgid "Projects"
+msgstr ""
+
+#: source/partials/home.html:48
+msgid "Refresh forms"
+msgstr ""
+
+#: source/partials/selectProject.html:6
+msgid "Select your active project"
+msgstr ""
+
+#: source/partials/home.html:44
+msgid "Server connection"
+msgstr ""
+
+#: source/partials/home.html:23
+msgid "Start"
+msgstr ""
+
+#: source/partials/survey.html:18
+msgid "Submit"
+msgstr ""
+
+#: source/partials/survey.html:3
+msgid "Survey"
+msgstr ""
+
+#: source/scripts/controllers/surveyController.js:75
+msgid "Survey saved successfully!"
+msgstr ""
+
+#: source/partials/home.html:63
+msgid "Switch user"
+msgstr ""
+
+#: source/partials/metrics/dateMetric.html:12
+#: source/partials/metrics/dichotomousMetric.html:6
+#: source/partials/metrics/freeTextMetric.html:12
+#: source/partials/metrics/numericMetric.html:6
+msgid "This is required"
+msgstr ""
+
+#: source/partials/home.html:52
+msgid "Upload surveys"
+msgstr ""
+
+#: source/partials/home.html:35
+msgid "Welcome {{currentContext.userEmail}}"
+msgstr ""
+
+#: source/scripts/controllers/draftsController.js:26
+msgid "error in deleting survey:"
+msgstr ""
+
+#: source/scripts/controllers/draftsController.js:12
+msgid "error in loading saved surveys:"
+msgstr ""
+
+#: source/scripts/controllers/draftsController.js:42
+msgid "error in loading the form template:"
+msgstr ""
+
+#: source/partials/survey.html:6
+msgid "of"
+msgstr ""
+
+#: source/partials/home.html:19
+msgid "{{form.draftsNumber}} draft(s)"
+msgstr ""

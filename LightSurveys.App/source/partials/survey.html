@@ -1,0 +1,42 @@
+
+<ion-view title="Record" id="surveyPage">
+    <ion-header-bar align-title="{{::getLeft()}}" class="bar bar-subheader bar-light">
+        <h2 class="title">{{::formTemplate.title}} :<span>{{currentPageIndex+1}} <span translate>of</span> {{numberOfPages}}</span></h2>
+        <div class="buttons">
+            <button class="button button-icon button-clear ion-ios-download " ng-click="saveDraft()"></button>
+            <button class="button button-icon button-clear ion-android-delete " ng-click="delete()"></button>
+        </div>
+    </ion-header-bar>
+    <ion-content class="has-subheader padding" ng-class="{'has-footer':numberOfPages > 1}" ng-cloak>
+        <form name="surveyForm" novalidate="novalidate" ng-submit="submitSurvey()">
+            <div class="list card">
+                <div ng-repeat="metricGroup in activeGroups" ng-controller="metricGroupController">
+                    <div ng-if="!metricGroup.isRepeater" ng-include="'partials/metrics/metricGroup.html'" ng-show="isCurrentPage(metricGroup)"></div>
+                    <div ng-if="metricGroup.isRepeater" ng-include="'partials/metrics/metricGroupRepeater.html'" ng-show="isCurrentPage(metricGroup)"></div>
+                </div>
+                <div class="item errors">
+                    <ul>
+                        <li class="padding" ng-repeat="(key, errors) in surveyForm.$error track by $index">
+                            <ul>
+                                <li ng-repeat="e in errors"><span translate>Error in entering</span> <strong>{{ getMetricShortTitle(e.$name) }}</strong></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="padding">
+                <button ng-show="isLastPage()" class="button button-block button-energized" type="submit" ng-disabled="surveyForm.$invalid">
+                    <span translate>Submit</span>
+                </button>
+            </div>
+        </form>
+
+    </ion-content>
+    <div class="bar bar-footer tabs bar-dark row" ng-if="numberOfPages > 1">
+        <a class="tab-item " ng-show="!isFirstPage()" ng-click="goToPreviousPage()"><span translate>Back to page</span> {{currentPageIndex}}</a>
+        <a class="tab-item"></a>
+        <a class='tab-item item-icon-{{getRight()}}' ng-disabled="surveyForm.$invalid" ng-click="goToNextPage()" ng-show="!isLastPage()">
+            <i class="icon ion-arrow-{{getRight()}}-a"></i>
+        </a>
+    </div>
+</ion-view>

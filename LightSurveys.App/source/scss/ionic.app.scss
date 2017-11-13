@@ -1,0 +1,262 @@
+﻿$screen-xs: 480px !default;
+$screen-sm: 768px !default;
+$screen-md: 992px !default;
+$screen-mobile: 320px !default;
+
+$medium-screen: "(min-width: #{$screen-sm}) and (max-width: #{$screen-md})";
+$small-screen: "only screen and (max-width: #{$screen-sm})";
+$xs-screen: "only screen and (max-width: #{$screen-xs})";
+$mobile-screen: "only screen and (max-width: #{$screen-mobile})";
+
+$color1: #1695A3;
+$color2: #DF5A2B;
+$color3: #245278;
+$color4: #1D2331;
+
+// The path for our ionicons font files, relative to the built CSS in www/css
+$ionicons-font-path: "../../www/fonts" !default;
+
+$light: #fdfdfd !default;
+$positive: $color1 !default;
+$energized: $color2 !default;
+$dark: $color4 !default;
+
+$button-font-size: 16px !default;
+$button-height: 60px !default;
+
+$button-icon-size: 30px !default;
+
+$bar-height: 60px !default;
+$button-border-width: 0px !default;
+$item-dark-border: lighten($dark,8);
+$item-positive-border: lighten($positive,4);
+$item-padding: 12px;
+
+$menu-bg: $color1 !default;
+$menu-side-shadow: 0;
+$content-padding: 14px !default;
+
+$base-background-color: #245278 !default;
+
+// Include all of Ionic
+@import "../../bower_components/ionic/scss/ionic.scss";
+
+.bar { border-width: 0; height: 61px; background-image: none !important; }
+.row { margin: 0 !important; }
+.item-icon-left .icon.fa, .item-icon-right .icon.fa { font-size: 20px; }
+.right-side { float: right; }
+.no-margin-top { margin-top: 0 !important; }
+
+label.item,
+.item-select select {
+    background: white;
+}
+
+.register { background-color: $positive;
+    .fa { color: lighten($dark,40); font-size: 20px !important; }
+    .item-input { padding-top: 1px; padding-bottom: 0 }
+}
+
+mwl-calendar.survey-calendar {
+    .cal-row-head { color: $light; }
+    .cal-month-box { border: 0;
+        .cal-row-fluid { border: 3px solid transparent; color: $light; }
+        .cal-month-day { background-color: black; padding: 5px; }
+        [class*=cal-cell] { border-right: 6px solid transparent; }
+        .cal-day-today { background-color: $positive; }
+        .cal-slide-content { padding: 14px; color: #fff; background-color: lighten($dark,10); -webkit-box-shadow: inset 0 0 0 0 rgba(0,0,0,.5); box-shadow: inset 0 0 0 0 rgba(0,0,0,.5); }
+        span[data-cal-date] { opacity: 1; }
+    }
+    .cal-day-box .cal-day-hour-part .cal-day-hour-part-time { color: white; }
+    .cal-day-box .cal-day-hour:nth-child(odd) { background-color: transparent; }
+    .cal-day-box .cal-day-panel { border: 0; }
+    .cal-month-day .cal-events-num { margin-left: 0; margin-top: 0; }
+    span[data-cal-date] { margin-top: 0; margin-right: 0; }
+}
+
+.bar.calendar button { height: 50px; }
+.bar.timeline {
+    button { height: 50px; }
+    .title { left: 0 !important; right: 0 !important; }
+}
+
+.bar .button.button-icon:before, .bar .button .icon:before, .bar .button.icon:before, .bar .button.icon-left:before, .bar .button.icon-right:before, .bar button.button-icon:before, .bar button .icon:before, .bar button.icon:before, .bar button.icon-left:before, .bar button.icon-right:before { padding-left: 5px; padding-right: 5px; }
+
+.metric label.item.item-input { border-bottom: 0; }
+
+.progress-bar { margin-bottom: 0; }
+.card.draft { background-color: lightyellow;
+    .item { background-color: transparent; }
+}
+
+.login { background-color: $positive;
+    &.pane { background-color: $positive }
+    h1 { font-size: 350%; padding: 14px 0; }
+    h2 { font-size: 140%; font-weight: normal; }
+    .slogan {
+        @include transition(0.4s);
+    }
+    form {
+        @include transition(0.4s);
+    }
+}
+
+@media (max-height: 600px) {
+    .login {
+        h1 { padding-bottom: 0; margin-bottom: 0; }
+        .slogan { height: 0; overflow-y: hidden; padding-top: 0; padding-bottom: 0; }
+        .list { margin-top: 0; margin-bottom: 0 }
+    }
+}
+
+/*
+ * Credits to https://forum.ionicframework.com/t/actionsheets-android-ugly-styling-need-help/18462/12
+ */
+.platform-android {
+    .action-sheet-backdrop.active { background-color: rgba(0, 0, 0, 0.1); }
+    .action-sheet { align-content: center; margin: auto; max-width: 96vw; border-radius: 5px; margin-bottom: 10px;
+        .action-sheet-title, .platform-android .action-sheet .button { text-align: left; font-size: 16px; color: inherit; }
+        .action-sheet-title { font-size: 14px; padding: 16px; color: #666; }
+        .button { border-color: #e2e2e2; padding-left: 16px; color: #104e89; }
+        .button.destructive { color: red; }
+        .button.active, .platform-android .action-sheet .button.activated { background: #e8e8e8; }
+    }
+    .action-sheet-group { border-radius: 0; background-color: #fafafa; }
+    .action-sheet-cancel { display: none; }
+    .action-sheet-has-icons {
+        .button { padding-left: 56px; }
+    }
+}
+
+
+.thumbnails { flex-wrap: wrap; display: flex; align-content: flex-start;
+    .thumbnail { width: 80px; vertical-align: central; height: 80px; margin: 5px; overflow: hidden;
+        &.add { }
+        img, video { max-width: 100% }
+    }
+}
+
+.image-modal { width: 100% !important; height: 100%; top: 0 !important; left: 0 !important; background-color: transparent !important;
+    .fullscreen-image { max-width: 90%; max-height: 75%; bottom: 0; left: 0; margin: auto; overflow: auto; position: fixed; right: 0; top: 0; }
+    .slider { width: 100%; height: 100%; }
+}
+
+.modal-backdrop { background-color: rgba(0,0,0,0.5) !important }
+
+.list .item-toggle { background-color: inherit; border-color: $base-background-color; color: #ddd; }
+
+.toast { padding: 15px 15px 15px 50px !important; box-shadow: none !important;background-color:red }
+
+.toast-bottom-center { bottom: 20px !important; }
+
+.passcode-screen { background-color: $base-background-color; color: white; display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; -webkit-box-direction: normal; -moz-box-direction: normal; -webkit-box-orient: horizontal; -moz-box-orient: horizontal; -webkit-flex-direction: row; -ms-flex-direction: row; flex-direction: row; -webkit-flex-wrap: nowrap; -ms-flex-wrap: nowrap; flex-wrap: nowrap; -webkit-box-pack: center; -moz-box-pack: center; -ms-flex-pack: center; justify-content: center; -webkit-align-content: stretch; -ms-flex-line-pack: stretch; align-content: stretch; -webkit-box-align: center; -moz-box-align: center; -ms-flex-align: center; align-items: center; }
+
+.passcode-screen > * { -webkit-box-ordinal-group: 1; -moz-box-ordinal-group: 1; -ms-flex-order: 0; order: 0; -webkit-box-flex: 1; -moz-box-flex: 1; -webkit-flex: 1 1 auto; -ms-flex: 1 1 auto; flex: 1 1 auto; -ms-flex-item-align: auto; align-self: auto; }
+
+.passcode-screen .passcode-modal-heading { padding-top: 60px; }
+
+.passcode-screen h3 { color: white; text-align: center; }
+
+.passcode-screen p { text-align: center; }
+
+.passcode-screen .button-stretch { background: inherit !important; border: 2px solid $positive !important; border-radius: 50%; color: white; font-size: 18px; min-width: 55px; min-height: 55px; height: 55px; width: 55px; line-height: 50px; }
+
+.passcode-screen .button-stretch.activated { border: 2px solid white !important; }
+
+.passcode-screen .button-white { color: white; font-size: inherit; }
+
+.passcode-screen .button.icon.ion-ios-arrow-back::before { line-height: 50px; }
+
+.passcode-screen .button-save-passcode::before { line-height: 50px; }
+
+.passcode-screen .col.first-digit { margin-left: 15%; }
+
+.passcode-screen .bullet { font-size: 26px; }
+
+.passcode-screen .digit-box { border-bottom: 2px solid #555 !important; font-size: 22px; padding-bottom: 10px; }
+
+.passcode-screen .digits-panel { margin-top: 20px; }
+
+.passcode-screen .forgot-pass-container { text-align: center; }
+
+/* timeline styles */
+canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; }
+
+#chartjs-tooltip { opacity: 1; position: absolute; background: rgba(0, 0, 0, .7); color: white; border-radius: 3px; -webkit-transition: all .1s ease; transition: all .1s ease; pointer-events: none; -webkit-transform: translate(-50%, 0); transform: translate(-50%, 0);
+
+    & table tbody tr td { white-space: nowrap; }
+}
+
+.chartjs-tooltip-key { display: inline-block; width: 10px; height: 10px; margin-right: 10px; }
+
+.login-header {
+    margin-top: 70px;
+
+    & .brand {
+        margin-left: -5px;
+        color: white;
+        padding-top: 40px;
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    @media #{$mobile-screen} {
+        & .brand {
+            font-size: 36px;
+        }
+    }
+}
+
+.login-footer {
+    display: block;
+    height: 15px;
+    background: #245278;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.app-icons {
+    padding-bottom: 10px;
+
+    & .app-icon {
+        width: 60px;
+        border-radius: 2px;
+    }
+
+    & .button.active-icon img {
+        border: 2px solid yellow;
+        box-shadow: 0 1px 12px yellow;
+    }
+}
+
+.guidance-content {
+    color: $light;
+    text-shadow: 1px 0 6px #000;
+
+    & h1, h2 {
+        color: inherit;
+    }
+
+    & h3, h4 {
+        color: $positive;
+    }
+
+    & ul {
+        list-style: disc;
+        padding-left: 30px;
+    }
+}
+
+.terms-modal-content {
+    padding: 0 15px;
+}
+
+.terms-checkbox {
+    & .terms-checkbox-input {
+        margin-left: 0 !important;
+    }
+}
+
+.pull-right { float: right; }

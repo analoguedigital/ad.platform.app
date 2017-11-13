@@ -1,0 +1,11 @@
+<h3 ng-hide="metricGroup.isRepeater"> {{::metric.description}} </h3>
+<div ng-controller="numericMetricController">
+    <label class="item item-input">
+        <input type="number" name="{{::metric.inputName}}" ng-required="metric.mandatory" ng-model="formValue.numericValue" placeholder="{{::metric.shortTitle}}">
+    </label>
+    <div class="errors" ng-messages="{{inputError}}">
+        <div ng-message="required"><span translate>This is required</span></div>
+        <div ng-message="min" ng-if="metric.minVal"><span translate>The value must be bigger than {{::metric.minVal}} </span></div>
+        <div ng-message="max" ng-if="metric.maxVal"><span translate>The value must be less than {{::metric.maxVal}} </span></div>
+    </div>
+</div>

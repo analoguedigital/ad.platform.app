@@ -1,0 +1,57 @@
+﻿<ion-view view-title="Home" class="login">
+    <ion-content class="content has-footer padding" ng-cloak>
+        <div class="padding-horizontal">
+            <div class="padding-horizontal">
+                <div class="text-center">
+                    <div class="inline text-center login-header">
+                        <img class="pull-left" src="images/art-on.png" alt="onrecord" width="100" />
+                        <span class="pull-left brand">RECORD</span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row responsive-sm ">
+            <div class="col col-50 col-offset-25">
+                <form name="registerForm" novalidate="novalidate" ng-show="!isQuickLoginActive">
+                    <div class="list list-inset">
+                        <label class="item item-icon-left">
+                            <i class="icon ion-ios-person-outline"></i>
+                            <span class="item-input">
+                                <input name="email" type="email" ng-model="loginData.email" placeholder="Email" required autofocus autocomplete="off">
+                            </span>
+                        </label>
+
+                        <label class="item item-icon-left">
+                            <i class="icon ion-ios-locked-outline"></i>
+                            <span class="item-input">
+                                <input name="password" ng-model="loginData.password" placeholder="Password" type="password" required autocomplete="off">
+                            </span>
+                        </label>
+                        <div class="">
+                            <button class="no-margin-top item button button-full button-energized " type="submit" ng-click="login()">
+                                Sign in
+                            </button>
+                        </div>
+                    </div>
+                    <div class="light" ng-show="isQuickLoginAvailable">
+                        <a ng-click="loginWithExistingAccounts()" class="button button-clear button-full button-light">Login to an existing profiles</a>
+                    </div>
+                </form>
+
+                <div class="bar bar-positive">
+                    <div class="title">
+                        <a class="button button-clear" ui-sref="forgotPassword">Forgot password?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+
+    <div class="bar bar-footer bar-positive">
+        <div class="title">
+            <button class="button button-clear" ng-click="goRegister()">Create Account</button>
+        </div>
+        <div class="login-footer"></div>
+    </div>
+</ion-view>

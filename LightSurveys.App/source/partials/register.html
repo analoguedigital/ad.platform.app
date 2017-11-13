@@ -1,0 +1,97 @@
+﻿<ion-view view-title="Create account" class="register">
+    <ion-header-bar class="bar-positive bar-stable with-button">
+        <button class="button button-icon button-clear ion-android-arrow-{{::getBack()}}" ng-click="back()"></button>
+        <h1 class="title" translate>Create account</h1>
+    </ion-header-bar>
+    <ion-content has-bouncing="false" class="content has-header has-footer register" ng-cloak>
+        <div class="padding-horizontal">
+            <div class="padding-horizontal">
+                <div class="padding-horizontal text-center">
+                    <div class="padding-horizontal inline text-left">
+                        <h1 class="padding-vertical light">
+                            Docit
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="row responsive-sm">
+                <form name="registerForm" novalidate="novalidate" class="col col-50 col-offset-25">
+                    <div class="list list-inset">
+                        <label class="item item-icon-left">
+                            <i class="icon fa fa-user-o fa-fw"></i>
+                            <div class="item-input">
+                                <input name="firstName" type="text" ng-model="registerData.firstName" placeholder="Name" required autofocus>
+                            </div>
+                        </label>
+                        <label class="item item-icon-left">
+                            <i class="icon fa fa-user fa-fw"></i>
+                            <div class="item-input">
+                                <input name="surname" type="text" ng-model="registerData.surname" placeholder="Surname" required autofocus>
+                            </div>
+                        </label>
+                        <label class="item item-icon-left">
+                            <i class="icon fa fa-envelope-o fa-fw"></i>
+                            <div class="item-input">
+                                <input name="email" type="email" ng-model="registerData.email" placeholder="Email" required autofocus>
+                            </div>
+                        </label>
+                        <label class="item item-icon-left">
+                            <i class="icon fa fa-lock fa-fw"></i>
+                            <div class="item-input">
+                                <input name="password" ng-model="registerData.password" placeholder="Password" type="password" required>
+                            </div>
+                        </label>
+                        <label class="item item-icon-left">
+                            <i class="icon fa fa-transgender fa-fw"></i>
+                            <div class="item-input item-select">
+                                <div class="input-label">
+                                    Gender
+                                </div>
+                                <select ng-model="registerData.gender">
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                        </label>
+                        <label class="item item-icon-left">
+                            <i class="icon fa fa-birthday-cake fa-fw"></i>
+                            <div class="item-input">
+                                <input name="birthdate" ng-model="registerData.birthdate" placeholder="Birthdate" type="date" required>
+                            </div>
+                        </label>
+                        <label class="item item-icon-left">
+                            <i class="icon fa fa-home fa-fw"></i>
+                            <div class="item-input">
+                                <textarea name="address" ng-model="registerData.address" placeholder="Address" rows="2" required></textarea>
+                            </div>
+                        </label>
+                        <label class="item item-checkbox terms-checkbox">
+                            <div class="checkbox">
+                                <input type="checkbox" ng-model="model.termsAgreed" class="terms-checkbox-input">
+                            </div>
+                            I agree to usage terms
+                        </label>
+                        <button class="button button-full button-energized button-small button-outline" ng-click="openTermsModal()">Read Terms &amp; Conditions</button>
+
+                        <div class="">
+                            <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="register()">
+                                Submit
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </ion-content>
+    <div class="bar bar-footer bar-default">
+        <div class="title">
+            <small>
+                <a href="#/login">Already have an account? Sign In</a>
+            </small>
+        </div>
+    </div>
+</ion-view>
