@@ -150,7 +150,8 @@ module App.Services {
                     q.reject(err);
                 },
                 {
-                    sourceType: Camera.PictureSourceType.CAMERA
+                    sourceType: Camera.PictureSourceType.CAMERA,
+                    destinationType: Camera.DestinationType.FILE_URI
                 });
 
 
