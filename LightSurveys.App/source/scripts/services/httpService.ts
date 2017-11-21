@@ -7,7 +7,7 @@ module App.Services {
 
     export interface IHttpService {
         getAuthenticationToken(loginData: ILoginData): angular.IPromise<any>;
-        getUserInfo(): angular.IPromise<string>;
+        getUserInfo(): angular.IPromise<any>;
         getFormTemplate(id: string): angular.IPromise<angular.IHttpPromiseCallbackArg<Models.FormTemplate>>;
         getFormTemplates(): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.FormTemplate>>>;
         getProjects(): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.Project>>>;
