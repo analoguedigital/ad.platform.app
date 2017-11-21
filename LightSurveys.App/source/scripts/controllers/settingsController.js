@@ -41,8 +41,10 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         });
 
         $scope.$watch('model.noStoreEnabled', function (newValue, oldValue) {
-            $scope.profile.settings.noStoreEnabled = newValue;
-            userService.saveProfile($scope.profile).then(function () { });
+            if ($scope.profile) {
+                $scope.profile.settings.noStoreEnabled = newValue;
+                userService.saveProfile($scope.profile).then(function () { });
+            }
         });
 
         $scope.$on('passcode-modal-pin-disabled', function (ev, args) {

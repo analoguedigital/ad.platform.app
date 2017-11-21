@@ -213,7 +213,7 @@ module App.Services {
         }
 
 
-        getExistingProfiles() {
+        getExistingProfiles(): ng.IPromise<IProfile[]> {
             return this.storageService.getAll(null, this.USER_OBJECT_TYPE);
         }
     }
