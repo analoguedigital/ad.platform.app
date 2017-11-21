@@ -1,4 +1,4 @@
-﻿<ion-view title="Home" id="homePage">
+﻿<ion-view title="Home" id="homePage" class="home">
     <ion-content has-bouncing="true" padding="true" class="has-header">
         <ion-refresher pulling-text="Pull to refresh..."
                        on-refresh="doRefresh()">
@@ -9,15 +9,15 @@
         <ion-list>
             <ion-item class="item-dark" data-ng-repeat="form in formTemplates">
                 <div class="light">{{form.title}}</div>
-                <div class="small">
+                <div class="small desc">
                     {{form.description}}
                 </div>
                 <div>
                     <a class="button button-dark button-dark" ng-click="goDrafts(form)">
-                        <span class='padding-horizontal' translate>{{form.draftsNumber}} recording{{ form.draftsNumber > 1 ? "s" : ""}}</span>
+                        <span class='padding-horizontal' translate>{{form.draftsNumber}} record{{ form.draftsNumber > 1 ? "s" : ""}}</span>
                     </a>
 
-                    <a class="right-side button button-large button-dark item-icon-{{::getRight()}} button-dark icon-{{::getRight()}} ion-ios-arrow-{{::getRight()}}" ng-click="startSurvey(form)">
+                    <a class="right-side button button-dark item-icon-{{::getRight()}} button-dark icon-{{::getRight()}} ion-ios-arrow-{{::getRight()}}" ng-click="startSurvey(form)">
                         <span class='padding-horizontal' translate>Start</span>
                     </a>
                 </div>

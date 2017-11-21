@@ -117,25 +117,25 @@
             .state('userAgreement', {
                 parent: 'menu',
                 url: '/guidance/user-agreement',
-                controller: 'userAgreementController',
+                controller: 'staticContentController',
                 templateUrl: 'partials/guidance/user-agreement.html'
             })
             .state('privacyPolicy', {
                 parent: 'menu',
                 url: '/guidance/privacy-policy',
-                controller: 'privacyPolicyController',
+                controller: 'staticContentController',
                 templateUrl: 'partials/guidance/privacy-policy.html'
             })
             .state('gatherEvidence', {
                 parent: 'menu',
                 url: '/guidance/gather-evidence',
-                controller: 'gatherEvidenceController',
+                controller: 'staticContentController',
                 templateUrl: 'partials/guidance/gather-evidence.html'
             })
             .state('makingRecords', {
                 parent: 'menu',
                 url: '/guidance/making-records',
-                controller: 'makingRecordsController',
+                controller: 'staticContentController',
                 templateUrl: 'partials/guidance/making-records.html'
             });
 

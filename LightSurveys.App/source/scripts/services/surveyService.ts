@@ -42,6 +42,10 @@ module App.Services {
         formTemplates: Models.FormTemplate[];
         projects: Models.Project[];
 
+        config = {
+            keepUploadedSurveys: true,
+        };
+
         constructor(
             private $q: ng.IQService,
             private $timeout: ng.ITimeoutService,
@@ -135,8 +139,8 @@ module App.Services {
 
                         this.getSubmittedSurveys(template.id)
                             .then((surveys) => {
-
-                                this.uploadSurveys(surveys)
+                                var surveysToUpload = _.filter(surveys, (survey) => { return survey.dateUploaded === null; });
+                                this.uploadSurveys(surveysToUpload)
                                     .then(
                                     () => { deferred.resolve(); },
                                     (err) => { },
@@ -275,25 +279,28 @@ module App.Services {
                     this.httpService.uploadSurvey(updatedSurvey)
                         .then(
                         () => {
-                            // this.softDelete(survey.id)
-                            //     .then(() => { q.resolve(); });
+                            updatedSurvey.dateUploaded = new Date(new Date().toISOString());
+                            this.saveSurvey(updatedSurvey).then(
+                                () => {
+                                    self.userService.getExistingProfiles().then((profiles) => {
+                                        var profile = profiles[0];
+                                        var noStoreEnabled = profile.settings.noStoreEnabled;
 
-                            self.userService.getExistingProfiles().then(function (profiles) {
-                                if (profiles.length) {
-                                    var profile = profiles[0];
-                                    var noStoreEnabled = profile.settings.noStoreEnabled;
+                                        self.config.keepUploadedSurveys = !noStoreEnabled;
 
-                                    if (noStoreEnabled) {
-                                        self.delete(survey.id);
-                                    }
-                                }
-                            });
+                                        if (!this.config.keepUploadedSurveys) {
+                                            self.softDelete(survey.id)
+                                                .then(() => { q.resolve(); });
+                                        }
 
-                            q.resolve();
+                                        q.resolve();
+                                    });
+                                },
+                                (err) => { q.reject(err); });
                         },
                         (err) => {
                             survey.error = err;
-                            this.saveSurvey(updatedSurvey)
+                            self.saveSurvey(updatedSurvey)
                                 .then(
                                 () => { q.reject(err); },
                                 () => { q.reject(err); });

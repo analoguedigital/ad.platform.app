@@ -92,20 +92,19 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
 
         $scope.changeAppIcon = function (iconName) {
             try {
-                alternateiconservice.issupported()
+                alternateIconService.isSupported()
                     .then(function (supported) {
                         if (supported) {
-                            alternateiconservice.changeicon(iconName, true)
-                                .then(function (success) {
-                                    if (success) {
-                                        this.alertservice.show('app icon changed!');
-                                        $scope.selectedAppIcon = iconName;
-                                    }
-                                    else
-                                        this.alertservice.show('app icon not changed. check your console!');
+                            alternateIconService.changeIcon(iconName, true)
+                                .then(function () {
+                                    alertService.show('app icon changed!');
+                                    $scope.selectedAppIcon = iconName;
+                                },
+                                function (err) {
+                                    alertService.show('app icon not changed. check your console!');
                                 });
                         } else {
-                            alertservice.show('appiconchanger is not available');
+                            alertService.show('appiconchanger is not available');
                         }
                     });
             } catch (e) {
@@ -137,7 +136,9 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                 });
 
             if (ionic.Platform.isIOS())
-                $scope.canChangeAppIcon = true;
+                alternateIconService.isSupported().then(function (supported) {
+                    $scope.canChangeAppIcon = supported;
+                });
 
             userService.getExistingProfiles().then(function (profiles) {
                 if (profiles.length) {

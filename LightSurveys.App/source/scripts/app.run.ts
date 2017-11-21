@@ -9,10 +9,11 @@ interface Navigator {
 
     angular.module("lm.surveys")
         .run(RunIonic)
+        .run(configAngularMoment)
         .run(SetupLoginTransitionControls);
 
     RunIonic.$inject = ["$rootScope", "$state", "$ionicPlatform", "$ionicHistory", "$route",
-        "$ionicSideMenuDelegate", "$ionicPopup", "gettext", "userService", "storageService"];
+        "$ionicSideMenuDelegate", "$ionicPopup", "gettext", "userService", "mediaService"];
     function RunIonic(
         $rootScope: ng.IRootScopeService,
         $state: ng.ui.IStateService,
@@ -23,7 +24,7 @@ interface Navigator {
         $ionicPopup: ionic.popup.IonicPopupService,
         gettext: any,
         userService: App.Services.IUserService,
-        storageService: App.Services.IStorageService) {
+        mediaService: App.Services.IMediaService) {
 
         $ionicPlatform.ready(function () {
             if (window.StatusBar) {
@@ -42,26 +43,20 @@ interface Navigator {
                     }
                 }
 
-                storageService.getObj('media-capture-meta', 'capture-in-progress').then((result) => {
-                    if (result && result == 'true') {
-                        // media capture in progress
-                    } else {
-                        $ionicHistory.clearHistory();
-                        $ionicHistory.clearCache();
-                        userService.clearCurrent();
-                    }
-                });
+                if (mediaService.isCaptureInProgress()) {
+                    // media capture in progress
+                } else {
+                    $ionicHistory.clearHistory();
+                    $ionicHistory.clearCache();
+                    userService.clearCurrent();
+                }
+
             });
 
             document.addEventListener('resume', function (event) {
-                storageService.getObj('media-capture-meta', 'capture-in-progress').then((result) => {
-                    if (result && result == 'true') {
-                        // media capture ended
-                        storageService.save('media-capture-meta', 'metadata', 'capture-in-progress', 'false').then((res) => { });
-                    } else {
-                        $state.go('login');
-                    }
-                });
+                if (!mediaService.isCaptureInProgress()) {
+                    $state.go('login');
+                }
             });
         });
 
@@ -72,7 +67,7 @@ interface Navigator {
                     $ionicSideMenuDelegate.toggleRight(false);
                 } else {
                     var popup = $ionicPopup.confirm({
-                        title: 'Exit Docit',
+                        title: 'Exit',
                         template: 'Are you sure you want to close the application?'
                     });
 
@@ -105,5 +100,10 @@ interface Navigator {
                 event.preventDefault();
             }
         });
+    }
+
+    configAngularMoment.$inject = ["amMoment", "$locale"];
+    function configAngularMoment(amMoment, $locale) {
+        amMoment.changeLocale("en-GB");
     }
 })();
