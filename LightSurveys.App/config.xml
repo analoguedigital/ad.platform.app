@@ -97,11 +97,10 @@
         <splash height="1920" src="res/screens/windows/SplashScreen.scale-240.png" width="1152" />
         <splash height="1920" src="res/screens/windows/SplashScreenPhone.scale-240.png" width="1152" />
     </platform>
-    <engine name="android" spec="^5.2.1" />
     <engine name="ios" spec="4.2.0" />
     <engine name="windows" spec="4.4.2" />
+    <engine name="android" spec="^6.3.0" />
     <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
-    <plugin name="cordova-plugin-compat" spec="^1.1.0" />
     <plugin name="cordova-plugin-geolocation" spec="^2.4.3" />
     <plugin name="cordova-plugin-file" spec="^4.3.3" />
     <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
@@ -130,4 +129,5 @@
         <variable name="XWALK_MODE" value="embedded" />
         <variable name="XWALK_MULTIPLEAPK" value="true" />
     </plugin>
+    <plugin name="cordova-plugin-compat" spec="~1.2.0" />
 </widget>
