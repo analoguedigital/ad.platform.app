@@ -28,11 +28,15 @@ module App.Services {
 
             this.$ionicPlatform.ready(() => {
                 if (ionic.Platform.isIOS()) {
-                    AppIconChanger.isSupported((supported) => {
-                        d.resolve(supported);
-                    }, (error) => {
-                        d.resolve(false);
-                    });
+                    try {
+                        AppIconChanger.isSupported((supported) => {
+                            d.resolve(supported);
+                        }, (error) => {
+                            d.resolve(false);
+                        });
+                    } catch (e) {
+                        console.warn(e);
+                    }
                 }
 
                 if (ionic.Platform.isAndroid()) {
