@@ -28,12 +28,8 @@ angular.module('lm.surveys').controller('registerController', ['$scope', '$state
             }
             else if (!$scope.registerData.firstName) {
                 alertService.show("Please enter your name");
-            }
-            else if (!$scope.registerData.birthdate) {
-                alertService.show("Please enter your birthdate");
-            }
-            else if (!$scope.registerData.address) {
-                alertService.show("Please enter your address");
+            } else if (!$scope.registerData.surname) {
+                alertService.show("Please enter your surname");
             }
             else if ($scope.model.termsAgreed == false) {
                 alertService.show("Please agree to usage terms");
