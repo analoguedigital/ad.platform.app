@@ -21,7 +21,7 @@
                     <i class="icon fa fa-home fa-fw"></i>
                     <span translate> Home</span>
                 </ion-item>
-                <ion-item ng-if="numberOfAvailableProjects > 1" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="projects" menu-close="">
+                <ion-item ng-if="numberOfAvailableProjects > 1 && currentContext.project" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="projects" menu-close="">
                     <i class="icon ion-android-folder-open"></i>
                     {{currentContext.project.name}}
                 </ion-item>
