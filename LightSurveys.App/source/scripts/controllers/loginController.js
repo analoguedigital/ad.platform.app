@@ -1,8 +1,8 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScope', '$ionicHistory', '$ionicPlatform', '$state', '$stateParams', '$timeout', '$ionicModal',
-    'userService', 'alertService', 'ngProgress', 'surveyService', 'fingerprintService', 'passcodeModalService', 'md5', 'toastr',
+    'userService', 'alertService', 'ngProgress', 'surveyService', 'fingerprintService', 'passcodeModalService', 'md5', 'toastr', 'localStorageService', 
     function ($scope, $rootScope, $ionicHistory, $ionicPlatform, $state, $stateParams, $timeout, $ionicModal, userService,
-        alertService, ngProgress, surveyService, fingerprintService, passcodeModalService, md5, toastr) {
+        alertService, ngProgress, surveyService, fingerprintService, passcodeModalService, md5, toastr, localStorageService) {
         $scope.existingProfiles = [];
         $scope.profile = undefined;
         $scope.loginValidated = false;
@@ -42,7 +42,15 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                             .then(function () {
                                 ngProgress.complete();
                                 $ionicHistory.clearHistory();
-                                $state.go('projects');
+
+                                var FIRST_LOGIN_KEY = 'FIRST_TIME_LOGIN';
+                                var firstLogin = localStorageService.get(FIRST_LOGIN_KEY);
+                                if (firstLogin === null || firstLogin === undefined) {
+                                    localStorageService.set(FIRST_LOGIN_KEY, true);
+                                    $state.go('makingRecords');
+                                } else {
+                                    $state.go('projects');
+                                }
                             },
                             function (err) {
                                 ngProgress.complete();
