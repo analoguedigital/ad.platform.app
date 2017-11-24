@@ -20,6 +20,7 @@ module App.Services {
         getAllSavedSurveys(formTemplateId: string): ng.IPromise<Array<Models.Survey>>;
         getProjects(): ng.IPromise<Array<Models.Project>>;
         getTemplateWithValues(surveyId: string): ng.IPromise<Models.FormTemplate>;
+        getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>>;
     }
 
     export class UploadProgress {
@@ -53,7 +54,6 @@ module App.Services {
             private httpService: IHttpService,
             private userService: IUserService,
             private locationService: ILocationService) { }
-
 
         refreshData(): ng.IPromise<void> {
             return this.refreshProjects()
@@ -120,7 +120,6 @@ module App.Services {
             return q.promise
         }
 
-
         uploadAllSurveys(): ng.IPromise<void> {
 
             var q = this.$q.defer<void>();
@@ -170,7 +169,6 @@ module App.Services {
 
             return q.promise;
         }
-
 
         private uploadSurveys(surveys: Array<Models.Survey>): ng.IPromise<void> {
 
@@ -363,7 +361,6 @@ module App.Services {
             return q.promise;
         }
 
-
         getFormTemplate(id: string): ng.IPromise<Models.FormTemplate> {
             var q = this.$q.defer<Models.FormTemplate>();
 
@@ -384,7 +381,6 @@ module App.Services {
 
             return q.promise;
         }
-
 
         startSurvey(template: Models.FormTemplate): ng.IPromise<Models.Survey> {
             var survey = new Models.Survey(this.userService.current.userId, this.userService.current.project.id, template.id);
@@ -486,13 +482,11 @@ module App.Services {
             return q.promise;
         }
 
-
         saveDraft(survey: Models.Survey): ng.IPromise<Models.Survey> {
             survey.dateUpdated = new Date(new Date().toISOString());
             survey.projectId = this.userService.current.project.id;
             return this.saveSurvey(survey);
         }
-
 
         submitSurvey(survey: Models.Survey): ng.IPromise<Models.Survey> {
 
@@ -560,7 +554,6 @@ module App.Services {
             return q.promise;
         }
 
-
         getAllSavedSurveys(formTemplateId: string): ng.IPromise<Array<Models.Survey>> {
             var q = this.$q.defer<Array<Models.Survey>>();
 
@@ -579,7 +572,6 @@ module App.Services {
 
             return q.promise;
         }
-
 
         getAllSubmittedSurveys(): ng.IPromise<Array<Models.Survey>> {
 
@@ -613,8 +605,6 @@ module App.Services {
             return q.promise;
         }
 
-
-
         getDrafts(formTemplateId: string): ng.IPromise<Array<Models.Survey>> {
             return this.getAllSavedSurveys(formTemplateId)
                 .then(
@@ -622,7 +612,6 @@ module App.Services {
                     return _.filter(savedSurveys, { 'isSubmitted': false });
                 });
         }
-
 
         getSubmittedSurveys(formTemplateId: string): ng.IPromise<Array<Models.Survey>> {
             return this.getAllSavedSurveys(formTemplateId)
@@ -632,11 +621,9 @@ module App.Services {
                 });
         }
 
-
         getProjects(): ng.IPromise<Array<Models.Project>> {
             return this.storageService.getAll(this.PROJECT_OBJECT_TYPE, null);
         }
-
 
         getTemplateWithValues(surveyId: string): ng.IPromise<Models.FormTemplate> {
             var q = this.$q.defer();
@@ -771,6 +758,24 @@ module App.Services {
             d.resolve(survey);
 
             return d.promise;
+        }
+
+        getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>> {
+            var q = this.$q.defer<Array<Models.Survey>>();
+
+            this.httpService.getUserSurveys(projectId)
+                .then(
+                (data) => {
+                    _.map(data, function (item: Models.Survey) {
+                        return item.isSubmitted = true;
+                    });
+
+                    q.resolve(data);
+                },
+                    (err) => { q.reject(err); }
+                );
+
+            return q.promise;
         }
     }
 
