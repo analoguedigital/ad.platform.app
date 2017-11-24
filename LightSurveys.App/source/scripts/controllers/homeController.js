@@ -1,12 +1,12 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicPlatform', '$ionicSideMenuDelegate', '$ionicPopup', 'surveyService', 'userService', 'alertService', 'ngProgress', '$ionicNavBarDelegate',
-    function ($scope, $rootScope, $state, $stateParams, $ionicPlatform, $ionicSideMenuDelegate, $ionicPopup, surveyService, userService, alertService, ngProgress, $ionicNavBarDelegate) {
+angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicPlatform', '$ionicSideMenuDelegate', '$ionicPopup', 'surveyService', 'userService', 'alertService', 'ngProgress', '$ionicNavBarDelegate', '$ionicHistory', 'storageService', 'httpService', 'localStorageService',
+    function ($scope, $rootScope, $state, $stateParams, $ionicPlatform, $ionicSideMenuDelegate, $ionicPopup, surveyService, userService, alertService, ngProgress, $ionicNavBarDelegate, $ionicHistory, storageService, httpService, localStorageService) {
+        var FIRST_TIME_LOGIN_KEY = 'FIRST_TIME_LOGIN';
 
         //solution to Navbar disappearance issue suggested here https://github.com/ionic-team/ionic/issues/3483
         $scope.$on('$ionicView.enter', function (e) {
             $ionicNavBarDelegate.showBar(true);
         });
-
 
         $scope.currentContext = userService.current;
         $scope.allFormTemplates = [];
@@ -84,9 +84,41 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                 });
         }
 
+        $scope.syncUserRecords = function () {
+            var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
+            if (firstLogin && firstLogin === true) {
+                localStorageService.set(FIRST_TIME_LOGIN_KEY, false);
 
-        if (userService.current.project !== undefined)
-            _loadList();
+                var projectId = userService.current.project.id;
+                surveyService.getUserSurveys(projectId)
+                    .then(function (data) {
+                        // fix attachments, and store surveys locally
+                        _.forEach(data, function (survey, index) {
+                            _.forEach(survey.formValues, function (fv) {
+                                _.forEach(fv.attachments, function (attachment) {
+                                    attachment.fileUri = 'http://192.168.1.7:8081' + attachment.url;
+                                    attachment.mediaType = _.toLower(attachment.typeString);
+                                    delete attachment.typeString;
+                                });
+                            });
+
+                            storageService.save('survey', survey.formTemplateId, survey.id, survey);
+                        });
+
+                        _loadList();
+                    }, function (err) {
+                        console.error(err);
+                    });
+            } else {
+                _loadList();
+            }
+        }
+
+        if (userService.current.project === undefined) {
+            $state.go('projects');
+        } else {
+            $scope.syncUserRecords();
+        }
 
     }]);
 

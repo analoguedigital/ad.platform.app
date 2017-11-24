@@ -19,6 +19,7 @@ module App.Services {
         forgotPassword(model: Models.IForgotPasswordModel): ng.IPromise<void>;
         resetPassword(model: Models.IResetPasswordModel): ng.IPromise<void>;
         getDataList(id: string): angular.IPromise<angular.IHttpPromiseCallbackArg<Models.DataListItem[]>>;
+        getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>>;
     }
 
     export class HttpService implements IHttpService {
@@ -110,7 +111,6 @@ module App.Services {
 
             return deferred.promise;
         }
-
 
         getFormTemplate(id: string): angular.IPromise<angular.IHttpPromiseCallbackArg<Models.FormTemplate>> {
 
@@ -221,6 +221,16 @@ module App.Services {
                 .error((data, status) => {
                     deferred.reject(this.onError(data, status));
                 });
+
+            return deferred.promise;
+        }
+
+        getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>> {
+            var deferred = this.$q.defer<Array<Models.Survey>>();
+            
+            this.$http.get(HttpService.serviceBase + 'api/surveys/user/' + projectId)
+                .success((data: Models.Survey[]) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
 
             return deferred.promise;
         }

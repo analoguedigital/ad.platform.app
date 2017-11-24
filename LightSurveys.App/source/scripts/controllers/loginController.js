@@ -8,6 +8,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
         $scope.loginValidated = false;
 
         var rejected = $stateParams.rejected === 'true';
+        var FIRST_TIME_LOGIN_KEY = 'FIRST_TIME_LOGIN';
 
         if (rejected) {
             userService.logOut();
@@ -43,10 +44,9 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                                 ngProgress.complete();
                                 $ionicHistory.clearHistory();
 
-                                var FIRST_LOGIN_KEY = 'FIRST_TIME_LOGIN';
-                                var firstLogin = localStorageService.get(FIRST_LOGIN_KEY);
+                                var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
                                 if (firstLogin === null || firstLogin === undefined) {
-                                    localStorageService.set(FIRST_LOGIN_KEY, true);
+                                    localStorageService.set(FIRST_TIME_LOGIN_KEY, true);
                                     $state.go('makingRecords');
                                 } else {
                                     $state.go('projects');
