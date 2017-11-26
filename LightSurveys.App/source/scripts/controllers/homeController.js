@@ -90,13 +90,15 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                 localStorageService.set(FIRST_TIME_LOGIN_KEY, false);
 
                 var projectId = userService.current.project.id;
+                var baseUrl = httpService.getServiceBase();;
+
                 surveyService.getUserSurveys(projectId)
                     .then(function (data) {
                         // fix attachments, and store surveys locally
                         _.forEach(data, function (survey, index) {
                             _.forEach(survey.formValues, function (fv) {
                                 _.forEach(fv.attachments, function (attachment) {
-                                    attachment.fileUri = 'http://192.168.1.7:8081' + attachment.url;
+                                    attachment.fileUri = baseUrl + attachment.url;
                                     attachment.mediaType = _.toLower(attachment.typeString);
                                     delete attachment.typeString;
                                 });

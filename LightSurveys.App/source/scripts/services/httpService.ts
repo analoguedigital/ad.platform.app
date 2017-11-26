@@ -20,6 +20,7 @@ module App.Services {
         resetPassword(model: Models.IResetPasswordModel): ng.IPromise<void>;
         getDataList(id: string): angular.IPromise<angular.IHttpPromiseCallbackArg<Models.DataListItem[]>>;
         getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>>;
+        getServiceBase(): string;
     }
 
     export class HttpService implements IHttpService {
@@ -31,6 +32,10 @@ module App.Services {
             private $http: ng.IHttpService,
             private authService: IAuthService,
             private $q: ng.IQService) { }
+
+        getServiceBase(): string {
+            return HttpService.serviceBase;
+        }
 
         forgotPassword(model: Models.IForgotPasswordModel): ng.IPromise<void> {
             var deferred = this.$q.defer<void>();
