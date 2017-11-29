@@ -274,3 +274,19 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 }
 
 .pull-right { float: right; }
+
+.rzslider .rz-tick-legend {
+    max-width: 150px !important;
+}
+
+.range.range-positive {
+    .rzslider {
+        padding-bottom: 30px;
+    }
+}
+
+.range .range-positive {
+    .item .metric {
+        padding-bottom: 40px !important;
+    }
+}
