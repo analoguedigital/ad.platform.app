@@ -22,8 +22,7 @@
                     <span translate> Home</span>
                 </ion-item>
                 <ion-item ng-if="numberOfAvailableProjects > 1 && currentContext.project" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="projects" menu-close="">
-                    <i class="icon ion-android-folder-open"></i>
-                    {{currentContext.project.name}}
+                    <i class="icon ion-android-folder-open"></i> &nbsp;{{currentContext.project.name}}
                 </ion-item>
                 <!--<ion-item class="item item-positive item-icon-{{::getLeft()}}" ng-click="refresh()">
                     <i class="icon ion-refresh"></i>
