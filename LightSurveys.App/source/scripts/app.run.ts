@@ -106,4 +106,8 @@ interface Navigator {
     function configAngularMoment(amMoment, $locale) {
         amMoment.changeLocale("en-GB");
     }
+
+    angular.module("lm.surveys").filter('trusted', ['$sce', function ($sce: ng.ISCEService) {
+        return $sce.trustAsResourceUrl;
+    }]);
 })();
