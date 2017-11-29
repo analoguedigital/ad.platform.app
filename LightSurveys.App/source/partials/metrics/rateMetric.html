@@ -1,7 +1,6 @@
 <h3 ng-hide="metricGroup.isRepeater"> {{::metric.description}} </h3>
 <div class=" range range-positive" ng-controller="rateMetricController">
-    <input type="range" aria-label="{{::metric.shortTitle}}"  ng-text-change="rateChanged($event)" ng-min="{{::metric.minValue}}" ng-max="{{::metric.maxValue}}" ng-model="formValue.numericValue">
-    {{getStepLabel()}}
+    <rzslider rz-slider-options="sliderOptions" rz-slider-model="formValue.numericValue"></rzslider>
 </div>
 <script>
     $(function () {

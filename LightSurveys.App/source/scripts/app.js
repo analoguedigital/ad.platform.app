@@ -16,6 +16,7 @@ angular.module('lm.surveys', [
     'tc.chartjs',
     'ionic-color-picker',
     "angularMoment",
-    'angular-md5'
+    'angular-md5',
+    'rzModule'
 ]);
 
