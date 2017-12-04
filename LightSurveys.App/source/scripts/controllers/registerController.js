@@ -1,6 +1,6 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('registerController', ['$scope', '$state', '$ionicHistory', '$ionicModal', 'userService', 'alertService', 'ngProgress', 'surveyService',
-    function ($scope, $state, $ionicHistory, $ionicModal, userService, alertService, ngProgress, surveyService) {
+angular.module('lm.surveys').controller('registerController', ['$scope', '$state', '$ionicHistory', '$ionicModal', 'userService', 'alertService', 'ngProgress', 'surveyService', 'localStorageService', 
+    function ($scope, $state, $ionicHistory, $ionicModal, userService, alertService, ngProgress, surveyService, localStorageService) {
         $scope.termsModal = undefined;
         $scope.model = {
             termsAgreed: false
@@ -43,7 +43,10 @@ angular.module('lm.surveys').controller('registerController', ['$scope', '$state
                             .then(function () {
                                 ngProgress.complete();
                                 $ionicHistory.clearHistory();
-                                $state.go('projects');
+
+                                var FIRST_TIME_LOGIN_KEY = 'FIRST_TIME_LOGIN';
+                                localStorageService.set(FIRST_TIME_LOGIN_KEY, true);
+                                $state.go('makingRecords');
                             },
                             function (err) {
                                 ngProgress.complete();
