@@ -393,7 +393,6 @@
                         label: onTooltipsLabelCallback
                     }
                 },
-
                 scales: {
                     xAxes: [{
                         display: true,
@@ -411,7 +410,8 @@
                             autoSkip: true,
                             callback: function (value) {
                                 return moment(value).format('MMM D');
-                            }
+                            },
+                            fontColor: '#CCCCCC'
                         }
                     }],
                     yAxes: [{
@@ -422,12 +422,15 @@
                         },
                         ticks: {
                             beginAtZero: true,
+                            stepSize: 1,
                             max: maxImpact,
-                            min: minImpact
+                            min: minImpact,
+                            fontColor: '#CCCCCC'
                         },
                         scaleLabel: {
                             display: true,
-                            labelString: 'Impact'
+                            labelString: 'Impact',
+                            fontColor: '#CCCCCC'
                         }
                     }]
                 },
@@ -437,6 +440,11 @@
                 animation: {
                     duration: 1,
                     onComplete: onChartAnimationComplete
+                },
+                legend: {
+                    labels: {
+                        fontColor: '#CCCCCC'
+                    }
                 }
             };
 
