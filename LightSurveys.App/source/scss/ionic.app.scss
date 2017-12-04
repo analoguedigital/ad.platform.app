@@ -290,3 +290,9 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
         padding-bottom: 40px !important;
     }
 }
+
+.home {
+    .form-item .desc {
+        white-space: normal !important;
+    }
+}
