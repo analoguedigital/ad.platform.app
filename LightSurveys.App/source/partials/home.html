@@ -1,13 +1,11 @@
-﻿<ion-view title="Home" id="homePage" class="home">
+﻿<ion-view title="Making and reviewing your records" id="homePage" class="home">
     <ion-content has-bouncing="true" padding="true" class="has-header">
-        <ion-refresher pulling-text="Pull to refresh..."
-                       on-refresh="doRefresh()">
-        </ion-refresher>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher>
         <h2 class="padding light">
             <a class="button button-light button-clear button-large" ng-click="cloneTemplate()"><i class="icon ion-plus"></i> Add a new thread</a>
         </h2>
         <ion-list>
-            <ion-item class="item-dark" data-ng-repeat="form in formTemplates">
+            <ion-item class="item-dark form-item" data-ng-repeat="form in formTemplates">
                 <div class="light">{{form.title}}</div>
                 <div class="small desc">
                     {{form.description}}
