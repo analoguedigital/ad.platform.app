@@ -21,6 +21,7 @@ module App.Services {
         getDataList(id: string): angular.IPromise<angular.IHttpPromiseCallbackArg<Models.DataListItem[]>>;
         getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>>;
         getServiceBase(): string;
+        updateProfile(model: Models.IProfileModel): ng.IPromise<void>;
     }
 
     export class HttpService implements IHttpService {
@@ -253,6 +254,20 @@ module App.Services {
             else {
                 return status + ': Server connection failed!';
             }
+        }
+
+        updateProfile(model: Models.IProfileModel): ng.IPromise<void> {
+            var deferred = this.$q.defer<void>();
+
+            this.$http.post(HttpService.serviceBase + 'api/account/updateprofile', model)
+                .success((result: any) => {
+                    deferred.resolve(result);
+                })
+                .error((err, status) => {
+                    deferred.reject(this.onError(err, status));
+                });
+
+            return deferred.promise;
         }
     }
 

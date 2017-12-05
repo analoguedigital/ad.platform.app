@@ -44,6 +44,10 @@
                     <i class="icon fa fa-cog fa-fw"></i>
                     <span translate> Settings</span>
                 </ion-item>
+                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="account" menu-close="">
+                    <i class="icon fa fa-user-plus fa-fw"></i>
+                    <span translate> My Account</span>
+                </ion-item>
                 <!--<ion-item class="item item-positive item-icon-{{::getLeft()}}" ng-click="switchUser()">
                     <i class="icon ion-person-stalker"></i>
                     <span translate> Switch user</span>

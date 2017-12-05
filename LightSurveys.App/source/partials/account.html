@@ -1,0 +1,53 @@
+﻿<ion-view title="My Account" id="accountPage">
+    <ion-content class="content padding account" ng-cloak>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher>
+        <div class="row responsive-sm">
+            <form name="registerForm" novalidate="novalidate" class="col col-50 col-offset-25">
+                <div class="list list-inset">
+                    <label class="item item-icon-left">
+                        <i class="icon fa fa-user-o fa-fw"></i>
+                        <div class="item-input">
+                            <input name="firstName" type="text" ng-model="model.firstName" placeholder="Name (required)" required autofocus>
+                        </div>
+                    </label>
+                    <label class="item item-icon-left">
+                        <i class="icon fa fa-user fa-fw"></i>
+                        <div class="item-input">
+                            <input name="surname" type="text" ng-model="model.surname" placeholder="Surname (required)" required autofocus>
+                        </div>
+                    </label>
+                    <label class="item item-icon-left">
+                        <i class="icon fa fa-transgender fa-fw"></i>
+                        <div class="item-input item-select">
+                            <div class="input-label">
+                                Gender
+                            </div>
+                            <select ng-model="model.gender">
+                                <option ng-selected="model.gender == 0">Male</option>
+                                <option ng-selected="model.gender == 1">Female</option>
+                                <option ng-selected="model.gender == 2">Other</option>
+                            </select>
+                        </div>
+                    </label>
+                    <label class="item item-icon-left">
+                        <i class="icon fa fa-birthday-cake fa-fw"></i>
+                        <div class="item-input">
+                            <input name="birthdate" ng-model="model.birthdate" placeholder="Birthdate" type="date" required>
+                        </div>
+                    </label>
+                    <label class="item item-icon-left">
+                        <i class="icon fa fa-home fa-fw"></i>
+                        <div class="item-input">
+                            <textarea name="address" ng-model="model.address" placeholder="Address" rows="2" required></textarea>
+                        </div>
+                    </label>
+                    <div class="">
+                        <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="saveChanges()">
+                            Save changes
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ion-content>
+</ion-view>

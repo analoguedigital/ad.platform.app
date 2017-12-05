@@ -28,6 +28,7 @@ module App.Services {
         email: string;
         calendar: string;
         language: string;
+        profile: IProfileInfo;
     }
 
     interface IProfile {
@@ -36,6 +37,14 @@ module App.Services {
         authenticationData: AuthData;
         lastRefreshTemplate: Date;
         settings: ISettings;
+    }
+
+    interface IProfileInfo {
+        firstName: string;
+        surname: string;
+        gender?: number;
+        birthdate?: Date;
+        address: string;
     }
 
     interface ISettings {
@@ -51,6 +60,7 @@ module App.Services {
         calendar: string;
         language: string;
         project: Models.Project;
+        profile: IProfileInfo;
     }
 
 
@@ -92,6 +102,7 @@ module App.Services {
             this.current.userId = profile.userInfo.userId;
             this.current.userEmail = profile.userInfo.email;
             this.current.project = profile.currentProject;
+            this.current.profile = profile.userInfo.profile;
         }
 
         clearCurrent() {

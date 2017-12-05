@@ -137,6 +137,12 @@
                 url: '/guidance/making-records',
                 controller: 'staticContentController',
                 templateUrl: 'partials/guidance/making-records.html'
+            })
+            .state('account', {
+                parent: 'menu',
+                url: '/account',
+                controller: 'accountController',
+                templateUrl: 'partials/account.html'
             });
 
         $urlRouterProvider.otherwise('/home');

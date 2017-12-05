@@ -162,4 +162,12 @@ module App.Models {
         password: string;
         confirmPassword: string;
     }
+
+    export interface IProfileModel {
+        firstName: string;
+        surname: string;
+        gender?: number;
+        birthdate: string;
+        address: string;
+    }
 }
