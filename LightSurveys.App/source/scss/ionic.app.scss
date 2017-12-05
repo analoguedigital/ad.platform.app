@@ -296,3 +296,12 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
         white-space: normal !important;
     }
 }
+
+.button.button-light.button-clear.button-block {
+    background-color: $color4;
+}
+
+.button-clear.active, 
+.button-clear.activated {
+    background-color: #262626 !important;
+}
