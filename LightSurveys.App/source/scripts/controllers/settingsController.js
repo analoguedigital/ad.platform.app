@@ -179,6 +179,26 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         }
 
         $scope.changePassword = function () {
+            if ($scope.model.password.length < 1) {
+                toastr.error('Please enter your current password');
+                return false;
+            }
+
+            if ($scope.model.newPassword.length < 1) {
+                toastr.error('Please enter your new password');
+                return false;
+            }
+
+            if ($scope.model.confirmPassword.length < 1) {
+                toastr.error('Please confirm your new password');
+                return false;
+            }
+
+            if ($scope.model.newPassword !== $scope.model.confirmPassword) {
+                toastr.error('New password and confirm password do not match');
+                return false;
+            }
+
             $scope.errors = [];
 
             var payload = {
