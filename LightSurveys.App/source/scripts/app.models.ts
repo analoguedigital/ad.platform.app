@@ -170,4 +170,11 @@ module App.Models {
         birthdate: string;
         address: string;
     }
+
+    export interface IChangePasswordModel {
+        userId: string;
+        oldPassword: string;
+        newPassword: string;
+        confirmPassword: string;
+    }
 }

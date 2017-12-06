@@ -74,6 +74,7 @@ module App.Services {
         setCurrentProject: (project: Models.Project) => void;
         register(registerData: IRegisterData): angular.IPromise<void>;
         clearCurrent: () => void;
+        changePassword(model: Models.IChangePasswordModel): ng.IPromise<void>;
     }
 
     class UserService implements IUserService {
@@ -227,6 +228,17 @@ module App.Services {
         getExistingProfiles(): ng.IPromise<IProfile[]> {
             return this.storageService.getAll(null, this.USER_OBJECT_TYPE);
         }
+
+        changePassword(model: Models.IChangePasswordModel): ng.IPromise<void> {
+            var deferred = this.$q.defer<void>();
+
+            this.httpService.changePassword(model)
+                .then((res: any) => { deferred.resolve(res); },
+                (err) => { deferred.reject(err); });
+
+            return deferred.promise;
+        }
+
     }
 
     angular.module('lm.surveys').service('userService', UserService);

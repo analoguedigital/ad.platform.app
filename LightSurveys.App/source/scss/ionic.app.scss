@@ -149,6 +149,10 @@ mwl-calendar.survey-calendar {
 
 .toast-bottom-center { bottom: 20px !important; }
 
+.change-password-screen {
+    background-color: $base-background-color;
+}
+
 .passcode-screen { background-color: $base-background-color; color: white; display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; -webkit-box-direction: normal; -moz-box-direction: normal; -webkit-box-orient: horizontal; -moz-box-orient: horizontal; -webkit-flex-direction: row; -ms-flex-direction: row; flex-direction: row; -webkit-flex-wrap: nowrap; -ms-flex-wrap: nowrap; flex-wrap: nowrap; -webkit-box-pack: center; -moz-box-pack: center; -ms-flex-pack: center; justify-content: center; -webkit-align-content: stretch; -ms-flex-line-pack: stretch; align-content: stretch; -webkit-box-align: center; -moz-box-align: center; -ms-flex-align: center; align-items: center; }
 
 .passcode-screen > * { -webkit-box-ordinal-group: 1; -moz-box-ordinal-group: 1; -ms-flex-order: 0; order: 0; -webkit-box-flex: 1; -moz-box-flex: 1; -webkit-flex: 1 1 auto; -ms-flex: 1 1 auto; flex: 1 1 auto; -ms-flex-item-align: auto; align-self: auto; }
@@ -304,4 +308,13 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .button-clear.active, 
 .button-clear.activated {
     background-color: #262626 !important;
+}
+
+.change-pass-errors {
+    padding-top: 20px;
+
+    p {
+        color: $color2;
+        padding: 0 20px;
+    }
 }
