@@ -81,10 +81,11 @@ interface Navigator {
         }, 101);
     }
 
-    SetupLoginTransitionControls.$inject = ["$rootScope", "userService"];
+    SetupLoginTransitionControls.$inject = ["$rootScope", "userService", "$ionicHistory"];
     function SetupLoginTransitionControls(
         $rootScope: ng.IRootScopeService,
-        userService: App.Services.IUserService) {
+        userService: App.Services.IUserService,
+        $ionicHistory: ionic.navigation.IonicHistoryService) {
 
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
             var publicStates = ['login', 'register', 'forgotPassword', 'resetPassword'];
@@ -98,6 +99,16 @@ interface Navigator {
 
             if (publicStates.indexOf(fromState.name) !== -1 && userService.currentProfile === null) {
                 event.preventDefault();
+            }
+
+            if (toState.name === 'home') {
+                $ionicHistory.clearCache();
+                $ionicHistory.clearHistory();
+
+                $ionicHistory.nextViewOptions({
+                    historyRoot: true,
+                    disableBack: true
+                });
             }
         });
     }

@@ -67,12 +67,20 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
 
         $scope.activateProfile = function (profile) {
             ngProgress.start();
-
             userService.activateProfile(profile);
+
+            $ionicHistory.clearCache();
             $ionicHistory.clearHistory();
+
             $scope.loginValidated = true;
-            $state.go('home');
             ngProgress.complete();
+
+            $ionicHistory.nextViewOptions({
+                historyRoot: true,
+                disableBack: true
+            });
+
+            $state.go('home');
         };
 
         $scope.goRegister = function () {

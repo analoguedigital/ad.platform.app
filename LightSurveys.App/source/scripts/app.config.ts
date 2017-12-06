@@ -24,7 +24,8 @@
                 url: '/home',
                 parent: 'menu',
                 controller: "homeController",
-                templateUrl: "partials/home.html"
+                templateUrl: "partials/home.html",
+                cache: false
             })
             .state('login', {
                 url: "/login?rejected",
