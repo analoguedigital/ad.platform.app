@@ -6,6 +6,8 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         //solution to Navbar disappearance issue suggested here https://github.com/ionic-team/ionic/issues/3483
         $scope.$on('$ionicView.enter', function (e) {
             $ionicNavBarDelegate.showBar(true);
+            $ionicHistory.clearCache();
+            $ionicHistory.clearHistory();
         });
 
         $scope.currentContext = userService.current;

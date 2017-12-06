@@ -24,12 +24,21 @@ function ($scope, $ionicHistory, $state, userService, surveyService, alertServic
         userService.setCurrentProject(project).then(
             function () {
                 $ionicHistory.clearHistory();
+                $ionicHistory.nextViewOptions({
+                    historyRoot: true,
+                    disableBack: true
+                });
+
                 $state.go('home');
             },
             function (err) { alertService.show(gettext("Error in setting active projects: "), err); });
     };
 
     $scope.back = function () {
+        $ionicHistory.nextViewOptions({
+            historyRoot: true,
+            disableBack: true
+        });
         $state.go('home');
     };
 
