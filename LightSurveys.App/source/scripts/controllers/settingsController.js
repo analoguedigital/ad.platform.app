@@ -1,7 +1,7 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootScope', '$state', '$timeout', '$ionicModal',
+angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootScope', '$state', '$timeout', '$ionicModal', 'toastr',
     '$ionicPopup', 'alertService', 'userService', 'surveyService', 'passcodeModalService', 'md5', 'fingerprintService', 'alternateIconService',
-    function ($scope, $rootScope, $state, $timeout, $ionicModal,
+    function ($scope, $rootScope, $state, $timeout, $ionicModal, toastr,
         $ionicPopup, alertService, userService, surveyService, passcodeModalService, md5, fingerprintService, alternateIconService) {
 
         $scope.profile = undefined;
@@ -9,11 +9,15 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         $scope.fingerprintHardwareDetected = false;
         $scope.canChangeAppIcon = false;
         $scope.selectedAppIcon = undefined;
+        $scope.modal = {};
 
         $scope.model = {
             passcodeEnabled: false,
             fingerprintEnabled: false,
-            noStoreEnabled: false
+            noStoreEnabled: false,
+            password: '',
+            newPassword: '',
+            confirmPassword: ''
         };
 
         $scope.$watch('model.passcodeEnabled', function (newValue, oldValue) {
@@ -153,7 +157,54 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                     $scope.model.noStoreEnabled = profile.settings.noStoreEnabled;
                 }
             });
+
+            $ionicModal.fromTemplateUrl('partials/change-password.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.modal = modal;
+            });
         };
+
+        $scope.openModal = function () {
+            $scope.model.password = '';
+            $scope.model.newPassword = '';
+            $scope.model.confirmPassword = '';
+
+            $scope.modal.show();
+        }
+
+        $scope.closeModal = function () {
+            $scope.modal.hide();
+        }
+
+        $scope.changePassword = function () {
+            $scope.errors = [];
+
+            var payload = {
+                userId: userService.current.userId,
+                oldPassword: $scope.model.password,
+                newPassword: $scope.model.newPassword,
+                confirmPassword: $scope.model.confirmPassword
+            };
+
+            userService.changePassword(payload)
+                .then(function (result) {
+                    toastr.success('You have changed your password', 'Password changed');
+                    $scope.closeModal();
+                }, function (err) {
+                    toastr.error(err.message);
+
+                    var errors = [];
+                    for (var key in err.modelState) {
+                        if (err.modelState.hasOwnProperty(key)) {
+                            errors.push(err.modelState[key][0]);
+                        }
+                    }
+
+                    $scope.errors = errors;
+                });
+        }
 
         $scope.activate();
 

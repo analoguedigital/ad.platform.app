@@ -22,6 +22,7 @@ module App.Services {
         getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>>;
         getServiceBase(): string;
         updateProfile(model: Models.IProfileModel): ng.IPromise<void>;
+        changePassword(model: Models.IChangePasswordModel): ng.IPromise<void>;
     }
 
     export class HttpService implements IHttpService {
@@ -260,6 +261,20 @@ module App.Services {
             var deferred = this.$q.defer<void>();
 
             this.$http.post(HttpService.serviceBase + 'api/account/updateprofile', model)
+                .success((result: any) => {
+                    deferred.resolve(result);
+                })
+                .error((err, status) => {
+                    deferred.reject(this.onError(err, status));
+                });
+
+            return deferred.promise;
+        }
+
+        changePassword(model: Models.IChangePasswordModel): ng.IPromise<void> {
+            var deferred = this.$q.defer<void>();
+
+            this.$http.post(HttpService.serviceBase + 'api/account/changePassword', model)
                 .success((result: any) => {
                     deferred.resolve(result);
                 })
