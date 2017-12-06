@@ -16,11 +16,15 @@ angular.module('lm.surveys').controller('accountController', ['$scope', 'userSer
                     $scope.profile = profiles[0];
 
                     var info = $scope.profile.userInfo.profile;
-                    $scope.model.firstName = info.firstName;
-                    $scope.model.surname = info.surname;
-                    $scope.model.gender = info.gender;
-                    $scope.model.birthdate = moment(info.birthdate).toDate();
-                    $scope.model.address = info.address;
+                    try {
+                        $scope.model.firstName = info.firstName;
+                        $scope.model.surname = info.surname;
+                        $scope.model.gender = info.gender;
+                        $scope.model.birthdate = moment(info.birthdate).toDate();
+                        $scope.model.address = info.address;
+                    } catch (e) {
+                        console.warn(e);
+                    }
                 }
             });
         }
