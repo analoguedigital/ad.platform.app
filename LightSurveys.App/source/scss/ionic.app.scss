@@ -318,3 +318,16 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
         padding: 0 20px;
     }
 }
+
+.menu .item {
+    padding: 0;
+
+    .item-content {
+        padding: 12px 12px 12px 40px;
+    }
+}
+
+.menu .item .item-content.activated {
+    background-color: $color3 !important;
+    border-color: $color3 !important;
+}

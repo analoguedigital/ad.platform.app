@@ -18,8 +18,7 @@
         <ion-content class="has-subheader positive">
             <ion-list>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="home" menu-close="">
-                    <i class="icon fa fa-home fa-fw"></i>
-                    <span translate> Home</span>
+                    <i class="icon fa fa-home fa-fw"></i> <span translate>Home</span>
                 </ion-item>
                 <ion-item ng-if="numberOfAvailableProjects > 1 && currentContext.project" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="projects" menu-close="">
                     <i class="icon ion-android-folder-open"></i> &nbsp;{{currentContext.project.name}}
@@ -60,9 +59,8 @@
                     <i class="icon fa fa-info-circle fa-fw"></i>
                     <span translate> Guidance</span>
                 </ion-item>
-                <ion-item class="item item-positive item-icon-{{::getLeft()}}" ng-click="logOut()">
-                    <i class="icon fa fa-sign-out fa-fw"></i>
-                    <span translate> Logout</span>
+                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ng-click="logOut()" ui-sref="" menu-close="">
+                    <i class="icon fa fa-sign-out fa-fw"></i> <span translate> Logout</span>
                 </ion-item>
             </ion-list>
         </ion-content>
