@@ -12,20 +12,30 @@ module App.Services {
 
     class LocationService implements ILocationService {
 
-        static $inject: string[] = ['$q'];
+        static $inject: string[] = ['$q', 'localStorageService'];
 
         constructor(
-            private $q: ng.IQService
-            ) { }
+            private $q: ng.IQService,
+            private localStorageService: ng.local.storage.ILocalStorageService
+        ) { }
 
 
         getCurrentPosition(): ng.IPromise<Models.Position> {
+            this.localStorageService.set<boolean>('capture-in-progress', true);
 
-            var q = this.$q.defer();
+            var q = this.$q.defer<Models.Position>();
 
             navigator.geolocation.getCurrentPosition(
-                (position) => { q.resolve(new Models.Position(position.coords.latitude, position.coords.longitude, position.coords.accuracy, '', '')); },
-                (err) => { q.reject(new Models.Position(null, null, null, err.message, '')); },
+                (position) => {
+                    this.localStorageService.set<boolean>('capture-in-progress', false);
+
+                    var result = new Models.Position(position.coords.latitude, position.coords.longitude, position.coords.accuracy, '', '');
+                    q.resolve(result);
+                },
+                (err) => {
+                    this.localStorageService.set<boolean>('capture-in-progress', false);
+                    q.reject(new Models.Position(null, null, null, err.message, ''));
+                },
                 { maximumAge: 60000, timeout: 15000, enableHighAccuracy: true });
 
             return q.promise;
