@@ -132,7 +132,7 @@ mwl-calendar.survey-calendar {
 .thumbnails { flex-wrap: wrap; display: flex; align-content: flex-start;
     .thumbnail { width: 80px; vertical-align: central; height: 80px; margin: 5px; overflow: hidden;
         &.add { }
-        img, video { max-width: 100% }
+        img, video { position: absolute; width: 70px; height: 70px; }
     }
 }
 
