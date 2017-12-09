@@ -331,3 +331,8 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     background-color: $color3 !important;
     border-color: $color3 !important;
 }
+
+.thumbnail-placeholder {
+    width: 70px;
+    height: 70px;
+}
