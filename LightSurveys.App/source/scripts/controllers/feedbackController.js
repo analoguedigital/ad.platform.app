@@ -1,6 +1,8 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('feedbackController', ['$scope', 'alertService', 'userService', 'ngProgress', 'feedbackService',
     function ($scope, alertService, userService, ngProgress, feedbackService) {
+        $scope.feedbackSent = false;
+
         $scope.model = {
             comment: ''
         };
@@ -17,6 +19,7 @@ angular.module('lm.surveys').controller('feedbackController', ['$scope', 'alertS
                 .then(function (result) {
                     alertService.show('Feedback sent! Thank you.');
                     $scope.model.comment = '';
+                    $scope.feedbackSent = true;
                 }, function (error) {
                     console.error(error);
                 }).finally(function () {
