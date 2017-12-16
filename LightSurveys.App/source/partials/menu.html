@@ -18,10 +18,11 @@
         <ion-content class="has-subheader positive">
             <ion-list>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="home" menu-close="">
-                    <i class="icon fa fa-home fa-fw"></i> <span translate>Home</span>
+                    <i class="fas fa-home fa-2x"></i> <span translate>Home</span>
                 </ion-item>
                 <ion-item ng-if="numberOfAvailableProjects > 1 && currentContext.project" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="projects" menu-close="">
-                    <i class="icon ion-android-folder-open"></i> &nbsp;{{currentContext.project.name}}
+                    <i class="fas fa-folder fa-2x"></i>
+                    <span>&nbsp;{{currentContext.project.name}}</span>
                 </ion-item>
                 <!--<ion-item class="item item-positive item-icon-{{::getLeft()}}" ng-click="refresh()">
                     <i class="icon ion-refresh"></i>
@@ -32,19 +33,19 @@
                     <span translate>Upload surveys</span>
                 </ion-item>-->
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="calendar" menu-close="">
-                    <i class="icon fa fa-calendar fa-fw"></i>
+                    <i class="fas fa-calendar-alt fa-2x"></i>
                     <span translate> Calendar</span>
                 </ion-item>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="timeline" menu-close="">
-                    <i class="icon fa fa-bar-chart fa-fw"></i>
+                    <i class="fas fa-chart-bar fa-2x"></i>
                     <span translate> Timeline</span>
                 </ion-item>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="settings" menu-close="">
-                    <i class="icon fa fa-cog fa-fw"></i>
+                    <i class="fas fa-cog fa-2x"></i>
                     <span translate> Settings</span>
                 </ion-item>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="account" menu-close="">
-                    <i class="icon fa fa-user-plus fa-fw"></i>
+                    <i class="fas fa-user-circle fa-2x"></i>
                     <span translate> My Account</span>
                 </ion-item>
                 <!--<ion-item class="item item-positive item-icon-{{::getLeft()}}" ng-click="switchUser()">
@@ -52,15 +53,16 @@
                     <span translate> Switch user</span>
                 </ion-item>-->
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="feedback" menu-close="">
-                    <i class="icon fa fa-comments fa-fw"></i>
+                    <i class="fas fa-comments fa-2x"></i>
                     <span translate>Feedback</span>
                 </ion-item>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="guidance" menu-close="">
-                    <i class="icon fa fa-info-circle fa-fw"></i>
+                    <i class="fas fa-info-circle fa-2x"></i>
                     <span translate> Guidance</span>
                 </ion-item>
-                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ng-click="logOut()" ui-sref="" menu-close="">
-                    <i class="icon fa fa-sign-out fa-fw"></i> <span translate> Logout</span>
+                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" menu-close="" ng-click="logOut()" style="padding: 10px 15px">
+                    <i class="fas fa-sign-out-alt fa-2x"></i>
+                    <span translate> Logout</span>
                 </ion-item>
             </ion-list>
         </ion-content>
