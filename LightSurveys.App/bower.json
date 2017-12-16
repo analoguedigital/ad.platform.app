@@ -1,5 +1,5 @@
 {
-  "name": "LightSurveys.App",
+  "name": "lightsurveys.app",
   "version": "1.0.0",
   "description": "Light Surveys App",
   "main": "www/index.html",
@@ -43,7 +43,6 @@
   },
   "resolutions": {
     "angular": ">= 1.0.8",
-    "angular-ui-router": "0.3.2",
-    "chart.js": "v2.6.0"
+    "angular-ui-router": "0.3.2"
   }
 }
