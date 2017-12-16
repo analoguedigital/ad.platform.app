@@ -10,24 +10,20 @@
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
     <title>Light Surveys</title>
 
-    <!-- LightSurveys.App references -->
     <!-- build:css css/bowercomponents.css -->
     <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../source/scss/ionic.app.css" rel="stylesheet">
-    <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="../bower_components/ngprogress/ngProgress.css" rel="stylesheet">
     <link href="../bower_components/persian-datepicker/dist/css/persian-datepicker-0.4.5.css" rel="stylesheet" />
     <link href="../bower_components/angular-toastr/dist/angular-toastr.css" rel="stylesheet" />
     <link href="../bower_components/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.min.css" rel="stylesheet">
     <link href="../bower_components/ionic-color-picker/dist/ionic-color-picker.min.css" rel="stylesheet" />
     <link href="../bower_components/angularjs-slider/dist/rzslider.css" rel="stylesheet" />
+    <link href="css/fa-svg-with-js.css" rel="stylesheet" />
     <!-- endbuild -->
-    <!--<link href="css/index.css" rel="stylesheet" />-->
 </head>
 <body ng-controller="indexController" dir="{{getDirection()}}" route-css-classnames>
-
     <ion-nav-view class="main-container" data-ng-view=""></ion-nav-view>
-
 
     <!-- build:js js/bowercomponents.js -->
     <script src="../bower_components/jquery/dist/jquery.js"></script>
@@ -52,8 +48,9 @@
     <script src="../bower_components/angular-md5/angular-md5.min.js"></script>
     <script src="../bower_components/angular-moment/angular-moment.js"></script>
     <script src="../bower_components/angularjs-slider/dist/rzslider.js"></script>
-
+    <script src="scripts/vendor/fontawesome-all.js"></script>
     <!-- endbuild -->
+
     <!-- build:js js/app.scripts.js -->
     <script src="scripts/app.js"></script>
     <script src="scripts/app.ts.js"></script>
@@ -101,12 +98,14 @@
 
     <script src="scripts/translations.js"></script>
     <!-- endbuild -->
+
     <!-- Cordova reference, this is added to your app when it's built. -->
     <script src="cordova.js"></script>
 
     <!-- build:js js/platformOverrides.js -->
     <script type="text/javascript" src="scripts/platformOverrides.js"></script>
     <!-- endbuild -->
+
     <!-- build:js js/index.js -->
     <script type="text/javascript" src="scripts/index.js"></script>
     <!-- endbuild -->
