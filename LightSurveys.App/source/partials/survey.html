@@ -4,7 +4,6 @@
         <h2 class="title">{{::formTemplate.title}} :<span>{{currentPageIndex+1}} <span translate>of</span> {{numberOfPages}}</span></h2>
         <div class="buttons">
             <button class="button button-icon button-clear ion-ios-download " ng-click="saveDraft()">Save draft</button>
-            <button class="button button-icon button-clear ion-android-delete " ng-click="delete()"></button>
         </div>
     </ion-header-bar>
     <ion-content class="has-subheader padding" ng-class="{'has-footer':numberOfPages > 1}" ng-cloak>
