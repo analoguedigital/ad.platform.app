@@ -5,19 +5,19 @@
             <form name="registerForm" novalidate="novalidate" class="col col-50 col-offset-25">
                 <div class="list list-inset">
                     <label class="item item-icon-left">
-                        <i class="icon fa fa-user-o fa-fw"></i>
+                        <i class="icon ion-ios-person-outline"></i>
                         <div class="item-input">
                             <input name="firstName" type="text" ng-model="model.firstName" placeholder="Name (required)" required autofocus>
                         </div>
                     </label>
                     <label class="item item-icon-left">
-                        <i class="icon fa fa-user fa-fw"></i>
+                        <i class="icon ion-ios-person"></i>
                         <div class="item-input">
                             <input name="surname" type="text" ng-model="model.surname" placeholder="Surname (required)" required autofocus>
                         </div>
                     </label>
                     <label class="item item-icon-left">
-                        <i class="icon fa fa-transgender fa-fw"></i>
+                        <i class="icon ion-transgender"></i>
                         <div class="item-input item-select">
                             <div class="input-label">
                                 Gender
@@ -30,20 +30,31 @@
                         </div>
                     </label>
                     <label class="item item-icon-left">
-                        <i class="icon fa fa-birthday-cake fa-fw"></i>
+                        <i class="icon ion-ios-calendar-outline"></i>
                         <div class="item-input">
                             <input name="birthdate" ng-model="model.birthdate" placeholder="Birthdate" type="date" required>
                         </div>
                     </label>
                     <label class="item item-icon-left">
-                        <i class="icon fa fa-home fa-fw"></i>
+                        <i class="icon ion-ios-home-outline"></i>
                         <div class="item-input">
                             <textarea name="address" ng-model="model.address" placeholder="Address" rows="2" required></textarea>
                         </div>
                     </label>
+                    <label class="item item-icon-left">
+                        <i class="icon ion-ios-telephone-outline"></i>
+                        <div class="item-input">
+                            <input name="phone" ng-model="model.phone" placeholder="Phone number" type="text">
+                        </div>
+                    </label>
                     <div class="">
-                        <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="saveChanges()">
-                            Save changes
+                        <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="saveChanges()" ng-disabled="requestWorking">
+                            <span ng-if="!requestWorking">
+                                <i class="icon ion-edit"></i> Save changes
+                            </span>
+                            <span ng-if="requestWorking">
+                                <i class="fas fa-spinner fa-pulse"></i> Saving changes
+                            </span>
                         </button>
                     </div>
                 </div>

@@ -10,6 +10,8 @@ angular.module('lm.surveys').controller('accountController', ['$scope', 'userSer
             address: ''
         };
 
+        $scope.requestWorking = false;
+
         $scope.activate = function () {
             userService.getExistingProfiles().then(function (profiles) {
                 if (profiles.length) {
@@ -41,17 +43,20 @@ angular.module('lm.surveys').controller('accountController', ['$scope', 'userSer
             }
 
             ngProgress.start();
+            $scope.requestWorking = true;
+
             httpService.updateProfile($scope.model)
                 .then(function (result) {
                     $scope.profile.userInfo.profile = $scope.model;
                     userService.saveProfile($scope.profile).then(function () { });
 
-                    console.log('profile', $scope.profile);
+                    toastr.info('Profile information saved');
                 }, function (err) {
                     console.error(err);
                 })
                 .finally(function () {
                     ngProgress.complete();
+                    $scope.requestWorking = false;
                 });
         }
 

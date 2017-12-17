@@ -4,7 +4,7 @@
 
         <ul class="list">
             <li class="item item-toggle">
-                Passcode Login
+                <i class="icon ion-ios-keypad-outline"></i> <span class="item-toggle-label">Passcode Login</span>
                 <label class="toggle toggle-positive">
                     <input type="checkbox" ng-model="model.passcodeEnabled">
                     <span class="track">
@@ -13,7 +13,7 @@
                 </label>
             </li>
             <li class="item item-toggle">
-                Fingerprint Login
+                <i class="icon ion-ios-barcode-outline"></i> <span class="item-toggle-label">Fingerprint Login</span>
                 <label class="toggle toggle-positive">
                     <input type="checkbox" ng-model="model.fingerprintEnabled" ng-disabled="!fingerprintHardwareDetected">
                     <span class="track">
@@ -22,7 +22,7 @@
                 </label>
             </li>
             <li class="item item-toggle">
-                Do not save records on this device
+                <i class="icon ion-eye-disabled"></i> <span class="item-toggle-label">Do not store on this device</span>
                 <label class="toggle toggle-positive">
                     <input type="checkbox" ng-model="model.noStoreEnabled" />
                     <span class="track">
@@ -33,7 +33,7 @@
             <li class="item item-button-right">
                 Delete all records on this device
                 <button class="button button-assertive" ng-click="deleteAllData()">
-                    <i class="icon ion-trash-a"></i>
+                    <i class="icon ion-ios-trash-outline"></i>
                 </button>
             </li>
         </ul>

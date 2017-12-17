@@ -3,7 +3,9 @@
     <ion-header-bar align-title="{{::getLeft()}}" class="bar bar-subheader bar-light">
         <h2 class="title">{{::formTemplate.title}} :<span>{{currentPageIndex+1}} <span translate>of</span> {{numberOfPages}}</span></h2>
         <div class="buttons">
-            <button class="button button-icon button-clear ion-ios-download " ng-click="saveDraft()">Save draft</button>
+            <button class="button button-icon button-clear" ng-click="saveDraft()">
+                <i class="fas fa-save"></i> Save draft
+            </button>
         </div>
     </ion-header-bar>
     <ion-content class="has-subheader padding" ng-class="{'has-footer':numberOfPages > 1}" ng-cloak>
@@ -24,8 +26,14 @@
                 </div>
             </div>
             <div class="padding">
-                <button ng-show="isLastPage()" class="button button-block button-energized" type="submit" ng-disabled="surveyForm.$invalid">
-                    <span translate>Upload</span>
+                <button ng-show="isLastPage()" class="button button-block button-energized" type="submit" ng-disabled="surveyForm.$invalid || uploadWorking">
+                    <span ng-if="!uploadWorking">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span translate>Upload</span>
+                    </span>
+                    <span ng-if="uploadWorking">
+                        <i class="fas fa-spinner fa-pulse"></i> Uploading record
+                    </span>
                 </button>
             </div>
         </form>

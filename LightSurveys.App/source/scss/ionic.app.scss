@@ -323,13 +323,13 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     padding: 0;
 
     .item-content {
-        padding: 10px 15px;
+        padding: 10px 20px;
     }
 
     span {
         display: inline-block;
-        padding-left: 5px;
-        font-size: 18px;
+        padding-left: 15px;
+        font-size: 16px;
         vertical-align: baseline;
     }
 }
@@ -342,4 +342,64 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 .thumbnail-placeholder {
     width: 70px;
     height: 70px;
+}
+
+.color-block {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+input[disabled=disabled],
+textarea[disabled=disabled],
+label.item[disabled=disabled],
+.item-text-wrap.item[disabled=disabled] {
+    background: #f3f3f3;
+}
+
+.item-text-wrap.item[disabled=disabled] {
+    label.item {
+        background: #f3f3f3;
+    }
+}
+
+.m-0 {
+    margin: 0 !important;
+}
+
+.item-complex.item-dark > .item-content {
+    padding: 15px !important;
+}
+
+.button.button-dark {
+    padding: 0 15px;
+    min-height: 55px;
+    height: 55px;
+    line-height: 50px;
+}
+
+.button .icon:before, .button.icon:before, .button.icon-left:before, .button.icon-right:before {
+    font-size: 20px;
+}
+
+a.button .icon:before, a.button.icon:before, a.button.icon-left:before, a.button.icon-right:before {
+    margin-top: -2px;
+}
+
+.list .item-toggle {
+    .icon::before {
+        font-size: 24px;
+    }
+
+    .item-toggle-label {
+        position: absolute;
+        padding: 3px 0 0 10px;
+        font-size: 16px;
+    }
+}
+
+.menu-header {
+    background: $color3;
+    width: 100%;
 }

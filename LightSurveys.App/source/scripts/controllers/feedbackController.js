@@ -2,6 +2,7 @@
 angular.module('lm.surveys').controller('feedbackController', ['$scope', 'alertService', 'userService', 'ngProgress', 'feedbackService',
     function ($scope, alertService, userService, ngProgress, feedbackService) {
         $scope.feedbackSent = false;
+        $scope.feedbackWorking = false;
 
         $scope.model = {
             comment: ''
@@ -15,15 +16,17 @@ angular.module('lm.surveys').controller('feedbackController', ['$scope', 'alertS
             };
 
             ngProgress.start();
+            $scope.feedbackWorking = true;
             feedbackService.sendFeedback(feedback)
                 .then(function (result) {
-                    alertService.show('Feedback sent! Thank you.');
+                    alertService.show('Feedback sent. Thank you!');
                     $scope.model.comment = '';
                     $scope.feedbackSent = true;
                 }, function (error) {
                     console.error(error);
                 }).finally(function () {
                     ngProgress.complete();
+                    $scope.feedbackWorking = false;
                 });
         }
     }]);
