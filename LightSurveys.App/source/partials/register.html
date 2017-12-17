@@ -9,31 +9,31 @@
                 <form name="registerForm" novalidate="novalidate" class="col col-50 col-offset-25">
                     <div class="list list-inset">
                         <label class="item item-icon-left">
-                            <i class="icon fa fa-user-o fa-fw"></i>
+                            <i class="icon ion-ios-person-outline"></i>
                             <div class="item-input">
                                 <input name="firstName" type="text" ng-model="registerData.firstName" placeholder="Name (required)" required autofocus>
                             </div>
                         </label>
                         <label class="item item-icon-left">
-                            <i class="icon fa fa-user fa-fw"></i>
+                            <i class="icon ion-ios-person"></i>
                             <div class="item-input">
                                 <input name="surname" type="text" ng-model="registerData.surname" placeholder="Surname (required)" required autofocus>
                             </div>
                         </label>
                         <label class="item item-icon-left">
-                            <i class="icon fa fa-envelope-o fa-fw"></i>
+                            <i class="icon ion-ios-email-outline"></i>
                             <div class="item-input">
                                 <input name="email" type="email" ng-model="registerData.email" placeholder="Email (required)" required autofocus>
                             </div>
                         </label>
                         <label class="item item-icon-left">
-                            <i class="icon fa fa-lock fa-fw"></i>
+                            <i class="icon ion-ios-locked-outline"></i>
                             <div class="item-input">
                                 <input name="password" ng-model="registerData.password" placeholder="Password (required)" type="password" required>
                             </div>
                         </label>
                         <label class="item item-icon-left">
-                            <i class="icon fa fa-transgender fa-fw"></i>
+                            <i class="icon ion-transgender"></i>
                             <div class="item-input item-select">
                                 <div class="input-label">
                                     Gender
@@ -46,17 +46,24 @@
                             </div>
                         </label>
                         <label class="item item-icon-left">
-                            <i class="icon fa fa-birthday-cake fa-fw"></i>
+                            <i class="icon ion-ios-calendar-outline"></i>
                             <div class="item-input">
                                 <input name="birthdate" ng-model="registerData.birthdate" placeholder="Birthdate" type="date" required>
                             </div>
                         </label>
                         <label class="item item-icon-left">
-                            <i class="icon fa fa-home fa-fw"></i>
+                            <i class="icon ion-ios-home-outline"></i>
                             <div class="item-input">
-                                <textarea name="address" ng-model="registerData.address" placeholder="Address" rows="2" required></textarea>
+                                <textarea name="address" ng-model="registerData.address" placeholder="Address (optional)" rows="2" required></textarea>
                             </div>
                         </label>
+                        <label class="item item-icon-left">
+                            <i class="icon ion-ios-telephone-outline"></i>
+                            <div class="item-input">
+                                <input name="phone" ng-model="registerData.phone" placeholder="Phone number (optional)" type="text">
+                            </div>
+                        </label>
+
                         <label class="item item-checkbox terms-checkbox">
                             <div class="checkbox">
                                 <input type="checkbox" ng-model="model.termsAgreed" class="terms-checkbox-input">

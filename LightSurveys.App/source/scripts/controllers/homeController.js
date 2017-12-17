@@ -25,6 +25,8 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                     });
 
                     $scope.allFormTemplates = results;
+                    // is this necessary? even if true, it should be a server-side implementation.
+                    // plus this is causing the threads list to be incorrect. having 2 forms, showing only 1.
                     $scope.formTemplates = _.filter(results, function (formTemplate) { return formTemplate.createdById === userService.current.userId; });
 
                 }, function (err) {
@@ -74,11 +76,12 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
 
             surveyService.refreshData()
                 .then(function () {
-                    _loadList();
                     $scope.$broadcast('scroll.refreshComplete');
                     $scope.downloading = false;
                     ngProgress.complete();
+
                     surveyService.uploadAllSurveys();
+                    $scope.syncUserRecords();
                 }, function (err) {
                     ngProgress.complete();
                     $scope.downloading = false;
@@ -87,42 +90,45 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         }
 
         $scope.syncUserRecords = function () {
-            var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
-            if (firstLogin && firstLogin === true) {
-                localStorageService.set(FIRST_TIME_LOGIN_KEY, false);
+            var projectId = userService.current.project.id;
+            var baseUrl = httpService.getServiceBase();;
 
-                var projectId = userService.current.project.id;
-                var baseUrl = httpService.getServiceBase();;
-
-                surveyService.getUserSurveys(projectId)
-                    .then(function (data) {
-                        // fix attachments, and store surveys locally
-                        _.forEach(data, function (survey, index) {
-                            _.forEach(survey.formValues, function (fv) {
-                                _.forEach(fv.attachments, function (attachment) {
-                                    attachment.fileUri = baseUrl + attachment.url;
-                                    attachment.mediaType = _.toLower(attachment.typeString);
-                                    delete attachment.typeString;
-                                });
+            surveyService.getUserSurveys(projectId)
+                .then(function (data) {
+                    // fix attachments, and store surveys locally
+                    _.forEach(data, function (survey, index) {
+                        _.forEach(survey.formValues, function (fv) {
+                            _.forEach(fv.attachments, function (attachment) {
+                                attachment.fileUri = baseUrl + attachment.url;
+                                attachment.mediaType = _.toLower(attachment.typeString);
+                                delete attachment.typeString;
                             });
-
-                            storageService.save('survey', survey.formTemplateId, survey.id, survey);
                         });
 
-                        _loadList();
-                    }, function (err) {
-                        console.error(err);
+                        storageService.save('survey', survey.formTemplateId, survey.id, survey);
                     });
+
+                    _loadList();
+                }, function (err) {
+                    console.error(err);
+                });
+        }
+
+        $scope.activate = function () {
+            if (userService.current.project === undefined) {
+                $state.go('projects');
             } else {
-                _loadList();
+                var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
+                if (firstLogin && firstLogin === true) {
+                    localStorageService.set(FIRST_TIME_LOGIN_KEY, false);
+                    $scope.syncUserRecords();
+                } else {
+                    _loadList();
+                }
             }
         }
 
-        if (userService.current.project === undefined) {
-            $state.go('projects');
-        } else {
-            $scope.syncUserRecords();
-        }
+        $scope.activate();
 
     }]);
 

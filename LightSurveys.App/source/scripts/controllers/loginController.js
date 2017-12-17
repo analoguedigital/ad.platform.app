@@ -7,6 +7,8 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
         $scope.profile = undefined;
         $scope.loginValidated = false;
 
+        $scope.loginWorking = false;
+
         var rejected = $stateParams.rejected === 'true';
         var FIRST_TIME_LOGIN_KEY = 'FIRST_TIME_LOGIN';
 
@@ -31,6 +33,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
             }
             else {
                 ngProgress.start();
+                $scope.loginWorking = true;
 
                 userService.login($scope.loginData)
                     .then(function () {
@@ -42,6 +45,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                         surveyService.refreshData()
                             .then(function () {
                                 ngProgress.complete();
+                                $scope.loginWorking = false;
                                 $ionicHistory.clearHistory();
 
                                 var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
@@ -60,6 +64,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                     },
                     function (err) {
                         ngProgress.complete();
+                        $scope.loginWorking = false;
                         alertService.show(err);
                     });
             }

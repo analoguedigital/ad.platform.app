@@ -1,6 +1,8 @@
 <ion-view title="Recordings" id="recordingsPage">
     <ion-header-bar align-title="{{getLeft()}}" class="bar bar-subheader bar-light">
-        <h2 class="title">{{formTemplate.title}}</h2>
+        <h2 class="title">
+            <span class="color-block" ng-style="{'background-color': formTemplate.colour}"></span> {{formTemplate.title}}
+        </h2>
     </ion-header-bar>
     <ion-content class="content has-subheader padding" ng-cloak>
         <div class="card" data-ng-repeat="draft in drafts | orderBy:'dateUpdated':true" ng-class="{'draft': !draft.isSubmitted}">
@@ -12,23 +14,23 @@
                     Attachments: {{draft.attachments}}
                 </h3>
                 <h4 class="small">
-                    <span translate>Created at</span> {{dateToString(draft.dateCreated)}}, 
+                    <span translate>Created at</span> {{dateToString(draft.dateCreated)}},
                     <span translate>last Updated at</span> {{dateToString(draft.dateUpdated)}}
                 </h4>
             </div>
 
             <div class="item">
                 <a ng-click="delete(draft)">
-                    <i class="icon ion-android-delete"></i>
+                    <i class="icon ion-ios-trash"></i>
                     <span translate> Delete</span>
                 </a>
                 <a class="right-side" ng-click="continue(draft)" ng-show="!draft.isSubmitted">
                     <span translate>Draft not uploaded</span>
-                    <i class="icon ion-chevron-{{getRight()}}"></i>
+                    <i class="icon ion-ios-arrow-forward"></i>
                 </a>
                 <a class="right-side" ng-click="viewSurvey(draft)" ng-show="draft.isSubmitted">
                     <span translate> View </span>
-                    <i class="icon ion-chevron-{{getRight()}}"></i>
+                    <i class="icon ion-ios-arrow-forward"></i>
                 </a>
             </div>
         </div>

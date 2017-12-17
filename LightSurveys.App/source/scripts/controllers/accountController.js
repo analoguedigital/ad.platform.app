@@ -7,8 +7,11 @@ angular.module('lm.surveys').controller('accountController', ['$scope', 'userSer
             surname: '',
             gender: '',
             birthdate: '',
-            address: ''
+            address: '',
+            phoneNumber: ''
         };
+
+        $scope.requestWorking = false;
 
         $scope.activate = function () {
             userService.getExistingProfiles().then(function (profiles) {
@@ -22,6 +25,7 @@ angular.module('lm.surveys').controller('accountController', ['$scope', 'userSer
                         $scope.model.gender = info.gender;
                         $scope.model.birthdate = moment(info.birthdate).toDate();
                         $scope.model.address = info.address;
+                        $scope.model.phoneNumber = info.phoneNumber;
                     } catch (e) {
                         console.warn(e);
                     }
@@ -41,17 +45,20 @@ angular.module('lm.surveys').controller('accountController', ['$scope', 'userSer
             }
 
             ngProgress.start();
+            $scope.requestWorking = true;
+
             httpService.updateProfile($scope.model)
                 .then(function (result) {
                     $scope.profile.userInfo.profile = $scope.model;
                     userService.saveProfile($scope.profile).then(function () { });
 
-                    console.log('profile', $scope.profile);
+                    toastr.info('Profile information saved');
                 }, function (err) {
                     console.error(err);
                 })
                 .finally(function () {
                     ngProgress.complete();
+                    $scope.requestWorking = false;
                 });
         }
 
@@ -59,7 +66,16 @@ angular.module('lm.surveys').controller('accountController', ['$scope', 'userSer
             httpService.getUserInfo()
                 .then(function (data) {
                     $scope.profile.userInfo = data;
-                    userService.saveProfile($scope.profile);
+                    userService.saveProfile($scope.profile)
+                        .then(function () {
+                            var info = data.profile;
+                            $scope.model.firstName = info.firstName;
+                            $scope.model.surname = info.surname;
+                            $scope.model.gender = info.gender;
+                            $scope.model.birthdate = moment(info.birthdate).toDate();
+                            $scope.model.address = info.address;
+                            $scope.model.phoneNumber = info.phoneNumber;
+                        });
                 }, function (err) {
                     console.error(err);
                 })

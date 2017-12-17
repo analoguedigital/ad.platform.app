@@ -1,8 +1,8 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootScope', '$state', '$timeout', '$ionicModal', 'toastr',
-    '$ionicPopup', 'alertService', 'userService', 'surveyService', 'passcodeModalService', 'md5', 'fingerprintService', 'alternateIconService',
+    '$ionicPopup', 'alertService', 'userService', 'surveyService', 'passcodeModalService', 'md5', 'fingerprintService', 'alternateIconService', 'ngProgress', 
     function ($scope, $rootScope, $state, $timeout, $ionicModal, toastr,
-        $ionicPopup, alertService, userService, surveyService, passcodeModalService, md5, fingerprintService, alternateIconService) {
+        $ionicPopup, alertService, userService, surveyService, passcodeModalService, md5, fingerprintService, alternateIconService, ngProgress) {
 
         $scope.profile = undefined;
         $scope.passcodeSaved = false;
@@ -19,6 +19,8 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
             newPassword: '',
             confirmPassword: ''
         };
+
+        $scope.changePwdWorking = false;
 
         $scope.$watch('model.passcodeEnabled', function (newValue, oldValue) {
             if (oldValue === false && newValue === true) {
@@ -134,7 +136,6 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         }
 
         $scope.activate = function () {
-
             $scope.isIOS = ionic.Platform.isIOS();
             fingerprintService.isHardwareDetected()
                 .then(function (result) {
@@ -208,9 +209,11 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                 confirmPassword: $scope.model.confirmPassword
             };
 
+            ngProgress.start();
+            $scope.changePwdWorking = true;
             userService.changePassword(payload)
                 .then(function (result) {
-                    toastr.success('You have changed your password', 'Password changed');
+                    toastr.info('You have changed your password', 'Password changed');
                     $scope.closeModal();
                 }, function (err) {
                     toastr.error(err.message);
@@ -223,6 +226,9 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                     }
 
                     $scope.errors = errors;
+                }).finally(function () {
+                    ngProgress.complete();
+                    $scope.changePwdWorking = false;
                 });
         }
 

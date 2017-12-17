@@ -1,6 +1,8 @@
 <ion-view title="Review" id="surveyViewPage">
     <ion-header-bar align-title="{{::getLeft()}}" class="bar bar-subheader bar-light">
-        <h2 class="title">{{::formTemplate.title}} :<span>{{currentPageIndex+1}} <span translate>of</span> {{numberOfPages}}</span></h2>
+        <h2 class="title">
+            <span class="color-block" ng-style="{'background-color': formTemplate.colour}"></span> {{::formTemplate.title}} :<span>{{currentPageIndex+1}} <span translate>of</span> {{numberOfPages}}</span>
+        </h2>
     </ion-header-bar>
     <ion-content class="has-subheader has-footer padding" ng-cloak>
         <form name="surveyForm" novalidate="novalidate" ng-submit="submitSurvey()">

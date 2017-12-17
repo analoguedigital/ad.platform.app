@@ -4,7 +4,7 @@
 
         <ul class="list">
             <li class="item item-toggle">
-                Passcode Login
+                <i class="icon ion-ios-keypad-outline"></i> <span class="item-toggle-label">Passcode Login</span>
                 <label class="toggle toggle-positive">
                     <input type="checkbox" ng-model="model.passcodeEnabled">
                     <span class="track">
@@ -13,7 +13,7 @@
                 </label>
             </li>
             <li class="item item-toggle">
-                Fingerprint Login
+                <i class="icon ion-ios-barcode-outline"></i> <span class="item-toggle-label">Fingerprint Login</span>
                 <label class="toggle toggle-positive">
                     <input type="checkbox" ng-model="model.fingerprintEnabled" ng-disabled="!fingerprintHardwareDetected">
                     <span class="track">
@@ -22,7 +22,7 @@
                 </label>
             </li>
             <li class="item item-toggle">
-                Do not save records on this device
+                <i class="icon ion-eye-disabled"></i> <span class="item-toggle-label">Do not store on this device</span>
                 <label class="toggle toggle-positive">
                     <input type="checkbox" ng-model="model.noStoreEnabled" />
                     <span class="track">
@@ -33,11 +33,11 @@
             <li class="item item-button-right">
                 Delete all records on this device
                 <button class="button button-assertive" ng-click="deleteAllData()">
-                    <i class="icon ion-trash-a"></i>
+                    <i class="icon ion-ios-trash-outline"></i>
                 </button>
             </li>
         </ul>
-        <span class="text-muted">Don't worry, all records you upload will be saved on our secure server.</span>
+        <p class="light">Don't worry, all records you upload will be saved on our secure server.</p>
         <br />
 
         <div ng-if="canChangeAppIcon">
@@ -76,7 +76,7 @@
         </div>
 
         <h2 class="light">Password Management</h2>
-        <p class="light">It's a good idea to change your passwords frequently, this applies to all your passwords. choose a strong phrase, something you can remember and keep it somewhere safe!</p>
+        <p class="light">It's a good idea to change your passwords frequently. This applies to all your passwords. Choose a strong phrase, something you can remember, and keep it somewhere safe.</p>
         <button class="button button-energized button-block" ng-click="openModal()">
             <i class="fa fa-key"></i> Change Password
         </button>

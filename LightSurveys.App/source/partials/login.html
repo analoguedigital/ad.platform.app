@@ -13,22 +13,27 @@
             <div class="col col-50 col-offset-25">
                 <form name="registerForm" novalidate="novalidate" ng-show="!isQuickLoginActive">
                     <div class="list list-inset">
-                        <label class="item item-icon-left">
+                        <label class="item item-icon-left" ng-disabled="loginWorking">
                             <i class="icon ion-ios-person-outline"></i>
                             <span class="item-input">
-                                <input name="email" type="email" ng-model="loginData.email" placeholder="Email" required autofocus autocomplete="off">
+                                <input name="email" type="email" ng-model="loginData.email" placeholder="Email address" required autofocus autocomplete="off" ng-disabled="loginWorking">
                             </span>
                         </label>
 
-                        <label class="item item-icon-left">
+                        <label class="item item-icon-left" ng-disabled="loginWorking">
                             <i class="icon ion-ios-locked-outline"></i>
                             <span class="item-input">
-                                <input name="password" ng-model="loginData.password" placeholder="Password" type="password" required autocomplete="off">
+                                <input name="password" ng-model="loginData.password" placeholder="Password" type="password" required autocomplete="off" ng-disabled="loginWorking">
                             </span>
                         </label>
                         <div class="">
-                            <button class="no-margin-top item button button-full button-energized " type="submit" ng-click="login()">
-                                Sign in
+                            <button class="no-margin-top item button button-full button-energized " type="submit" ng-click="login()" ng-disabled="loginWorking">
+                                <span ng-if="!loginWorking">
+                                    <i class="icon ion-log-in"></i> Sign in
+                                </span>
+                                <span ng-if="loginWorking">
+                                    <i class="fas fa-spinner fa-pulse"></i> Please wait
+                                </span>
                             </button>
                         </div>
                     </div>

@@ -20,6 +20,7 @@ module App.Services {
         birthdate: Date;
         gender: string;
         address: string;
+        phoneNumber: string;
         organisationName: string;
     }
 
@@ -45,6 +46,7 @@ module App.Services {
         gender?: number;
         birthdate?: Date;
         address: string;
+        phoneNumber: string;
     }
 
     interface ISettings {
