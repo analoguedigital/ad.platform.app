@@ -33,6 +33,7 @@ interface Navigator {
             }
 
             document.addEventListener('pause', function (event) {
+                // release audio playback, if any.
                 if ($rootScope.currentMedia) {
                     $rootScope.currentMedia.stop();
                     $rootScope.currentMedia.release();
@@ -43,9 +44,9 @@ interface Navigator {
                     }
                 }
 
-                if (mediaService.isCaptureInProgress()) {
-                    // media capture in progress
-                } else {
+                // if we're not coming back from media-capture, 
+                // release active profile and enfore relog.
+                if (!mediaService.isCaptureInProgress()) {
                     $ionicHistory.clearHistory();
                     $ionicHistory.clearCache();
                     userService.clearCurrent();
@@ -99,6 +100,12 @@ interface Navigator {
 
             if (publicStates.indexOf(fromState.name) !== -1 && userService.currentProfile === null) {
                 event.preventDefault();
+            }
+
+            if (fromState.name === 'home' && toState.name === 'projects') {
+                if (userService.currentProfile !== null) {
+                    event.preventDefault();
+                }
             }
 
             if (toState.name === 'home') {
