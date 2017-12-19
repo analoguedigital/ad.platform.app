@@ -1,7 +1,10 @@
 
 <ion-view title="Record" id="surveyPage">
     <ion-header-bar align-title="{{::getLeft()}}" class="bar bar-subheader bar-light">
-        <h2 class="title">{{::formTemplate.title}} :<span>{{currentPageIndex+1}} <span translate>of</span> {{numberOfPages}}</span></h2>
+        <h2 class="title">
+            <span class="color-block" ng-style="{'background-color': formTemplate.colour}"></span> 
+            {{::formTemplate.title}} :<span>{{currentPageIndex+1}} <span translate>of</span> {{numberOfPages}}</span>
+        </h2>
         <div class="buttons">
             <button class="button button-icon button-clear" ng-click="saveDraft()">
                 <i class="fa fa-floppy-o"></i> Save draft
