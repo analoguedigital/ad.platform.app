@@ -51,7 +51,6 @@ interface Navigator {
                     $ionicHistory.clearCache();
                     userService.clearCurrent();
                 }
-
             });
 
             document.addEventListener('resume', function (event) {
@@ -79,7 +78,7 @@ interface Navigator {
                     });
                 }
             }
-        }, 101);
+        }, 100);
     }
 
     SetupLoginTransitionControls.$inject = ["$rootScope", "userService", "$ionicHistory"];
@@ -89,7 +88,7 @@ interface Navigator {
         $ionicHistory: ionic.navigation.IonicHistoryService) {
 
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-            var publicStates = ['login', 'register', 'forgotPassword', 'resetPassword'];
+            var publicStates = ['login', 'register', 'forgotPassword', 'resetPassword', 'projects'];
 
             if (publicStates.indexOf(toState.name) !== -1 && publicStates.indexOf(fromState.name) !== -1)
                 return;
@@ -100,12 +99,6 @@ interface Navigator {
 
             if (publicStates.indexOf(fromState.name) !== -1 && userService.currentProfile === null) {
                 event.preventDefault();
-            }
-
-            if (fromState.name === 'home' && toState.name === 'projects') {
-                if (userService.currentProfile !== null) {
-                    event.preventDefault();
-                }
             }
 
             if (toState.name === 'home') {
