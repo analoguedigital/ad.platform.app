@@ -18,7 +18,7 @@
                     <i class="icon ion-paper-airplane"></i> Send feedback
                 </span>
                 <span ng-if="feedbackWorking">
-                    <i class="fas fa-spinner fa-pulse"></i> Sending feedback
+                    <i class="fa fa-spinner fa-pulse fa-fw"></i> Sending feedback
                 </span>
             </button>
         </div>
@@ -26,7 +26,7 @@
         <div ng-if="feedbackSent">
             <div class="card">
                 <div class="item item-text-wrap">
-                    <h1 class="text-success"><i class="fas fa-check"></i> Feedback Sent</h1>
+                    <h1 class="text-success"><i class="fa fa-check"></i> Feedback Sent</h1>
                     <br />
                     <p>We read all the feedback and take it seriously. We may sometimes get back to you for clarification.</p>
                     <br />
@@ -34,7 +34,7 @@
             </div>
 
             <a class="button button-light button-clear button-block" ui-sref="home">
-                <i class="fas fa-long-arrow-alt-left"></i> back to home
+                <i class="fa fa-arrow-left fa-fw"></i> back to home
             </a>
         </div>
     </ion-content>
