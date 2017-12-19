@@ -47,8 +47,14 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         };
 
         $scope.cloneTemplate = function () {
-            //var recordingsTemplate = _.filter($scope.allFormTemplates, function (template) { return template.title.toLowerCase().includes('recording'); })[0];
+            // SHARED FORM TEMPLATE (Your Recordings) as seeded in our DB.
+            // the FormTemplateID on staging website is: 74eadb8f-7434-49c0-ad5a-854b0e77bcbd
             var recordingTemplateId = '74eadb8f-7434-49c0-ad5a-854b0e77bcbd';
+
+            // Ideally, we would get the shared thread from our platform,
+            // and then find it in our local collection.
+            // var recordingsTemplate = _.filter($scope.allFormTemplates, function (template) { return template.title.toLowerCase().includes('recording'); })[0];
+
             $state.go("cloneTemplate", { id: recordingTemplateId });
         };
 

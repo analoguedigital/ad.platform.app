@@ -1,6 +1,6 @@
 ﻿<ion-view title="Make and review your records" id="homePage" class="home">
     <ion-content has-bouncing="true" padding="true" class="has-header">
-        <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-refresher pulling-text="Pull to refresh and sync records" on-refresh="doRefresh()"></ion-refresher>
         <h2 class="padding light m-0">
             <a class="button button-light button-clear button-large" ng-click="cloneTemplate()"><i class="icon ion-plus"></i> Add a new thread</a>
         </h2>
@@ -16,7 +16,7 @@
 
                 <div>
                     <a class="button button-dark" ng-click="goDrafts(form)">
-                        <i class="icon ion-ios-paper-outline" style="vertical-align: middle"></i>
+                        <i class="icon ion-ios-paper-outline" style="vertical-align: middle"></i> 
                         <span translate>{{form.draftsNumber}} record{{ form.draftsNumber > 1 ? "s" : ""}}</span>
                     </a>
 
