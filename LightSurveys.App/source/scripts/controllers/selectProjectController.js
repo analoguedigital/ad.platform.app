@@ -23,7 +23,9 @@ function ($scope, $ionicHistory, $state, userService, surveyService, alertServic
     $scope.selectProject = function (project) {
         userService.setCurrentProject(project).then(
             function () {
+                $ionicHistory.clearCache();
                 $ionicHistory.clearHistory();
+
                 $ionicHistory.nextViewOptions({
                     historyRoot: true,
                     disableBack: true
