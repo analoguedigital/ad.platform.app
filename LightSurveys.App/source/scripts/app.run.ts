@@ -32,6 +32,8 @@ interface Navigator {
                 window.StatusBar.styleDefault();
             }
 
+            ionic.Platform.fullScreen(true, true);
+
             document.addEventListener('pause', function (event) {
                 // release audio playback, if any.
                 if ($rootScope.currentMedia) {
