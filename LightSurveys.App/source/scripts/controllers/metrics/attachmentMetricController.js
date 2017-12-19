@@ -119,9 +119,9 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
         $scope.deleteAttachment = function (attachment) {
             var hideSheet = $ionicActionSheet.show({
                 buttons: [
-                    { text: 'Delete' }
+                    { text: 'Yes, delete it' }
                 ],
-                titleText: 'action',
+                titleText: 'Do you want to remove this attachment?',
                 cancelText: 'Cancel',
                 buttonClicked: function (index) {
                     _.remove($scope.formValue.attachments, function (item) { return item.fileUri === attachment.fileUri; });
