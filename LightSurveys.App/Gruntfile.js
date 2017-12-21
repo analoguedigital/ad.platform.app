@@ -16,6 +16,13 @@ module.exports = function (grunt) {
                 }
             },
         },
+        sass: {
+            dist: {
+                files: {
+                    'source/scss/ionic.app.css': 'source/scss/ionic.app.scss'
+                }
+            }
+        },
         ts: {
             default: {
                 src: ["scripts/typings/**/*.ts", "source/**/*.ts"],
@@ -66,8 +73,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-ts");
     grunt.loadNpmTasks("grunt-usemin");
+    grunt.loadNpmTasks("grunt-contrib-sass");
 
     grunt.registerTask('build', [
+        'sass',
         'ts',
         'copy:html',
         'copy:css',

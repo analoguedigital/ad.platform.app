@@ -366,17 +366,34 @@ module App.Services {
 
             if (this.formTemplates !== undefined) {
                 let template = _.find(this.formTemplates, { 'id': id });
-                this.getFormTemplateMetadata(template).then((t) => { template = t; });
-                q.resolve(template);
+
+                if(template !== undefined) {
+                    this.getFormTemplateMetadata(template).then((t) => { template = t; });
+                    q.resolve(template);
+                } else {
+                    this.httpService.getFormTemplate(id)
+                        .then((data: any) => {
+                            this.getFormTemplateMetadata(data).then((t) => { data = t; });
+                            q.resolve(data);
+                        })
+                }
 
                 return q.promise;
             }
 
             this.storageService.getObj(this.FORM_TEMPLATE_OBJECT_TYPE, id).then((formTemplate: Models.FormTemplate) => {
-                this.getFormTemplateMetadata(formTemplate).then((template) => {
-                    formTemplate = template;
-                    q.resolve(template);
-                });
+                if(formTemplate !== undefined) {
+                    this.getFormTemplateMetadata(formTemplate).then((template) => {
+                        formTemplate = template;
+                        q.resolve(template);
+                    });
+                } else {
+                    this.httpService.getFormTemplate(id)
+                        .then((data: any) => { 
+                            this.getFormTemplateMetadata(data).then((t) => { data = t; });
+                            q.resolve(data);
+                        });
+                }
             });
 
             return q.promise;
