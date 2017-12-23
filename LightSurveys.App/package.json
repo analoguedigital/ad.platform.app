@@ -28,6 +28,7 @@
     "cordova-plugin-file-transfer": "^1.7.0",
     "cordova-plugin-geolocation": "^2.4.3",
     "cordova-plugin-ionic-wkwebview-engine": "^1.1.4",
+    "cordova-plugin-ios-camera-permissions": "^1.2.0",
     "cordova-plugin-media-capture": "^2.0.0",
     "cordova-plugin-media-playback": "^1.0.2-dev5",
     "cordova-plugin-splashscreen": "^4.1.0",
@@ -38,20 +39,20 @@
   },
   "cordova": {
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ],
     "plugins": {
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-geolocation": {
-        "GEOLOCATION_USAGE_DESCRIPTION": " "
+        "GEOLOCATION_USAGE_DESCRIPTION": "OnRecord would like to access your location to let you track your records."
       },
       "cordova-plugin-file-transfer": {},
       "cordova-plugin-device": {},
       "cordova-plugin-whitelist": {},
       "cordova-plugin-android-fingerprint-auth": {},
       "cordova-plugin-touch-id": {
-        "FACEID_USAGE_DESCRIPTION": " "
+        "FACEID_USAGE_DESCRIPTION": "OnRecord would like to access your touch ID to let you log in securely."
       },
       "cordova-plugin-add-swift-support": {},
       "cordova-plugin-app-icon-changer": {},
@@ -68,7 +69,13 @@
       "cordova-plugin-ionic-wkwebview-engine": {},
       "es6-promise-plugin": {},
       "cordova-plugin-media-playback": {},
-      "cordova-plugin-statusbar": {}
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-ios-camera-permissions": {
+        "CAMERA_USAGE_DESCRIPTION": "This app needs camera access",
+        "MICROPHONE_USAGE_DESCRIPTION": "This app needs microphone access",
+        "PHOTOLIBRARY_ADD_USAGE_DESCRIPTION": "This app needs write-access to photo library",
+        "PHOTOLIBRARY_USAGE_DESCRIPTION": "This app needs read/write-access photo library access"
+      }
     }
   }
 }

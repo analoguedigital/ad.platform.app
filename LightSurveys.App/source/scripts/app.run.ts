@@ -32,7 +32,7 @@ interface Navigator {
                 window.StatusBar.styleDefault();
             }
 
-            ionic.Platform.fullScreen(true, true);
+            ionic.Platform.fullScreen();
 
             document.addEventListener('pause', function (event) {
                 // release audio playback, if any.
