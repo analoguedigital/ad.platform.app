@@ -223,7 +223,12 @@ module App.Services {
         activateProfile(profile: IProfile) {
             this.setCurrent(profile);
             this.authService.loginUser(profile.authenticationData);
-            this.gettextCatalog.setCurrentLanguage(profile.userInfo.language.replace('-', '_'));
+
+            var language = profile.userInfo.language;
+            if (language && language.length)
+                this.gettextCatalog.setCurrentLanguage(profile.userInfo.language.replace('-', '_'));
+            else
+                this.gettextCatalog.setCurrentLanguage('en-GB');
         }
 
 

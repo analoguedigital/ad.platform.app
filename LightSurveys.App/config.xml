@@ -9,8 +9,7 @@
     <access origin="*" />
     <preference name="SplashScreen" value="screen" />
     <preference name="windows-target-version" value="10.0" />
-    <preference name="StatusBarOverlaysWebView" value="false" />
-    <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
+    <preference name="StatusBarOverlaysWebView" value="true" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="content://*/*" />
@@ -79,11 +78,10 @@
         <splash height="960" src="res/ios/splash/Default@2x~iphone.png" width="640" />
         <splash height="480" src="res/ios/splash/Default~iphone.png" width="320" />
     </platform>
-    <feature name="CDVWKWebViewEngine">
-        <param name="ios-package" value="CDVWKWebViewEngine" />
+    <feature name="StatusBar">
+        <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
     <engine name="android" spec="6.3.0" />
-    <engine name="ios" spec="4.5.4" />
     <plugin name="cordova-plugin-splashscreen" spec="^4.1.0" />
     <plugin name="cordova-plugin-geolocation" spec="^2.4.3">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="OnRecord would like to access your location to let you track your records." />
@@ -95,7 +93,7 @@
     <plugin name="cordova-plugin-touch-id" spec="^3.3.1">
         <variable name="FACEID_USAGE_DESCRIPTION" value="OnRecord would like to access your touch ID to let you log in securely." />
     </plugin>
-    <plugin name="cordova-plugin-add-swift-support" spec="^1.7.0" />
+    <plugin name="cordova-plugin-add-swift-support" spec="^1.7.1" />
     <plugin name="cordova-plugin-app-icon-changer" spec="^1.0.0" />
     <plugin name="cordova-plugin-media-capture" spec="^2.0.0">
         <variable name="CAMERA_USAGE_DESCRIPTION" value="OnRecord would like to access your camera to let you capture evidence." />
@@ -107,7 +105,6 @@
         <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="OnRecord would like to access your photo library to let you capture evidence." />
     </plugin>
     <plugin name="cordova-plugin-file" spec="^5.0.0" />
-    <plugin name="cordova-plugin-ionic-wkwebview-engine" spec="^1.1.4" />
     <plugin name="es6-promise-plugin" spec="^4.1.1" />
     <plugin name="cordova-plugin-media-playback" spec="^1.0.2-dev5" />
     <plugin name="cordova-plugin-statusbar" spec="^2.4.0" />
@@ -117,4 +114,6 @@
         <variable name="PHOTOLIBRARY_ADD_USAGE_DESCRIPTION" value="This app needs write-access to photo library" />
         <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="This app needs read/write-access photo library access" />
     </plugin>
+    <plugin name="cordova-plugin-crosswalk-webview" spec="~2.3.0" />
+    <engine name="ios" spec="~4.5.4" />
 </widget>
