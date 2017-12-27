@@ -30,9 +30,13 @@ interface Navigator {
             if (window.StatusBar) {
                 // org.apache.cordova.statusbar required
                 window.StatusBar.styleDefault();
-            }
 
-            ionic.Platform.fullScreen();
+                if (ionic.Platform.isAndroid()) {
+                    window.StatusBar.backgroundColorByHexString("#245278");
+                } else if (ionic.Platform.isIOS) {
+                    window.StatusBar.overlaysWebView(true);
+                }
+            }
 
             document.addEventListener('pause', function (event) {
                 // release audio playback, if any.

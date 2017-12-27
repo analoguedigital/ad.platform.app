@@ -18,16 +18,16 @@
   "dependencies": {
     "cordova-android": "6.3.0",
     "cordova-ios": "4.5.4",
-    "cordova-plugin-add-swift-support": "^1.7.0",
+    "cordova-plugin-add-swift-support": "^1.7.1",
     "cordova-plugin-android-fingerprint-auth": "^1.4.0",
     "cordova-plugin-app-icon-changer": "^1.0.0",
     "cordova-plugin-camera": "^2.4.1",
     "cordova-plugin-compat": "^1.2.0",
+    "cordova-plugin-crosswalk-webview": "~2.3.0",
     "cordova-plugin-device": "^1.1.7",
     "cordova-plugin-file": "^5.0.0",
     "cordova-plugin-file-transfer": "^1.7.0",
     "cordova-plugin-geolocation": "^2.4.3",
-    "cordova-plugin-ionic-wkwebview-engine": "^1.1.4",
     "cordova-plugin-ios-camera-permissions": "^1.2.0",
     "cordova-plugin-media-capture": "^2.0.0",
     "cordova-plugin-media-playback": "^1.0.2-dev5",
@@ -66,7 +66,6 @@
         "PHOTOLIBRARY_USAGE_DESCRIPTION": "OnRecord would like to access your photo library to let you capture evidence."
       },
       "cordova-plugin-file": {},
-      "cordova-plugin-ionic-wkwebview-engine": {},
       "es6-promise-plugin": {},
       "cordova-plugin-media-playback": {},
       "cordova-plugin-statusbar": {},
@@ -75,7 +74,8 @@
         "MICROPHONE_USAGE_DESCRIPTION": "This app needs microphone access",
         "PHOTOLIBRARY_ADD_USAGE_DESCRIPTION": "This app needs write-access to photo library",
         "PHOTOLIBRARY_USAGE_DESCRIPTION": "This app needs read/write-access photo library access"
-      }
+      },
+      "cordova-plugin-crosswalk-webview": {}
     }
   }
 }
