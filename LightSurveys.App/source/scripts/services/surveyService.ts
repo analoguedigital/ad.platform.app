@@ -21,6 +21,7 @@ module App.Services {
         getProjects(): ng.IPromise<Array<Models.Project>>;
         getTemplateWithValues(surveyId: string): ng.IPromise<Models.FormTemplate>;
         getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>>;
+        clearLocalData(): ng.IPromise<void>;
     }
 
     export class UploadProgress {
@@ -54,6 +55,22 @@ module App.Services {
             private httpService: IHttpService,
             private userService: IUserService,
             private locationService: ILocationService) { }
+
+        clearLocalData(): ng.IPromise<void> {
+            let q = this.$q.defer<void>();
+
+            var promises: Array<ng.IPromise<void>> = [];
+            promises.push(this.storageService.deleteAllObjectsOfType(this.PROJECT_OBJECT_TYPE));
+            promises.push(this.storageService.deleteAllObjectsOfType(this.FORM_TEMPLATE_OBJECT_TYPE));
+
+            this.$q.all(promises).then(() => {
+                q.resolve();
+            }, (err) => {
+                q.reject(err);
+            });
+
+            return q.promise;
+        }
 
         refreshData(): ng.IPromise<void> {
             return this.refreshProjects()

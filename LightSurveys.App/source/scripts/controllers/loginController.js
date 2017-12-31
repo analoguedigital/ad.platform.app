@@ -42,6 +42,13 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                         if ($scope.profile)
                             userService.activateProfile($scope.profile);
 
+                        surveyService.clearLocalData()
+                            .then(function() {
+                                console.warn('local data cleared out');
+                            }, function(err) {
+                                console.error(err);
+                            });
+
                         surveyService.refreshData()
                             .then(function () {
                                 ngProgress.complete();
