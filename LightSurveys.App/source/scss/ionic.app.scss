@@ -319,8 +319,26 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     }
 }
 
+.sidemenu-list .item.item-positive {
+    border-color: #222;
+}
+
+.menu {
+    background: #171717;
+
+    .item.item-avatar.activated {
+        background: $color3 !important;
+    }
+
+    .item.item-avatar.activated h2+p {
+        color: #ccc;
+    }
+}
+
 .menu .item {
     padding: 0;
+    background: #171717;
+    color: #ccc;
 
     .item-content {
         padding: 15px 20px;
@@ -411,4 +429,8 @@ a.button .icon:before, a.button.icon:before, a.button.icon-left:before, a.button
 
 .scroll-refresher .ionic-refresher-content.ionic-refresher-with-text {
     color: #ddd;
+}
+
+.toggle .track {
+    background-color: transparent;
 }

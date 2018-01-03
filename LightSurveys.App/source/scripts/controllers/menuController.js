@@ -1,13 +1,19 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('menuController', ['$scope', '$ionicPopup', '$state', '$timeout', 'surveyService', 'userService', 'alertService', 'ngProgress',
-    function ($scope, $ionicPopup, $state, $timeout, surveyService, userService, alertService, ngProgress) {
+angular.module('lm.surveys').controller('menuController', ['$scope', '$rootScope', '$ionicPopup', '$state', '$timeout', 'surveyService', 'userService', 'alertService', 'ngProgress',
+    function ($scope, $rootScope, $ionicPopup, $state, $timeout, surveyService, userService, alertService, ngProgress) {
 
         $scope.currentContext = userService.current;
         $scope.downloading = false;
         $scope.uploading = false;
         $scope.numberOfAvailableProjects = 0;
+        $scope.profile = {};
+
+        $rootScope.$on("update-menu-profile", function (event, args) {
+            $scope.profile = args.profile;
+        });
 
         var init = function () {
+            $scope.profile = $scope.currentContext.profile;
             surveyService.getProjects().then(function (projects) {
                 $scope.numberOfAvailableProjects = projects.length;
             });
