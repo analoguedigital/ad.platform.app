@@ -1,6 +1,9 @@
 /// <reference path="../../../scripts/typings/cordova/plugins/mediacapture.d.ts" />
 /// <reference path="../../../scripts/typings/cordova/plugins/camera.d.ts" />
 
+declare var FilePicker: any;
+declare var fileChooser: any;
+
 module App.Services {
     "use strict";
 
@@ -26,6 +29,62 @@ module App.Services {
                 return true;
 
             return false;
+        }
+
+        chooseFile(): ng.IPromise<Models.Attachment> {
+            var self = this;
+
+            var q = this.$q.defer<Models.Attachment>();
+
+            // Uncomment the following to use the file-picker plugin, for iCloud access.
+            //FilePicker.isAvailable((avail) => {
+            //    console.warn(avail ? "FilePicker is available" : "FilePicker is not available!");
+
+            //    var utis = ["public.data", "public.audio"];
+            //    FilePicker.pickFile((res) => {
+            //        console.log('result', res);
+            //    }, (err) => {
+            //        console.error(err);
+            //    }, utis);
+            //});
+
+            this.startCapture();
+
+            fileChooser.open(function (uri) {
+                self.endCapture();
+                console.warn('URI', uri);
+
+                self.storageService.getFileEntryFromUri(uri).then(
+                    (fileEntry) => {
+                        console.warn('entry', fileEntry);
+
+                        fileEntry.file(
+                            (file) => {
+                                var mimeType = file.type;
+                                if (!mimeType)
+                                    mimeType = this.getMimeType(uri.split('.').pop());
+
+                                q.resolve(<Models.Attachment>{
+                                    fileUri: uri,
+                                    type: mimeType,
+                                    mediaType: _.split(mimeType, '/')[0],
+                                    tempStorage: true
+                                });
+                            },
+                            (err) => {
+                                q.reject(err);
+                            }
+                        )
+                    },
+                    (err) => { q.reject(err); })
+            }, function (err) {
+                self.endCapture();
+
+                console.error(err);
+                q.reject(err);
+            });
+
+            return q.promise;
         }
 
         addFromLibrary(): ng.IPromise<Models.Attachment> {
@@ -234,7 +293,7 @@ module App.Services {
 
         private getMimeType(extension: string) {
             var ext = extension.toLowerCase();
-            
+
             if (ext === 'jpg') return 'image/jpeg';
             if (ext === 'png') return 'image/png';
             if (ext === 'mp4') return 'video/mp4';
