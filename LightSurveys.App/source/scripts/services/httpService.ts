@@ -17,7 +17,6 @@ module App.Services {
         uploadFile(attchment: Models.Attachment): angular.IPromise<string>
         uploadFeedback(feedback: IFeedbackData): ng.IPromise<void>;
         forgotPassword(model: Models.IForgotPasswordModel): ng.IPromise<void>;
-        resetPassword(model: Models.IResetPasswordModel): ng.IPromise<void>;
         getDataList(id: string): angular.IPromise<angular.IHttpPromiseCallbackArg<Models.DataListItem[]>>;
         getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>>;
         getServiceBase(): string;
@@ -43,16 +42,6 @@ module App.Services {
             var deferred = this.$q.defer<void>();
 
             this.$http.post(HttpService.serviceBase + 'api/account/forgotpassword', JSON.stringify(model))
-                .success((data) => { deferred.resolve(); })
-                .error((data, status) => { deferred.reject(this.onError(data, status)); });
-
-            return deferred.promise;
-        }
-
-        resetPassword(model: Models.IResetPasswordModel): ng.IPromise<void> {
-            var deferred = this.$q.defer<void>();
-
-            this.$http.post(HttpService.serviceBase + 'api/account/resetpassword', JSON.stringify(model))
                 .success((data) => { deferred.resolve(); })
                 .error((data, status) => { deferred.reject(this.onError(data, status)); });
 

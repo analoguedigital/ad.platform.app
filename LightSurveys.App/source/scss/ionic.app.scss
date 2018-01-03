@@ -356,6 +356,11 @@ textarea[disabled=disabled],
 label.item[disabled=disabled],
 .item-text-wrap.item[disabled=disabled] {
     background: #f3f3f3;
+    color: #ccc;
+}
+
+label.item[disabled=disabled] i.icon {
+    color: #ccc;
 }
 
 .item-text-wrap.item[disabled=disabled] {

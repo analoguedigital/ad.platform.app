@@ -39,12 +39,6 @@
                 templateUrl: "partials/forgot-password.html",
                 data: { cssClassnames: "forgot-password-page" }
             })
-            .state('resetPassword', {
-                url: "/reset-password",
-                controller: "resetPasswordController",
-                templateUrl: "partials/reset-password.html",
-                data: { cssClassnames: "reset-password-page" }
-            })
             .state('register', {
                 url: "/register",
                 controller: "registerController",
