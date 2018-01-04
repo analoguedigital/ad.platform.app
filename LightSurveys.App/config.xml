@@ -83,8 +83,8 @@
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
-    <engine name="android" spec="6.3.0" />
     <engine name="ios" spec="4.5.4" />
+    <engine name="android" spec="6.3.0" />
     <plugin name="cordova-plugin-splashscreen" spec="^4.1.0" />
     <plugin name="cordova-plugin-geolocation" spec="^2.4.3">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="OnRecord would like to access your location to let you track your records." />
@@ -124,6 +124,5 @@
         <variable name="XWALK_MODE" value="embedded" />
         <variable name="XWALK_MULTIPLEAPK" value="true" />
     </plugin>
-    <plugin name="cordova-plugin-filepicker" spec="git+https://github.com/jcesarmobile/FilePicker-Phonegap-iOS-Plugin.git" />
     <plugin name="cordova-plugin-filechooser" spec="^1.0.1" />
 </widget>
