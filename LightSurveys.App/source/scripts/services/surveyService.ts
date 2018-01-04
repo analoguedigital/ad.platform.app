@@ -750,7 +750,7 @@ module App.Services {
         }
 
         getSurveyMetadata(survey: Models.Survey): ng.IPromise<Models.Survey> {
-            var d = this.$q.defer();
+            var d = this.$q.defer<Models.Survey>();
 
             this.getFormTemplate(survey.formTemplateId).then((template) => {
                 this.getDescirptionMetrics(template).then((descMetrics) => {
