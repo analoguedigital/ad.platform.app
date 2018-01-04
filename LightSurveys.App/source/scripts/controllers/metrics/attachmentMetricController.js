@@ -81,7 +81,8 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
                     { text: 'From library' },
                     { text: 'Record video' },
                     { text: 'Record audio' },
-                    { text: 'Choose a file' }
+                    { text: 'Choose a file' },
+                    { text: 'Choose from iCloud' }
                 ],
                 titleText: 'Select source',
                 cancelText: 'Cancel',
@@ -106,6 +107,10 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
                         }
                         case 4: {
                             mediaService.chooseFile().then($scope.addAttachment);
+                            break;
+                        }
+                        case 5: {
+                            mediaService.chooseFromICloud().then($scope.addAttachment);
                             break;
                         }
                     }

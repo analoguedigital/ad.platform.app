@@ -41,6 +41,11 @@ $base-background-color: #245278 !default;
 // Include all of Ionic
 @import "../../bower_components/ionic/scss/ionic.scss";
 
+hr {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
 .bar { border-width: 0; height: 61px; background-image: none !important; }
 .row { margin: 0 !important; }
 .item-icon-left .icon.fa, .item-icon-right .icon.fa { font-size: 20px; }
@@ -323,6 +328,10 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     border-color: #222;
 }
 
+.sidemenu-list .item.item-positive.activated {
+    background-color: $color3;
+}
+
 .menu {
     background: #171717;
 
@@ -433,4 +442,12 @@ a.button .icon:before, a.button.icon:before, a.button.icon-left:before, a.button
 
 .toggle .track {
     background-color: transparent;
+}
+
+.has-subheader {
+    top: 100px;
+}
+
+.has-footer {
+    bottom: 20px;
 }

@@ -1,6 +1,10 @@
 /// <reference path="../../../scripts/typings/cordova/plugins/mediacapture.d.ts" />
 /// <reference path="../../../scripts/typings/cordova/plugins/camera.d.ts" />
 
+declare interface Window {
+    FilePicker?: any & typeof FilePicker;
+}
+
 declare var FilePicker: any;
 declare var fileChooser: any;
 
@@ -31,22 +35,39 @@ module App.Services {
             return false;
         }
 
+        chooseFromICloud(): ng.IPromise<Models.Attachment> {
+            var self = this;
+            var q = this.$q.defer<Models.Attachment>();
+
+            if (window.FilePicker === undefined) {
+                console.warn('FilePicker plugin is not available');
+            } else {
+                console.info('FilePicker plugin seems to be available');
+            }
+
+            window.FilePicker.isAvailable(function (avail) {
+                var message = avail ? "FilePicker is available" : "FilePicker is not available!";
+                console.warn('isAvailable?', message);
+
+                var utis = ["public.data", "public.audio"];
+                window.FilePicker.pickFile(
+                    function (path) {
+                        console.log('file-picker-result', path);
+                        q.resolve(path);
+                    },
+                    function (err) {
+                        console.error(err);
+                        q.reject(err);
+                    }, utis);
+            });
+
+            return q.promise;
+        }
+
         chooseFile(): ng.IPromise<Models.Attachment> {
             var self = this;
 
             var q = this.$q.defer<Models.Attachment>();
-
-            // Uncomment the following to use the file-picker plugin, for iCloud access.
-            //FilePicker.isAvailable((avail) => {
-            //    console.warn(avail ? "FilePicker is available" : "FilePicker is not available!");
-
-            //    var utis = ["public.data", "public.audio"];
-            //    FilePicker.pickFile((res) => {
-            //        console.log('result', res);
-            //    }, (err) => {
-            //        console.error(err);
-            //    }, utis);
-            //});
 
             this.startCapture();
 

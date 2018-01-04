@@ -1,11 +1,7 @@
 ﻿<ion-side-menus>
     <ion-side-menu side="left">
-        <div class="bar bar-positive">
-            <h2 class="title" translate>OnRecord <small style="color: lightgray; font-size: small">v1.1.10</small></h2>
-        </div>
-
-        <div class="list" style="padding-top: 60px; margin-bottom: 0; padding-bottom: 0">
-            <a class="item item-avatar" ui-sref="account" menu-close style="padding-left: 65px; padding-top: 10px; background: #000">
+        <div class="list" style="margin-bottom: 0; padding-bottom: 0">
+            <a class="item item-avatar" ui-sref="account" menu-close style="padding-left: 65px; padding-top: 10px; background: #000; border-top: none">
                 <img src="images/avatar-male.png" ng-if="profile.gender === 0">
                 <img src="images/avatar-female.png" ng-if="profile.gender === 1" />
                 <h2 style="color: #ccc">{{profile.firstName}} {{ profile.surname}}</h2>
@@ -34,10 +30,6 @@
                     <i class="icon ion-ios-cog-outline"></i>
                     <span translate> Settings</span>
                 </ion-item>
-                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="account" menu-close="">
-                    <i class="icon ion-ios-person-outline"></i>
-                    <span translate> My Account</span>
-                </ion-item>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="feedback" menu-close="">
                     <i class="icon ion-ios-pulse"></i>
                     <span translate>Feedback</span>
@@ -46,7 +38,7 @@
                     <i class="icon ion-ios-help-outline"></i>
                     <span translate> Guidance</span>
                 </ion-item>
-                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" menu-close="" ui-sref="" ng-click="logOut()">
+                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" menu-close="" ng-click="logOut()" style="padding: 15px 20px">
                     <i class="icon ion-log-out"></i>
                     <span translate> Log out</span>
                 </ion-item>

@@ -123,6 +123,16 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         $scope.deleteAllData = function () {
             var confirmPopup = $ionicPopup.confirm({
                 title: 'Delete all data',
+                buttons: [
+                    { text: 'Cancel' },
+                    {
+                        text: 'Delete',
+                        type: 'button-assertive',
+                        onTap: function (e) {
+                            return true;
+                        }
+                    }
+                ],
                 template: 'Are you sure you want to delete all data stored on the device?'
             });
 
