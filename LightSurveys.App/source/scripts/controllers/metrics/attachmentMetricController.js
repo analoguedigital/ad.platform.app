@@ -1,6 +1,6 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('attachmentMetricController', ['$scope', '$rootScope', '$timeout', 'mediaService', '$ionicModal', '$ionicActionSheet', '$controller', 'userService', 'Upload',
-    function ($scope, $rootScope, $timeout, mediaService, $ionicModal, $ionicActionSheet, $controller, userService, Upload) {
+angular.module('lm.surveys').controller('attachmentMetricController', ['$scope', '$rootScope', '$timeout', 'mediaService', '$ionicModal', '$ionicActionSheet', '$controller', 'userService', 'Upload', 'localStorageService', 
+    function ($scope, $rootScope, $timeout, mediaService, $ionicModal, $ionicActionSheet, $controller, userService, Upload, localStorageService) {
 
         $controller('metricController', { $scope: $scope });
 
@@ -80,7 +80,9 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
                     { text: 'Take photo' },
                     { text: 'From library' },
                     { text: 'Record video' },
-                    { text: 'Record audio' }
+                    { text: 'Record audio' },
+                    { text: 'Choose a file' },
+                    { text: 'Choose from iCloud' }
                 ],
                 titleText: 'Select source',
                 cancelText: 'Cancel',
@@ -101,6 +103,14 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
                             break;
                         case 3: {
                             mediaService.recordAudio().then($scope.addAttachment);
+                            break;
+                        }
+                        case 4: {
+                            mediaService.chooseFile().then($scope.addAttachment);
+                            break;
+                        }
+                        case 5: {
+                            mediaService.chooseFromICloud().then($scope.addAttachment);
                             break;
                         }
                     }

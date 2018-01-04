@@ -41,6 +41,11 @@ $base-background-color: #245278 !default;
 // Include all of Ionic
 @import "../../bower_components/ionic/scss/ionic.scss";
 
+hr {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
 .bar { border-width: 0; height: 61px; background-image: none !important; }
 .row { margin: 0 !important; }
 .item-icon-left .icon.fa, .item-icon-right .icon.fa { font-size: 20px; }
@@ -319,8 +324,30 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     }
 }
 
+.sidemenu-list .item.item-positive {
+    border-color: #222;
+}
+
+.sidemenu-list .item.item-positive.activated {
+    background-color: $color3;
+}
+
+.menu {
+    background: #171717;
+
+    .item.item-avatar.activated {
+        background: $color3 !important;
+    }
+
+    .item.item-avatar.activated h2+p {
+        color: #ccc;
+    }
+}
+
 .menu .item {
     padding: 0;
+    background: #171717;
+    color: #ccc;
 
     .item-content {
         padding: 15px 20px;
@@ -356,6 +383,11 @@ textarea[disabled=disabled],
 label.item[disabled=disabled],
 .item-text-wrap.item[disabled=disabled] {
     background: #f3f3f3;
+    color: #ccc;
+}
+
+label.item[disabled=disabled] i.icon {
+    color: #ccc;
 }
 
 .item-text-wrap.item[disabled=disabled] {
@@ -406,4 +438,16 @@ a.button .icon:before, a.button.icon:before, a.button.icon-left:before, a.button
 
 .scroll-refresher .ionic-refresher-content.ionic-refresher-with-text {
     color: #ddd;
+}
+
+.toggle .track {
+    background-color: transparent;
+}
+
+.has-subheader {
+    top: 100px;
+}
+
+.has-footer {
+    bottom: 20px;
 }

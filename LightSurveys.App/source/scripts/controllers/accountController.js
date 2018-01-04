@@ -1,6 +1,6 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('accountController', ['$scope', 'userService', 'moment', 'httpService', 'toastr', 'ngProgress',
-    function ($scope, userService, moment, httpService, toastr, ngProgress) {
+angular.module('lm.surveys').controller('accountController', ['$scope', '$rootScope', 'userService', 'moment', 'httpService', 'toastr', 'ngProgress',
+    function ($scope, $rootScope, userService, moment, httpService, toastr, ngProgress) {
         $scope.profile = {};
         $scope.model = {
             firstName: '',
@@ -51,6 +51,8 @@ angular.module('lm.surveys').controller('accountController', ['$scope', 'userSer
                 .then(function (result) {
                     $scope.profile.userInfo.profile = $scope.model;
                     userService.saveProfile($scope.profile).then(function () { });
+
+                    $rootScope.$broadcast("update-menu-profile", { profile: $scope.model });
 
                     toastr.info('Profile information saved');
                 }, function (err) {

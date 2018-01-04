@@ -5,33 +5,69 @@
         </h2>
     </ion-header-bar>
     <ion-content class="content has-subheader padding" ng-cloak>
-        <div class="card" data-ng-repeat="draft in drafts | orderBy:'dateUpdated':true" ng-class="{'draft': !draft.isSubmitted}">
-            <div class="item item-text-wrap">
-                <h3 ng-if="draft.description !== undefined">
-                    {{draft.description}}
-                </h3>
-                <h3 ng-if="draft.attachments !== ''">
-                    Attachments: {{draft.attachments}}
-                </h3>
-                <h4 class="small">
-                    <span translate>Created at</span> {{dateToString(draft.dateCreated)}},
-                    <span translate>last Updated at</span> {{dateToString(draft.dateUpdated)}}
-                </h4>
+        <div class="card" ng-repeat="draft in drafts | orderBy:'dateUpdated':true" ng-class="{'draft': !draft.isSubmitted}">
+            <div class="item item-divider">
+                <span am-time-ago="draft.dateCreated"></span>
+                <small class="text-muted">({{draft.dateCreated | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}})</small>
+                <span class="right-side">
+                    <i class="icon ion-clock"></i> {{draft.dateCreated | amUtc | amLocal | amDateFormat:'HH:mm'}}
+                </span>
             </div>
 
-            <div class="item">
-                <a ng-click="delete(draft)">
-                    <i class="icon ion-ios-trash"></i>
-                    <span translate> Delete</span>
-                </a>
-                <a class="right-side" ng-click="continue(draft)" ng-show="!draft.isSubmitted">
-                    <span translate>Draft not uploaded</span>
-                    <i class="icon ion-ios-arrow-forward"></i>
-                </a>
-                <a class="right-side" ng-click="viewSurvey(draft)" ng-show="draft.isSubmitted">
-                    <span translate> View </span>
-                    <i class="icon ion-ios-arrow-forward"></i>
-                </a>
+            <div class="item item-body">
+                <img class="full-image" ng-src="{{draft.coverImage}}" ng-if="draft.coverImage.length" ng-click="viewSurvey(draft)">
+
+                <p ng-if="!draft.isSubmitted">
+                    Pick up where you left off. Edit your draft and upload when you're ready.
+                </p>
+
+                <p ng-if="draft.description">
+                    <strong>Description</strong><br />
+                    {{draft.description}}
+                </p>
+
+                <p ng-if="draft.attachments">
+                    <strong>Attachments</strong><br />
+
+                    <span ng-if="draft.metadata.images.length" ng-click="viewSurvey(draft)">
+                        <i class="icon ion-image"></i> {{draft.metadata.images.length}} image<span ng-if="draft.metadata.images.length > 1">s</span>
+                    </span>
+
+                    <span ng-if="draft.metadata.videos.length" ng-click="viewSurvey(draft)">
+                        <i class="icon ion-ios-videocam"></i> {{draft.metadata.videos.length}} video<span ng-if="draft.metadata.videos.length > 1">s</span>
+                    </span>
+
+                    <span ng-if="draft.metadata.audios.length" ng-click="viewSurvey(draft)">
+                        <i class="icon ion-mic-a"></i> {{draft.metadata.audios.length}} audio<span ng-if="draft.metadata.audios.length > 1">s</span>
+                    </span>
+
+                    <span ng-if="draft.metadata.documents.length" ng-click="viewSurvey(draft)">
+                        <i class="icon ion-document-text"></i> {{draft.metadata.documents.length}} document<span ng-if="draft.metadata.documents.length > 1">s</span>
+                    </span>
+
+                    <span ng-if="draft.metadata.files.length" ng-click="viewSurvey(draft)">
+                        <i class="icon ion-document"></i> {{draft.metadata.files.length}} file<span ng-if="draft.metadata.files.length > 1">s</span>
+                    </span>
+                </p>
+
+                <hr />
+
+                <p>
+                    <a ng-click="delete(draft)">
+                        <i class="icon ion-ios-trash"></i>
+                        <span translate> Delete</span>
+                    </a>
+
+                    <a class="right-side" ng-click="continue(draft)" ng-show="!draft.isSubmitted">
+                        <i class="icon ion-edit"></i>
+                        <span translate>Edit Draft</span>
+                    </a>
+
+                    <a class="right-side" ng-click="viewSurvey(draft)" ng-show="draft.isSubmitted">
+                        <i class="icon ion-eye"></i>
+                        <span translate>View Record</span>
+                    </a>
+                </p>
             </div>
         </div>
     </ion-content>

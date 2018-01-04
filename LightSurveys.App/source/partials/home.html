@@ -4,7 +4,7 @@
         <h2 class="padding light m-0">
             <a class="button button-light button-clear button-large" ng-click="cloneTemplate()"><i class="icon ion-plus"></i> Add a new thread</a>
         </h2>
-        <ion-list>
+        <ion-list ng-if="formTemplates.length">
             <ion-item class="item-dark form-item" data-ng-repeat="form in formTemplates">
                 <div class="light">
                     <span class="color-block" ng-style="{'background-color': form.colour}"></span> {{form.title}}
@@ -29,6 +29,12 @@
                 <ion-option-button ng-if="form.createdById == currentContext.userId" class="button-positive" ng-click="editTemplate(form)">Edit</ion-option-button>
             </ion-item>
         </ion-list>
+
+        <div class="card" ng-if="formTemplates.length < 1">
+            <div class="item item-text-wrap">
+                <i class="icon ion-happy-outline"></i> There's nothing to show here.
+            </div>
+        </div>
     </ion-content>
 </ion-view>
 

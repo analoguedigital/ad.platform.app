@@ -73,7 +73,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-ts");
     grunt.loadNpmTasks("grunt-usemin");
-    grunt.loadNpmTasks("grunt-contrib-sass");
+    grunt.loadNpmTasks("grunt-sass");
 
     grunt.registerTask('build', [
         'sass',

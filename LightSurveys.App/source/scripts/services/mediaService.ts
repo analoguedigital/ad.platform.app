@@ -1,6 +1,13 @@
 /// <reference path="../../../scripts/typings/cordova/plugins/mediacapture.d.ts" />
 /// <reference path="../../../scripts/typings/cordova/plugins/camera.d.ts" />
 
+declare interface Window {
+    FilePicker?: any & typeof FilePicker;
+}
+
+declare var FilePicker: any;
+declare var fileChooser: any;
+
 module App.Services {
     "use strict";
 
@@ -26,6 +33,79 @@ module App.Services {
                 return true;
 
             return false;
+        }
+
+        chooseFromICloud(): ng.IPromise<Models.Attachment> {
+            var self = this;
+            var q = this.$q.defer<Models.Attachment>();
+
+            if (window.FilePicker === undefined) {
+                console.warn('FilePicker plugin is not available');
+            } else {
+                console.info('FilePicker plugin seems to be available');
+            }
+
+            window.FilePicker.isAvailable(function (avail) {
+                var message = avail ? "FilePicker is available" : "FilePicker is not available!";
+                console.warn('isAvailable?', message);
+
+                var utis = ["public.data", "public.audio"];
+                window.FilePicker.pickFile(
+                    function (path) {
+                        console.log('file-picker-result', path);
+                        q.resolve(path);
+                    },
+                    function (err) {
+                        console.error(err);
+                        q.reject(err);
+                    }, utis);
+            });
+
+            return q.promise;
+        }
+
+        chooseFile(): ng.IPromise<Models.Attachment> {
+            var self = this;
+
+            var q = this.$q.defer<Models.Attachment>();
+
+            this.startCapture();
+
+            fileChooser.open(function (uri) {
+                self.endCapture();
+                console.warn('URI', uri);
+
+                self.storageService.getFileEntryFromUri(uri).then(
+                    (fileEntry) => {
+                        console.warn('entry', fileEntry);
+
+                        fileEntry.file(
+                            (file) => {
+                                var mimeType = file.type;
+                                if (!mimeType)
+                                    mimeType = this.getMimeType(uri.split('.').pop());
+
+                                q.resolve(<Models.Attachment>{
+                                    fileUri: uri,
+                                    type: mimeType,
+                                    mediaType: _.split(mimeType, '/')[0],
+                                    tempStorage: true
+                                });
+                            },
+                            (err) => {
+                                q.reject(err);
+                            }
+                        )
+                    },
+                    (err) => { q.reject(err); })
+            }, function (err) {
+                self.endCapture();
+
+                console.error(err);
+                q.reject(err);
+            });
+
+            return q.promise;
         }
 
         addFromLibrary(): ng.IPromise<Models.Attachment> {
@@ -234,7 +314,7 @@ module App.Services {
 
         private getMimeType(extension: string) {
             var ext = extension.toLowerCase();
-            
+
             if (ext === 'jpg') return 'image/jpeg';
             if (ext === 'png') return 'image/png';
             if (ext === 'mp4') return 'video/mp4';

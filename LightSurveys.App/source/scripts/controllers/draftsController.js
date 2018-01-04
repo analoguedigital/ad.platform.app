@@ -1,6 +1,6 @@
 'use strict';
-angular.module('lm.surveys').controller('draftsController', ['$scope', '$state', '$stateParams', '$location', 'surveyService', 'alertService', 'gettext', 'userService',
-    function ($scope, $state, $stateParams, $location, surveyService, alertService, gettext, userService) {
+angular.module('lm.surveys').controller('draftsController', ['$scope', '$state', '$stateParams', '$location', '$ionicPopup', 'surveyService', 'alertService', 'gettext', 'userService',
+    function ($scope, $state, $stateParams, $location, $ionicPopup, surveyService, alertService, gettext, userService) {
 
         $scope.formTemplateId = $stateParams.id;
         $scope.formTemplate = {};
@@ -17,6 +17,37 @@ angular.module('lm.surveys').controller('draftsController', ['$scope', '$state',
                             draft.attachments += (draft.attachments !== '' ? ', ' : '') + attachmentGroups[key].length + " " + key + (attachmentGroups[key].length > 1 ? 's' : '');
                         });
 
+                        var attachments = [];
+                        _.forEach(draft.formValues, function (fv) {
+                            attachments = attachments.concat(fv.attachments);
+                        });
+
+                        if (attachments.length) {
+                            var images = _.filter(attachments, function (a) { if (a) return a.mediaType === 'image'; });
+                            var videos = _.filter(attachments, function (a) { if (a) return a.mediaType === 'video'; });
+                            var audios = _.filter(attachments, function (a) { if (a) return a.mediaType === 'audio' });
+                            var documents = _.filter(attachments, function (a) { if (a) return a.mediaType === 'document' });
+                            var files = _.filter(attachments, function (a) {
+                                if (a && a.mediaType !== 'image' && a.mediaType !== 'video' && a.mediaType !== 'audio' && a.mediaType !== 'document') {
+                                    return a;
+                                }
+                            });
+
+                            var meta = {
+                                images: images,
+                                videos: videos,
+                                audios: audios,
+                                documents: documents,
+                                files: files
+                            };
+
+                            draft.metadata = meta;
+
+                            if (images.length > 0) {
+                                draft.coverImage = images[0].fileUri;
+                            }
+                        }
+
                         $scope.drafts.push(draft);
                     });
                 },
@@ -32,9 +63,29 @@ angular.module('lm.surveys').controller('draftsController', ['$scope', '$state',
         };
 
         $scope.delete = function (draft) {
-            surveyService.delete(draft.id).then(
-                reload,
-                function (err) { alertService.show(gettext('error in deleting survey: ') + err); });
+            var title = draft.isSubmitted ? "Delete record" : "Delete draft";
+            var confirmPopup = $ionicPopup.confirm({
+                title: title,
+                buttons: [
+                    { text: 'Cancel' },
+                    {
+                        text: 'Delete',
+                        type: 'button-assertive',
+                        onTap: function (e) {
+                            return true;
+                        }
+                    }
+                ],
+                template: 'Are you sure you want to delete this record from your device?'
+            });
+
+            confirmPopup.then(function (res) {
+                if (res) {
+                    surveyService.delete(draft.id).then(
+                        reload,
+                        function (err) { alertService.show(gettext('error in deleting survey: ') + err); });
+                }
+            });
         };
 
         $scope.dateToString = function (isoString) {

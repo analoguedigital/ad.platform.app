@@ -5,24 +5,27 @@ angular.module('lm.surveys').controller('forgotPasswordController', ['$scope', '
             email: ''
         };
 
+        $scope.emailSent = false;
+        $scope.isWorking = false;
+
         $scope.resetPassword = function () {
             if (!$scope.model.email || $scope.model.email.length == 0) {
                 toastr.info('Please enter your email address first');
                 return;
             }
 
+            $scope.isWorking = true;
             ngProgress.start();
             httpService.forgotPassword($scope.model)
                 .then(function (result) {
-                    console.log(result);
-                    toastr.info('Password reset token has been sent', 'Check your inbox!');
-                    $state.go('resetPassword');
+                    $scope.emailSent = true;
                 }, function (error) {
                     console.error(error);
                     toastr.error('Please verify your username', 'Bad request');
                 })
                 .finally(function () {
                     ngProgress.complete();
+                    $scope.isWorking = false;
                 });
         };
 

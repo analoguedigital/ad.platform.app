@@ -14,7 +14,7 @@
             </div>
         </form>
     </ion-content>
-    <div class="bar bar-footer tabs bar-dark row">
+    <div class="bar bar-footer tabs bar-dark row" ng-if="numberOfPages > 1">
         <a class="tab-item " ng-show="!isFirstPage()" ng-click="goToPreviousPage()"><span translate>Back to page</span> {{currentPageIndex}}</a>
         <a class="tab-item"></a>
         <a class='tab-item item-icon-{{getRight()}}' ng-disabled="surveyForm.$invalid" ng-click="goToNextPage()" ng-show="!isLastPage()">
