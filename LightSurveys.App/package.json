@@ -17,7 +17,6 @@
     "typescript": "2.2.1"
   },
   "dependencies": {
-    "FilePicker": "git+https://github.com/Telerik-Verified-Plugins/FilePicker.git",
     "cordova-android": "6.3.0",
     "cordova-ios": "4.5.4",
     "cordova-plugin-add-swift-support": "^1.7.1",
@@ -30,6 +29,7 @@
     "cordova-plugin-file": "^5.0.0",
     "cordova-plugin-file-transfer": "^1.7.0",
     "cordova-plugin-filechooser": "^1.0.1",
+    "cordova-plugin-filepicker": "^1.1.4",
     "cordova-plugin-geolocation": "^2.4.3",
     "cordova-plugin-ios-camera-permissions": "^1.2.0",
     "cordova-plugin-media-capture": "^2.0.0",
@@ -70,7 +70,6 @@
       },
       "cordova-plugin-file": {},
       "es6-promise-plugin": {},
-      "cordova-plugin-media-playback": {},
       "cordova-plugin-statusbar": {},
       "cordova-plugin-ios-camera-permissions": {
         "CAMERA_USAGE_DESCRIPTION": "This app needs camera access",
@@ -85,7 +84,9 @@
         "XWALK_MODE": "embedded",
         "XWALK_MULTIPLEAPK": "true"
       },
-      "cordova-plugin-filechooser": {}
+      "cordova-plugin-filechooser": {},
+      "cordova-plugin-media-playback": {},
+      "cordova-plugin-filepicker": {}
     }
   }
 }
