@@ -12,9 +12,11 @@
         <div>
             <ion-list class="sidemenu-list">
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="home" menu-close="">
-                    <i class="icon ion-ios-home-outline"></i> <span translate>Home</span>
+                    <i class="icon ion-ios-home-outline"></i>
+                    <span translate>Home</span>
                 </ion-item>
-                <ion-item ng-if="numberOfAvailableProjects > 1 && currentContext.project" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="projects" menu-close="">
+                <ion-item ng-if="numberOfAvailableProjects > 1 && currentContext.project" class="item item-positive item-icon-{{::getLeft()}}"
+                    ui-sref="projects" menu-close="">
                     <i class="icon ion-ios-folder-outline"></i>&nbsp;
                     <span>&nbsp;{{currentContext.project.name}}</span>
                 </ion-item>
@@ -38,7 +40,8 @@
                     <i class="icon ion-ios-help-outline"></i>
                     <span translate> Guidance</span>
                 </ion-item>
-                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" menu-close="" ng-click="logOut()" style="padding: 15px 20px">
+                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" menu-close="" ng-click="logOut()"
+                    style="padding: 15px 20px">
                     <i class="icon ion-log-out"></i>
                     <span translate> Log out</span>
                 </ion-item>
@@ -55,4 +58,3 @@
         <ion-nav-view></ion-nav-view>
     </ion-side-menu-content>
 </ion-side-menus>
-

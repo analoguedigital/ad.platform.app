@@ -8,8 +8,7 @@
     <content src="index.html" />
     <access origin="*" />
     <preference name="SplashScreen" value="screen" />
-    <preference name="windows-target-version" value="10.0" />
-    <preference name="StatusBarOverlaysWebView" value="true" />
+    <preference name="windows-target-version" value="10.0" />    
     <preference name="AndroidPersistentFileLocation" value="Internal" />
     <preference name="iosPersistentFileLocation" value="Internal" />
     <allow-intent href="http://*/*" />
@@ -69,6 +68,8 @@
         <splash density="port-xxxhdpi" src="res/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <platform name="ios">
+        <preference name="StatusBarOverlaysWebView" value="true" />
+        <preference name="StatusBarStyle" value="default" />
         <splash height="1136" src="res/ios/splash/Default-568h@2x~iphone.png" width="640" />
         <splash height="1334" src="res/ios/splash/Default-667h.png" width="750" />
         <splash height="2208" src="res/ios/splash/Default-736h.png" width="1242" />
