@@ -73,12 +73,9 @@ module App.Services {
 
             fileChooser.open(function (uri) {
                 self.endCapture();
-                console.warn('URI', uri);
 
                 self.storageService.getFileEntryFromUri(uri).then(
                     (fileEntry) => {
-                        console.warn('entry', fileEntry);
-
                         fileEntry.file(
                             (file) => {
                                 var mimeType = file.type;
@@ -316,6 +313,7 @@ module App.Services {
             var ext = extension.toLowerCase();
 
             if (ext === 'jpg') return 'image/jpeg';
+            if (ext === 'jpeg') return 'image/jpeg';
             if (ext === 'png') return 'image/png';
             if (ext === 'mp4') return 'video/mp4';
             if (ext === 'm3u8') return 'video/MP2T';
@@ -323,6 +321,11 @@ module App.Services {
             if (ext === 'mov') return 'video/quicktime';
             if (ext === 'wav') return 'audio/wav';
             if (ext === 'amr') return 'audio/amr';
+            if (ext === 'mp3') return 'audio/mpeg';
+            if (ext === 'aac') return 'audio/aac';
+            if (ext === 'oga') return 'audio/ogg';
+            if (ext === 'pdf') return 'application/pdf';
+            if (ext === 'doc') return 'application/msword';
         }
     }
 
