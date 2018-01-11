@@ -31,18 +31,21 @@
                 url: "/login?rejected",
                 controller: "loginController",
                 templateUrl: "partials/login.html",
-                data: { cssClassnames: "login-page" }
+                data: { cssClassnames: "login-page" },
+                cache: false
             })
             .state('forgotPassword', {
                 url: "/forgot-password",
                 controller: "forgotPasswordController",
                 templateUrl: "partials/forgot-password.html",
-                data: { cssClassnames: "forgot-password-page" }
+                data: { cssClassnames: "forgot-password-page" },
+                cache: false
             })
             .state('register', {
                 url: "/register",
                 controller: "registerController",
-                templateUrl: "partials/register.html"
+                templateUrl: "partials/register.html",
+                cache: false
             })
             .state('survey', {
                 parent: 'menu',
