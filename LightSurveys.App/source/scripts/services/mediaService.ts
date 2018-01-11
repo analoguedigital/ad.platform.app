@@ -66,7 +66,6 @@ module App.Services {
 
         chooseFile(): ng.IPromise<Models.Attachment> {
             var self = this;
-
             var q = this.$q.defer<Models.Attachment>();
 
             this.startCapture();
@@ -82,22 +81,22 @@ module App.Services {
                                 if (!mimeType)
                                     mimeType = this.getMimeType(uri.split('.').pop());
 
-                                q.resolve(<Models.Attachment>{
+                                var newAttachment = <Models.Attachment>{
                                     fileUri: uri,
                                     type: mimeType,
                                     mediaType: _.split(mimeType, '/')[0],
                                     tempStorage: true
-                                });
+                                };
+
+                                q.resolve(newAttachment);
                             },
                             (err) => {
                                 q.reject(err);
-                            }
-                        )
+                            });
                     },
                     (err) => { q.reject(err); })
             }, function (err) {
                 self.endCapture();
-
                 console.error(err);
                 q.reject(err);
             });
