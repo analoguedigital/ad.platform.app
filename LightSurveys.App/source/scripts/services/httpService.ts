@@ -163,13 +163,65 @@ module App.Services {
             return deferred.promise;
         }
 
-        uploadFile(attchment: Models.Attachment): angular.IPromise<string> {
+        private getFileExtension(attachment: Models.Attachment) {
+            if (!attachment.type || !attachment.type.length)
+                return '';
 
+            switch (attachment.type) {
+                case 'image/jpeg': {
+                    return '.jpg';
+                }
+                case 'image/png': {
+                    return '.png';
+                }
+                case 'video/mp4': {
+                    return '.mp4';
+                }
+                case 'video/MP2T': {
+                    return '.m3u8';
+                }
+                case 'application/x-mpegURL': {
+                    return '.ts';
+                }
+                case 'video/quicktime': {
+                    return '.mov';
+                }
+                case 'audio/wav': {
+                    return '.wav';
+                }
+                case 'audio/amr': {
+                    return '.amr';
+                }
+                case 'audio/mpeg': {
+                    return '.mp3';
+                }
+                case 'audio/aac': {
+                    return '.aac';
+                }
+                case 'audio/ogg': {
+                    return '.oga';
+                }
+                case 'application/pdf': {
+                    return '.pdf';
+                }
+                case 'application/msword': {
+                    return '.doc';
+                }
+            }
+        }
+
+        uploadFile(attchment: Models.Attachment): angular.IPromise<string> {
             var deferred = this.$q.defer<string>();
 
             var options = <FileUploadOptions>{};
             options.fileKey = "file";
             options.fileName = attchment.fileUri.substr(attchment.fileUri.lastIndexOf('/') + 1);
+
+            if (options.fileName.lastIndexOf('.') === -1) {
+                var fileExtension = this.getFileExtension(attchment);
+                options.fileName += fileExtension;
+            }
+
             options.mimeType = attchment.type;
             options.params = {};
             options.httpMethod = "POST";
@@ -183,6 +235,7 @@ module App.Services {
             }
 
             var ft = new FileTransfer();
+
             ft.upload(attchment.fileUri, encodeURI(HttpService.serviceBase + 'api/files'),
                 (response: FileUploadResult) => {
                     deferred.resolve(response.response.replace(/\"/g, ""));
@@ -223,7 +276,7 @@ module App.Services {
 
         getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>> {
             var deferred = this.$q.defer<Array<Models.Survey>>();
-            
+
             this.$http.get(HttpService.serviceBase + 'api/surveys/user/' + projectId)
                 .success((data: Models.Survey[]) => { deferred.resolve(data); })
                 .error((data, status) => { deferred.reject(this.onError(data, status)); });
