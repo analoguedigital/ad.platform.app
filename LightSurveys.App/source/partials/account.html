@@ -5,13 +5,13 @@
             <form name="registerForm" novalidate="novalidate" class="col col-50 col-offset-25">
                 <div class="list list-inset" style="margin-top:0">
                     <label class="item item-icon-left">
-                        <i class="icon ion-ios-person-outline"></i>
+                        <i class="icon ion-person"></i>
                         <div class="item-input">
                             <input name="firstName" type="text" ng-model="model.firstName" placeholder="Name (required)" required autofocus>
                         </div>
                     </label>
                     <label class="item item-icon-left">
-                        <i class="icon ion-ios-person"></i>
+                        <i class="icon ion-person-stalker"></i>
                         <div class="item-input">
                             <input name="surname" type="text" ng-model="model.surname" placeholder="Surname (required)" required autofocus>
                         </div>
@@ -19,14 +19,8 @@
                     <label class="item item-icon-left">
                         <i class="icon ion-transgender"></i>
                         <div class="item-input item-select">
-                            <div class="input-label">
-                                Gender
-                            </div>
-                            <select ng-model="model.gender">
-                                <option ng-selected="model.gender == 0">Male</option>
-                                <option ng-selected="model.gender == 1">Female</option>
-                                <option ng-selected="model.gender == 2">Other</option>
-                            </select>
+                            <div class="input-label">Gender</div>
+                            <select name="gender" ng-model="model.gender" ng-options="obj.value as obj.text for obj in genders"></select>
                         </div>
                     </label>
                     <label class="item item-icon-left">

@@ -11,6 +11,12 @@ angular.module('lm.surveys').controller('accountController', ['$scope', '$rootSc
             phoneNumber: ''
         };
 
+        $scope.genders = [
+            { text: 'Male', value: 0 },
+            { text: 'Female', value: 1 },
+            { text: 'Other', value: 2 }
+        ];
+
         $scope.requestWorking = false;
 
         $scope.activate = function () {
