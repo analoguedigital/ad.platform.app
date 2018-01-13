@@ -1,5 +1,7 @@
-﻿'use strict';
-angular.module('lm.surveys').controller('attachmentMetricController', ['$scope', '$rootScope', '$timeout', 'mediaService', '$ionicModal', '$ionicActionSheet', '$controller', 'userService', 'Upload', 'localStorageService', 
+﻿/// <reference path="../../../../scripts/typings/ionic/ionic.d.ts" />
+
+'use strict';
+angular.module('lm.surveys').controller('attachmentMetricController', ['$scope', '$rootScope', '$timeout', 'mediaService', '$ionicModal', '$ionicActionSheet', '$controller', 'userService', 'Upload', 'localStorageService',
     function ($scope, $rootScope, $timeout, mediaService, $ionicModal, $ionicActionSheet, $controller, userService, Upload, localStorageService) {
 
         $controller('metricController', { $scope: $scope });
@@ -75,19 +77,25 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
 
         $scope.startCapture = function () {
             var i = 2;
+
+            var actionButtons = [
+                { text: 'Take photo' },
+                { text: 'From library' },
+                { text: 'Record video' },
+                { text: 'Record audio' }
+            ];
+
+            if (ionic.Platform.isAndroid()) {
+                actionButtons.push({ text: 'Choose a file'});
+            }
+
             var hideSheet = $ionicActionSheet.show({
-                buttons: [
-                    { text: 'Take photo' },
-                    { text: 'From library' },
-                    { text: 'Record video' },
-                    { text: 'Record audio' },
-                    { text: 'Choose a file' },
-                    { text: 'Choose from iCloud' }
-                ],
+                buttons: actionButtons,
                 titleText: 'Select source',
                 cancelText: 'Cancel',
                 cancel: function () {
-                    // add cancel code..
+                    // add cancel code.
+                    console.log('startCapture cancelled by user');
                 },
                 buttonClicked: function (index) {
 
@@ -107,10 +115,6 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
                         }
                         case 4: {
                             mediaService.chooseFile().then($scope.addAttachment);
-                            break;
-                        }
-                        case 5: {
-                            mediaService.chooseFromICloud().then($scope.addAttachment);
                             break;
                         }
                     }
