@@ -5,7 +5,7 @@
         </h2>
     </ion-header-bar>
     <ion-content class="content has-subheader padding" ng-cloak>
-        <div class="card" ng-repeat="draft in drafts | orderBy:'dateUpdated':true" ng-class="{'draft': !draft.isSubmitted}">
+        <div class="card" ng-repeat="draft in drafts | orderBy:'dateUpdated':true" ng-class="{'draft': !draft.isSubmitted}" style="margin-top: 15px; margin-bottom: 15px">
             <div class="item item-divider">
                 <span am-time-ago="draft.dateCreated"></span>
                 <small class="text-muted">({{draft.dateCreated | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}})</small>
@@ -15,13 +15,11 @@
             </div>
 
             <div class="item item-body">
-                <img class="full-image" ng-src="{{draft.coverImage}}" ng-if="draft.coverImage.length" ng-click="viewSurvey(draft)">
-
                 <p ng-if="!draft.isSubmitted">
                     Pick up where you left off. Edit your draft and upload when you're ready.
                 </p>
 
-                <p ng-if="draft.description">
+                <p ng-if="draft.description" style="margin-top: 0">
                     <strong>Description</strong><br />
                     {{draft.description}}
                 </p>

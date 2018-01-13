@@ -42,10 +42,6 @@ angular.module('lm.surveys').controller('draftsController', ['$scope', '$state',
                             };
 
                             draft.metadata = meta;
-
-                            if (images.length > 0) {
-                                draft.coverImage = images[0].fileUri;
-                            }
                         }
 
                         $scope.drafts.push(draft);
