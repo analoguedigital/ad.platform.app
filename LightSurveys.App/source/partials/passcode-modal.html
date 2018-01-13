@@ -1,5 +1,5 @@
 ﻿<ion-modal-view>
-    <ion-header-bar class="bar-stable bar-positive with-button" ng-hide="loginMode">
+    <ion-header-bar class="bar-stable bar-positive with-button" ng-hide="dialogMode === 'login'">
         <h1 class="title"></h1>
         <button class="button button-icon button-clear ion-ios-close-outline" ng-click="closeModal()"></button>
     </ion-header-bar>
@@ -70,7 +70,7 @@
                 </div>
             </div>
         </div>
-        <div class="forgot-pass-container" ng-show="loginMode">
+        <div class="forgot-pass-container" ng-show="dialogMode === 'login'">
             <button class="button button-clear button-white" ng-click="forgotPasscode()">Forgot your passcode?</button>
         </div>
     </ion-content>
