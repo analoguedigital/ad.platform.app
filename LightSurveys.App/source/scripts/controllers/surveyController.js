@@ -123,7 +123,7 @@ angular.module('lm.surveys').controller('surveyController', ['$scope', '$ionicHi
             $scope.uploadWorking = true;
             surveyService.submitSurvey($scope.survey)
                 .then(function () {
-                    alertService.show("Recording submitted successfully!");
+                    alertService.show("Recording uploaded successfully");
 
                     $timeout(function () {
                         $ionicHistory.goBack();
