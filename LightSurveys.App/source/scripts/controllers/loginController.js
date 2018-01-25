@@ -95,12 +95,6 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
             $state.go('home');
         };
 
-        $scope.goRegister = function () {
-            ngProgress.start();
-            $state.go('register');
-            ngProgress.complete();
-        };
-
         $scope.$on('passcode-modal-pin-entered', function (ev, args) {
             var passcode = args;
             if (passcode && passcode.length === 4) {
@@ -148,9 +142,11 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                                                 $scope.loginValidated = true;
                                                 $scope.activateProfile($scope.profile);
                                             } else {
+                                                userService.logOut();
                                                 $scope.fallbackToPasscode();
                                             }
                                         }, function (error) {
+                                            userService.logOut();
                                             $scope.fallbackToPasscode();
                                         });
                                     } else {

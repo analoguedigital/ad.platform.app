@@ -61,10 +61,6 @@ angular.module('lm.surveys').controller('registerController', ['$scope', '$state
             }
         };
 
-        $scope.back = function () {
-            $ionicHistory.goBack();
-        }
-
         $scope.getValidationErrors = function (error) {
             var validationErrors = [];
             if (error.modelState && angular.isObject(error.modelState)) {

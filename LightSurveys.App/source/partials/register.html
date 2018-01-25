@@ -1,6 +1,6 @@
 ﻿<ion-view view-title="Create account" class="register" cache-view="false">
     <ion-header-bar class="bar-positive bar-stable with-button">
-        <button class="button button-icon button-clear ion-android-arrow-{{::getBack()}}" ng-click="back()"></button>
+        <button class="button button-icon button-clear ion-android-arrow-{{::getBack()}}" ui-sref="login" nav-transition="none"></button>
         <h1 class="title" translate>Create account</h1>
     </ion-header-bar>
     <ion-content has-bouncing="false" class="content has-header has-footer register" ng-cloak>
@@ -86,7 +86,7 @@
     <div class="bar bar-footer bar-default">
         <div class="title">
             <small>
-                <a href="#/login">Already have an account? Sign In</a>
+                <a ui-sref="login" nav-transition="none">Already have an account? Sign In</a>
             </small>
         </div>
     </div>
