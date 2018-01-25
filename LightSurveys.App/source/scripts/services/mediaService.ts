@@ -46,14 +46,33 @@ module App.Services {
             }
 
             window.FilePicker.isAvailable(function (avail) {
-                var message = avail ? "FilePicker is available" : "FilePicker is not available!";
-                console.warn('isAvailable?', message);
-
-                var utis = ["public.data", "public.audio"];
+                var utis = ["public.data", "public.image", "public.audio", "public.movie", "public.mpeg4", "public.text", "public.plain-text", "public.content", "public.utf8-plain-text", "public.archive"];
                 window.FilePicker.pickFile(
                     function (path) {
                         console.log('file-picker-result', path);
-                        q.resolve(path);
+
+                        self.storageService.getFileEntryFromUri(path).then(
+                            (fileEntry) => {
+                                console.log('file entry', fileEntry);
+
+                                fileEntry.file(
+                                    (file) => {
+                                        var mimeType = file.type;
+                                        if (!mimeType)
+                                            mimeType = self.getMimeType(path.split('.').pop());
+                                        q.resolve(<Models.Attachment>{
+                                            fileUri: path,
+                                            type: mimeType,
+                                            mediaType: _.split(mimeType, '/')[0],
+                                            tempStorage: true
+                                        });
+                                    },
+                                    (err) => {
+                                        q.reject(err);
+                                    }
+                                )
+                            },
+                            (err) => { q.reject(err); })
                     },
                     function (err) {
                         console.error(err);

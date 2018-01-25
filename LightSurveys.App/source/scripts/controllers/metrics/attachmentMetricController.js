@@ -86,7 +86,11 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
             ];
 
             if (ionic.Platform.isAndroid()) {
-                actionButtons.push({ text: 'Choose a file'});
+                actionButtons.push({ text: 'Choose a file' });
+            }
+
+            if (ionic.Platform.isIOS()) {
+                actionButtons.push({ text: 'Choose from iCloud' });
             }
 
             var hideSheet = $ionicActionSheet.show({
@@ -98,7 +102,6 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
                     console.log('startCapture cancelled by user');
                 },
                 buttonClicked: function (index) {
-
                     switch (index) {
                         case 0:
                             mediaService.captureImage().then($scope.addAttachment);
@@ -114,7 +117,13 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
                             break;
                         }
                         case 4: {
-                            mediaService.chooseFile().then($scope.addAttachment);
+                            if(ionic.Platform.isAndroid()) {
+                                mediaService.chooseFile().then($scope.addAttachment);
+                            }
+
+                            if(ionic.Platform.isIOS()) {
+                                mediaService.chooseFromICloud().then($scope.addAttachment);
+                            }
                             break;
                         }
                     }
