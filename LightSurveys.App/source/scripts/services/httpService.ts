@@ -25,8 +25,7 @@ module App.Services {
     }
 
     export class HttpService implements IHttpService {
-
-        public static serviceBase: string = 'https://docit.analogue.digital/';
+        public static serviceBase: string = 'http://platform.onrecord.tech/';
 
         static $inject: string[] = ['$http', 'authService', '$q'];
         constructor(
