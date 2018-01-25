@@ -105,11 +105,11 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                         if (supported) {
                             alternateIconService.changeIcon(iconName, true)
                                 .then(function () {
-                                    alertService.show('app icon changed!');
                                     $scope.selectedAppIcon = iconName;
                                 },
                                 function (err) {
-                                    alertService.show('app icon not changed. check your console!');
+                                    console.error(err);
+                                    alertService.show('could not change app icon!');
                                 });
                         } else {
                             alertService.show('appiconchanger is not available');
