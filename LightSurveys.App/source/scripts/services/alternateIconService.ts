@@ -24,7 +24,7 @@ module App.Services {
             private alertService: App.Services.IAlertService) { }
 
         isSupported(): ng.IPromise<boolean> {
-            let d = this.$q.defer();
+            let d = this.$q.defer<boolean>();
 
             this.$ionicPlatform.ready(() => {
                 if (ionic.Platform.isIOS()) {
@@ -56,6 +56,7 @@ module App.Services {
                     suppressUserNotification: suppressUserNotification
                 },
                 () => {
+                    console.warn('app icon changed');
                     d.resolve();
                 },
                 (err) => {
