@@ -354,7 +354,7 @@
             if (scope.renderMode === 'web')
                 parent = element.closest('.box-content');
             else if (scope.renderMode === 'mobile')
-                parent = element.closest('.content');
+                parent = element.closest('.timeline-content');
 
             var ctx = canvas.getContext('2d');
 
@@ -465,7 +465,10 @@
 
         function buildTimeline() {
             generateTimelineData();
-            renderTimelineChart();
+
+            $timeout(function () {
+                renderTimelineChart();
+            }, 100);
         }
 
         function onChartAnimationComplete() {
@@ -573,15 +576,12 @@
             scope.timelinePreviousMonth();
         });
 
-        window.onresize = function () {
+        $rootScope.$on('timeline-rebuild', function (evt, arg) {
             $timeout(function () {
-                scope.orientation = getScreenOrientation();
-
-                if (scope.timelineChart)
-                    scope.timelineChart.destroy();
-
+                scope.orientation = arg;
+                if (scope.timelineChart) scope.timelineChart.destroy();
                 buildTimeline();
             }, 100);
-        }
+        });
     }
 }]);

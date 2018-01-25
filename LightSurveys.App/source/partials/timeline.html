@@ -1,5 +1,5 @@
-﻿<ion-view title="Timeline" id="timelinePage">
-    <ion-header-bar align-title="center" class="bar bar-subheader bar-positive timeline">
+﻿<ion-view title="Timeline" id="timelinePage" cache-view="false">
+    <ion-header-bar align-title="center" class="bar bar-subheader bar-positive timeline" ng-style="TimelineHeaderBarStyle">
         <button class="button button-clear icon-left ion-ios-arrow-left" ng-click="previousMonth()">
             {{months[(today.getMonth()+11)%12]}}
         </button>
@@ -10,7 +10,7 @@
             {{months[((today.getMonth()+1)%12)]}}
         </button>
     </ion-header-bar>
-    <ion-content class="content has-subheader padding" ng-cloak>
+    <ion-content class="content has-subheader padding timeline-content" ng-cloak ng-style="TimelineContentStyle">
         <lm-timeline form-templates="templates" surveys="surveys" render-mode="mobile"></lm-timeline>
     </ion-content>
 </ion-view>

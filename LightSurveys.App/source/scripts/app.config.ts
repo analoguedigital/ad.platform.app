@@ -74,13 +74,15 @@
                 parent: 'menu',
                 url: "/calendar",
                 controller: "calendarController",
-                templateUrl: "partials/calendar.html"
+                templateUrl: "partials/calendar.html",
+                cache: false
             })
             .state('timeline', {
                 parent: 'menu',
                 url: "/timeline",
                 controller: "timelineController",
-                templateUrl: "partials/timeline.html"
+                templateUrl: "partials/timeline.html",
+                cache: false
             })
             .state('cloneTemplate', {
                 parent: 'menu',
