@@ -12,12 +12,13 @@ interface Navigator {
         .run(configAngularMoment)
         .run(SetupLoginTransitionControls);
 
-    RunIonic.$inject = ["$rootScope", "$state", "$ionicPlatform", "$ionicHistory", "$route",
+    RunIonic.$inject = ["$rootScope", "$state", "$ionicPlatform", "$ionicConfig", "$ionicHistory", "$route",
         "$ionicSideMenuDelegate", "$ionicPopup", "gettext", "userService", "mediaService"];
     function RunIonic(
         $rootScope: ng.IRootScopeService,
         $state: ng.ui.IStateService,
         $ionicPlatform: ionic.platform.IonicPlatformService,
+        $ionicConfig: ionic.utility.IonicConfigProvider,
         $ionicHistory: ionic.navigation.IonicHistoryService,
         $route: ng.route.IRouteService,
         $ionicSideMenuDelegate: ionic.sideMenu.IonicSideMenuDelegate,
@@ -33,9 +34,14 @@ interface Navigator {
 
                 if (ionic.Platform.isAndroid()) {
                     window.StatusBar.backgroundColorByHexString("#245278");
-                } else if (ionic.Platform.isIOS) {
+                } else if (ionic.Platform.isIOS()) {
                     window.StatusBar.overlaysWebView(true);
                 }
+            }
+
+            if (ionic.Platform.grade.toLowerCase() != 'a') {
+                $ionicConfig.views.transition('none');
+                console.log('Ionic Platform Grade is not A, disabling views transitions');
             }
 
             document.addEventListener('pause', function (event) {
