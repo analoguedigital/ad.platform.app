@@ -48,8 +48,7 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
 
         $scope.cloneTemplate = function () {
             // SHARED FORM TEMPLATE (Your Recordings) as seeded in our DB.
-            // the FormTemplateID on staging website is: 74eadb8f-7434-49c0-ad5a-854b0e77bcbd
-            var recordingTemplateId = '74eadb8f-7434-49c0-ad5a-854b0e77bcbd';
+            var recordingTemplateId = '74EADB8F-7434-49C0-AD5A-854B0E77BCBD';
 
             // Ideally, we would get the shared thread from our platform,
             // and then find it in our local collection.
@@ -96,28 +95,41 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         }
 
         $scope.syncUserRecords = function () {
-            var projectId = userService.current.project.id;
-            var baseUrl = httpService.getServiceBase();;
+            userService.getExistingProfiles().then(function (profiles) {
+                if (profiles.length) {
+                    var profile = profiles[0];
+                    if (!profile.settings.noStoreEnabled) {
+                        var projectId = userService.current.project.id;
+                        var baseUrl = httpService.getServiceBase();;
 
-            surveyService.getUserSurveys(projectId)
-                .then(function (data) {
-                    // fix attachments, and store surveys locally
-                    _.forEach(data, function (survey, index) {
-                        _.forEach(survey.formValues, function (fv) {
-                            _.forEach(fv.attachments, function (attachment) {
-                                attachment.fileUri = baseUrl + attachment.url;
-                                attachment.mediaType = _.toLower(attachment.typeString);
-                                delete attachment.typeString;
+                        console.log('syncing user records...');
+
+                        surveyService.getUserSurveys(projectId)
+                            .then(function (data) {
+                                try {
+                                    // fix attachments, and store surveys locally
+                                    _.forEach(data, function (survey, index) {
+                                        _.forEach(survey.formValues, function (fv) {
+                                            _.forEach(fv.attachments, function (attachment) {
+                                                attachment.fileUri = baseUrl + attachment.url;
+                                                attachment.mediaType = _.toLower(attachment.typeString);
+                                                delete attachment.typeString;
+                                            });
+                                        });
+
+                                        storageService.save('survey', survey.formTemplateId, survey.id, survey);
+                                    });
+                                } catch (err) {
+                                    console.warn(err);
+                                }
+
+                                _loadList();
+                            }, function (err) {
+                                console.error(err);
                             });
-                        });
-
-                        storageService.save('survey', survey.formTemplateId, survey.id, survey);
-                    });
-
-                    _loadList();
-                }, function (err) {
-                    console.error(err);
-                });
+                    }
+                }
+            });
         }
 
         $scope.activate = function () {
