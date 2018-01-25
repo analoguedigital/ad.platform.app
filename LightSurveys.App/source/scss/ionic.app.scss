@@ -235,8 +235,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     }
 
     & .button.active-icon img {
-        border: 2px solid yellow;
-        box-shadow: 0 1px 12px yellow;
+        border: 2px solid $color2;
     }
 }
 
@@ -452,33 +451,23 @@ a.button .icon:before, a.button.icon:before, a.button.icon-left:before, a.button
     bottom: 20px;
 }
 
-.platform-browser .platform-ios {
-    .bar-subheader,
-    .has-subheader,
-    .has-header {
-        margin-top: 20px !important;
-    }
-}
-
-.platform-ios [class*="platform-ios"] {
-    .nav-bar-container .nav-bar-block {
-        .bar-header {
-            height: 63px !important;
-        }
-    }
-
-    .menu .bar-header {
-        height: 63px !important;
-    }
-
+.platform-ios {
     .bar-header .title,
     .bar-header .buttons {
         margin-top: 0 !important;
+    }
+
+    .bar-header {
+        height: 60px !important;
     }
 
     .bar-subheader,
     .has-subheader,
     .has-header {
         margin-top: -20px !important;
+    }
+
+    .scroll-content .has-header {
+        top: 60px !important;
     }
 }
