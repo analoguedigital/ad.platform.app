@@ -2,7 +2,7 @@
     <ion-content has-bouncing="true" padding="true" class="has-header">
         <ion-refresher pulling-text="Pull to refresh and sync records" on-refresh="doRefresh()"></ion-refresher>
         <h2 class="padding light m-0">
-            <a class="button button-light button-clear button-large" ng-click="cloneTemplate()"><i class="icon ion-plus"></i> Add a new thread</a>
+            <a class="button button-light button-clear button-large" ng-click="cloneTemplate()" nav-transition="none"><i class="icon ion-plus"></i> Add a new thread</a>
         </h2>
         <ion-list ng-if="formTemplates.length">
             <ion-item class="item-dark form-item" data-ng-repeat="form in formTemplates">
