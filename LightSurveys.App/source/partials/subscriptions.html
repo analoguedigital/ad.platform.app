@@ -1,0 +1,93 @@
+﻿<ion-view title="Subscriptions" id="subscriptionsPage">
+    <ion-content class="content padding account" ng-cloak>
+        <ion-refresher pulling-text="Pull to refresh account information" on-refresh="refreshUserInfo()"></ion-refresher>
+
+        <div class="row responsive-sm">
+            <div ng-if="!userInfo.profile.expiryDate">
+                <p class="light">
+                    You do not have an active subscription. Unsubscribed users have limited access to our platform and have a fixed monthly quota for uploading records.
+                </p>
+
+                <p class="light">
+                    You can purchase subscription packages, redeem vouchers or join organizations to continue using OnRecord without limits.
+                </p>
+            </div>
+
+            <div ng-if="activeSubscription">
+                <div class="card" ng-if="activeSubscription.type === 0">
+                    <div class="item item-divider">Active Subscription</div>
+                    <div class="item item-text-wrap">
+                        <p class="light">Paid plan: {{activeSubscription.subscriptionPlan.name}}</p>
+                        <p class="light">Starting from <strong>{{activeSubscription.startDate | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong></p>
+                        <p class="light">
+                            Your next renewal is on <strong>{{profile.userInfo.profile.expiryDate| amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong>
+                        </p>
+
+                        <p class="light">
+                            <span ng-if="!activeSubscription.subscriptionPlan.isLimited">No upload limits.</span>
+                            <span ng-if="activeSubscription.subscriptionPlan.isLimited">
+                                Limited to {{activeSubscription.subscriptionPlan.monthlyQuota}} records per month.
+                            </span>
+                        </p>
+
+                        <p class="light">
+                            PDF Export:
+                            <span ng-if="activeSubscription.subscriptionPlan.pdfExport">
+                                <i class="icon ion-ios-checkmark-outline"></i> Yes
+                            </span>
+                            <span ng-if="!activeSubscription.subscriptionPlan.pdfExport">
+                                <i class="icon ion-ios-close-outline"></i> No
+                            </span>
+                        </p>
+
+                        <p class="light">
+                            Zip Export:
+                            <span ng-if="activeSubscription.subscriptionPlan.zipExport">
+                                <i class="icon ion-ios-checkmark-outline"></i> Yes
+                            </span>
+                            <span ng-if="!activeSubscription.subscriptionPlan.zipExport">
+                                <i class="icon ion-ios-close-outline"></i> No
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card" ng-if="activeSubscription.type === 1">
+                    <div class="item item-divider">Active Subscription</div>
+                    <div class="item item-text-wrap">
+                        <p class="light">Starting from <strong>{{activeSubscription.startDate | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong></p>
+                        <p class="light">{{activeSubscription.note}}</p>
+                    </div>
+                </div>
+
+                <div class="card" ng-if="activeSubscription.type === 2">
+                    <div class="item item-divider">Active Subscription</div>
+                    <div class="item item-text-wrap">
+                        <p class="light">{{activeSubscription.note}}.</p>
+                        <p class="light">Starting from <strong>{{activeSubscription.startDate | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong></p>
+                        <p class="light">
+                            Your next renewal is on <strong>{{profile.userInfo.profile.expiryDate| amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row responsive-sm">
+            <div class="list dark">
+                <div class="item item-button-right">
+                    <span>Redeem voucher</span>
+                    <button class="button button-positive" ng-click="openVoucherModal()">
+                        <i class="icon ion-ios-pricetag-outline"></i>
+                    </button>
+                </div>
+                <div class="item item-button-right">
+                    Add subscription
+                    <button class="button button-positive" ui-sref="addSubscription">
+                        <i class="icon ion-ios-cart-outline"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

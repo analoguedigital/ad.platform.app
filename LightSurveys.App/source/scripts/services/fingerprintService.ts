@@ -44,7 +44,7 @@ module App.Services {
             private httpService: IHttpService) { }
 
         isAvailable(): ng.IPromise<boolean> {
-            let d = this.$q.defer();
+            let d = this.$q.defer<boolean>();
 
             if (ionic.Platform.isIOS()) {
                 if (window.plugins && window.plugins.touchid) {
@@ -75,7 +75,7 @@ module App.Services {
         }
 
         isHardwareDetected(): ng.IPromise<boolean> {
-            let d = this.$q.defer();
+            let d = this.$q.defer<boolean>();
 
             if (ionic.Platform.isIOS()) {
                 if (window.plugins && window.plugins.touchid) {
@@ -105,7 +105,7 @@ module App.Services {
         }
 
         verify(): ng.IPromise<IVerifyFingerprintResult> {
-            let d = this.$q.defer();
+            let d = this.$q.defer<IVerifyFingerprintResult>();
 
             let response: IVerifyFingerprintResult = {
                 success: false,

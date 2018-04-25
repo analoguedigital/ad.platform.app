@@ -25,10 +25,10 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                     });
 
                     $scope.allFormTemplates = results;
-                    // is this necessary? even if true, it should be a server-side implementation.
-                    // plus this is causing the threads list to be incorrect. having 2 forms, showing only 1.
-                    $scope.formTemplates = _.filter(results, function (formTemplate) { return formTemplate.createdById === userService.current.userId; });
+                    $scope.formTemplates = results;
 
+                    // filter results to threads created by current user.
+                    //$scope.formTemplates = _.filter(results, function (formTemplate) { return formTemplate.createdById === userService.current.userId; });
                 }, function (err) {
                     alertService.show(err);
                 });
@@ -50,8 +50,7 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
             // SHARED FORM TEMPLATE (Your Recordings) as seeded in our DB.
             var recordingTemplateId = '74EADB8F-7434-49C0-AD5A-854B0E77BCBD';
 
-            // Ideally, we would get the shared thread from our platform,
-            // and then find it in our local collection.
+            // Ideally, we would get the shared thread from our platform.
             // var recordingsTemplate = _.filter($scope.allFormTemplates, function (template) { return template.title.toLowerCase().includes('recording'); })[0];
 
             $state.go("cloneTemplate", { id: recordingTemplateId });
@@ -100,9 +99,7 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                     var profile = profiles[0];
                     if (!profile.settings.noStoreEnabled) {
                         var projectId = userService.current.project.id;
-                        var baseUrl = httpService.getServiceBase();;
-
-                        console.log('syncing user records...');
+                        var baseUrl = httpService.getServiceBase();
 
                         surveyService.getUserSurveys(projectId)
                             .then(function (data) {
@@ -111,7 +108,8 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                                     _.forEach(data, function (survey, index) {
                                         _.forEach(survey.formValues, function (fv) {
                                             _.forEach(fv.attachments, function (attachment) {
-                                                attachment.fileUri = baseUrl + attachment.url;
+                                                //attachment.fileUri = baseUrl + attachment.url;
+                                                attachment.fileUri = undefined;
                                                 attachment.mediaType = _.toLower(attachment.typeString);
                                                 delete attachment.typeString;
                                             });

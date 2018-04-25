@@ -1,8 +1,8 @@
 ﻿<div class="modal image-modal" ng-click="closeModal()">
     <ion-slide-box on-slide-changed="slideChanged(index)" show-pager="true" active-slide="activeSlide">
         <ion-slide ng-repeat="attachment in formValue.attachments">
-            <img ng-if="attachment.mediaType==='image'" ng-src="{{attachment.fileUri | trusted}}" class="fullscreen-image" />
-            <video ng-if="attachment.mediaType==='video'" ng-src="{{attachment.fileUri | trusted}}" class="fullscreen-image" controls="controls"/>
+            <img ng-if="attachment.mediaType==='image'" ng-src="{{getDownloadUrl(attachment)}}" class="fullscreen-image" />
+            <video ng-if="attachment.mediaType==='video'" ng-src="{{getDownloadUrl(attachment)}}" class="fullscreen-image" controls="controls"/>
             
             <div ng-if="attachment.mediaType === 'audio'">
                 <div class="button-bar audio-controls-bar">

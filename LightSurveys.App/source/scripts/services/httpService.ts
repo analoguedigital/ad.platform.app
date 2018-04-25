@@ -22,10 +22,20 @@ module App.Services {
         getServiceBase(): string;
         updateProfile(model: Models.IProfileModel): ng.IPromise<void>;
         changePassword(model: Models.IChangePasswordModel): ng.IPromise<void>;
+        getSubscriptionPlans(): ng.IPromise<ng.IHttpPromiseCallbackArg<Array<Models.SubscriptionPlan>>>;
+
+        addPhoneNumber(phoneNumber: string): ng.IPromise<void>;
+        verifyPhoneNumber(phoneNumber: string, securityCode: string): ng.IPromise<void>;
+        changePhoneNumber(phoneNumber: string): ng.IPromise<void>;
+        verifyChangedPhoneNumber(phoneNumber: string, securityCode: string): ng.IPromise<void>;
+        removePhoneNumber(): ng.IPromise<void>;
+
+        redeemVoucher(voucherCode: string): ng.IPromise<void>;
+        buySubscription(subscriptionPlanId: string): ng.IPromise<void>;
+        joinOrganization(invitationToken: string): ng.IPromise<void>;
     }
 
     export class HttpService implements IHttpService {
-        public static serviceBase: string = 'https://platform.onrecord.tech/';
 
         static $inject: string[] = ['$http', 'authService', '$q'];
         constructor(
@@ -36,7 +46,7 @@ module App.Services {
         getServiceBase(): string {
             return HttpService.serviceBase;
         }
-
+        
         forgotPassword(model: Models.IForgotPasswordModel): ng.IPromise<void> {
             var deferred = this.$q.defer<void>();
 
@@ -149,7 +159,6 @@ module App.Services {
 
             return deferred.promise;
         }
-
 
         uploadSurvey(survey: Models.Survey): angular.IPromise<angular.IHttpPromiseCallbackArg<any>> {
 
@@ -322,6 +331,101 @@ module App.Services {
                 .error((err, status) => {
                     deferred.reject(this.onError(err, status));
                 });
+
+            return deferred.promise;
+        }
+
+        getSubscriptionPlans(): ng.IPromise<ng.IHttpPromiseCallbackArg<Models.SubscriptionPlan[]>> {
+            var deferred = this.$q.defer();
+
+            this.$http.get(HttpService.serviceBase + 'api/subscriptionplans')
+                .success((data: Models.SubscriptionPlan[]) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        addPhoneNumber(phoneNumber: string): ng.IPromise<void> {
+            var deferred = this.$q.defer<void>();
+
+            var params = { phoneNumber: phoneNumber };
+            this.$http.post(HttpService.serviceBase + 'api/account/addphonenumber', params)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        verifyPhoneNumber(phoneNumber: string, securityCode: string): ng.IPromise<void> {
+            var deferred = this.$q.defer<void>();
+
+            var params = { phoneNumber: phoneNumber, code: securityCode };
+            this.$http.post(HttpService.serviceBase + 'api/account/verifyphonenumber', params)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        changePhoneNumber(phoneNumber: string): ng.IPromise<void> {
+            var deferred = this.$q.defer<void>();
+
+            var params = { phoneNumber: phoneNumber };
+            this.$http.post(HttpService.serviceBase + 'api/account/changephonenumber', params)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        verifyChangedPhoneNumber(phoneNumber: string, securityCode: string): ng.IPromise<void> {
+            var deferred = this.$q.defer<void>();
+
+            var params = { phoneNumber: phoneNumber, code: securityCode };
+            this.$http.post(HttpService.serviceBase + 'api/account/verifychangednumber', params)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        removePhoneNumber(): ng.IPromise<void> {
+            var deferred = this.$q.defer<void>();
+
+            this.$http.post(HttpService.serviceBase + 'api/account/removephonenumber', null)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        redeemVoucher(voucherCode: string): ng.IPromise<void> {
+            var deferred = this.$q.defer<void>();
+
+            this.$http.post(HttpService.serviceBase + 'api/vouchers/redeem/' + voucherCode, null)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        buySubscription(subscriptionPlanId: string): ng.IPromise<void> {
+            var deferred = this.$q.defer<void>();
+
+            this.$http.post(HttpService.serviceBase + 'api/subscriptions/buy/' + subscriptionPlanId, null)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        joinOrganization(invitationToken: string): ng.IPromise<void> {
+            var deferred = this.$q.defer<void>();
+
+            var params = { token: invitationToken };
+            this.$http.post(HttpService.serviceBase + 'api/subscriptions/joinorganisation/' + invitationToken, null)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
 
             return deferred.promise;
         }

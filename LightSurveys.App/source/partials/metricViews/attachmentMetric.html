@@ -3,14 +3,16 @@
     <div class="thumbnails">
         <div class="thumbnail" ng-repeat="attachment in formValue.attachments" ng-click="showImages($index)">
             <div class="thumbnail-placeholder" cover-image="images/70x70.png">
-                <img ng-src="{{attachment.fileUri | trusted}}" ng-if="attachment.mediaType === 'image'" />
-                <video ng-src="{{attachment.fileUri | trusted}}" ng-if="attachment.mediaType==='video'" />
+                <img ng-src="{{getDownloadUrl(attachment)}}" ng-if="attachment.mediaType === 'image'" />
+
+                <video ng-src="{{getDownloadUrl(attachment)}}" ng-if="attachment.mediaType==='video'" />
                 <div class="audio-thumbnail" ng-if="attachment.mediaType==='audio'">
                     <i class="icon ion-play"></i>
                 </div>
             </div>
-            
-            <div ng-if="attachment.mediaType!=='image' && attachment.mediaType!=='video' && attachment.mediaType !== 'audio'" ng-src="{{attachment.fileUri | trusted}}" class="fullscreen-image">{{attachment.mediaType}}</div>
+
+            <div ng-if="attachment.mediaType!=='image' && attachment.mediaType!=='video' && attachment.mediaType !== 'audio'"
+                 ng-src="{{getDownloadUrl(attachment)}}" class="fullscreen-image">{{attachment.mediaType}}</div>
         </div>
     </div>
 

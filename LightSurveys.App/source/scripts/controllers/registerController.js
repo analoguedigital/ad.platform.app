@@ -2,6 +2,7 @@
 angular.module('lm.surveys').controller('registerController', ['$scope', '$state', '$ionicHistory', '$ionicModal', 'userService', 'alertService', 'ngProgress', 'surveyService', 'localStorageService', 
     function ($scope, $state, $ionicHistory, $ionicModal, userService, alertService, ngProgress, surveyService, localStorageService) {
         $scope.termsModal = undefined;
+
         $scope.model = {
             termsAgreed: false
         };
@@ -40,19 +41,8 @@ angular.module('lm.surveys').controller('registerController', ['$scope', '$state
 
                 userService.register($scope.registerData)
                     .then(function () {
-                        surveyService.refreshData()
-                            .then(function () {
-                                ngProgress.complete();
-                                $ionicHistory.clearHistory();
-
-                                var FIRST_TIME_LOGIN_KEY = 'FIRST_TIME_LOGIN';
-                                localStorageService.set(FIRST_TIME_LOGIN_KEY, true);
-                                $state.go('makingRecords');
-                            },
-                            function (err) {
-                                ngProgress.complete();
-                                alertService.show(err);
-                            });
+                        ngProgress.complete();
+                        $state.go('registerComplete');
                     },
                     function (err) {
                         ngProgress.complete();

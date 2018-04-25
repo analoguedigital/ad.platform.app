@@ -47,6 +47,9 @@ module App.Services {
         birthdate?: Date;
         address: string;
         phoneNumber: string;
+        isSubscribed: boolean;
+        expiryDate?: Date;
+
     }
 
     interface ISettings {
@@ -152,14 +155,8 @@ module App.Services {
 
             this.httpService.register(registerData)
                 .then((response) => {
-                    // user is registered
-                    var loginData = <ILoginData>{ email: registerData.email, password: registerData.password };
-                    this.login(loginData).then(
-                        (response) => { deferred.resolve(response); },
-                        (err) => { deferred.reject(err); });
-
+                    deferred.resolve(response);
                 }, (err) => {
-                    // user is not authenicated 
                     this.authService.logOutUser();
                     deferred.reject(err);
                 });
@@ -168,11 +165,11 @@ module App.Services {
         }
 
         createProfile(authenticationData: AuthData): angular.IPromise<IProfile> {
-            var deferred = this.$q.defer();
+            var deferred = this.$q.defer<IProfile>();
 
             this.httpService.getUserInfo()
                 .then((userinfo) => {
-                    var profile = {
+                    var profile: any = {
                         email: authenticationData.email,
                         authenticationData: authenticationData,
                         userInfo: userinfo,

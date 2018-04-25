@@ -32,18 +32,18 @@ angular.module('lm.surveys').controller('surveyController', ['$scope', '$ionicHi
         };
 
         $scope.isCurrentPage = function (metricGroup) {
-            if ($scope.currentPageIndex == -1) return false;
-            return metricGroup.page == $scope.currentPageIndex + 1;
+            if ($scope.currentPageIndex === -1) return false;
+            return metricGroup.page === $scope.currentPageIndex + 1;
         }
 
         $scope.isFirstPage = function () {
-            if ($scope.currentPageIndex == -1) return false;
-            return $scope.currentPageIndex == 0;
+            if ($scope.currentPageIndex === -1) return false;
+            return $scope.currentPageIndex === 0;
         };
 
         $scope.isLastPage = function () {
-            if ($scope.currentPageIndex == -1) return false;
-            return $scope.currentPageIndex + 1 == $scope.numberOfPages;
+            if ($scope.currentPageIndex === -1) return false;
+            return $scope.currentPageIndex + 1 === $scope.numberOfPages;
         };
 
         $scope.goToNextPage = function () {
@@ -76,7 +76,7 @@ angular.module('lm.surveys').controller('surveyController', ['$scope', '$ionicHi
         }
 
         $scope.saveDraft = function () {
-            if ($scope.formTemplate == null)
+            if ($scope.formTemplate === null)
                 return;
 
             //populateFormValues();
@@ -113,7 +113,7 @@ angular.module('lm.surveys').controller('surveyController', ['$scope', '$ionicHi
         };
 
         $scope.submitSurvey = function () {
-            if ($scope.formTemplate == null)
+            if ($scope.formTemplate === null)
                 return;
 
             //populateFormValues();
@@ -123,11 +123,9 @@ angular.module('lm.surveys').controller('surveyController', ['$scope', '$ionicHi
             $scope.uploadWorking = true;
             surveyService.submitSurvey($scope.survey)
                 .then(function () {
-                    alertService.show("Recording uploaded successfully");
-
                     $timeout(function () {
                         $ionicHistory.goBack();
-                    }, 1000);
+                    }, 500);
                 },
                 function (err) {
                     alertService.show(gettext("Error in submitting the recording: ") + err);

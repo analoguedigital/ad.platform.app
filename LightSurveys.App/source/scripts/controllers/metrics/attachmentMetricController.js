@@ -1,8 +1,8 @@
 ﻿/// <reference path="../../../../scripts/typings/ionic/ionic.d.ts" />
 
 'use strict';
-angular.module('lm.surveys').controller('attachmentMetricController', ['$scope', '$rootScope', '$timeout', 'mediaService', '$ionicModal', '$ionicActionSheet', '$controller', 'userService', 'Upload', 'localStorageService',
-    function ($scope, $rootScope, $timeout, mediaService, $ionicModal, $ionicActionSheet, $controller, userService, Upload, localStorageService) {
+angular.module('lm.surveys').controller('attachmentMetricController', ['$scope', '$rootScope', '$timeout', 'mediaService', '$ionicModal', '$ionicActionSheet', '$controller', 'userService', 'Upload', 'localStorageService', 'httpService', 
+    function ($scope, $rootScope, $timeout, mediaService, $ionicModal, $ionicActionSheet, $controller, userService, Upload, localStorageService, httpService) {
 
         $controller('metricController', { $scope: $scope });
 
@@ -117,11 +117,11 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
                             break;
                         }
                         case 4: {
-                            if(ionic.Platform.isAndroid()) {
+                            if (ionic.Platform.isAndroid()) {
                                 mediaService.chooseFile().then($scope.addAttachment);
                             }
 
-                            if(ionic.Platform.isIOS()) {
+                            if (ionic.Platform.isIOS()) {
                                 mediaService.chooseFromICloud().then($scope.addAttachment);
                             }
                             break;
@@ -174,6 +174,18 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
             $scope.modal.hide();
             $scope.modal.remove()
         };
+
+        $scope.getDownloadUrl = function (attachment) {
+            var baseUrl = httpService.getServiceBase();
+            var url;
+
+            if (attachment.fileUri && attachment.fileUri.length)
+                url = attachment.fileUri;
+            else if (attachment.oneTimeAccessId && attachment.oneTimeAccessId.length)
+                url = baseUrl + 'api/downloads/' + attachment.oneTimeAccessId;
+
+            return url;
+        }
 
         //$scope.uploadFiles = function () {
         //    if (uploadIndex < $scope.files.length && !uploadInstance) {

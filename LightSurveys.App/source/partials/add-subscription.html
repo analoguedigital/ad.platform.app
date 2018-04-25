@@ -1,0 +1,20 @@
+﻿<ion-view title="Add Subscription" id="addSubscriptionPage">
+    <ion-content class="content padding add-subscription" ng-cloak>
+        <div class="row responsive-sm">
+            <div class="list">
+                <div class="item item-divider">Buy subscription</div>
+                <a class="item" href="" ng-repeat="plan in subscriptionPlans track by plan.id" ng-click="buy(plan)">
+                    <h2>{{plan.name}}</h2>
+                    <p>{{plan.description}}</p>
+                </a>
+
+                <div class="item item-divider">OR</div>
+
+                <a class="item" href="" ng-click="openInvitationModal()">
+                    <h2><i class="icon ion-ios-world"></i> Connect to an organisation</h2>
+                    <p>Enter your invitation token to subscribe to an organisation.</p>
+                </a>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

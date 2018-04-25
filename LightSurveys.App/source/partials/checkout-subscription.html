@@ -1,0 +1,50 @@
+﻿<ion-modal-view>
+    <ion-header-bar class="bar-stable bar-positive with-button">
+        <h1 class="title">Confirm Subscription</h1>
+        <button class="button button-icon button-clear ion-ios-close-outline" ng-click="closeCheckoutModal()"></button>
+    </ion-header-bar>
+    <ion-content class="content checkout-subscription-screen">
+        <div class="row responsive-sm">
+            <div class="padding">
+                <h2 class="light">{{selectedPackage.name}}</h2>
+
+                <p class="light">
+                    {{selectedPackage.description}}
+                </p>
+
+                <p class="light">
+                    Length: {{selectedPackage.length}} month(s)
+                </p>
+
+                <p class="light" ng-if="selectedPackage.isLimited">
+                    Limited to {{selectedPackage.monthlyQuota}} records per month
+                </p>
+
+                <p class="light" ng-if="!selectedPackage.isLimited">
+                    No upload limits
+                </p>
+
+                <p class="light">
+                    PDF Export:
+                    <span ng-if="selectedPackage.pdfExport">Yes</span>
+                    <span ng-if="!selectedPackage.pdfExport">No</span>
+                </p>
+
+                <p class="light">
+                    Zip Export:
+                    <span ng-if="selectedPackage.zipExport">Yes</span>
+                    <span ng-if="!selectedPackage.zipExport">No</span>
+                </p>
+            </div>
+
+            <button class="no-margin-top item button button-full button-energized" type="button" ng-click="checkoutSubscription(selectedPackage)" ng-disabled="checkoutWorking">
+                <span ng-if="!checkoutWorking">
+                    <i class="icon ion-edit"></i> Checkout
+                </span>
+                <span ng-if="checkoutWorking">
+                    <i class="fa fa-spinner fa-pulse fa-fw"></i> Adding subscription
+                </span>
+            </button>
+        </div>
+    </ion-content>
+</ion-modal-view>
