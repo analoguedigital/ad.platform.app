@@ -43,6 +43,8 @@ module App.Services {
             private authService: IAuthService,
             private $q: ng.IQService) { }
 
+        public static serviceBase: string = 'https://platform.onrecord.tech/';
+
         getServiceBase(): string {
             return HttpService.serviceBase;
         }
