@@ -21,7 +21,14 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
             if ($scope.currentMedia)
                 $scope.currentMedia.play();
             else {
-                var media = new Media(attachment.fileUri, function () { }, function (err) { });
+                var baseUrl = httpService.getServiceBase();
+                var _url;
+                if (attachment.fileUri && attachment.fileUri.length)
+                    _url = attachment.fileUri;
+                else if (attachment.oneTimeAccessId && attachment.oneTimeAccessId.length)
+                    _url = baseUrl + 'api/downloads/' + attachment.oneTimeAccessId;
+
+                var media = new Media(_url, function () { }, function (err) { });
 
                 $scope.currentMedia = media;
                 $rootScope.currentMedia = media;
