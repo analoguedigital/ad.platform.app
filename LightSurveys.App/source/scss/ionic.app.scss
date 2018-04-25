@@ -154,7 +154,11 @@ mwl-calendar.survey-calendar {
 
 .toast-bottom-center { bottom: 20px !important; }
 
-.change-password-screen {
+.change-password-screen,
+.redeem-voucher-screen,
+.join-organization-screen,
+.checkout-subscription-screen,
+.add-phonenumber-screen {
     background-color: $base-background-color;
 }
 
@@ -383,6 +387,14 @@ label.item[disabled=disabled],
 .item-text-wrap.item[disabled=disabled] {
     background: #f3f3f3;
     color: #ccc;
+}
+
+label.item.disabled {
+    background: #f3f3f3 !important;
+}
+
+label.item.disabled i.icon {
+    color: #ccc !important;
 }
 
 label.item[disabled=disabled] i.icon {

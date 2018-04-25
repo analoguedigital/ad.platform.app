@@ -71,6 +71,7 @@ module App.Models {
         public type: string;
         public mediaType: string;
         public fileUri: string;
+        public oneTimeAccessId: string;
         public tempStorage: boolean;
         public uploadGuid: string;
         public uploadError: string;
@@ -145,6 +146,22 @@ module App.Models {
         public id: string;
         public relationshipId: string;
         public valueId: string;
+    }
+
+    export class Subscription {
+
+    }
+
+    export class SubscriptionPlan {
+        public name: string;
+        public description: string;
+        public price: number;
+        public length: number;
+        public isLimited: boolean;
+        public monthlyQuota?: number;
+        public pdfExport: boolean;
+        public zipExport: boolean;
+        public subscriptions: Subscription[];
     }
 
     export interface IGetDescriptionMetricsDTO {

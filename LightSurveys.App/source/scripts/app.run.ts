@@ -100,7 +100,7 @@ interface Navigator {
         $ionicHistory: ionic.navigation.IonicHistoryService) {
 
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-            var publicStates = ['login', 'register', 'forgotPassword', 'resetPassword'];
+            var publicStates = ['login', 'register', 'registerComplete', 'forgotPassword', 'resetPassword'];
 
             if (publicStates.indexOf(toState.name) !== -1 && publicStates.indexOf(fromState.name) !== -1)
                 return;

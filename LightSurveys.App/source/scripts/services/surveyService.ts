@@ -34,7 +34,7 @@ module App.Services {
 
     class SurveyService implements ISurveyService {
 
-        static $inject: string[] = ['$q', '$timeout', 'storageService', 'httpService', 'userService', 'locationService'];
+        static $inject: string[] = ['$q', '$timeout', 'storageService', 'httpService', 'userService', 'locationService', 'toastr'];
 
         SURVEY_OBJECT_TYPE: string = 'survey';
         FORM_TEMPLATE_OBJECT_TYPE: string = 'formTemplate';
@@ -54,7 +54,8 @@ module App.Services {
             private storageService: IStorageService,
             private httpService: IHttpService,
             private userService: IUserService,
-            private locationService: ILocationService) { }
+            private locationService: ILocationService,
+            private toastr: any) { }
 
         clearLocalData(): ng.IPromise<void> {
             let q = this.$q.defer<void>();
@@ -315,10 +316,18 @@ module App.Services {
                         },
                         (err) => {
                             survey.error = err;
-                            self.saveSurvey(updatedSurvey)
-                                .then(
-                                () => { q.reject(err); },
-                                () => { q.reject(err); });
+
+                            var statusCode = err.substring(0, 3);
+                            if (statusCode === '401') {
+                                this.toastr.error('Unauthorized to upload record!');
+                                self.softDelete(survey.id).then(() => { q.reject(err); });
+                            }
+                            else {
+                                self.saveSurvey(updatedSurvey)
+                                    .then(
+                                    () => { q.reject(err); },
+                                    () => { q.reject(err); });
+                            }
                         });
                 },
                 (err) => { q.reject(err); });
@@ -333,7 +342,7 @@ module App.Services {
         }
 
         getFormTemplateMetadata(formTemplate: Models.FormTemplate): ng.IPromise<Models.FormTemplate> {
-            var d = this.$q.defer();
+            var d = this.$q.defer<Models.FormTemplate>();
 
             angular.forEach(formTemplate.metricGroups, function (group) {
                 if (!group.isRepeater) {
@@ -422,7 +431,8 @@ module App.Services {
         }
 
         getSurvey(id: string): ng.IPromise<Models.Survey> {
-            var d = this.$q.defer();
+            var d = this.$q.defer<Models.Survey>();
+
             this.storageService.getObj(this.SURVEY_OBJECT_TYPE, id).then((survey: Models.Survey) => {
                 this.getSurveyMetadata(survey).then((s) => {
                     d.resolve(s);
@@ -447,7 +457,8 @@ module App.Services {
         }
 
         saveSurvey(survey: Models.Survey): ng.IPromise<Models.Survey> {
-            var q = this.$q.defer();
+            var q = this.$q.defer<Models.Survey>();
+
             var promises: Array<ng.IPromise<void>> = [];
 
             let template = this.getFormTemplate(survey.formTemplateId)
@@ -463,7 +474,7 @@ module App.Services {
                             });
 
                             if (dateMetric) {
-                                var dateValue = new Date(fv.dateValue);
+                                var dateValue = fv.dateValue;
                                 if (!dateMetric.hasTimeValue) {
                                     dateValue.setUTCHours(0);
                                     dateValue.setUTCMinutes(0);
@@ -524,7 +535,7 @@ module App.Services {
 
         submitSurvey(survey: Models.Survey): ng.IPromise<Models.Survey> {
 
-            var q = this.$q.defer();
+            var q = this.$q.defer<Models.Survey>();
             survey.dateUpdated = new Date(new Date().toISOString());
             survey.projectId = this.userService.current.project.id;
             survey.isSubmitted = true;
@@ -660,7 +671,7 @@ module App.Services {
         }
 
         getTemplateWithValues(surveyId: string): ng.IPromise<Models.FormTemplate> {
-            var q = this.$q.defer();
+            var q = this.$q.defer<Models.FormTemplate>();
 
             this.getSurvey(surveyId)
                 .then(
@@ -689,7 +700,7 @@ module App.Services {
                     return moment(formValue.dateValue).format('DD/MM/YYYY hh:mm A');
                 }
 
-                return new Date(formValue.dateValue).toLocaleDateString();
+                return formValue.dateValue.toLocaleDateString();
             }
 
             if (formValue.numericValue)
@@ -697,7 +708,7 @@ module App.Services {
         }
 
         getDescirptionMetrics(formTemplate: Models.FormTemplate): ng.IPromise<Models.IGetDescriptionMetricsDTO> {
-            let d = this.$q.defer();
+            let d = this.$q.defer<Models.IGetDescriptionMetricsDTO>();
 
             let descFormat = formTemplate.descriptionFormat;
             if (descFormat && descFormat.length) {

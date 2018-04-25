@@ -44,7 +44,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
 
                         surveyService.clearLocalData()
                             .then(function() {
-                                console.warn('local data cleared out');
+                                // local data wiped.
                             }, function(err) {
                                 console.error(err);
                             });

@@ -35,10 +35,10 @@
                             <textarea name="address" ng-model="model.address" placeholder="Address" rows="2" required></textarea>
                         </div>
                     </label>
-                    <label class="item item-icon-left">
+                    <label class="item item-icon-left" ng-class="{ 'disabled': model.phoneNumberConfirmed }">
                         <i class="icon ion-ios-telephone-outline"></i>
                         <div class="item-input">
-                            <input name="phone" ng-model="model.phoneNumber" placeholder="Phone number" type="text">
+                            <input type="text" name="phone" placeholder="Phone number" ng-model="model.phoneNumber" ng-disabled="model.phoneNumberConfirmed">
                         </div>
                     </label>
                     <div class="">

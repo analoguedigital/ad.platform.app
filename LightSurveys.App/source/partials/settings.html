@@ -1,6 +1,6 @@
 ﻿<ion-view title="Settings" id="settingsPage">
     <ion-content class="content padding settings" ng-cloak>
-        <h2 class="light">Privacy &amp; Security</h2>
+        <h2 class="light">App Security</h2>
 
         <ul class="list">
             <li class="item item-toggle">
@@ -22,7 +22,7 @@
                 </label>
             </li>
             <li class="item item-toggle">
-                <i class="icon ion-eye-disabled"></i> <span class="item-toggle-label">Do not store on this device</span>
+                <i class="icon ion-eye-disabled"></i> <span class="item-toggle-label">Don't store on this device</span>
                 <label class="toggle toggle-positive">
                     <input type="checkbox" ng-model="model.noStoreEnabled" />
                     <span class="track">
@@ -38,8 +38,45 @@
             </li>
         </ul>
         <p class="light">Don't worry, all records you upload will be saved on our secure server.</p>
-        <br />
 
+        <h2 class="light">Account Security</h2>
+        <div class="list">
+            <div class="item item-button-right" ng-if="!userInfo.phoneNumber.length">
+                <span >Add your phone number</span>
+                <button class="button button-positive" ng-click="openAddPhoneNumberModal()">
+                    <i class="icon ion-ios-telephone-outline"></i>
+                </button>
+            </div>
+            <div class="item item-button-right" ng-if="userInfo.phoneNumber.length && !userInfo.phoneNumberConfirmed">
+                Verify your number <strong>{{userInfo.phoneNumber}}</strong>
+                <button class="button button-positive" ng-click="confirmPhoneNumber()">
+                    <i class="icon ion-ios-checkmark-outline"></i>
+                </button>
+            </div>
+            <div class="item item-button-right" ng-if="userInfo.phoneNumber.length && userInfo.phoneNumberConfirmed">
+                Change your phone number
+                <button class="button button-positive" ng-click="openChangePhoneNumberModal()">
+                    <i class="icon ion-ios-compose-outline"></i>
+                </button>
+            </div>
+            <div class="item item-button-right" ng-if="userInfo.phoneNumber.length && userInfo.phoneNumberConfirmed">
+                Remove your phone number
+                <button class="button button-energized" ng-click="removePhoneNumber()">
+                    <i class="icon ion-ios-close-outline"></i>
+                </button>
+            </div>
+        </div>
+        <p class="light" ng-if="userInfo.phoneNumber.length && !userInfo.phoneNumberConfirmed">
+            You haven't verified your phone yet. Click the checkmark button to confirm your number.
+        </p>
+
+        <h4 class="light">Password Management</h4>
+        <p class="light">It's a good idea to change your passwords frequently. This applies to all your passwords. Choose a strong phrase, something you can remember, and keep it somewhere safe.</p>
+        <button class="button button-energized button-block" ng-click="openModal()">
+            <i class="fa fa-key"></i> Change Password
+        </button>
+
+        <!-- app icon changer -->
         <div ng-if="canChangeAppIcon">
             <h2 class="light">Choose App Icon</h2>
             <br />
@@ -58,7 +95,7 @@
                     <img class="app-icon" src="images/art-paw.png" alt="paw" />
                 </a>
             </div>
-            
+
             <div class="button-bar app-icons">
                 <a class="button button-clear" ng-click="changeAppIcon('art-signal')" ng-class="{ 'active-icon': selectedAppIcon == 'art-signal' }">
                     <img class="app-icon" src="images/art-signal.png" alt="signal" />
@@ -74,11 +111,5 @@
                 </a>
             </div>
         </div>
-
-        <h2 class="light">Password Management</h2>
-        <p class="light">It's a good idea to change your passwords frequently. This applies to all your passwords. Choose a strong phrase, something you can remember, and keep it somewhere safe.</p>
-        <button class="button button-energized button-block" ng-click="openModal()">
-            <i class="fa fa-key"></i> Change Password
-        </button>
     </ion-content>
 </ion-view>

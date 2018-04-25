@@ -1,15 +1,35 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootScope', '$state', '$timeout', '$ionicModal', 'toastr',
-    '$ionicPopup', 'alertService', 'userService', 'surveyService', 'passcodeModalService', 'md5', 'fingerprintService', 'alternateIconService', 'ngProgress', 
+    '$ionicPopup', 'alertService', 'userService', 'surveyService', 'passcodeModalService', 'md5', 'fingerprintService',
+    'alternateIconService', 'ngProgress', 'httpService',
     function ($scope, $rootScope, $state, $timeout, $ionicModal, toastr,
-        $ionicPopup, alertService, userService, surveyService, passcodeModalService, md5, fingerprintService, alternateIconService, ngProgress) {
+        $ionicPopup, alertService, userService, surveyService, passcodeModalService, md5,
+        fingerprintService, alternateIconService, ngProgress, httpService) {
 
         $scope.profile = undefined;
+        $scope.userInfo = undefined;
+
         $scope.passcodeSaved = false;
         $scope.fingerprintHardwareDetected = false;
         $scope.canChangeAppIcon = false;
         $scope.selectedAppIcon = undefined;
+
         $scope.modal = {};
+        $scope.addPhoneNumberModal = {};
+        $scope.changePhoneNumberModal = {};
+
+        $scope.phoneNumberAdded = false;
+
+        $scope.addPhoneNumberModel = {
+            phoneNumber: '',
+            securityCode: ''
+        };
+
+        $scope.changePhoneNumberModel = {
+            phoneNumberAdded: false,
+            phoneNumber: '',
+            securityCode: ''
+        };
 
         $scope.model = {
             passcodeEnabled: false,
@@ -21,6 +41,10 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         };
 
         $scope.changePwdWorking = false;
+        $scope.addPhoneNumberWorking = false;
+        $scope.verifyPhoneNumberWorking = false;
+        $scope.changePhoneNumberWorking = false;
+        $scope.verifyChangePhoneWorking = false;
 
         $scope.$watch('model.passcodeEnabled', function (newValue, oldValue) {
             if (oldValue === false && newValue === true) {
@@ -161,6 +185,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                 if (profiles.length) {
                     var profile = profiles[0];
                     $scope.profile = profile;
+                    $scope.userInfo = profile.userInfo;
 
                     $scope.model.passcodeEnabled = profile.settings.passcodeEnabled;
                     $scope.model.fingerprintEnabled = profile.settings.fingerprintEnabled;
@@ -174,6 +199,20 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                 animation: 'slide-in-up'
             }).then(function (modal) {
                 $scope.modal = modal;
+            });
+
+            $ionicModal.fromTemplateUrl('partials/add-phonenumber.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.addPhoneNumberModal = modal;
+                });
+
+            $ionicModal.fromTemplateUrl('partials/change-phonenumber.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.changePhoneNumberModal = modal;
             });
         };
 
@@ -239,6 +278,194 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                 }).finally(function () {
                     ngProgress.complete();
                     $scope.changePwdWorking = false;
+                });
+        }
+
+        $scope.addPhoneNumber = function () {
+            var phoneNumber = $scope.addPhoneNumberModel.phoneNumber;
+            if (!phoneNumber.length) {
+                toastr.warning('Please enter a valid phone number');
+                return false;
+            }
+
+            ngProgress.start();
+            $scope.addPhoneNumberWorking = true;
+            httpService.addPhoneNumber(phoneNumber)
+                .then(function (res) {
+                    $scope.phoneNumberAdded = true;
+                    toastr.info('We have sent you a security code');
+                }, function (err) {
+                    console.error(err);
+                    if (err.exceptionMessage)
+                        toastr.error(err.exceptionMessage);
+                })
+                .finally(function () {
+                    ngProgress.complete();
+                    $scope.addPhoneNumberWorking = false;
+                });
+        }
+
+        $scope.verifyPhoneNumber = function () {
+            var phoneNumber = $scope.addPhoneNumberModel.phoneNumber;
+            var code = $scope.addPhoneNumberModel.securityCode;
+
+            if (code.length == 0) {
+                toastr.warning('Please enter your security code');
+                return false;
+            }
+
+            ngProgress.start();
+            $scope.verifyPhoneNumberWorking = true;
+            httpService.verifyPhoneNumber(phoneNumber, code)
+                .then(function (res) {
+                    toastr.success('Phone number confirmed');
+                    $scope.closeAddPhoneNumberModal();
+                    $scope.refreshUserInfo();
+                }, function (err) {
+                    console.error(err);
+
+                    if (err.exceptionMessage)
+                        toastr.error(err.exceptionMessage);
+
+                    if (err.message)
+                        toastr.error(err.message);
+                })
+                .finally(function () {
+                    ngProgress.complete();
+                    $scope.verifyPhoneNumberWorking = false;
+                });
+        }
+
+        $scope.confirmPhoneNumber = function () {
+            $scope.addPhoneNumberModel.phoneNumber = $scope.profile.userInfo.phoneNumber;
+            $scope.addPhoneNumberModel.confirmMode = true;
+
+            $scope.openAddPhoneNumberModal();
+        }
+        
+        $scope.removePhoneNumber = function () {
+            var confirmPopup = $ionicPopup.confirm({
+                title: 'Remove phone number',
+                buttons: [
+                    { text: 'Cancel' },
+                    {
+                        text: 'Remove',
+                        type: 'button-assertive',
+                        onTap: function (e) {
+                            return true;
+                        }
+                    }
+                ],
+                template: 'Are you sure you want to remove your phone number?'
+            });
+
+            confirmPopup.then(function (res) {
+                if (res) {
+                    httpService.removePhoneNumber()
+                        .then(function (res) {
+                            toastr.success("Phone number removed");
+                            $scope.refreshUserInfo();
+                        }, function (err) {
+                            console.error(err);
+                            toastr.error("Couldn't remove phone number. An error has occured.");
+                        });
+                }
+            });
+        }
+
+        $scope.changePhoneNumber = function () {
+            var phoneNumber = $scope.changePhoneNumberModel.phoneNumber;
+            if (!phoneNumber.length) {
+                toastr.warning('Please enter a valid phone number');
+                return false;
+            }
+
+            var oldPhoneNumber = $scope.profile.userInfo.phoneNumber;
+            if (phoneNumber === oldPhoneNumber) {
+                toastr.warning('This number is already added. Enter a different number to change.');
+                return false;
+            }
+
+            ngProgress.start();
+            $scope.changePhoneNumberWorking = true;
+            httpService.changePhoneNumber(phoneNumber)
+                .then(function (res) {
+                    $scope.changePhoneNumberModel.phoneNumberAdded = true;
+                    toastr.info('We have sent you a security code');
+                }, function (err) {
+                    console.error(err);
+                    if (err.exceptionMessage)
+                        toastr.error(err.exceptionMessage);
+                })
+                .finally(function () {
+                    ngProgress.complete();
+                    $scope.changePhoneNumberWorking = false;
+                });
+        }
+
+        $scope.verifyChangedNumber = function () {
+            var phoneNumber = $scope.changePhoneNumberModel.phoneNumber;
+            var code = $scope.changePhoneNumberModel.securityCode;
+
+            if (code.length == 0) {
+                toastr.warning('Please enter your security code');
+                return false;
+            }
+
+            ngProgress.start();
+            $scope.verifyChangePhoneWorking = true;
+            httpService.verifyChangedPhoneNumber(phoneNumber, code)
+                .then(function (res) {
+                    toastr.success('Phone number confirmed');
+                    $scope.closeChangePhoneNumberModal();
+                    $scope.refreshUserInfo();
+                }, function (err) {
+                    console.error(err);
+
+                    if (err.exceptionMessage)
+                        toastr.error(err.exceptionMessage);
+
+                    if (err.message)
+                        toastr.error(err.message);
+                })
+                .finally(function () {
+                    ngProgress.complete();
+                    $scope.verifyChangePhoneWorking = false;
+                });
+        }
+
+        $scope.openAddPhoneNumberModal = function () {
+            $scope.addPhoneNumberModal.show();
+        }
+
+        $scope.closeAddPhoneNumberModal = function () {
+            $scope.addPhoneNumberModal.hide();
+        }
+
+        $scope.openChangePhoneNumberModal = function () {
+            $scope.changePhoneNumberModel.phoneNumber = $scope.profile.userInfo.phoneNumber;
+            $scope.changePhoneNumberModal.show();
+        }
+
+        $scope.closeChangePhoneNumberModal = function () {
+            $scope.changePhoneNumberModal.hide();
+        }
+
+        $scope.refreshUserInfo = function () {
+            httpService.getUserInfo()
+                .then(function (data) {
+                    $scope.userInfo = data;
+                    $scope.profile.userInfo = data;
+
+                    userService.saveProfile($scope.profile)
+                        .then(function () {
+                            // local profile data updated.
+                        });
+                }, function (err) {
+                    console.error(err);
+                })
+                .finally(function () {
+                    $scope.$broadcast('scroll.refreshComplete');
                 });
         }
 

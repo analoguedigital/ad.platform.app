@@ -47,6 +47,12 @@
                 templateUrl: "partials/register.html",
                 cache: false
             })
+            .state('registerComplete', {
+                url: '/register-complete',
+                controller: 'registerCompleteController',
+                templateUrl: 'partials/register-complete.html',
+                cache: false
+            })
             .state('survey', {
                 parent: 'menu',
                 url: "/survey/:id",
@@ -102,6 +108,12 @@
                 controller: "settingsController",
                 templateUrl: "partials/settings.html"
             })
+            .state('subscriptions', {
+                parent: 'menu',
+                url: '/subscriptions',
+                controller: 'subscriptionsController',
+                templateUrl: 'partials/subscriptions.html'
+            })
             .state('feedback', {
                 parent: 'menu',
                 url: "/feedback",
@@ -143,6 +155,12 @@
                 url: '/account',
                 controller: 'accountController',
                 templateUrl: 'partials/account.html'
+            })
+            .state('addSubscription', {
+                parent: 'menu',
+                url: '/account',
+                controller: 'addSubscriptionController',
+                templateUrl: 'partials/add-subscription.html'
             });
 
         $urlRouterProvider.otherwise('/home');
