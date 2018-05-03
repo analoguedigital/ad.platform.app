@@ -1,7 +1,7 @@
 'use strict';
-angular.module('lm.surveys').controller('surveyController', ['$scope', '$ionicHistory', '$stateParams', '$state', 'userService',
-    'surveyService', 'alertService', 'gettext', '$timeout', 'ngProgress',
-    function ($scope, $ionicHistory, $stateParams, $state, userService, surveyService, alertService, gettext, $timeout, ngProgress) {
+angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$scope', '$ionicHistory', '$stateParams', '$state', 'userService',
+    'surveyService', 'alertService', 'gettext', '$timeout', 'ngProgress', 'httpService',
+    function ($rootScope, $scope, $ionicHistory, $stateParams, $state, userService, surveyService, alertService, gettext, $timeout, ngProgress, httpService) {
 
         $scope.surveyId = $stateParams.id;
         $scope.formTemplate = null;
@@ -153,6 +153,35 @@ angular.module('lm.surveys').controller('surveyController', ['$scope', '$ionicHi
             $scope.allFormValues.push(formValue);
             return formValue;
         };
+
+        $scope.doRefresh = function () {
+            ngProgress.start();
+            httpService.getSurvey($scope.surveyId)
+                .then(function (data) {
+                    surveyService.getTemplateWithValues($scope.surveyId).then(
+                        function (template) {
+                            _.forEach(template.metricGroups, function (group) {
+                                _.forEach(group.metrics, function (metric) {
+                                    metric.type = _.camelCase(metric.type);
+                                });
+                            });
+                            $scope.formTemplate = template;
+                            $scope.survey = data;
+                            $scope.allFormValues = data.formValues;
+                            $scope.numberOfPages = _.max(template.metricGroups, 'page').page;
+                            goToPageIndex(0);
+
+                            $rootScope.$broadcast('refresh-survey-attachments', data);
+                        },
+                        function (err) { alertService.show(gettext("Error in loading ... ") + err); });
+                }, function (err) {
+                    console.error(err);
+                })
+                .finally(function () {
+                    ngProgress.complete();
+                    $scope.$broadcast('scroll.refreshComplete');
+                });
+        }
 
         surveyService.getTemplateWithValues($scope.surveyId).then(
             function (template) {

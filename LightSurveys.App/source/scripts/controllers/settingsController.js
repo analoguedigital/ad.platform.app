@@ -1,10 +1,10 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootScope', '$state', '$timeout', '$ionicModal', 'toastr',
     '$ionicPopup', 'alertService', 'userService', 'surveyService', 'passcodeModalService', 'md5', 'fingerprintService',
-    'alternateIconService', 'ngProgress', 'httpService',
+    'alternateIconService', 'ngProgress', 'httpService', 'localStorageService', 
     function ($scope, $rootScope, $state, $timeout, $ionicModal, toastr,
         $ionicPopup, alertService, userService, surveyService, passcodeModalService, md5,
-        fingerprintService, alternateIconService, ngProgress, httpService) {
+        fingerprintService, alternateIconService, ngProgress, httpService, localStorageService) {
 
         $scope.profile = undefined;
         $scope.userInfo = undefined;
@@ -294,6 +294,9 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                 .then(function (res) {
                     $scope.phoneNumberAdded = true;
                     toastr.info('We have sent you a security code');
+
+                    // CAPTURE IN PROGRESS
+                    localStorageService.set('capture-in-progress', true);
                 }, function (err) {
                     console.error(err);
                     if (err.exceptionMessage)
@@ -320,6 +323,8 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                 .then(function (res) {
                     toastr.success('Phone number confirmed');
                     $scope.closeAddPhoneNumberModal();
+
+                    localStorageService.set('capture-in-progress', false);
                     $scope.refreshUserInfo();
                 }, function (err) {
                     console.error(err);
@@ -361,6 +366,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
 
             confirmPopup.then(function (res) {
                 if (res) {
+                    ngProgress.start();
                     httpService.removePhoneNumber()
                         .then(function (res) {
                             toastr.success("Phone number removed");
@@ -368,6 +374,9 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                         }, function (err) {
                             console.error(err);
                             toastr.error("Couldn't remove phone number. An error has occured.");
+                        })
+                        .finally(function () {
+                            ngProgress.complete();
                         });
                 }
             });
@@ -392,6 +401,9 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                 .then(function (res) {
                     $scope.changePhoneNumberModel.phoneNumberAdded = true;
                     toastr.info('We have sent you a security code');
+
+                    // CAPTURE IN PROGRESS
+                    localStorageService.set('capture-in-progress', true);
                 }, function (err) {
                     console.error(err);
                     if (err.exceptionMessage)
@@ -418,6 +430,8 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                 .then(function (res) {
                     toastr.success('Phone number confirmed');
                     $scope.closeChangePhoneNumberModal();
+
+                    localStorageService.set('capture-in-progress', false);
                     $scope.refreshUserInfo();
                 }, function (err) {
                     console.error(err);
@@ -439,6 +453,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         }
 
         $scope.closeAddPhoneNumberModal = function () {
+            localStorageService.set('capture-in-progress', false);
             $scope.addPhoneNumberModal.hide();
         }
 
@@ -448,6 +463,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         }
 
         $scope.closeChangePhoneNumberModal = function () {
+            localStorageService.set('capture-in-progress', false);
             $scope.changePhoneNumberModal.hide();
         }
 

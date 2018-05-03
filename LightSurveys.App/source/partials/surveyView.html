@@ -5,6 +5,7 @@
         </h2>
     </ion-header-bar>
     <ion-content class="has-subheader has-footer padding" ng-cloak>
+        <ion-refresher pulling-text="Pull to refresh this record" on-refresh="doRefresh()"></ion-refresher>
         <form name="surveyForm" novalidate="novalidate" ng-submit="submitSurvey()">
             <div class="list card">
                 <div ng-repeat="metricGroup in activeGroups" ng-controller="metricGroupController">
