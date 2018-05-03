@@ -96,6 +96,8 @@ angular.module('lm.surveys').controller('accountController', ['$scope', '$rootSc
                             $scope.model.address = info.address;
                             $scope.model.phoneNumber = info.phoneNumber;
                             $scope.model.phoneNumberConfirmed = $scope.profile.userInfo.phoneNumberConfirmed;
+
+                            $rootScope.$broadcast('refresh-sidemenu-subscription');
                         });
                 }, function (err) {
                     console.error(err);

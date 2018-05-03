@@ -49,7 +49,13 @@ module App.Services {
         phoneNumber: string;
         isSubscribed: boolean;
         expiryDate?: Date;
+        lastSubscription?: any;
+        monthlyQuota: IMonthlyQuota;
+    }
 
+    interface IMonthlyQuota {
+        quota?: number;
+        used: number;
     }
 
     interface ISettings {

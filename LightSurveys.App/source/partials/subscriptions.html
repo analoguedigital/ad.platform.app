@@ -4,6 +4,9 @@
 
         <div class="row responsive-sm">
             <div ng-if="!userInfo.profile.expiryDate">
+                <h3 class="energized">
+                    <i class="icon ion-android-warning"></i> You are not subscribed.
+                </h3>
                 <p class="light">
                     You do not have an active subscription. Unsubscribed users have limited access to our platform and have a fixed monthly quota for uploading records.
                 </p>
@@ -14,14 +17,14 @@
             </div>
 
             <div ng-if="activeSubscription">
-                <div class="card" ng-if="activeSubscription.type === 0">
+                <div class="card" ng-if="activeSubscription.type === 0" style="margin-top: 10px; margin-bottom: 10px">
                     <div class="item item-divider">Active Subscription</div>
                     <div class="item item-text-wrap">
-                        <p class="light">Paid plan: {{activeSubscription.subscriptionPlan.name}}</p>
-                        <p class="light">Starting from <strong>{{activeSubscription.startDate | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong></p>
                         <p class="light">
                             Your next renewal is on <strong>{{profile.userInfo.profile.expiryDate| amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong>
                         </p>
+                        <p class="light">Starting from <strong>{{activeSubscription.startDate | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong></p>
+                        <p class="light">Paid plan: {{activeSubscription.subscriptionPlan.name}}</p>                        
 
                         <p class="light">
                             <span ng-if="!activeSubscription.subscriptionPlan.isLimited">No upload limits.</span>
@@ -52,7 +55,7 @@
                     </div>
                 </div>
 
-                <div class="card" ng-if="activeSubscription.type === 1">
+                <div class="card" ng-if="activeSubscription.type === 1" style="margin-top: 10px; margin-bottom: 10px">
                     <div class="item item-divider">Active Subscription</div>
                     <div class="item item-text-wrap">
                         <p class="light">Starting from <strong>{{activeSubscription.startDate | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong></p>
@@ -60,17 +63,36 @@
                     </div>
                 </div>
 
-                <div class="card" ng-if="activeSubscription.type === 2">
+                <div class="card" ng-if="activeSubscription.type === 2" style="margin-top: 10px; margin-bottom: 10px">
                     <div class="item item-divider">Active Subscription</div>
                     <div class="item item-text-wrap">
-                        <p class="light">{{activeSubscription.note}}.</p>
-                        <p class="light">Starting from <strong>{{activeSubscription.startDate | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong></p>
                         <p class="light">
                             Your next renewal is on <strong>{{profile.userInfo.profile.expiryDate| amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong>
                         </p>
+                        <p class="light">{{activeSubscription.note}}.</p>
+                        <p class="light">Starting from <strong>{{activeSubscription.startDate | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong></p>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="row responsive-sm">
+            <p class="light" ng-if="monthlyQuota.quota">
+                You have used {{monthlyQuota.used}} of {{monthlyQuota.quota}} records this month.
+            </p>
+            <p class="light" ng-if="!monthlyQuota.quota">
+                You have used {{monthlyQuota.used}} records this month.
+            </p>
+
+            <!-- determinate progress -->
+            <progress max="{{monthlyQuota.quota}}" value="{{monthlyQuota.used}}" ng-if="monthlyQuota.quota" style="margin: 0 auto 10px auto">
+                <div class="progress-bar">
+                    <span style="width: {{monthlyQuota.used}}%;">Used: {{monthlyQuota.used}}%</span>
+                </div>
+            </progress>
+
+            <!-- indeterminate progress -->
+            <progress value="{{monthlyQuota.used}}" ng-if="!monthlyQuota.quota" style="margin: 0 auto 10px auto"></progress>
         </div>
 
         <div class="row responsive-sm">

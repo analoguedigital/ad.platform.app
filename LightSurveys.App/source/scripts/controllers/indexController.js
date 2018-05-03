@@ -3,6 +3,8 @@ angular.module('lm.surveys').controller('indexController', ["$scope", "$rootScop
     function ($scope, $rootScope, $state, $location, authService, userService) {
 
         $scope.authentication = authService.authentication;
+        $scope.expiryDate = undefined;
+
         $scope.getDirection = function () {
             return 'ltr';
         }
@@ -23,10 +25,29 @@ angular.module('lm.surveys').controller('indexController', ["$scope", "$rootScop
             return 'forward';
         }
 
-        if (!$scope.authentication.isAuth) {
-            $location.path('/login');
+        $scope.activate = function () {
+            if (!$scope.authentication.isAuth)
+                $location.path('/login');
+            else
+                $location.path('/home');
+            
+            $scope.refreshSubscriptionWarning();
         }
-        else
-            $location.path('/home');
+
+        $scope.refreshSubscriptionWarning = function () {
+            userService.getExistingProfiles().then(function (profiles) {
+                if (profiles.length) {
+                    var profile = profiles[0];
+                    var expiryDate = profile.userInfo.profile.expiryDate;
+                    $scope.expiryDate = expiryDate;
+                }
+            });
+        }
+
+        $rootScope.$on('refresh-sidemenu-subscription', function () {
+            $scope.refreshSubscriptionWarning();
+        });
+
+        $scope.activate();
 
     }]);

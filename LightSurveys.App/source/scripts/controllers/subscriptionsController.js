@@ -9,6 +9,7 @@ angular.module('lm.surveys').controller('subscriptionsController', ['$scope', '$
         $scope.profile = undefined;
         $scope.userInfo = undefined;
         $scope.activeSubscription = undefined;
+        $scope.monthlyQuota = undefined;
 
         $scope.model = {
             voucherCode: ''
@@ -23,7 +24,18 @@ angular.module('lm.surveys').controller('subscriptionsController', ['$scope', '$
                     var profile = profiles[0];
                     $scope.profile = profile;
                     $scope.userInfo = profile.userInfo;
-                    $scope.activeSubscription = profile.userInfo.profile.lastSubscription;
+
+                    $scope.activeSubscription = $scope.userInfo.profile.lastSubscription;
+                    $scope.monthlyQuota = $scope.userInfo.profile.monthlyQuota;
+
+                    // NOTE: not necessary to list the subscription history for mobile users.
+                    // we might add a separate screen for this at a later time.
+                    //
+                    //httpService.getUserSubscriptions().then(function (res) {
+                    //    console.info(res);
+                    //}, function (err) {
+                    //    console.error(err);
+                    //});
                 }
 
                 $scope.refreshUserInfo();
@@ -84,10 +96,12 @@ angular.module('lm.surveys').controller('subscriptionsController', ['$scope', '$
                     $scope.userInfo = data;
                     $scope.profile.userInfo = data;
                     $scope.activeSubscription = data.profile.lastSubscription;
+                    $scope.monthlyQuota = data.profile.monthlyQuota;
 
                     userService.saveProfile($scope.profile)
                         .then(function () {
                             // local profile data updated.
+                            $rootScope.$broadcast('refresh-sidemenu-subscription');
                         });
                 }, function (err) {
                     console.error(err);

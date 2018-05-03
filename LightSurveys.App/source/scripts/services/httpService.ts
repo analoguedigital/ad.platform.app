@@ -11,6 +11,7 @@ module App.Services {
         getFormTemplate(id: string): angular.IPromise<angular.IHttpPromiseCallbackArg<Models.FormTemplate>>;
         getFormTemplates(): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.FormTemplate>>>;
         getProjects(): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.Project>>>;
+        getSurvey(id: string): ng.IPromise<Models.Survey>;
         uploadSurvey(survey: Models.Survey): angular.IPromise<angular.IHttpPromiseCallbackArg<any>>;
         register(registerData: IRegisterData): ng.IPromise<any>;
         deleteFormTemplate(id: string): ng.IPromise<any>;
@@ -33,6 +34,8 @@ module App.Services {
         redeemVoucher(voucherCode: string): ng.IPromise<void>;
         buySubscription(subscriptionPlanId: string): ng.IPromise<void>;
         joinOrganization(invitationToken: string): ng.IPromise<void>;
+
+        getUserSubscriptions(): ng.IPromise<any>;
     }
 
     export class HttpService implements IHttpService {
@@ -125,6 +128,16 @@ module App.Services {
 
             this.$http.get(HttpService.serviceBase + 'api/formtemplates/' + id)
                 .success((data) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        getSurvey(id: string): ng.IPromise<Models.Survey> {
+            var deferred = this.$q.defer<Models.Survey>();
+
+            this.$http.get(HttpService.serviceBase + 'api/surveys/' + id)
+                .success((data: Models.Survey) => { deferred.resolve(data); })
                 .error((data, status) => { deferred.reject(this.onError(data, status)); });
 
             return deferred.promise;
@@ -426,6 +439,16 @@ module App.Services {
 
             var params = { token: invitationToken };
             this.$http.post(HttpService.serviceBase + 'api/subscriptions/joinorganisation/' + invitationToken, null)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        getUserSubscriptions(): ng.IPromise<any> {
+            var deferred = this.$q.defer<void>();
+
+            this.$http.get(HttpService.serviceBase + 'api/subscriptions/', null)
                 .success((data: any) => { deferred.resolve(data); })
                 .error((data, status) => { deferred.reject(this.onError(data, status)); });
 

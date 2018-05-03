@@ -52,6 +52,12 @@
                     <span translate> Log out</span>
                 </ion-item>
             </ion-list>
+
+            <ion-list class="sidemenu-list" ng-if="!expiryDate">
+                <ion-item class="item item-assertive item-icon-{{::getLeft()}}" menu-close"" style="padding: 15px 20px">
+                    <i class="icon ion-android-warning assertive"></i> <span translate class="assertive"> You are not subscribed</span>
+                </ion-item>
+            </ion-list>
         </div>
     </ion-side-menu>
     <ion-side-menu-content>

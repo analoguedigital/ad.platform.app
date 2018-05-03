@@ -1,10 +1,35 @@
 ﻿/// <reference path="../../../../scripts/typings/ionic/ionic.d.ts" />
 
 'use strict';
-angular.module('lm.surveys').controller('attachmentMetricController', ['$scope', '$rootScope', '$timeout', 'mediaService', '$ionicModal', '$ionicActionSheet', '$controller', 'userService', 'Upload', 'localStorageService', 'httpService', 
+angular.module('lm.surveys').controller('attachmentMetricController', ['$scope', '$rootScope', '$timeout', 'mediaService', '$ionicModal', '$ionicActionSheet', '$controller', 'userService', 'Upload', 'localStorageService', 'httpService',
     function ($scope, $rootScope, $timeout, mediaService, $ionicModal, $ionicActionSheet, $controller, userService, Upload, localStorageService, httpService) {
 
         $controller('metricController', { $scope: $scope });
+
+        $rootScope.$on('refresh-survey-attachments', function (event, survey) {
+            var formValueId = $scope.formValue.id;
+            var updatedValue = _.filter(survey.formValues, function (fv) {
+                return fv.id == formValueId;
+            });
+
+            if (updatedValue && updatedValue.length) {
+                var newFormValue = updatedValue[0];
+
+                _.forEach(newFormValue.attachments, function (attachment) {
+                    attachment.fileUri = undefined;
+                    attachment.mediaType = _.toLower(attachment.typeString);
+                    delete attachment.typeString;
+                });
+
+                $scope.formValue.attachments = newFormValue.attachments;
+            }
+        });
+
+        var uploadInstance;
+        var uploadIndex = 0;
+
+        $scope.currentMedia = undefined;
+        $scope.currentMediaDuration = undefined;
 
         if (_.isEmpty($scope.formValues)) {
             $scope.formValue = $scope.addFormValue($scope.metric, $scope.dataListItem, $scope.rowNumber);
@@ -14,8 +39,8 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
             $scope.formValue = $scope.formValues[0];
         }
 
-        $scope.currentMedia = undefined;
-        $scope.currentMediaDuration = undefined;
+        if ($scope.formValue.textValue === undefined)
+            $scope.formValue.textValue = '';
 
         $scope.playAudio = function (attachment) {
             if ($scope.currentMedia)
@@ -75,12 +100,6 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
             $scope.currentMedia = undefined;
             $scope.currentMediaDuration = undefined;
         }
-
-        var uploadInstance;
-        var uploadIndex = 0;
-
-        if ($scope.formValue.textValue === undefined)
-            $scope.formValue.textValue = '';
 
         $scope.startCapture = function () {
             var i = 2;

@@ -84,6 +84,8 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                     $scope.downloading = false;
                     ngProgress.complete();
 
+                    $rootScope.$broadcast('refresh-sidemenu-subscription');
+
                     surveyService.uploadAllSurveys();
                     $scope.syncUserRecords();
                 }, function (err) {
