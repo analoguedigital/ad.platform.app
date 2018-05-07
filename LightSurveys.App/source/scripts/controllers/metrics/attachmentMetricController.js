@@ -1,8 +1,9 @@
 ﻿/// <reference path="../../../../scripts/typings/ionic/ionic.d.ts" />
 
 'use strict';
-angular.module('lm.surveys').controller('attachmentMetricController', ['$scope', '$rootScope', '$timeout', 'mediaService', '$ionicModal', '$ionicActionSheet', '$controller', 'userService', 'Upload', 'localStorageService', 'httpService',
-    function ($scope, $rootScope, $timeout, mediaService, $ionicModal, $ionicActionSheet, $controller, userService, Upload, localStorageService, httpService) {
+angular.module('lm.surveys').controller('attachmentMetricController', ['$scope', '$sce', '$rootScope', '$timeout', 'mediaService',
+    '$ionicModal', '$ionicActionSheet', '$controller', 'userService', 'Upload', 'localStorageService', 'httpService',
+    function ($scope, $sce, $rootScope, $timeout, mediaService, $ionicModal, $ionicActionSheet, $controller, userService, Upload, localStorageService, httpService) {
 
         $controller('metricController', { $scope: $scope });
 
@@ -53,26 +54,30 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
                 else if (attachment.oneTimeAccessId && attachment.oneTimeAccessId.length)
                     _url = baseUrl + 'api/downloads/' + attachment.oneTimeAccessId;
 
-                var media = new Media(_url, function () { }, function (err) { });
+                try {
+                    var media = new Media(_url, function () { }, function (err) { });
 
-                $scope.currentMedia = media;
-                $rootScope.currentMedia = media;
-                $rootScope.mediaModal = $scope.modal;
+                    $scope.currentMedia = media;
+                    $rootScope.currentMedia = media;
+                    $rootScope.mediaModal = $scope.modal;
 
-                var counter = 0;
-                var timeDuration = setInterval(function () {
-                    counter = counter + 100;
-                    if (counter > 2000)
-                        clearInterval(timeDuration);
+                    var counter = 0;
+                    var timeDuration = setInterval(function () {
+                        counter = counter + 100;
+                        if (counter > 2000)
+                            clearInterval(timeDuration);
 
-                    var duration = media.getDuration();
-                    if (duration > 0) {
-                        clearInterval(timeDuration);
-                        $scope.currentMediaDuration = _.round(duration, 1);
-                    }
-                }, 100);
+                        var duration = media.getDuration();
+                        if (duration > 0) {
+                            clearInterval(timeDuration);
+                            $scope.currentMediaDuration = _.round(duration, 1);
+                        }
+                    }, 100);
 
-                media.play();
+                    media.play();
+                } catch (e) {
+                    console.warn(e);
+                }
             }
         };
 
@@ -201,6 +206,16 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
             $scope.modal.remove()
         };
 
+        $scope.showPdfModal = function () {
+            $ionicModal.fromTemplateUrl('partials/documentModal.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.pdfDocumentModal = modal;
+                $scope.pdfDocumentModal.show();
+            });
+        }
+
         $scope.getDownloadUrl = function (attachment) {
             var baseUrl = httpService.getServiceBase();
             var url;
@@ -210,7 +225,25 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
             else if (attachment.oneTimeAccessId && attachment.oneTimeAccessId.length)
                 url = baseUrl + 'api/downloads/' + attachment.oneTimeAccessId;
 
-            return url;
+            return $sce.trustAsResourceUrl(url);
+        }
+
+        $scope.openDocument = function (attachment) {
+            var fileName = attachment.fileName;
+            var fileExt = fileName.substr(fileName.length - 3, 3);
+
+            var downloadUrl = $scope.getDownloadUrl(attachment);
+            var gdocsUrl = 'http://docs.google.com/gview?embedded=true&url=';
+
+            var url = $sce.trustAsResourceUrl(gdocsUrl + downloadUrl);
+            
+            $scope.pdfDocumentUrl = url;
+            $scope.showPdfModal();
+        }
+
+        $scope.closePdfModal = function () {
+            $scope.pdfDocumentModal.hide();
+            $scope.pdfDocumentModal.remove();
         }
 
         //$scope.uploadFiles = function () {

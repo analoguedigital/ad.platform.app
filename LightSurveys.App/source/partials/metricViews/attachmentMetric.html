@@ -1,18 +1,45 @@
 ﻿<h3 ng-hide="metricGroup.isRepeater"> {{::metric.description}} </h3>
 <div ng-controller="attachmentMetricController">
     <div class="thumbnails">
-        <div class="thumbnail" ng-repeat="attachment in formValue.attachments" ng-click="showImages($index)">
+        <div class="thumbnail" ng-repeat="attachment in formValue.attachments | filter:{mediaType: 'image'}" ng-click="showImages($index)">
             <div class="thumbnail-placeholder" cover-image="images/70x70.png">
-                <img ng-src="{{getDownloadUrl(attachment)}}" ng-if="attachment.mediaType === 'image'" />
+                <img ng-src="{{getDownloadUrl(attachment)}}" />
+            </div>
+        </div>
+    </div>
 
-                <video ng-src="{{getDownloadUrl(attachment)}}" ng-if="attachment.mediaType==='video'" />
-                <div class="audio-thumbnail" ng-if="attachment.mediaType==='audio'">
+    <div class="thumbnails">
+        <div class="thumbnail" ng-repeat="attachment in formValue.attachments | filter:{mediaType: 'video'}" ng-click="showImages($index)">
+            <div class="thumbnail-placeholder" cover-image="images/70x70.png">
+                <video ng-src="{{getDownloadUrl(attachment)}}" />
+            </div>
+        </div>
+    </div>
+
+    <div class="thumbnails">
+        <div class="thumbnail" ng-repeat="attachment in formValue.attachments | filter:{mediaType: 'audio'}" ng-click="showImages($index)">
+            <div class="thumbnail-placeholder" cover-image="images/70x70.png">
+                <div class="audio-thumbnail">
                     <i class="icon ion-play"></i>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div ng-if="attachment.mediaType!=='image' && attachment.mediaType!=='video' && attachment.mediaType !== 'audio'"
-                 ng-src="{{getDownloadUrl(attachment)}}" class="fullscreen-image">{{attachment.mediaType}}</div>
+    <div class="thumbnails">
+        <div class="thumbnail" ng-repeat="attachment in formValue.attachments | filter:{mediaType: 'document'}" ng-click="openDocument(attachment)">
+            <div class="thumbnail-placeholder" cover-image="images/70x70.png">
+                <div ng-src="{{getDownloadUrl(attachment)}}" class="fullscreen-image">
+                    <i class="fa fa-file-pdf-o"></i> doc
+                    <!--{{attachment.mediaType}}-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="thumbnails">
+        <div class="thumbnail" ng-repeat="attachment in formValue.attachments | filter:{mediaType: !'image' && !'video' && !'audio'}" ng-click="showImages($index)">
+            <div ng-src="{{getDownloadUrl(attachment)}}" class="fullscreen-image">{{attachment.mediaType}}</div>
         </div>
     </div>
 
