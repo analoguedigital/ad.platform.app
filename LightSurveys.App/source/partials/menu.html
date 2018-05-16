@@ -7,7 +7,7 @@
                 <img src="images/avatar-other.png" ng-if="profile.gender === 2" />
 
                 <h2 style="color: #ccc">{{profile.firstName}} {{ profile.surname}}</h2>
-                <p>{{currentContext.userEmail}}</p>
+                <p>{{profile.email}}</p>
             </a>
         </div>
 
@@ -39,12 +39,12 @@
                     <span translate> Subscriptions</span>
                 </ion-item>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="feedback" menu-close="">
-                    <i class="icon ion-ios-pulse"></i>
-                    <span translate>Feedback</span>
+                    <i class="icon ion-help-buoy"></i>
+                    <span translate>Need Help?</span>
                 </ion-item>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="guidance" menu-close="">
                     <i class="icon ion-ios-help-outline"></i>
-                    <span translate> Guidance</span>
+                    <span translate> Guidance and Legal</span>
                 </ion-item>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" menu-close="" ng-click="logOut()"
                           style="padding: 15px 20px">

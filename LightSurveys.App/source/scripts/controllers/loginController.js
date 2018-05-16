@@ -1,8 +1,8 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScope', '$ionicHistory', '$ionicPlatform', '$state', '$stateParams', '$timeout', '$ionicModal',
-    'userService', 'alertService', 'ngProgress', 'surveyService', 'fingerprintService', 'passcodeModalService', 'md5', 'toastr', 'localStorageService', 
+    'userService', 'alertService', 'ngProgress', 'surveyService', 'fingerprintService', 'passcodeModalService', 'md5', 'toastr', 'localStorageService', 'storageService',
     function ($scope, $rootScope, $ionicHistory, $ionicPlatform, $state, $stateParams, $timeout, $ionicModal, userService,
-        alertService, ngProgress, surveyService, fingerprintService, passcodeModalService, md5, toastr, localStorageService) {
+        alertService, ngProgress, surveyService, fingerprintService, passcodeModalService, md5, toastr, localStorageService, storageService) {
         $scope.existingProfiles = [];
         $scope.profile = undefined;
         $scope.loginValidated = false;
@@ -18,8 +18,6 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
         }
 
         $scope.loginData = {
-            //email: "manager@test.t",
-            //password: "Test1234"
             email: "",
             password: ""
         };
@@ -39,37 +37,34 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                     .then(function () {
                         $scope.loginValidated = true;
 
-                        if ($scope.profile)
-                            userService.activateProfile($scope.profile);
+                        _.forEach(localStorageService.keys(), function (key) {
+                            if (_.includes(key, 'user')) {
+                                localStorageService.remove(key);
+                            }
+                        });
 
-                        surveyService.clearLocalData()
-                            .then(function() {
-                                // local data wiped.
-                            }, function(err) {
-                                console.error(err);
-                            });
+                        surveyService.clearLocalData().then(function () {
+                            surveyService.refreshData()
+                                .then(function () {
+                                    ngProgress.complete();
+                                    $scope.loginWorking = false;
+                                    $ionicHistory.clearHistory();
 
-                        surveyService.refreshData()
-                            .then(function () {
-                                ngProgress.complete();
-                                $scope.loginWorking = false;
-                                $ionicHistory.clearHistory();
+                                    $rootScope.$broadcast('refresh-sidemenu-subscription');
 
-                                $rootScope.$broadcast('refresh-sidemenu-subscription');
-
-                                var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
-                                if (firstLogin === null || firstLogin === undefined) {
-                                    localStorageService.set(FIRST_TIME_LOGIN_KEY, true);
-                                    $state.go('makingRecords');
-                                } else {
-                                    $state.go('projects');
-                                }
-                            },
-                            function (err) {
-                                ngProgress.complete();
-                                alertService.show(err);
-                            });
-
+                                    var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
+                                    if (firstLogin === null || firstLogin === undefined) {
+                                        localStorageService.set(FIRST_TIME_LOGIN_KEY, true);
+                                        $state.go('makingRecords');
+                                    } else {
+                                        $state.go('projects');
+                                    }
+                                },
+                                function (err) {
+                                    ngProgress.complete();
+                                    alertService.show(err);
+                                });
+                        });
                     },
                     function (err) {
                         ngProgress.complete();
@@ -129,35 +124,40 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
         $scope.activate = function () {
             userService.getExistingProfiles()
                 .then(function (profiles) {
-                    $scope.existingProfiles = profiles;
-                    if (profiles.length > 0) {
+                    if (profiles.length) {
+                        $scope.existingProfiles = profiles;
                         $scope.profile = profiles[0];
 
-                        var settings = profiles[0].settings;
-                        if (settings.fingerprintEnabled || settings.passcodeEnabled) {
-                            if (settings.fingerprintEnabled === true) {
-                                fingerprintService.isAvailable().then(function (isAvailable) {
-                                    if (isAvailable) {
-                                        // verify fingerprint
-                                        fingerprintService.verify().then(function (result) {
-                                            if (result.success === true) {
-                                                $scope.loginValidated = true;
-                                                $scope.activateProfile($scope.profile);
-                                            } else {
+                        var settings = $scope.profile.settings;
+                        if (settings === undefined) {
+                            userService.logOut().then(function () {
+                                // force re-log. not necessary though.
+                            });
+                        } else {
+                            if (settings.fingerprintEnabled || settings.passcodeEnabled) {
+                                if (settings.fingerprintEnabled === true) {
+                                    fingerprintService.isAvailable().then(function (isAvailable) {
+                                        if (isAvailable) {
+                                            fingerprintService.verify().then(function (result) {
+                                                if (result.success === true) {
+                                                    $scope.loginValidated = true;
+                                                    $scope.activateProfile($scope.profile);
+                                                } else {
+                                                    userService.logOut();
+                                                    $scope.fallbackToPasscode();
+                                                }
+                                            }, function (error) {
                                                 userService.logOut();
                                                 $scope.fallbackToPasscode();
-                                            }
-                                        }, function (error) {
-                                            userService.logOut();
+                                            });
+                                        } else {
+                                            // fingerprint not available
                                             $scope.fallbackToPasscode();
-                                        });
-                                    } else {
-                                        // fingerprint not available
-                                        $scope.fallbackToPasscode();
-                                    }
-                                });
-                            } else {
-                                $scope.fallbackToPasscode();
+                                        }
+                                    });
+                                } else {
+                                    $scope.fallbackToPasscode();
+                                }
                             }
                         }
                     }

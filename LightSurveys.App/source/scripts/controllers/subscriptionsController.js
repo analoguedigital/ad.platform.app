@@ -19,33 +19,29 @@ angular.module('lm.surveys').controller('subscriptionsController', ['$scope', '$
         $scope.voucherWorking = false;
 
         $scope.activate = function () {
-            userService.getExistingProfiles().then(function (profiles) {
-                if (profiles.length) {
-                    var profile = profiles[0];
-                    $scope.profile = profile;
-                    $scope.userInfo = profile.userInfo;
-
-                    $scope.activeSubscription = $scope.userInfo.profile.lastSubscription;
-                    $scope.monthlyQuota = $scope.userInfo.profile.monthlyQuota;
-
-                    // NOTE: not necessary to list the subscription history for mobile users.
-                    // we might add a separate screen for this at a later time.
-                    //
-                    //httpService.getUserSubscriptions().then(function (res) {
-                    //    console.info(res);
-                    //}, function (err) {
-                    //    console.error(err);
-                    //});
-                }
-
-                $scope.refreshUserInfo();
-            });
-
             $ionicModal.fromTemplateUrl('partials/redeem-voucher.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
             }).then(function (modal) {
                 $scope.voucherModal = modal;
+            });
+
+            userService.getExistingProfiles().then(function (profiles) {
+                $scope.profile = profiles[0];
+                $scope.userInfo = $scope.profile.userInfo;
+
+                $scope.activeSubscription = $scope.userInfo.profile.lastSubscription;
+                $scope.monthlyQuota = $scope.userInfo.profile.monthlyQuota;
+
+                $scope.refreshUserInfo();
+
+                // NOTE: not necessary to list the subscription history for mobile users.
+                // we might add a separate screen for this at a later time.
+                //httpService.getUserSubscriptions().then(function (res) {
+                //    console.info(res);
+                //}, function (err) {
+                //    console.error(err);
+                //});
             });
         };
 

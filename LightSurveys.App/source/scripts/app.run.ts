@@ -130,6 +130,7 @@ interface Navigator {
         amMoment.changeLocale("en-GB");
     }
 
+    // refactor this filter to a separate file.
     angular.module("lm.surveys").filter('trusted', ['$sce', function ($sce: ng.ISCEService) {
         return $sce.trustAsResourceUrl;
     }]);

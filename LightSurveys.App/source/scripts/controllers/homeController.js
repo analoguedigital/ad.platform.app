@@ -28,7 +28,11 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                     $scope.formTemplates = results;
 
                     // filter results to threads created by current user.
-                    //$scope.formTemplates = _.filter(results, function (formTemplate) { return formTemplate.createdById === userService.current.userId; });
+                    // PS this isn't necessary because users can see threads 
+                    // that they have access to. based on assignments and all.
+                    //$scope.formTemplates = _.filter(results, function (formTemplate) {
+                    //    return formTemplate.createdById === userService.current.userId;
+                    //});
                 }, function (err) {
                     alertService.show(err);
                 });
@@ -64,10 +68,10 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                     _.remove($scope.formTemplates, function (template) { return template.id === formTemplate.id });
                     ngProgress.complete();
                 },
-                function (err) {
-                    ngProgress.complete();
-                    alertService.show($scope.getValidationErrors(err));
-                });
+                    function (err) {
+                        ngProgress.complete();
+                        alertService.show($scope.getValidationErrors(err));
+                    });
         }
 
         $scope.editTemplate = function (formTemplate) {
@@ -99,40 +103,50 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
             userService.getExistingProfiles().then(function (profiles) {
                 if (profiles.length) {
                     var profile = profiles[0];
-                    if (!profile.settings.noStoreEnabled) {
-                        var projectId = userService.current.project.id;
-                        var baseUrl = httpService.getServiceBase();
+                    if (profile.settings !== undefined) {
+                        if (!profile.settings.noStoreEnabled) {
+                            var projectId = userService.current.project.id;
+                            var baseUrl = httpService.getServiceBase();
 
-                        surveyService.getUserSurveys(projectId)
-                            .then(function (data) {
-                                try {
-                                    // fix attachments, and store surveys locally
-                                    _.forEach(data, function (survey, index) {
-                                        _.forEach(survey.formValues, function (fv) {
-                                            _.forEach(fv.attachments, function (attachment) {
-                                                //attachment.fileUri = baseUrl + attachment.url;
-                                                attachment.fileUri = undefined;
-                                                attachment.mediaType = _.toLower(attachment.typeString);
-                                                delete attachment.typeString;
+                            surveyService.getUserSurveys(projectId)
+                                .then(function (data) {
+                                    try {
+                                        // fix attachments, and store surveys locally
+                                        _.forEach(data, function (survey, index) {
+                                            _.forEach(survey.formValues, function (fv) {
+                                                _.forEach(fv.attachments, function (attachment) {
+                                                    //attachment.fileUri = baseUrl + attachment.url;
+                                                    attachment.fileUri = undefined;
+                                                    attachment.mediaType = _.toLower(attachment.typeString);
+                                                    delete attachment.typeString;
+                                                });
                                             });
+
+                                            storageService.save('survey', survey.formTemplateId, survey.id, survey);
                                         });
+                                    } catch (err) {
+                                        console.warn(err);
+                                    }
 
-                                        storageService.save('survey', survey.formTemplateId, survey.id, survey);
-                                    });
-                                } catch (err) {
-                                    console.warn(err);
-                                }
-
-                                _loadList();
-                            }, function (err) {
-                                console.error(err);
-                            });
+                                    _loadList();
+                                }, function (err) {
+                                    console.error(err);
+                                });
+                        }
                     }
                 }
             });
         }
 
         $scope.activate = function () {
+            userService.getExistingProfiles().then(function (profiles) {
+                $scope.profile = profiles[0];
+                $scope.userInfo = $scope.profile.userInfo;
+
+                $rootScope.$broadcast('refresh-sidemenu-subscription');
+                $rootScope.$broadcast('update-menu-profile', { profile: $scope.userInfo.profile });
+            });
+
             if (userService.current.project === undefined) {
                 $state.go('projects');
             } else {

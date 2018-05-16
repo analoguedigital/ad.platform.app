@@ -169,53 +169,6 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
             });
         }
 
-        $scope.activate = function () {
-            $scope.isIOS = ionic.Platform.isIOS();
-            fingerprintService.isHardwareDetected()
-                .then(function (result) {
-                    $scope.fingerprintHardwareDetected = result;
-                });
-
-            if (ionic.Platform.isIOS())
-                alternateIconService.isSupported().then(function (supported) {
-                    $scope.canChangeAppIcon = supported;
-                });
-
-            userService.getExistingProfiles().then(function (profiles) {
-                if (profiles.length) {
-                    var profile = profiles[0];
-                    $scope.profile = profile;
-                    $scope.userInfo = profile.userInfo;
-
-                    $scope.model.passcodeEnabled = profile.settings.passcodeEnabled;
-                    $scope.model.fingerprintEnabled = profile.settings.fingerprintEnabled;
-                    $scope.passcodeSaved = profile.settings.passcodeEnabled;
-                    $scope.model.noStoreEnabled = profile.settings.noStoreEnabled;
-                }
-            });
-
-            $ionicModal.fromTemplateUrl('partials/change-password.html', {
-                scope: $scope,
-                animation: 'slide-in-up'
-            }).then(function (modal) {
-                $scope.modal = modal;
-            });
-
-            $ionicModal.fromTemplateUrl('partials/add-phonenumber.html', {
-                scope: $scope,
-                animation: 'slide-in-up'
-            }).then(function (modal) {
-                $scope.addPhoneNumberModal = modal;
-                });
-
-            $ionicModal.fromTemplateUrl('partials/change-phonenumber.html', {
-                scope: $scope,
-                animation: 'slide-in-up'
-            }).then(function (modal) {
-                $scope.changePhoneNumberModal = modal;
-            });
-        };
-
         $scope.openModal = function () {
             $scope.model.password = '';
             $scope.model.newPassword = '';
@@ -484,6 +437,50 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                     $scope.$broadcast('scroll.refreshComplete');
                 });
         }
+
+        $scope.activate = function () {
+            $scope.isIOS = ionic.Platform.isIOS();
+            fingerprintService.isHardwareDetected()
+                .then(function (result) {
+                    $scope.fingerprintHardwareDetected = result;
+                });
+
+            if (ionic.Platform.isIOS())
+                alternateIconService.isSupported().then(function (supported) {
+                    $scope.canChangeAppIcon = supported;
+                });
+
+            userService.getExistingProfiles().then(function (profiles) {
+                $scope.profile = profiles[0];
+                $scope.userInfo = $scope.profile.userInfo;
+
+                $scope.model.passcodeEnabled = $scope.profile.settings.passcodeEnabled;
+                $scope.model.fingerprintEnabled = $scope.profile.settings.fingerprintEnabled;
+                $scope.passcodeSaved = $scope.profile.settings.passcodeEnabled;
+                $scope.model.noStoreEnabled = $scope.profile.settings.noStoreEnabled;
+            });
+
+            $ionicModal.fromTemplateUrl('partials/change-password.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.modal = modal;
+            });
+
+            $ionicModal.fromTemplateUrl('partials/add-phonenumber.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.addPhoneNumberModal = modal;
+            });
+
+            $ionicModal.fromTemplateUrl('partials/change-phonenumber.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.changePhoneNumberModal = modal;
+            });
+        };
 
         $scope.activate();
 
