@@ -10,6 +10,7 @@ angular.module('lm.surveys').controller('accountController', ['$scope', '$rootSc
             gender: '',
             birthdate: '',
             address: '',
+            email: '',
             phoneNumber: '',
             phoneNumberConfirmed: false,
             isSubscribed: false,
@@ -24,30 +25,6 @@ angular.module('lm.surveys').controller('accountController', ['$scope', '$rootSc
 
         $scope.requestWorking = false;
         $scope.voucherWorking = false;
-
-        $scope.activate = function () {
-            userService.getExistingProfiles().then(function (profiles) {
-                if (profiles.length) {
-                    $scope.profile = profiles[0];
-                    $scope.userInfo = $scope.profile.userInfo.profile;
-
-                    var info = $scope.userInfo;
-                    try {
-                        $scope.model.firstName = info.firstName;
-                        $scope.model.surname = info.surname;
-                        $scope.model.gender = info.gender;
-                        $scope.model.birthdate = moment(info.birthdate).toDate();
-                        $scope.model.address = info.address;
-                        $scope.model.phoneNumber = info.phoneNumber;
-                        $scope.model.phoneNumberConfirmed = $scope.profile.userInfo.phoneNumberConfirmed;
-                        $scope.model.isSubscribed = info.isSubscribed;
-                        $scope.model.expiryDate = info.expiryDate;
-                    } catch (e) {
-                        console.warn(e);
-                    }
-                }
-            });
-        }
 
         $scope.saveChanges = function () {
             if (!$scope.model.firstName || $scope.model.firstName.length < 1) {
@@ -86,25 +63,52 @@ angular.module('lm.surveys').controller('accountController', ['$scope', '$rootSc
                     $scope.userInfo = data;
                     $scope.profile.userInfo = data;
 
-                    userService.saveProfile($scope.profile)
-                        .then(function () {
-                            var info = data.profile;
-                            $scope.model.firstName = info.firstName;
-                            $scope.model.surname = info.surname;
-                            $scope.model.gender = info.gender;
-                            $scope.model.birthdate = moment(info.birthdate).toDate();
-                            $scope.model.address = info.address;
-                            $scope.model.phoneNumber = info.phoneNumber;
-                            $scope.model.phoneNumberConfirmed = $scope.profile.userInfo.phoneNumberConfirmed;
+                    var info = data.profile;
+                    $scope.model.firstName = info.firstName;
+                    $scope.model.surname = info.surname;
+                    $scope.model.gender = info.gender;
+                    $scope.model.birthdate = moment(info.birthdate).toDate();
+                    $scope.model.address = info.address;
+                    $scope.model.email = info.email;
+                    $scope.model.phoneNumber = info.phoneNumber;
+                    $scope.model.phoneNumberConfirmed = $scope.profile.userInfo.phoneNumberConfirmed;
 
-                            $rootScope.$broadcast('refresh-sidemenu-subscription');
-                        });
+                    $rootScope.$broadcast('refresh-sidemenu-subscription');
+                    $rootScope.$broadcast('update-menu-profile', { profile: data.profile });
+
+                    userService.saveProfile($scope.profile).then(function () {
+                        // profile data updated
+                    });
                 }, function (err) {
                     console.error(err);
                 })
                 .finally(function () {
                     $scope.$broadcast('scroll.refreshComplete');
                 });
+        }
+
+        $scope.activate = function () {
+            userService.getExistingProfiles().then(function (profiles) {
+                $scope.profile = profiles[0];
+                $scope.userInfo = $scope.profile.userInfo;
+
+                var info = $scope.userInfo.profile;
+                try {
+                    $scope.model.firstName = info.firstName;
+                    $scope.model.surname = info.surname;
+                    $scope.model.gender = info.gender;
+                    $scope.model.birthdate = moment(info.birthdate).toDate();
+                    $scope.model.address = info.address;
+                    $scope.model.phoneNumber = info.phoneNumber;
+                    $scope.model.phoneNumberConfirmed = $scope.userInfo.phoneNumberConfirmed;
+                    $scope.model.isSubscribed = info.isSubscribed;
+                    $scope.model.expiryDate = info.expiryDate;
+
+                    $scope.doRefresh();
+                } catch (e) {
+                    console.warn(e);
+                }
+            });
         }
 
         $scope.activate();

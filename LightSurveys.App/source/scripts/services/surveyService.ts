@@ -63,6 +63,8 @@ module App.Services {
             var promises: Array<ng.IPromise<void>> = [];
             promises.push(this.storageService.deleteAllObjectsOfType(this.PROJECT_OBJECT_TYPE));
             promises.push(this.storageService.deleteAllObjectsOfType(this.FORM_TEMPLATE_OBJECT_TYPE));
+            promises.push(this.storageService.deleteAllObjectsOfType(this.SURVEY_OBJECT_TYPE));
+            promises.push(this.storageService.deleteAllObjectsOfType(this.ATTACHMENT_OBJECT_TYPE));
 
             this.$q.all(promises).then(() => {
                 q.resolve();

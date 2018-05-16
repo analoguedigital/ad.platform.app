@@ -1,6 +1,6 @@
 'use strict';
-angular.module('lm.surveys').controller('selectProjectController', ['$scope', '$ionicHistory', '$state', 'userService', 'surveyService', 'alertService', 'gettext',
-function ($scope, $ionicHistory, $state, userService, surveyService, alertService, gettext) {
+angular.module('lm.surveys').controller('selectProjectController', ['$scope', '$rootScope', '$ionicHistory', '$state', 'userService', 'surveyService', 'alertService', 'gettext',
+function ($scope, $rootScope, $ionicHistory, $state, userService, surveyService, alertService, gettext) {
     $scope.projects = [];
     $scope.isBackAvailable = (userService.current.project != null)
 
@@ -29,6 +29,16 @@ function ($scope, $ionicHistory, $state, userService, surveyService, alertServic
                 $ionicHistory.nextViewOptions({
                     historyRoot: true,
                     disableBack: true
+                });
+
+                userService.getExistingProfiles().then(function (profiles) {
+                    if (profiles.length) {
+                        $scope.profile = profiles[0];
+                        $scope.userInfo = $scope.profile.userInfo;
+
+                        $rootScope.$broadcast('refresh-sidemenu-subscription');
+                        $rootScope.$broadcast('update-menu-profile', { profile: $scope.userInfo.profile });
+                    }
                 });
 
                 $state.go('home');

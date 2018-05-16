@@ -6,11 +6,10 @@ module App.Services {
 
     export interface IAuthInterceptorService {
         request: (config: ng.IRequestConfig) => ng.IRequestConfig;
-        responseError: (rejection: ng.IHttpPromiseCallbackArg<any>) => ng.IHttpPromiseCallbackArg<any>;
+        responseError: (rejection: ng.IHttpPromiseCallbackArg<any>) => ng.IPromise<ng.IHttpPromiseCallbackArg<any>>;
     }
 
     class AuthInterceptorService implements IAuthInterceptorService {
-
         static $inject: string[] = ['$q', '$location', 'authService'];
 
         constructor(
@@ -18,8 +17,8 @@ module App.Services {
             private $location: ng.ILocationService,
             private authService: IAuthService) { }
 
-
         request: (config: ng.IRequestConfig) => ng.IRequestConfig = (config) => {
+            var q = this.$q.defer();
 
             config.headers = config.headers || {};
             config.headers.timezoneOffset = new Date().getTimezoneOffset();
@@ -32,8 +31,7 @@ module App.Services {
             return config;
         }
 
-        responseError: (rejection: ng.IHttpPromiseCallbackArg<any>) => ng.IHttpPromiseCallbackArg<any> = (rejection) => {
-
+        responseError: (rejection: ng.IHttpPromiseCallbackArg<any>) => ng.IPromise<ng.IHttpPromiseCallbackArg<any>> = (rejection) => {
             if (rejection.status === 401) {
                 this.$location.path('/login').search('rejected', 'true');
             }

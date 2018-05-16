@@ -46,7 +46,7 @@ module App.Services {
 
         private getObjects<T>(fileEntries: Array<FileEntry>): ng.IPromise<Array<T>> {
 
-            var q = this.$q.defer();
+            var q = this.$q.defer<Array<T>>();
 
             try {
                 var promises: Array<ng.IPromise<void>> = [];
@@ -58,7 +58,16 @@ module App.Services {
                     promises.push(deferred.promise);
 
                     this.cordovaFileService.readFileAsText(item)
-                        .then((text) => { result.push(JSON.parse(text)); deferred.resolve(); }, (err) => { q.reject((err)); });
+                        .then((text) => {
+                            try {
+                                result.push(JSON.parse(text));
+                                deferred.resolve();
+                            } catch (e) {
+                                q.reject(e);
+                            }
+                        }, (err) => {
+                            q.reject((err));
+                        });
                 });
 
                 this.$q.all(promises).then(() => { q.resolve(result); }, (err) => { q.reject(err); });
@@ -98,33 +107,33 @@ module App.Services {
 
             this.getFileEntryByTypeAndCatAndKey(objectType, null, key)
                 .then(
-                (obj) => { q.resolve(obj); },
-                (err) => {
-                    this.getDirEntry(objectType, null)
-                        .then((dirEntry) => { return this.cordovaFileService.getDirEntries(dirEntry); })
-                        .then(
-                        (dirEntries) => {
+                    (obj) => { q.resolve(obj); },
+                    (err) => {
+                        this.getDirEntry(objectType, null)
+                            .then((dirEntry) => { return this.cordovaFileService.getDirEntries(dirEntry); })
+                            .then(
+                                (dirEntries) => {
 
-                            var promises: Array<ng.IPromise<void>> = [];
-                            var fileEntry: FileEntry = null;
+                                    var promises: Array<ng.IPromise<void>> = [];
+                                    var fileEntry: FileEntry = null;
 
-                            angular.forEach(dirEntries, (dirEntry) => {
+                                    angular.forEach(dirEntries, (dirEntry) => {
 
-                                var deferred = this.$q.defer<void>();
-                                promises.push(deferred.promise);
-                                var cat = dirEntry.name;
+                                        var deferred = this.$q.defer<void>();
+                                        promises.push(deferred.promise);
+                                        var cat = dirEntry.name;
 
-                                this.getFileEntryByTypeAndCatAndKey(objectType, cat, key)
-                                    .then((entry) => { fileEntry = entry; deferred.resolve(); }, (err) => { deferred.resolve(); });
+                                        this.getFileEntryByTypeAndCatAndKey(objectType, cat, key)
+                                            .then((entry) => { fileEntry = entry; deferred.resolve(); }, (err) => { deferred.resolve(); });
 
-                            });
+                                    });
 
-                            this.$q.all(promises).then(() => { q.resolve(fileEntry); });
+                                    this.$q.all(promises).then(() => { q.resolve(fileEntry); });
 
-                        },
-                        (err) => { q.reject(err); });
-                },
-                (err) => { q.reject(err); });
+                                },
+                                (err) => { q.reject(err); });
+                    },
+                    (err) => { q.reject(err); });
 
             return q.promise;
         }
@@ -161,23 +170,23 @@ module App.Services {
 
                 var fileEntryPromise = this.getDirEntry(objectType, category)
                     .then(
-                    (dir) => { return this.cordovaFileService.getFileEntry(dir, key + ".json", true); },
-                    (err) => { q.reject(err); });
+                        (dir) => { return this.cordovaFileService.getFileEntry(dir, key + ".json", true); },
+                        (err) => { q.reject(err); });
 
                 fileEntryPromise
                     .then(
-                    (fileEntry) => {
-                        fileEntry.createWriter(
-                            (writer) => {
-                                writer.onwrite = () => { q.resolve(value); };
-                                var val: any = JSON.stringify(value);
-                                writer.write(val);
-                            },
-                            (err) => { q.reject(err); });
-                    },
-                    (err) => {
-                        q.reject(err);
-                    });
+                        (fileEntry) => {
+                            fileEntry.createWriter(
+                                (writer) => {
+                                    writer.onwrite = () => { q.resolve(value); };
+                                    var val: any = JSON.stringify(value);
+                                    writer.write(val);
+                                },
+                                (err) => { q.reject(err); });
+                        },
+                        (err) => {
+                            q.reject(err);
+                        });
             }
             catch (e) {
                 q.reject(e);
@@ -253,11 +262,11 @@ module App.Services {
             this.getDirEntry(objectType, category)
                 .then((dirEntry) => { return this.cordovaFileService.getFileEntries(dirEntry); })
                 .then(
-                (fileEntries) => {
-                    var fileKeys = _.map(fileEntries, entry => entry.name.substring(0, entry.name.indexOf('.')));
-                    q.resolve(fileKeys);
-                },
-                (err) => { q.reject(err); });
+                    (fileEntries) => {
+                        var fileKeys = _.map(fileEntries, entry => entry.name.substring(0, entry.name.indexOf('.')));
+                        q.resolve(fileKeys);
+                    },
+                    (err) => { q.reject(err); });
 
             return q.promise;
         }

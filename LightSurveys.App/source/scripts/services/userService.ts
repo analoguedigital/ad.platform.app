@@ -46,6 +46,7 @@ module App.Services {
         gender?: number;
         birthdate?: Date;
         address: string;
+        email: string;
         phoneNumber: string;
         isSubscribed: boolean;
         expiryDate?: Date;
@@ -79,7 +80,7 @@ module App.Services {
         current: AppContext;
         currentProfile: IProfile;
         login: (ILoginData: ILoginData) => ng.IPromise<void>;
-        logOut: () => void;
+        logOut: () => ng.IPromise<void>;
         activateProfile: (profile: IProfile) => void;
         getExistingProfiles: () => ng.IPromise<IProfile[]>;
         setCurrentProject: (project: Models.Project) => void;
@@ -89,7 +90,7 @@ module App.Services {
     }
 
     class UserService implements IUserService {
-        static $inject: string[] = ['$q', 'storageService', 'authService', 'httpService', 'gettextCatalog'];
+        static $inject: string[] = ['$q', 'storageService', 'localStorageService', 'authService', 'httpService', 'gettextCatalog'];
 
         private USER_OBJECT_TYPE: string = 'user';
         current: AppContext;
@@ -98,6 +99,7 @@ module App.Services {
         constructor(
             private $q: angular.IQService,
             private storageService: IStorageService,
+            private localStorageService: ng.local.storage.ILocalStorageService,
             private authService: IAuthService,
             private httpService: IHttpService,
             private gettextCatalog: any) {
@@ -128,24 +130,25 @@ module App.Services {
 
 
         login(loginData: ILoginData): angular.IPromise<void> {
-
             var deferred = this.$q.defer<void>();
 
             this.httpService.getAuthenticationToken(loginData)
                 .then((response) => {
-                    // user is authenicated 
+                    // user is authenicated
                     var authenticationData = new AuthData(response.access_token, loginData.email);
                     this.authService.loginUser(authenticationData);
                     this.createProfile(authenticationData)
-                        .then((profile) => { return this.saveProfile(profile); })
                         .then((profile) => {
                             this.activateProfile(profile);
+                            this.saveProfile(profile).then((p) => {
+                                // created profile saved
+                            });
+
                             deferred.resolve();
                         }, (err) => {
                             this.authService.logOutUser();
                             deferred.reject(err);
                         });
-
                 }, (err) => {
                     // user is not authenicated 
                     this.authService.logOutUser();
@@ -197,35 +200,59 @@ module App.Services {
 
         }
 
-
         saveProfile(profile: IProfile): ng.IPromise<IProfile> {
-            return this.storageService.save(null, this.USER_OBJECT_TYPE, profile.userInfo.userId, profile);
+            // instead of storing the user object using storageService, which
+            // uses cordovaFileService on device, use localStorageService.
+            //return this.storageService.deleteByCat(null, this.USER_OBJECT_TYPE, this.current.userId)
+            //    .then(() => {
+            //        return this.storageService.save(null, this.USER_OBJECT_TYPE, profile.userInfo.userId, profile);
+            //    });
+
+            var q = this.$q.defer<IProfile>();
+
+            var entryKey = 'user/' + profile.userInfo.userId;
+            this.localStorageService.set(entryKey, profile);
+
+            q.resolve(profile);
+
+            return q.promise;
         }
 
+        setCurrentProject(project: Models.Project): ng.IPromise<void> {
+            var q = this.$q.defer<void>();
 
-        setCurrentProject(project: Models.Project) {
             this.currentProfile.currentProject = project;
             this.current.project = project;
-            return this.saveProfile(this.currentProfile);
+
+            this.saveProfile(this.currentProfile).then(() => { });
+
+            q.resolve();
+
+            return q.promise;
         }
 
-
-        logOut() {
+        logOut(): ng.IPromise<void> {
             var userService = this;
-            return this.storageService.deleteByCat(null, this.USER_OBJECT_TYPE, this.current.userId)
-                .then(() => {
-                    userService.clearCurrent();
-                    userService.authService.logOutUser();
-                }, function () {
-                    userService.clearCurrent();
-                    userService.authService.logOutUser();
-                });
-        }
+            var q = this.$q.defer<void>();
 
+            // not necessary anymore, since the user object is being stored using localStorageService.
+            //this.storageService.deleteByCat(null, this.USER_OBJECT_TYPE, this.current.userId);
+
+            userService.clearCurrent();
+            userService.authService.logOutUser();
+
+            _.forEach(this.localStorageService.keys(), (key) => {
+                if (_.includes(key, 'user'))
+                    this.localStorageService.remove(key);
+            });
+
+            q.resolve();
+
+            return q.promise;
+        }
 
         activateProfile(profile: IProfile) {
             this.setCurrent(profile);
-            this.authService.loginUser(profile.authenticationData);
 
             var language = profile.userInfo.language;
             if (language && language.length)
@@ -234,9 +261,17 @@ module App.Services {
                 this.gettextCatalog.setCurrentLanguage('en-GB');
         }
 
-
         getExistingProfiles(): ng.IPromise<IProfile[]> {
-            return this.storageService.getAll(null, this.USER_OBJECT_TYPE);
+            //return this.storageService.getAll(null, this.USER_OBJECT_TYPE);
+
+            var q = this.$q.defer<any>();
+
+            var keys = _.filter(this.localStorageService.keys(), key => _.startsWith(key, 'user/'));
+            var storage = this.localStorageService;
+
+            q.resolve(_.map(keys, key => storage.get(key)));
+
+            return q.promise;
         }
 
         changePassword(model: Models.IChangePasswordModel): ng.IPromise<void> {
@@ -244,11 +279,10 @@ module App.Services {
 
             this.httpService.changePassword(model)
                 .then((res: any) => { deferred.resolve(res); },
-                (err) => { deferred.reject(err); });
+                    (err) => { deferred.reject(err); });
 
             return deferred.promise;
         }
-
     }
 
     angular.module('lm.surveys').service('userService', UserService);

@@ -18,10 +18,13 @@ module App.Services {
 
 
         private getMergedKey(objectType: string, category: string, key: string): string {
+            var authData = <AuthData>this.localStorageService.get('authenticationData');
 
             var folder = '';
-            if (objectType)
-                folder = this.authService.authentication.email + '/' + objectType + '/';
+            if (objectType) {
+                //folder = this.authService.authentication.email + '/' + objectType + '/';
+                folder = authData.email + '/' + objectType + '/';
+            }
 
             if (category != null)
                 folder += category + '/';
@@ -152,10 +155,14 @@ module App.Services {
             var q = this.$q.defer<void>();
             var keysPrefix = this.getMergedKey(objectType, null, null);
 
-            angular.forEach(this.localStorageService.keys(), (key: string) => {
-                if (_.startsWith(key, keysPrefix))
+            var keys = this.localStorageService.keys();
+            var typeString = `/${objectType}/`;
+            angular.forEach(keys, (key: string) => {
+                //if (_.startsWith(key, keysPrefix))
+                if(_.includes(key, typeString))
                     this.localStorageService.remove(key);
             });
+
             q.resolve();
 
             return q.promise;

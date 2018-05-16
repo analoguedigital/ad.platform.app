@@ -38,8 +38,7 @@ angular.module('lm.surveys').controller('indexController', ["$scope", "$rootScop
             userService.getExistingProfiles().then(function (profiles) {
                 if (profiles.length) {
                     var profile = profiles[0];
-                    var expiryDate = profile.userInfo.profile.expiryDate;
-                    $scope.expiryDate = expiryDate;
+                    $scope.expiryDate = profile.userInfo.profile.expiryDate;
                 }
             });
         }

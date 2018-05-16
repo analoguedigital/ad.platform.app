@@ -1,7 +1,7 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('menuController', ['$scope', '$rootScope', '$ionicPopup', '$state', '$timeout', 'surveyService', 'userService', 'alertService', 'ngProgress',
-    function ($scope, $rootScope, $ionicPopup, $state, $timeout, surveyService, userService, alertService, ngProgress) {
-
+angular.module('lm.surveys').controller('menuController', ['$scope', '$rootScope', '$ionicPopup', '$state',
+    '$timeout', 'surveyService', 'userService', 'alertService', 'ngProgress', 'storageService', 
+    function ($scope, $rootScope, $ionicPopup, $state, $timeout, surveyService, userService, alertService, ngProgress, storageService) {
         $scope.currentContext = userService.current;
         $scope.downloading = false;
         $scope.uploading = false;
@@ -14,6 +14,7 @@ angular.module('lm.surveys').controller('menuController', ['$scope', '$rootScope
 
         var init = function () {
             $scope.profile = $scope.currentContext.profile;
+
             surveyService.getProjects().then(function (projects) {
                 $scope.numberOfAvailableProjects = projects.length;
             });
@@ -94,10 +95,12 @@ angular.module('lm.surveys').controller('menuController', ['$scope', '$rootScope
         };
 
         $scope.logOut = function () {
-            userService.logOut()
-                .then(function () {
-                    $state.go('login');
-                });
+            surveyService.clearLocalData().then(function () {
+                userService.logOut()
+                    .then(function () {
+                        $state.go('login');
+                    });
+            });
         };
 
         if (userService.currentProfile !== null && userService.currentProfile.lastRefreshTemplate === undefined) {
