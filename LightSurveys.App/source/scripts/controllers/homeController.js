@@ -140,11 +140,13 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
 
         $scope.activate = function () {
             userService.getExistingProfiles().then(function (profiles) {
-                $scope.profile = profiles[0];
-                $scope.userInfo = $scope.profile.userInfo;
+                if (profiles.length) {
+                    $scope.profile = profiles[0];
+                    $scope.userInfo = $scope.profile.userInfo;
 
-                $rootScope.$broadcast('refresh-sidemenu-subscription');
-                $rootScope.$broadcast('update-menu-profile', { profile: $scope.userInfo.profile });
+                    $rootScope.$broadcast('refresh-sidemenu-subscription');
+                    $rootScope.$broadcast('update-menu-profile', { profile: $scope.userInfo.profile });
+                }
             });
 
             if (userService.current.project === undefined) {
