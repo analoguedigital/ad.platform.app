@@ -1,45 +1,9 @@
 ﻿<plist>
-<dict>
+<dict>    
     <key>CFBundleIcons</key>
     <dict>
       <key>CFBundleAlternateIcons</key>
       <dict>
-        <key>art-arrow-right</key>
-        <dict>
-          <key>UIPrerenderedIcon</key>
-          <true/>
-          <key>CFBundleIconFiles</key>
-          <array>
-            <string>art-arrow-right.png</string>
-          </array>
-        </dict>
-        <key>art-calculator</key>
-        <dict>
-          <key>UIPrerenderedIcon</key>
-          <true/>
-          <key>CFBundleIconFiles</key>
-          <array>
-            <string>art-calculator.png</string>
-          </array>
-        </dict>
-        <key>art-camera</key>
-        <dict>
-          <key>UIPrerenderedIcon</key>
-          <true/>
-          <key>CFBundleIconFiles</key>
-          <array>
-            <string>art-camera.png</string>
-          </array>
-        </dict>
-        <key>art-checker</key>
-        <dict>
-          <key>UIPrerenderedIcon</key>
-          <true/>
-          <key>CFBundleIconFiles</key>
-          <array>
-            <string>art-checker.png</string>
-          </array>
-        </dict>
         <key>art-onrecord</key>
         <dict>
           <key>UIPrerenderedIcon</key>
@@ -49,31 +13,175 @@
             <string>art-onrecord.png</string>
           </array>
         </dict>
-        <key>art-paw</key>
+        <key>icon1</key>
         <dict>
           <key>UIPrerenderedIcon</key>
           <true/>
           <key>CFBundleIconFiles</key>
           <array>
-            <string>art-paw.png</string>
+            <string>icon 1.png</string>
           </array>
         </dict>
-        <key>art-signal</key>
+        <key>icon2</key>
         <dict>
           <key>UIPrerenderedIcon</key>
           <true/>
           <key>CFBundleIconFiles</key>
           <array>
-            <string>art-signal.png</string>
+            <string>icon 2.png</string>
           </array>
         </dict>
-        <key>art-train</key>
+            <key>icon3</key>
         <dict>
           <key>UIPrerenderedIcon</key>
           <true/>
           <key>CFBundleIconFiles</key>
           <array>
-            <string>art-train.png</string>
+            <string>icon 3.png</string>
+          </array>
+        </dict>
+        <key>icon4</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 4.png</string>
+          </array>
+        </dict>
+        <key>icon5</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 5.png</string>
+          </array>
+        </dict>
+        <key>icon6</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 6.png</string>
+          </array>
+        </dict>
+        <key>icon7</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 7.png</string>
+          </array>
+        </dict>
+        <key>icon8</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 8.png</string>
+          </array>
+        </dict>
+        <key>icon9</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 9.png</string>
+          </array>
+        </dict>
+        <key>icon10</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 10.png</string>
+          </array>
+        </dict>
+        <key>icon11</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 11.png</string>
+          </array>
+        </dict>
+        <key>icon12</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 12.png</string>
+          </array>
+        </dict>
+        <key>icon13</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 13.png</string>
+          </array>
+        </dict>
+        <key>icon14</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 14.png</string>
+          </array>
+        </dict>
+        <key>icon15</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 15.png</string>
+          </array>
+        </dict>
+        <key>icon16</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 16.png</string>
+          </array>
+        </dict>
+        <key>icon17</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 17.png</string>
+          </array>
+        </dict>
+        <key>icon18</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 18.png</string>
+          </array>
+        </dict>
+        <key>icon19</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 19.png</string>
           </array>
         </dict>
       </dict>
@@ -82,42 +190,6 @@
     <dict>
       <key>CFBundleAlternateIcons</key>
       <dict>
-        <key>art-arrow-right</key>
-        <dict>
-          <key>UIPrerenderedIcon</key>
-          <true/>
-          <key>CFBundleIconFiles</key>
-          <array>
-            <string>art-arrow-right.png</string>
-          </array>
-        </dict>
-        <key>art-calculator</key>
-        <dict>
-          <key>UIPrerenderedIcon</key>
-          <true/>
-          <key>CFBundleIconFiles</key>
-          <array>
-            <string>art-calculator.png</string>
-          </array>
-        </dict>
-        <key>art-camera</key>
-        <dict>
-          <key>UIPrerenderedIcon</key>
-          <true/>
-          <key>CFBundleIconFiles</key>
-          <array>
-            <string>art-camera.png</string>
-          </array>
-        </dict>
-        <key>art-checker</key>
-        <dict>
-          <key>UIPrerenderedIcon</key>
-          <true/>
-          <key>CFBundleIconFiles</key>
-          <array>
-            <string>art-checker.png</string>
-          </array>
-        </dict>
         <key>art-onrecord</key>
         <dict>
           <key>UIPrerenderedIcon</key>
@@ -127,31 +199,175 @@
             <string>art-onrecord.png</string>
           </array>
         </dict>
-        <key>art-paw</key>
+        <key>icon1</key>
         <dict>
           <key>UIPrerenderedIcon</key>
           <true/>
           <key>CFBundleIconFiles</key>
           <array>
-            <string>art-paw.png</string>
+            <string>icon 1.png</string>
           </array>
         </dict>
-        <key>art-signal</key>
+        <key>icon2</key>
         <dict>
           <key>UIPrerenderedIcon</key>
           <true/>
           <key>CFBundleIconFiles</key>
           <array>
-            <string>art-signal.png</string>
+            <string>icon 2.png</string>
           </array>
         </dict>
-        <key>art-train</key>
+            <key>icon3</key>
         <dict>
           <key>UIPrerenderedIcon</key>
           <true/>
           <key>CFBundleIconFiles</key>
           <array>
-            <string>art-train.png</string>
+            <string>icon 3.png</string>
+          </array>
+        </dict>
+        <key>icon4</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 4.png</string>
+          </array>
+        </dict>
+        <key>icon5</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 5.png</string>
+          </array>
+        </dict>
+        <key>icon6</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 6.png</string>
+          </array>
+        </dict>
+        <key>icon7</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 7.png</string>
+          </array>
+        </dict>
+        <key>icon8</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 8.png</string>
+          </array>
+        </dict>
+        <key>icon9</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 9.png</string>
+          </array>
+        </dict>
+        <key>icon10</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 10.png</string>
+          </array>
+        </dict>
+        <key>icon11</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 11.png</string>
+          </array>
+        </dict>
+        <key>icon12</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 12.png</string>
+          </array>
+        </dict>
+        <key>icon13</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 13.png</string>
+          </array>
+        </dict>
+        <key>icon14</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 14.png</string>
+          </array>
+        </dict>
+        <key>icon15</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 15.png</string>
+          </array>
+        </dict>
+        <key>icon16</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 16.png</string>
+          </array>
+        </dict>
+        <key>icon17</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 17.png</string>
+          </array>
+        </dict>
+        <key>icon18</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 18.png</string>
+          </array>
+        </dict>
+        <key>icon19</key>
+        <dict>
+          <key>UIPrerenderedIcon</key>
+          <true/>
+          <key>CFBundleIconFiles</key>
+          <array>
+            <string>icon 19.png</string>
           </array>
         </dict>
       </dict>

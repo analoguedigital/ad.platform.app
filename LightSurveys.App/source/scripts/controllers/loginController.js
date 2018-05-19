@@ -25,52 +25,53 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
         $scope.login = function () {
             if (!$scope.loginData.email) {
                 alertService.show("Please enter your email");
-            }
-            else if (!$scope.loginData.password) {
+            } else if (!$scope.loginData.password) {
                 alertService.show("Please enter your password");
-            }
-            else {
+            } else {
                 ngProgress.start();
                 $scope.loginWorking = true;
 
                 userService.login($scope.loginData)
                     .then(function () {
-                        $scope.loginValidated = true;
+                            $scope.loginValidated = true;
 
-                        _.forEach(localStorageService.keys(), function (key) {
-                            if (_.includes(key, 'user')) {
-                                localStorageService.remove(key);
-                            }
+                            if (navigator.vibrate)
+                                navigator.vibrate(1000);
+
+                            _.forEach(localStorageService.keys(), function (key) {
+                                if (_.includes(key, 'user')) {
+                                    localStorageService.remove(key);
+                                }
+                            });
+
+                            surveyService.clearLocalData().then(function () {
+                                surveyService.refreshData()
+                                    .then(function () {
+                                            ngProgress.complete();
+                                            $scope.loginWorking = false;
+                                            $ionicHistory.clearHistory();
+
+                                            $rootScope.$broadcast('refresh-sidemenu-subscription');
+
+                                            var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
+                                            if (firstLogin === null || firstLogin === undefined) {
+                                                localStorageService.set(FIRST_TIME_LOGIN_KEY, true);
+                                                $state.go('makingRecords');
+                                            } else {
+                                                $state.go('projects');
+                                            }
+                                        },
+                                        function (err) {
+                                            ngProgress.complete();
+                                            alertService.show(err);
+                                        });
+                            });
+                        },
+                        function (err) {
+                            ngProgress.complete();
+                            $scope.loginWorking = false;
+                            alertService.show(err);
                         });
-
-                        surveyService.clearLocalData().then(function () {
-                            surveyService.refreshData()
-                                .then(function () {
-                                    ngProgress.complete();
-                                    $scope.loginWorking = false;
-                                    $ionicHistory.clearHistory();
-
-                                    $rootScope.$broadcast('refresh-sidemenu-subscription');
-
-                                    var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
-                                    if (firstLogin === null || firstLogin === undefined) {
-                                        localStorageService.set(FIRST_TIME_LOGIN_KEY, true);
-                                        $state.go('makingRecords');
-                                    } else {
-                                        $state.go('projects');
-                                    }
-                                },
-                                function (err) {
-                                    ngProgress.complete();
-                                    alertService.show(err);
-                                });
-                        });
-                    },
-                    function (err) {
-                        ngProgress.complete();
-                        $scope.loginWorking = false;
-                        alertService.show(err);
-                    });
             }
         };
 
@@ -100,6 +101,10 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                     toastr.clear();
                     $timeout(function () {
                         $scope.loginValidated = true;
+
+                        if (navigator.vibrate)
+                            navigator.vibrate(1000);
+
                         passcodeModalService.hideDialog();
                         $scope.activateProfile($scope.profile);
                     }, 250);
@@ -141,6 +146,10 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                                             fingerprintService.verify().then(function (result) {
                                                 if (result.success === true) {
                                                     $scope.loginValidated = true;
+
+                                                    if (navigator.vibrate)
+                                                        navigator.vibrate(1000);
+
                                                     $scope.activateProfile($scope.profile);
                                                 } else {
                                                     userService.logOut();
@@ -165,4 +174,5 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
         };
         $scope.activate();
 
-    }]);
+    }
+]);

@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "cordova-android": "6.3.0",
-    "cordova-ios": "4.5.4",
+    "cordova-ios": "^4.5.4",
     "cordova-plugin-add-swift-support": "^1.7.1",
     "cordova-plugin-android-fingerprint-auth": "^1.4.1",
     "cordova-plugin-app-icon-changer": "^1.0.0",
@@ -37,6 +37,7 @@
     "cordova-plugin-splashscreen": "^4.1.0",
     "cordova-plugin-statusbar": "^2.4.1",
     "cordova-plugin-touch-id": "^3.3.1",
+    "cordova-plugin-vibration": "^3.1.0",
     "cordova-plugin-whitelist": "^1.3.3",
     "es6-promise-plugin": "^4.2.2"
   },
@@ -86,7 +87,8 @@
       "cordova-plugin-filechooser": {},
       "cordova-plugin-filepicker": {},
       "cordova-plugin-media-playback": {},
-      "cordova-plugin-android-fingerprint-auth": {}
+      "cordova-plugin-android-fingerprint-auth": {},
+      "cordova-plugin-vibration": {}
     }
   }
 }
