@@ -1,19 +1,20 @@
 ﻿<ion-view title="Need Help?">
     <ion-content class="content padding" ng-cloak>
-        <div class="card">
+        <div class="card" style="margin-top: 0">
             <div class="item item-text-wrap">
-                <p>Contact us at <strong>admin@analogue.digital</strong>.</p>
-                <p>Visit our website at <strong>https://www.onrecord.tech</strong>.</p>
+                <p>Find advice and guidance on our website at <a href="https://onrecord.tech" target="_blank">https://onrecord.tech</a>.</p>
+                <p>See our YouTube Channel - <a href="https://www.youtube.com/channel/UCbySt38csVzV1oI5k4PoSAw" target="_blank">OnRecord</a> - for more.</p>
+                <p>We are happy to offer individual guidance at <a href="mailto:admin@analogue.digital">admin@analogue.digital</a>.</p>
             </div>
         </div>
 
         <div ng-if="!feedbackSent">
             <div class="list">
                 <div class="item item-text-wrap" ng-disabled="feedbackWorking">
-                    <h3>Your Comment</h3>
+                    <h3>We also welcome feedback in the box below:</h3>
                     <br />
                     <label class="item item-input">
-                        <textarea placeholder="Enter your comment and tap send" rows="10" ng-model="model.comment" ng-disabled="feedbackWorking"></textarea>
+                        <textarea placeholder="Enter your comment and tap send" rows="2" ng-model="model.comment" ng-disabled="feedbackWorking"></textarea>
                     </label>
                 </div>
                 <br />

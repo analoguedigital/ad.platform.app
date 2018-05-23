@@ -254,7 +254,7 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
         color: inherit;
     }
 
-    & h3, h4 {
+    & h3, h4, h5 {
         color: $light;
     }
 
@@ -572,4 +572,81 @@ progress[value]::-moz-progress-bar {
     border-radius: 2px;
     display: block;
     text-indent: -9999px;
+}
+
+/* iPad Pro in landscape */
+@media only screen and (min-device-width: 1024px) and (max-device-width: 1366px) and (orientation: landscape) {
+    .app-icons .button {
+        min-height: 320px !important;
+    }
+}
+
+/* iPad in landscape */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+    .app-icons .button {
+        min-height: 240px !important;
+    }
+}
+
+/* iPad in portrait */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation: portrait) {
+    .app-icons .button {
+        min-height: 175px !important;
+    }
+}
+
+/* iPad Pro in portrait */
+@media only screen and (min-device-width: 1024px) and (max-device-width: 1366px) and (orientation: portrait) {
+    .app-icons .button {
+        min-height: 240px !important;
+    }
+}
+
+/* iPhone X in portrait */
+@media only screen and (min-device-width : 375px) and (max-device-width : 812px) and (orientation: portrait) and (-webkit-device-pixel-ratio : 3) {
+    .app-icons .button {
+        min-height: 80px !important;
+    }
+}
+
+/* iPhone X in landscape */
+@media only screen and (min-device-width: 812px) and (max-device-width: 812px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
+    .app-icons .button {
+        min-height: 190px !important;
+    }
+}
+
+/* iPhone 6,7,8 Plus in portrait */
+@media only screen and (min-device-width : 414px) and (max-device-height : 736px) and (orientation : portrait) {
+    .app-icons .button {
+        min-height: 90px !important;
+    }
+}
+
+/* iPhone 6,7,8 in portrait */
+@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (orientation: portrait) {
+    .app-icons .button {
+        min-height: 80px !important;
+    }
+}
+
+/* iPhone 6,7,8 Plus in landscape */
+@media only screen and (min-device-width : 414px) and (max-device-width : 736px) and (orientation : landscape) {
+    .app-icons .button {
+        min-height: 170px !important;
+    }
+}
+
+/* iPhone 6,7,8 in landscape */
+@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (orientation: landscape) {
+    .app-icons .button {
+        min-height: 148.5px !important;
+    }
+}
+
+/* iPhone 5 & 5S in landscape */
+@media only screen and (min-device-width : 320px) and (max-device-width : 568px) and (orientation : landscape) {
+    .app-icons .button {
+        min-height: 130px !important;
+    }
 }

@@ -17,7 +17,7 @@
     "typescript": "2.2.1"
   },
   "dependencies": {
-    "cordova-android": "6.3.0",
+    "cordova-android": "^6.3.0",
     "cordova-ios": "^4.5.4",
     "cordova-plugin-add-swift-support": "^1.7.1",
     "cordova-plugin-android-fingerprint-auth": "^1.4.1",
@@ -43,10 +43,6 @@
     "npm": "^6.0.1"
   },
   "cordova": {
-    "platforms": [
-      "android",
-      "ios"
-    ],
     "plugins": {
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-geolocation": {
@@ -90,6 +86,10 @@
       "cordova-plugin-media-playback": {},
       "cordova-plugin-android-fingerprint-auth": {},
       "cordova-plugin-vibration": {}
-    }
+    },
+    "platforms": [
+      "android",
+      "ios"
+    ]
   }
 }
