@@ -17,7 +17,7 @@
     "typescript": "2.2.1"
   },
   "dependencies": {
-    "cordova-android": "^6.3.0",
+    "cordova-android": "6.3.0",
     "cordova-ios": "^4.5.4",
     "cordova-plugin-add-swift-support": "^1.7.1",
     "cordova-plugin-android-fingerprint-auth": "^1.4.1",
@@ -88,8 +88,8 @@
       "cordova-plugin-vibration": {}
     },
     "platforms": [
-      "android",
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }
