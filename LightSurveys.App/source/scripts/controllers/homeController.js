@@ -88,8 +88,6 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                     $scope.downloading = false;
                     ngProgress.complete();
 
-                    $rootScope.$broadcast('refresh-sidemenu-subscription');
-
                     surveyService.uploadAllSurveys();
                     $scope.syncUserRecords();
                 }, function (err) {
@@ -115,7 +113,6 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                                         _.forEach(data, function (survey, index) {
                                             _.forEach(survey.formValues, function (fv) {
                                                 _.forEach(fv.attachments, function (attachment) {
-                                                    //attachment.fileUri = baseUrl + attachment.url;
                                                     attachment.fileUri = undefined;
                                                     attachment.mediaType = _.toLower(attachment.typeString);
                                                     delete attachment.typeString;
@@ -144,7 +141,6 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                     $scope.profile = profiles[0];
                     $scope.userInfo = $scope.profile.userInfo;
 
-                    $rootScope.$broadcast('refresh-sidemenu-subscription');
                     $rootScope.$broadcast('update-menu-profile', { profile: $scope.userInfo.profile });
                 }
             });

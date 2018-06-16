@@ -17,7 +17,7 @@
     "typescript": "2.2.1"
   },
   "dependencies": {
-    "cordova-android": "6.3.0",
+    "cordova-android": "^6.3.0",
     "cordova-ios": "^4.5.4",
     "cordova-plugin-add-swift-support": "^1.7.1",
     "cordova-plugin-android-fingerprint-auth": "^1.4.1",
@@ -31,6 +31,8 @@
     "cordova-plugin-filechooser": "^1.0.1",
     "cordova-plugin-filepicker": "^1.1.4",
     "cordova-plugin-geolocation": "^2.4.3",
+    "cordova-plugin-inappbrowser": "^3.0.0",
+    "cordova-plugin-inapppurchase": "^1.1.0",
     "cordova-plugin-ios-camera-permissions": "^1.2.0",
     "cordova-plugin-media-capture": "^2.0.0",
     "cordova-plugin-media-playback": "^1.0.2-dev5",
@@ -85,7 +87,9 @@
       "cordova-plugin-filepicker": {},
       "cordova-plugin-media-playback": {},
       "cordova-plugin-android-fingerprint-auth": {},
-      "cordova-plugin-vibration": {}
+      "cordova-plugin-vibration": {},
+      "cordova-plugin-inapppurchase": {},
+      "cordova-plugin-inappbrowser": {}
     },
     "platforms": [
       "ios",

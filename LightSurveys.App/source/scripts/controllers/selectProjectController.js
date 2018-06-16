@@ -36,7 +36,6 @@ function ($scope, $rootScope, $ionicHistory, $state, userService, surveyService,
                         $scope.profile = profiles[0];
                         $scope.userInfo = $scope.profile.userInfo;
 
-                        $rootScope.$broadcast('refresh-sidemenu-subscription');
                         $rootScope.$broadcast('update-menu-profile', { profile: $scope.userInfo.profile });
                     }
                 });

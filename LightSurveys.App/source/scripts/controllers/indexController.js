@@ -29,23 +29,8 @@ angular.module('lm.surveys').controller('indexController', ["$scope", "$rootScop
             if (!$scope.authentication.isAuth)
                 $location.path('/login');
             else
-                $location.path('/home');
-            
-            $scope.refreshSubscriptionWarning();
+                $location.path('/home');            
         }
-
-        $scope.refreshSubscriptionWarning = function () {
-            userService.getExistingProfiles().then(function (profiles) {
-                if (profiles.length) {
-                    var profile = profiles[0];
-                    $scope.expiryDate = profile.userInfo.profile.expiryDate;
-                }
-            });
-        }
-
-        $rootScope.$on('refresh-sidemenu-subscription', function () {
-            $scope.refreshSubscriptionWarning();
-        });
 
         $scope.activate();
 

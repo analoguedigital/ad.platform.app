@@ -51,8 +51,6 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                                             $scope.loginWorking = false;
                                             $ionicHistory.clearHistory();
 
-                                            $rootScope.$broadcast('refresh-sidemenu-subscription');
-
                                             var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
                                             if (firstLogin === null || firstLogin === undefined) {
                                                 localStorageService.set(FIRST_TIME_LOGIN_KEY, true);
@@ -172,7 +170,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                     }
                 });
         };
-        $scope.activate();
 
+        $scope.activate();
     }
 ]);

@@ -34,9 +34,13 @@
                     <i class="icon ion-ios-cog-outline"></i>
                     <span translate> Settings</span>
                 </ion-item>
-                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="subscriptions" menu-close="">
+                <!-- <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="subscriptions" menu-close="">
                     <i class="icon ion-card"></i>
                     <span translate> Subscriptions</span>
+                </ion-item> -->
+                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="connectToOrganization" menu-close="">
+                    <i class="icon ion-cube"></i>
+                    <span translate>Connect to an organization</span>
                 </ion-item>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="feedback" menu-close="">
                     <i class="icon ion-help-buoy"></i>
@@ -50,12 +54,6 @@
                           style="padding: 15px 20px">
                     <i class="icon ion-log-out"></i>
                     <span translate> Log out</span>
-                </ion-item>
-            </ion-list>
-
-            <ion-list class="sidemenu-list" ng-if="!expiryDate">
-                <ion-item class="item item-assertive item-icon-{{::getLeft()}}" menu-close"" style="padding: 15px 20px">
-                    <i class="icon ion-android-warning assertive"></i> <span translate class="assertive"> You are not subscribed</span>
                 </ion-item>
             </ion-list>
         </div>

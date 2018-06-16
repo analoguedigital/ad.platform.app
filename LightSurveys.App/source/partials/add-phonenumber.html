@@ -6,56 +6,58 @@
         <button class="button button-icon button-clear ion-ios-close-outline" ng-click="closeAddPhoneNumberModal()"></button>
     </ion-header-bar>
     <ion-content class="content add-phonenumber-screen">
-        <div class="row responsive-sm">
-            <div class="change-pass-errors">
-                <p ng-repeat="err in errors track by $index">{{err}}</p>
+        <div class="row responsive-lg">
+            <div class="col">
+                <div class="change-pass-errors">
+                    <p ng-repeat="err in errors track by $index">{{err}}</p>
+                </div>
+    
+                <form name="addPhoneForm" novalidate="novalidate" class="col col-50 col-offset-25" ng-show="!phoneNumberAdded">
+                    <div class="list list-inset">
+                        <label class="item item-icon-left" ng-disabled="changePwdWorking">
+                            <i class="icon ion-ios-locked-outline"></i>
+                            <span class="item-input">
+                                <input name="phoneNumber" ng-model="addPhoneNumberModel.phoneNumber" placeholder="e.g. +44xxx-xxx-xxxx without dashes" type="text" required autocomplete="off" ng-disabled="addPhoneNumberWorking">
+                            </span>
+                        </label>
+                        <div class="">
+                            <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="addPhoneNumber()" ng-disabled="addPhoneNumberWorking">
+                                <span ng-if="!addPhoneNumberWorking && !addPhoneNumberModel.confirmMode">
+                                    <i class="icon ion-edit"></i> Add phone number
+                                </span>
+                                <span ng-if="addPhoneNumberWorking && !addPhoneNumberModel.confirmMode">
+                                    <i class="fa fa-spinner fa-pulse fa-fw"></i> Adding your phone
+                                </span>
+    
+                                <span ng-if="addPhoneNumberModel.confirmMode">
+                                    <i class="icon ion-paper-airplane"></i> Send security code
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+    
+                <form name="verifyPhoneForm" novalidate="novalidate" class="col col-50 col-offset-25" ng-show="phoneNumberAdded">
+                    <div class="list list-inset">
+                        <label class="item item-icon-left" ng-disabled="verifyPhoneNumberWorking">
+                            <i class="icon ion-ios-locked-outline"></i>
+                            <span class="item-input">
+                                <input name="securityCode" ng-model="addPhoneNumberModel.securityCode" placeholder="6 digit security code" type="number" required autocomplete="off" ng-disabled="verifyPhoneNumberWorking">
+                            </span>
+                        </label>
+                        <div class="">
+                            <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="verifyPhoneNumber()" ng-disabled="verifyPhoneNumberWorking">
+                                <span ng-if="!verifyPhoneNumberWorking">
+                                    <i class="icon ion-edit"></i> Verify phone number
+                                </span>
+                                <span ng-if="verifyPhoneNumberWorking">
+                                    <i class="fa fa-spinner fa-pulse fa-fw"></i> Verifying your phone
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-
-            <form name="addPhoneForm" novalidate="novalidate" class="col col-50 col-offset-25" ng-show="!phoneNumberAdded">
-                <div class="list list-inset">
-                    <label class="item item-icon-left" ng-disabled="changePwdWorking">
-                        <i class="icon ion-ios-locked-outline"></i>
-                        <span class="item-input">
-                            <input name="phoneNumber" ng-model="addPhoneNumberModel.phoneNumber" placeholder="e.g. +44xxx-xxx-xxxx without dashes" type="text" required autocomplete="off" ng-disabled="addPhoneNumberWorking">
-                        </span>
-                    </label>
-                    <div class="">
-                        <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="addPhoneNumber()" ng-disabled="addPhoneNumberWorking">
-                            <span ng-if="!addPhoneNumberWorking && !addPhoneNumberModel.confirmMode">
-                                <i class="icon ion-edit"></i> Add phone number
-                            </span>
-                            <span ng-if="addPhoneNumberWorking && !addPhoneNumberModel.confirmMode">
-                                <i class="fa fa-spinner fa-pulse fa-fw"></i> Adding your phone
-                            </span>
-
-                            <span ng-if="addPhoneNumberModel.confirmMode">
-                                <i class="icon ion-paper-airplane"></i> Send security code
-                            </span>
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-            <form name="verifyPhoneForm" novalidate="novalidate" class="col col-50 col-offset-25" ng-show="phoneNumberAdded">
-                <div class="list list-inset">
-                    <label class="item item-icon-left" ng-disabled="verifyPhoneNumberWorking">
-                        <i class="icon ion-ios-locked-outline"></i>
-                        <span class="item-input">
-                            <input name="securityCode" ng-model="addPhoneNumberModel.securityCode" placeholder="6 digit security code" type="number" required autocomplete="off" ng-disabled="verifyPhoneNumberWorking">
-                        </span>
-                    </label>
-                    <div class="">
-                        <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="verifyPhoneNumber()" ng-disabled="verifyPhoneNumberWorking">
-                            <span ng-if="!verifyPhoneNumberWorking">
-                                <i class="icon ion-edit"></i> Verify phone number
-                            </span>
-                            <span ng-if="verifyPhoneNumberWorking">
-                                <i class="fa fa-spinner fa-pulse fa-fw"></i> Verifying your phone
-                            </span>
-                        </button>
-                    </div>
-                </div>
-            </form>
         </div>
     </ion-content>
 </ion-modal-view>

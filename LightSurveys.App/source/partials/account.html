@@ -1,58 +1,60 @@
 ﻿<ion-view title="My Account" id="accountPage">
     <ion-content class="content padding account" ng-cloak>
         <ion-refresher pulling-text="Pull to refresh account information" on-refresh="doRefresh()"></ion-refresher>
-        <div class="row responsive-sm">
-            <form name="registerForm" novalidate="novalidate" class="col col-50 col-offset-25">
-                <div class="list list-inset" style="margin-top:0">
-                    <label class="item item-icon-left">
-                        <i class="icon ion-person"></i>
-                        <div class="item-input">
-                            <input name="firstName" type="text" ng-model="model.firstName" placeholder="Name (required)" required autofocus>
+        <div class="row responsive-lg">
+            <div class="col" style="margin-bottom: 0">
+                <form name="registerForm" novalidate="novalidate" class="col col-50 col-offset-25">
+                    <div class="list list-inset" style="margin-top:0">
+                        <label class="item item-icon-left">
+                            <i class="icon ion-person"></i>
+                            <div class="item-input">
+                                <input name="firstName" type="text" ng-model="model.firstName" placeholder="Name (required)" required autofocus>
+                            </div>
+                        </label>
+                        <label class="item item-icon-left">
+                            <i class="icon ion-person-stalker"></i>
+                            <div class="item-input">
+                                <input name="surname" type="text" ng-model="model.surname" placeholder="Surname (required)" required autofocus>
+                            </div>
+                        </label>
+                        <label class="item item-icon-left">
+                            <i class="icon ion-transgender"></i>
+                            <div class="item-input item-select">
+                                <div class="input-label">Gender</div>
+                                <select name="gender" ng-model="model.gender" ng-options="obj.value as obj.text for obj in genders"></select>
+                            </div>
+                        </label>
+                        <label class="item item-icon-left">
+                            <i class="icon ion-ios-calendar-outline"></i>
+                            <div class="item-input">
+                                <input name="birthdate" ng-model="model.birthdate" placeholder="Birthdate" type="date" required>
+                            </div>
+                        </label>
+                        <label class="item item-icon-left">
+                            <i class="icon ion-ios-home-outline"></i>
+                            <div class="item-input">
+                                <textarea name="address" ng-model="model.address" placeholder="Address" rows="2" required></textarea>
+                            </div>
+                        </label>
+                        <label class="item item-icon-left" ng-class="{ 'disabled': model.phoneNumberConfirmed }">
+                            <i class="icon ion-ios-telephone-outline"></i>
+                            <div class="item-input">
+                                <input type="text" name="phone" placeholder="Phone number" ng-model="model.phoneNumber" ng-disabled="model.phoneNumberConfirmed">
+                            </div>
+                        </label>
+                        <div class="">
+                            <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="saveChanges()" ng-disabled="requestWorking">
+                                <span ng-if="!requestWorking">
+                                    <i class="icon ion-edit"></i> Save changes
+                                </span>
+                                <span ng-if="requestWorking">
+                                    <i class="fa fa-spinner fa-pulse fa-fw"></i> Saving changes
+                                </span>
+                            </button>
                         </div>
-                    </label>
-                    <label class="item item-icon-left">
-                        <i class="icon ion-person-stalker"></i>
-                        <div class="item-input">
-                            <input name="surname" type="text" ng-model="model.surname" placeholder="Surname (required)" required autofocus>
-                        </div>
-                    </label>
-                    <label class="item item-icon-left">
-                        <i class="icon ion-transgender"></i>
-                        <div class="item-input item-select">
-                            <div class="input-label">Gender</div>
-                            <select name="gender" ng-model="model.gender" ng-options="obj.value as obj.text for obj in genders"></select>
-                        </div>
-                    </label>
-                    <label class="item item-icon-left">
-                        <i class="icon ion-ios-calendar-outline"></i>
-                        <div class="item-input">
-                            <input name="birthdate" ng-model="model.birthdate" placeholder="Birthdate" type="date" required>
-                        </div>
-                    </label>
-                    <label class="item item-icon-left">
-                        <i class="icon ion-ios-home-outline"></i>
-                        <div class="item-input">
-                            <textarea name="address" ng-model="model.address" placeholder="Address" rows="2" required></textarea>
-                        </div>
-                    </label>
-                    <label class="item item-icon-left" ng-class="{ 'disabled': model.phoneNumberConfirmed }">
-                        <i class="icon ion-ios-telephone-outline"></i>
-                        <div class="item-input">
-                            <input type="text" name="phone" placeholder="Phone number" ng-model="model.phoneNumber" ng-disabled="model.phoneNumberConfirmed">
-                        </div>
-                    </label>
-                    <div class="">
-                        <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="saveChanges()" ng-disabled="requestWorking">
-                            <span ng-if="!requestWorking">
-                                <i class="icon ion-edit"></i> Save changes
-                            </span>
-                            <span ng-if="requestWorking">
-                                <i class="fa fa-spinner fa-pulse fa-fw"></i> Saving changes
-                            </span>
-                        </button>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </ion-content>
 </ion-view>

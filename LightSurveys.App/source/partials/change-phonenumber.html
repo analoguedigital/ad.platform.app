@@ -5,52 +5,54 @@
         <button class="button button-icon button-clear ion-ios-close-outline" ng-click="closeChangePhoneNumberModal()"></button>
     </ion-header-bar>
     <ion-content class="content add-phonenumber-screen">
-        <div class="row responsive-sm">
-            <div class="change-pass-errors">
-                <p ng-repeat="err in errors track by $index">{{err}}</p>
+        <div class="row responsive-lg">
+            <div class="col">
+                <div class="change-pass-errors">
+                    <p ng-repeat="err in errors track by $index">{{err}}</p>
+                </div>
+    
+                <form name="changePhoneForm" novalidate="novalidate" class="col col-50 col-offset-25" ng-show="!changePhoneNumberModel.phoneNumberAdded">
+                    <div class="list list-inset">
+                        <label class="item item-icon-left" ng-disabled="changePhoneNumberWorking">
+                            <i class="icon ion-ios-locked-outline"></i>
+                            <span class="item-input">
+                                <input name="phoneNumber" ng-model="changePhoneNumberModel.phoneNumber" placeholder="e.g. +44xxx-xxx-xxxx without dashes" type="text" required autocomplete="off" ng-disabled="changePhoneNumberWorking">
+                            </span>
+                        </label>
+                        <div class="">
+                            <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="changePhoneNumber()" ng-disabled="changePhoneNumberWorking">
+                                <span ng-if="!changePhoneNumberWorking">
+                                    <i class="icon ion-edit"></i> Change phone number
+                                </span>
+                                <span ng-if="changePhoneNumberWorking">
+                                    <i class="fa fa-spinner fa-pulse fa-fw"></i> Changing your phone number
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+    
+                <form name="verifyChangePhoneForm" novalidate="novalidate" class="col col-50 col-offset-25" ng-show="changePhoneNumberModel.phoneNumberAdded">
+                    <div class="list list-inset">
+                        <label class="item item-icon-left" ng-disabled="verifyChangePhoneWorking">
+                            <i class="icon ion-ios-locked-outline"></i>
+                            <span class="item-input">
+                                <input name="securityCode" ng-model="changePhoneNumberModel.securityCode" placeholder="6 digit security code" type="number" required autocomplete="off" ng-disabled="verifyChangePhoneWorking">
+                            </span>
+                        </label>
+                        <div class="">
+                            <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="verifyChangedNumber()" ng-disabled="verifyChangePhoneWorking">
+                                <span ng-if="!verifyChangePhoneWorking">
+                                    <i class="icon ion-edit"></i> Verify phone number
+                                </span>
+                                <span ng-if="verifyChangePhoneWorking">
+                                    <i class="fa fa-spinner fa-pulse fa-fw"></i> Verifying your phone
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-
-            <form name="changePhoneForm" novalidate="novalidate" class="col col-50 col-offset-25" ng-show="!changePhoneNumberModel.phoneNumberAdded">
-                <div class="list list-inset">
-                    <label class="item item-icon-left" ng-disabled="changePhoneNumberWorking">
-                        <i class="icon ion-ios-locked-outline"></i>
-                        <span class="item-input">
-                            <input name="phoneNumber" ng-model="changePhoneNumberModel.phoneNumber" placeholder="e.g. +44xxx-xxx-xxxx without dashes" type="text" required autocomplete="off" ng-disabled="changePhoneNumberWorking">
-                        </span>
-                    </label>
-                    <div class="">
-                        <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="changePhoneNumber()" ng-disabled="changePhoneNumberWorking">
-                            <span ng-if="!changePhoneNumberWorking">
-                                <i class="icon ion-edit"></i> Change phone number
-                            </span>
-                            <span ng-if="changePhoneNumberWorking">
-                                <i class="fa fa-spinner fa-pulse fa-fw"></i> Changing your phone number
-                            </span>
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-            <form name="verifyChangePhoneForm" novalidate="novalidate" class="col col-50 col-offset-25" ng-show="changePhoneNumberModel.phoneNumberAdded">
-                <div class="list list-inset">
-                    <label class="item item-icon-left" ng-disabled="verifyChangePhoneWorking">
-                        <i class="icon ion-ios-locked-outline"></i>
-                        <span class="item-input">
-                            <input name="securityCode" ng-model="changePhoneNumberModel.securityCode" placeholder="6 digit security code" type="number" required autocomplete="off" ng-disabled="verifyChangePhoneWorking">
-                        </span>
-                    </label>
-                    <div class="">
-                        <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="verifyChangedNumber()" ng-disabled="verifyChangePhoneWorking">
-                            <span ng-if="!verifyChangePhoneWorking">
-                                <i class="icon ion-edit"></i> Verify phone number
-                            </span>
-                            <span ng-if="verifyChangePhoneWorking">
-                                <i class="fa fa-spinner fa-pulse fa-fw"></i> Verifying your phone
-                            </span>
-                        </button>
-                    </div>
-                </div>
-            </form>
         </div>
     </ion-content>
 </ion-modal-view>

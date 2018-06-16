@@ -1,11 +1,11 @@
 ﻿<ion-view view-title="Create account" class="register" cache-view="false">
     <ion-header-bar class="bar-positive bar-stable with-button">
-        <button class="button button-icon button-clear ion-android-arrow-{{::getBack()}}" ui-sref="login" nav-transition="none"></button>
+        <button class="button button-icon button-clear ion-android-arrow-{{::getBack()}}" ui-sref="login" nav-transition="none" style="margin-top: 0"></button>
         <h1 class="title" translate>Create account</h1>
     </ion-header-bar>
     <ion-content class="content has-header has-footer register" ng-cloak>
-        <div>
-            <div class="row responsive-sm">
+        <div class="row responsive-lg">
+            <div class="col col-50 col-offset-25">
                 <form name="registerForm" novalidate="novalidate" class="col col-50 col-offset-25">
                     <div class="list list-inset">
                         <label class="item item-icon-left">
@@ -63,21 +63,21 @@
                                 <input name="phone" ng-model="registerData.phone" placeholder="Phone number (optional)" type="text">
                             </div>
                         </label>
-
+    
                         <label class="item item-checkbox terms-checkbox">
                             <div class="checkbox">
                                 <input type="checkbox" ng-model="model.termsAgreed" class="terms-checkbox-input">
                             </div>
-                            I agree to usage terms
+                            I agree to usage conditions
                         </label>
-                        <button class="button button-full button-energized button-small button-outline" ng-click="openTermsModal()">Read Terms &amp; Conditions</button>
-
+                        <button class="button button-full button-energized button-small button-outline" ng-click="openTermsModal()">Read Conditions of Use</button>
+    
                         <div class="">
                             <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="register()">
                                 Submit
                             </button>
                         </div>
-
+    
                     </div>
                 </form>
             </div>

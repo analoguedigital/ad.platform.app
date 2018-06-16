@@ -108,11 +108,23 @@
                 controller: "settingsController",
                 templateUrl: "partials/settings.html"
             })
-            .state('subscriptions', {
+            // .state('subscriptions', {
+            //     parent: 'menu',
+            //     url: '/subscriptions',
+            //     controller: 'subscriptionsController',
+            //     templateUrl: 'partials/subscriptions.html'
+            // })
+            // .state('addSubscription', {
+            //     parent: 'menu',
+            //     url: '/account',
+            //     controller: 'addSubscriptionController',
+            //     templateUrl: 'partials/add-subscription.html'
+            // })
+            .state('connectToOrganization', {
                 parent: 'menu',
-                url: '/subscriptions',
-                controller: 'subscriptionsController',
-                templateUrl: 'partials/subscriptions.html'
+                url: '/connect-to-organization',
+                controller: 'connectToOrganizationController',
+                templateUrl: 'partials/connect-to-organization.html'
             })
             .state('feedback', {
                 parent: 'menu',
@@ -138,6 +150,12 @@
                 controller: 'staticContentController',
                 templateUrl: 'partials/guidance/privacy-policy.html'
             })
+            .state('acceptableUsePolicy', {
+                parent: 'menu',
+                url: '/guidance/privacy-policy',
+                controller: 'staticContentController',
+                templateUrl: 'partials/guidance/acceptable-use-policy.html'
+            })
             .state('gatherEvidence', {
                 parent: 'menu',
                 url: '/guidance/gather-evidence',
@@ -155,12 +173,6 @@
                 url: '/account',
                 controller: 'accountController',
                 templateUrl: 'partials/account.html'
-            })
-            .state('addSubscription', {
-                parent: 'menu',
-                url: '/account',
-                controller: 'addSubscriptionController',
-                templateUrl: 'partials/add-subscription.html'
             });
 
         $urlRouterProvider.otherwise('/home');

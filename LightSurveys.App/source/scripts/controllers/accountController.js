@@ -73,7 +73,6 @@ angular.module('lm.surveys').controller('accountController', ['$scope', '$rootSc
                     $scope.model.phoneNumber = info.phoneNumber;
                     $scope.model.phoneNumberConfirmed = $scope.profile.userInfo.phoneNumberConfirmed;
 
-                    $rootScope.$broadcast('refresh-sidemenu-subscription');
                     $rootScope.$broadcast('update-menu-profile', { profile: data.profile });
 
                     userService.saveProfile($scope.profile).then(function () {

@@ -1,49 +1,59 @@
 ﻿<ion-view title="Need Help?">
     <ion-content class="content padding" ng-cloak>
-        <div class="card" style="margin-top: 0">
-            <div class="item item-text-wrap">
-                <p>Find advice and guidance on our website at <a href="https://onrecord.tech" target="_blank">https://onrecord.tech</a>.</p>
-                <p>See our YouTube Channel - <a href="https://www.youtube.com/channel/UCbySt38csVzV1oI5k4PoSAw" target="_blank">OnRecord</a> - for more.</p>
-                <p>We are happy to offer individual guidance at <a href="mailto:admin@analogue.digital">admin@analogue.digital</a>.</p>
-            </div>
-        </div>
-
-        <div ng-if="!feedbackSent">
-            <div class="list">
-                <div class="item item-text-wrap" ng-disabled="feedbackWorking">
-                    <h3>We also welcome your feedback:</h3>
-                    <br />
-                    <label class="item item-input">
-                        <textarea placeholder="Enter your comment and tap send" rows="2" ng-model="model.comment" ng-disabled="feedbackWorking"></textarea>
-                    </label>
-                </div>
-                <br />
-                <p class="light">We read all the feedback and take it seriously. We may sometimes get back to you for clarification.</p>
-            </div>
-
-            <button class="button button-positive button-block" ng-disabled="model.comment.length < 1 || feedbackWorking" ng-click="sendFeedback()">
-                <span ng-if="!feedbackWorking">
-                    <i class="icon ion-paper-airplane"></i> Send feedback
-                </span>
-                <span ng-if="feedbackWorking">
-                    <i class="fa fa-spinner fa-pulse fa-fw"></i> Sending feedback
-                </span>
-            </button>
-        </div>
-
-        <div ng-if="feedbackSent">
-            <div class="card">
-                <div class="item item-text-wrap">
-                    <h1 class="text-success"><i class="fa fa-check"></i> Feedback Sent</h1>
-                    <br />
-                    <p>We read all the feedback and take it seriously. We may sometimes get back to you for clarification.</p>
-                    <br />
+        <div class="row responsive-lg">
+            <div class="col">
+                <div class="card" style="margin-top: 0">
+                    <div class="item item-text-wrap">
+                        <p class="lead">Find advice and guidance on our website at <a href="#" onclick="window.open('https://onrecord.tech', '_system', 'location=yes'); return false;">https://onrecord.tech</a>.</p>
+                    </div>
+                    <div class="item item-text-wrap">
+                        <p class="lead">See our <a href="#" onclick="window.open('https://www.youtube.com/channel/UCbySt38csVzV1oI5k4PoSAw', '_system', 'location=yes'); return false;">YouTube Channel</a> for more.</p>
+                    </div>
+                    <div class="item item-text-wrap">
+                        <p class="lead">We are happy to offer individual guidance at <a href="#" onclick="window.open('mailto:admin@analogue.digital', '_system'); return false;">admin@analogue.digital</a>.</p>
+                    </div>
                 </div>
             </div>
-
-            <a class="button button-light button-clear button-block" ui-sref="home">
-                <i class="fa fa-arrow-left fa-fw"></i> back to home
-            </a>
+            <div class="col">
+                <div ng-if="!feedbackSent">
+                    <div class="list">
+                        <div class="item item-text-wrap" ng-disabled="feedbackWorking">
+                            <h3>We also welcome your feedback:</h3>
+                            <br />
+                            <label class="item item-input">
+                                <textarea placeholder="Enter your comment and tap send" rows="2" ng-model="model.comment" ng-disabled="feedbackWorking"></textarea>
+                            </label>
+                        </div>
+                        <br />
+                        <p class="lead light">We read all the feedback and take it seriously. We may sometimes get back to you for clarification.</p>
+                    </div>
+        
+                    <button class="button button-positive button-block" ng-disabled="model.comment.length < 1 || feedbackWorking" ng-click="sendFeedback()">
+                        <span ng-if="!feedbackWorking">
+                            <i class="icon ion-paper-airplane"></i> Send feedback
+                        </span>
+                        <span ng-if="feedbackWorking">
+                            <i class="fa fa-spinner fa-pulse fa-fw"></i> Sending feedback
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="col">
+                <div ng-if="feedbackSent">
+                    <div class="card">
+                        <div class="item item-text-wrap">
+                            <h1 class="text-success"><i class="fa fa-check"></i> Feedback Sent</h1>
+                            <br />
+                            <p>We read all the feedback and take it seriously. We may sometimes get back to you for clarification.</p>
+                            <br />
+                        </div>
+                    </div>
+        
+                    <a class="button button-light button-clear button-block" ui-sref="home">
+                        <i class="fa fa-arrow-left fa-fw"></i> back to home
+                    </a>
+                </div>
+            </div>
         </div>
     </ion-content>
 </ion-view>
