@@ -134,6 +134,5 @@
     <plugin name="cordova-plugin-media-playback" spec="^1.0.2-dev5" />
     <plugin name="cordova-plugin-android-fingerprint-auth" spec="^1.4.1" />
     <plugin name="cordova-plugin-vibration" spec="^3.1.0" />
-    <plugin name="cordova-plugin-inapppurchase" spec="^1.1.0" />
     <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0" />
 </widget>
