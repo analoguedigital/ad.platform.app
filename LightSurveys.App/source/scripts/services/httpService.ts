@@ -16,7 +16,7 @@ module App.Services {
         register(registerData: IRegisterData): ng.IPromise<any>;
         deleteFormTemplate(id: string): ng.IPromise<any>;
         uploadFile(attchment: Models.Attachment): angular.IPromise<string>
-        uploadFeedback(feedback: IFeedbackData): ng.IPromise<void>;
+        uploadFeedback(feedback: Models.IFeedbackData): ng.IPromise<void>;
         forgotPassword(model: Models.IForgotPasswordModel): ng.IPromise<void>;
         getDataList(id: string): angular.IPromise<angular.IHttpPromiseCallbackArg<Models.DataListItem[]>>;
         getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>>;
@@ -36,6 +36,9 @@ module App.Services {
         joinOrganization(invitationToken: string): ng.IPromise<void>;
 
         getUserSubscriptions(): ng.IPromise<any>;
+        getOrganizations(): ng.IPromise<any>;
+        requestOrgConnection(organisationId: string): ng.IPromise<any>;
+        requestOrganization(model: Models.IOrgRequestModel): ng.IPromise<any>;
     }
 
     export class HttpService implements IHttpService {
@@ -51,7 +54,7 @@ module App.Services {
         getServiceBase(): string {
             return HttpService.serviceBase;
         }
-        
+
         forgotPassword(model: Models.IForgotPasswordModel): ng.IPromise<void> {
             var deferred = this.$q.defer<void>();
 
@@ -272,7 +275,7 @@ module App.Services {
 
         }
 
-        uploadFeedback(feedback: IFeedbackData): ng.IPromise<void> {
+        uploadFeedback(feedback: Models.IFeedbackData): ng.IPromise<void> {
             var deferred = this.$q.defer<void>();
 
             this.$http.post(HttpService.serviceBase + 'api/feedbacks', JSON.stringify(feedback))
@@ -449,6 +452,36 @@ module App.Services {
             var deferred = this.$q.defer<void>();
 
             this.$http.get(HttpService.serviceBase + 'api/subscriptions/', null)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        getOrganizations(): ng.IPromise<any> {
+            var deferred = this.$q.defer<void>();
+
+            this.$http.get(HttpService.serviceBase + 'api/organisations/getlist', null)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        requestOrgConnection(organisationId: string): ng.IPromise<any> {
+            var deferred = this.$q.defer<void>();
+
+            this.$http.post(HttpService.serviceBase + 'api/orgConnectionRequests/' + organisationId, null)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        requestOrganization(model: Models.IOrgRequestModel): ng.IPromise<any> {
+            var deferred = this.$q.defer<void>();
+
+            this.$http.post(HttpService.serviceBase + 'api/orgRequests/', model)
                 .success((data: any) => { deferred.resolve(data); })
                 .error((data, status) => { deferred.reject(this.onError(data, status)); });
 

@@ -11,12 +11,12 @@
         </div>
         <div class="row responsive-lg">
             <div class="col col-50 col-offset-25">
-                <form name="registerForm" novalidate="novalidate" ng-show="!isQuickLoginActive">
+                <form name="registerForm" novalidate="novalidate" ng-show="!isQuickLoginActive" class="col col-50 col-offset-25">
                     <div class="list list-inset">
                         <label class="item item-icon-left" ng-disabled="loginWorking">
                             <i class="icon ion-ios-person-outline"></i>
                             <span class="item-input">
-                                <input name="email" type="email" ng-model="loginData.email" placeholder="Email address" required autofocus autocomplete="off" ng-disabled="loginWorking">
+                                <input name="email" type="email" ng-model="loginData.email" placeholder="Email address" required autocomplete="off" ng-disabled="loginWorking">
                             </span>
                         </label>
 

@@ -194,4 +194,19 @@ module App.Models {
         newPassword: string;
         confirmPassword: string;
     }
+
+    export interface IOrgRequestModel {
+        name: string;
+        address: string;
+        contactName: string;
+        email: string;
+        telNumber: string;
+        postcode: string;
+    }
+
+    export interface IFeedbackData {
+        addedById: string;
+        organisationId: string;
+        comment: string;
+    }
 }

@@ -1,0 +1,63 @@
+<ion-modal-view>
+    <ion-header-bar class="bar-stable bar-positive with-button">
+        <h1 class="title">Request Organization</h1>
+        <button class="button button-icon button-clear ion-ios-close-outline" ng-click="closeOrgRequestDialog()" style="margin-top: 0"></button>
+    </ion-header-bar>
+    <ion-content class="content organization-request-screen">
+        <div class="row responsive-lg">
+            <div class="col">
+                <form name="orgRequestForm" novalidate="novalidate">
+                    <div class="list list-inset" style="margin-top: 0">
+                        <label class="item item-icon-left" ng-disabled="orgRequestWorking">
+                            <i class="icon ion-clipboard"></i>
+                            <span class="item-input">
+                                <input name="name" ng-model="orgRequestModel.name" placeholder="Organization name (required)" type="text" required autocomplete="off" ng-disabled="orgRequestWorking">
+                            </span>
+                        </label>
+                        <label class="item item-icon-left" ng-disabled="orgRequestWorking">
+                            <i class="icon ion-map"></i>
+                            <span class="item-input">
+                                <input name="address" ng-model="orgRequestModel.address" placeholder="Address" type="text" required autocomplete="off" ng-disabled="orgRequestWorking">
+                            </span>
+                        </label>
+                        <label class="item item-icon-left" ng-disabled="orgRequestWorking">
+                            <i class="icon ion-person"></i>
+                            <span class="item-input">
+                                <input name="contactName" ng-model="orgRequestModel.contactName" placeholder="Contact name" type="text" required autocomplete="off" ng-disabled="orgRequestWorking">
+                            </span>
+                        </label>
+                        <label class="item item-icon-left" ng-disabled="orgRequestWorking">
+                            <i class="icon ion-at"></i>
+                            <span class="item-input">
+                                <input name="email" ng-model="orgRequestModel.email" placeholder="Email address" type="email" required autocomplete="off" ng-disabled="orgRequestWorking">
+                            </span>
+                        </label>
+                        <label class="item item-icon-left" ng-disabled="orgRequestWorking">
+                            <i class="icon ion-information"></i>
+                            <span class="item-input">
+                                <input name="telNumber" ng-model="orgRequestModel.telNumber" placeholder="Telephone" type="text" required autocomplete="off" ng-disabled="orgRequestWorking">
+                            </span>
+                        </label>
+                        <label class="item item-icon-left" ng-disabled="orgRequestWorking">
+                            <i class="icon ion-pound"></i>
+                            <span class="item-input">
+                                <input name="postcode" ng-model="orgRequestModel.postcode" placeholder="Postcode" type="text" required autocomplete="off" ng-disabled="orgRequestWorking">
+                            </span>
+                        </label>
+
+                        <div class="">
+                            <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="sendOrgRequest()" ng-disabled="orgRequestWorking">
+                                <span ng-if="!orgRequestWorking">
+                                    <i class="icon ion-paper-airplane"></i> Send request
+                                </span>
+                                <span ng-if="orgRequestWorking">
+                                    <i class="fa fa-spinner fa-pulse fa-fw"></i> Sending request
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>

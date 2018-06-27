@@ -6,14 +6,8 @@
 module App.Services {
     "use strict";
 
-    export interface IFeedbackData {
-        addedById: string;
-        organisationId: string;
-        comment: string;
-    }
-
     export interface IFeedbackService {
-        sendFeedback: (feedback: IFeedbackData) => ng.IPromise<void>;
+        sendFeedback: (feedback: Models.IFeedbackData) => ng.IPromise<void>;
     }
 
     class FeedbackService implements IFeedbackService {
@@ -21,7 +15,7 @@ module App.Services {
 
         constructor(private httpService: IHttpService) { }
 
-        sendFeedback(feedback: IFeedbackData): ng.IPromise<void> {
+        sendFeedback(feedback: Models.IFeedbackData): ng.IPromise<void> {
             return this.httpService.uploadFeedback(feedback);
         }
     }

@@ -120,12 +120,6 @@
             //     controller: 'addSubscriptionController',
             //     templateUrl: 'partials/add-subscription.html'
             // })
-            .state('connectToOrganization', {
-                parent: 'menu',
-                url: '/connect-to-organization',
-                controller: 'connectToOrganizationController',
-                templateUrl: 'partials/connect-to-organization.html'
-            })
             .state('feedback', {
                 parent: 'menu',
                 url: "/feedback",
@@ -173,6 +167,12 @@
                 url: '/account',
                 controller: 'accountController',
                 templateUrl: 'partials/account.html'
+            })
+            .state('organizations', {
+               parent: 'menu',
+               url: '/organizations',
+               controller: 'organizationsController',
+               templateUrl: 'partials/organizations.html' 
             });
 
         $urlRouterProvider.otherwise('/home');

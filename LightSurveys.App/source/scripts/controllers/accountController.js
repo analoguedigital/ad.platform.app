@@ -4,6 +4,9 @@ angular.module('lm.surveys').controller('accountController', ['$scope', '$rootSc
         $scope.profile = {};
         $scope.userInfo = {};
 
+        $scope.activeSubscription = undefined;
+        $scope.monthlyQuota = undefined;
+
         $scope.model = {
             firstName: '',
             surname: '',
@@ -24,7 +27,6 @@ angular.module('lm.surveys').controller('accountController', ['$scope', '$rootSc
         ];
 
         $scope.requestWorking = false;
-        $scope.voucherWorking = false;
 
         $scope.saveChanges = function () {
             if (!$scope.model.firstName || $scope.model.firstName.length < 1) {
@@ -63,6 +65,9 @@ angular.module('lm.surveys').controller('accountController', ['$scope', '$rootSc
                     $scope.userInfo = data;
                     $scope.profile.userInfo = data;
 
+                    $scope.activeSubscription = data.profile.lastSubscription;
+                    $scope.monthlyQuota = data.profile.monthlyQuota;
+
                     var info = data.profile;
                     $scope.model.firstName = info.firstName;
                     $scope.model.surname = info.surname;
@@ -91,7 +96,11 @@ angular.module('lm.surveys').controller('accountController', ['$scope', '$rootSc
                 $scope.profile = profiles[0];
                 $scope.userInfo = $scope.profile.userInfo;
 
+                $scope.activeSubscription = $scope.userInfo.profile.lastSubscription;
+                $scope.monthlyQuota = $scope.userInfo.profile.monthlyQuota;
+
                 var info = $scope.userInfo.profile;
+
                 try {
                     $scope.model.firstName = info.firstName;
                     $scope.model.surname = info.surname;
