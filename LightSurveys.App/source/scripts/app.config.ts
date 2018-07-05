@@ -173,6 +173,12 @@
                url: '/organizations',
                controller: 'organizationsController',
                templateUrl: 'partials/organizations.html' 
+            })
+            .state('adviceThreads', {
+                parent: 'menu',
+                url: '/advice-threads',
+                controller: 'adviceThreadsController',
+                templateUrl: 'partials/advice-threads.html'
             });
 
         $urlRouterProvider.otherwise('/home');

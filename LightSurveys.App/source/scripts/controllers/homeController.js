@@ -14,7 +14,10 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         $scope.allFormTemplates = [];
         $scope.formTemplates = [];
 
-        var _loadList = function () {
+        $scope.profile = {};
+        $scope.userInfo = {};
+
+        $scope.loadList = function () {
             surveyService.getFormTemplates()
                 .then(function (results) {
                     angular.forEach(results, function (formTemplate) {
@@ -41,13 +44,16 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         $scope.startSurvey = function (formTemplate) {
             surveyService.startSurvey(formTemplate)
                 .then(function (survey) {
-                    $state.go("survey", { id: survey.id });
-                }, function (err) {
-                });
+                    $state.go("survey", {
+                        id: survey.id
+                    });
+                }, function (err) {});
         };
 
         $scope.goDrafts = function (formTemplate) {
-            $state.go("drafts", { id: formTemplate.id });
+            $state.go("drafts", {
+                id: formTemplate.id
+            });
         };
 
         $scope.cloneTemplate = function () {
@@ -57,7 +63,9 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
             // Ideally, we would get the shared thread from our platform.
             // var recordingsTemplate = _.filter($scope.allFormTemplates, function (template) { return template.title.toLowerCase().includes('recording'); })[0];
 
-            $state.go("cloneTemplate", { id: recordingTemplateId });
+            $state.go("cloneTemplate", {
+                id: recordingTemplateId
+            });
         };
 
         $scope.deleteTemplate = function (formTemplate) {
@@ -65,9 +73,11 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
 
             surveyService.deleteFormTemplate(formTemplate)
                 .then(function () {
-                    _.remove($scope.formTemplates, function (template) { return template.id === formTemplate.id });
-                    ngProgress.complete();
-                },
+                        _.remove($scope.formTemplates, function (template) {
+                            return template.id === formTemplate.id
+                        });
+                        ngProgress.complete();
+                    },
                     function (err) {
                         ngProgress.complete();
                         alertService.show($scope.getValidationErrors(err));
@@ -75,7 +85,9 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         }
 
         $scope.editTemplate = function (formTemplate) {
-            $state.go("editTemplate", { id: formTemplate.id });
+            $state.go("editTemplate", {
+                id: formTemplate.id
+            });
         };
 
         $scope.doRefresh = function () {
@@ -125,7 +137,7 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                                         console.warn(err);
                                     }
 
-                                    _loadList();
+                                    $scope.loadList();
                                 }, function (err) {
                                     console.error(err);
                                 });
@@ -141,7 +153,9 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                     $scope.profile = profiles[0];
                     $scope.userInfo = $scope.profile.userInfo;
 
-                    $rootScope.$broadcast('update-menu-profile', { profile: $scope.userInfo.profile });
+                    $rootScope.$broadcast('update-menu-profile', {
+                        profile: $scope.userInfo.profile
+                    });
                 }
             });
 
@@ -153,12 +167,12 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                     localStorageService.set(FIRST_TIME_LOGIN_KEY, false);
                     $scope.syncUserRecords();
                 } else {
-                    _loadList();
+                    $scope.loadList();
                 }
             }
         }
 
         $scope.activate();
 
-    }]);
-
+    }
+]);

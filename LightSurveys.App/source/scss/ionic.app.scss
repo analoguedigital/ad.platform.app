@@ -94,6 +94,14 @@ mwl-calendar.survey-calendar {
     .item { background-color: transparent; }
 }
 
+.card.advice-record {
+    background-color: lightgreen;
+
+    .item {
+        background-color: transparent;
+    }
+}
+
 .login { background-color: $positive;
     &.pane { background-color: $positive }
     h1 { font-size: 350%; padding: 14px 0; }

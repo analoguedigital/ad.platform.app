@@ -2,11 +2,14 @@
 angular.module('lm.surveys').controller('draftsController', ['$scope', '$state', '$stateParams', '$location', '$ionicPopup', 'surveyService', 'alertService', 'gettext', 'userService',
     function ($scope, $state, $stateParams, $location, $ionicPopup, surveyService, alertService, gettext, userService) {
 
+        $scope.currentUserId = '';
         $scope.formTemplateId = $stateParams.id;
         $scope.formTemplate = {};
         $scope.drafts = [];
 
         var reload = function () {
+            $scope.currentUserId = userService.current.userId;
+
             surveyService.getAllSavedSurveys($scope.formTemplateId).then(
                 function (drafts) {
                     $scope.drafts = [];

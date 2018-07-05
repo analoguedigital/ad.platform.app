@@ -5,7 +5,7 @@
         </h2>
     </ion-header-bar>
     <ion-content class="content has-subheader padding" ng-cloak>
-        <div class="card" ng-repeat="draft in drafts | orderBy:'dateUpdated':true" ng-class="{'draft': !draft.isSubmitted}" style="margin-top: 15px; margin-bottom: 15px">
+        <div class="card" ng-repeat="draft in drafts | orderBy:'dateUpdated':true" ng-class="{ 'draft': !draft.isSubmitted, 'advice-record': draft.filledById !== currentUserId }" style="margin-top: 15px; margin-bottom: 15px">
             <div class="item item-divider">
                 <span am-time-ago="draft.dateCreated"></span>
                 <small class="text-muted">({{draft.dateCreated | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}})</small>

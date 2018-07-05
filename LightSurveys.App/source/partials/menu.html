@@ -34,6 +34,10 @@
                     <i class="icon ion-ios-cog-outline"></i>
                     <span translate> Settings</span>
                 </ion-item>
+                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="adviceThreads" menu-close="">
+                    <i class="icon ion-chatbubbles"></i>
+                    <span translate> Advice Threads</span>
+                </ion-item>
                 <!-- <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="subscriptions" menu-close="">
                     <i class="icon ion-card"></i>
                     <span translate> Subscriptions</span>
@@ -43,7 +47,7 @@
                     <span translate>Need Help?</span>
                 </ion-item>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="guidance" menu-close="">
-                    <i class="icon ion-ios-help-outline"></i>
+                    <i class="icon ion-quote"></i>
                     <span translate> Guidance and Legal</span>
                 </ion-item>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" menu-close="" ng-click="logOut()"

@@ -5,6 +5,7 @@ module App.Services {
 
     export interface ISurveyService {
         getFormTemplates(): ng.IPromise<Array<Models.FormTemplate>>;
+        getAdviceThreads(): ng.IPromise<Array<Models.FormTemplate>>;
         getFormTemplate(id: string): ng.IPromise<Models.FormTemplate>;
         refreshData(): ng.IPromise<void>;
         saveTemplate(template: Models.FormTemplate): ng.IPromise<Models.FormTemplate>;
@@ -38,10 +39,12 @@ module App.Services {
 
         SURVEY_OBJECT_TYPE: string = 'survey';
         FORM_TEMPLATE_OBJECT_TYPE: string = 'formTemplate';
+        ADVICE_THREAD_OBJECT_TYPE: string = 'adviceThread';
         PROJECT_OBJECT_TYPE: string = 'project';
         ATTACHMENT_OBJECT_TYPE: string = "attachment";
 
         formTemplates: Models.FormTemplate[];
+        adviceThreads: Models.FormTemplate[];
         projects: Models.Project[];
 
         config = {
@@ -63,6 +66,7 @@ module App.Services {
             var promises: Array<ng.IPromise<void>> = [];
             promises.push(this.storageService.deleteAllObjectsOfType(this.PROJECT_OBJECT_TYPE));
             promises.push(this.storageService.deleteAllObjectsOfType(this.FORM_TEMPLATE_OBJECT_TYPE));
+            promises.push(this.storageService.deleteAllObjectsOfType(this.ADVICE_THREAD_OBJECT_TYPE));
             promises.push(this.storageService.deleteAllObjectsOfType(this.SURVEY_OBJECT_TYPE));
             promises.push(this.storageService.deleteAllObjectsOfType(this.ATTACHMENT_OBJECT_TYPE));
 
@@ -77,33 +81,63 @@ module App.Services {
 
         refreshData(): ng.IPromise<void> {
             return this.refreshProjects()
-                .then(() => { return this.refreshTemplates(); });
+                .then(() => {
+                    return this.refreshTemplates().then(() => {
+                        return this.refreshAdviceThreads();
+                    })
+                });
         }
 
         refreshTemplates(): ng.IPromise<void> {
 
             var q = this.$q.defer<void>();
 
-            this.httpService.getFormTemplates()
+            this.httpService.getFormTemplates(0)
                 .then(
-                (forms) => {
-                    var promises: Array<ng.IPromise<void>> = [];
+                    (forms) => {
+                        var promises: Array<ng.IPromise<void>> = [];
 
-                    angular.forEach(forms, (form) => {
+                        angular.forEach(forms, (form) => {
 
-                        var deferred = this.$q.defer<void>();
-                        promises.push(deferred.promise);
+                            var deferred = this.$q.defer<void>();
+                            promises.push(deferred.promise);
 
-                        this.storageService.save(this.FORM_TEMPLATE_OBJECT_TYPE, null, form.id, form)
-                            .then(() => { deferred.resolve(); }, (err) => { deferred.reject(err); });
-                    });
+                            this.storageService.save(this.FORM_TEMPLATE_OBJECT_TYPE, null, form.id, form)
+                                .then(() => { deferred.resolve(); }, (err) => { deferred.reject(err); });
+                        });
 
-                    this.$q.all(promises).then(() => {
-                        this.formTemplates = undefined;
-                        q.resolve();
-                    });
-                },
-                (err) => { q.reject(err); });
+                        this.$q.all(promises).then(() => {
+                            this.formTemplates = undefined;
+                            q.resolve();
+                        });
+                    },
+                    (err) => { q.reject(err); });
+
+            return q.promise
+        }
+
+        refreshAdviceThreads(): ng.IPromise<void> {
+            var q = this.$q.defer<void>();
+
+            this.httpService.getFormTemplates(1)
+                .then(
+                    (forms) => {
+                        var promises: Array<ng.IPromise<void>> = [];
+
+                        angular.forEach(forms, (form) => {
+                            var deferred = this.$q.defer<void>();
+                            promises.push(deferred.promise);
+
+                            this.storageService.save(this.ADVICE_THREAD_OBJECT_TYPE, null, form.id, form)
+                                .then(() => { deferred.resolve(); }, (err) => { deferred.reject(err); });
+                        });
+
+                        this.$q.all(promises).then(() => {
+                            this.adviceThreads = undefined;
+                            q.resolve();
+                        });
+                    },
+                    (err) => { q.reject(err); });
 
             return q.promise
         }
@@ -118,24 +152,24 @@ module App.Services {
 
             this.httpService.getProjects()
                 .then(
-                (projects) => {
-                    var promises: Array<ng.IPromise<void>> = [];
+                    (projects) => {
+                        var promises: Array<ng.IPromise<void>> = [];
 
-                    angular.forEach(projects, (project) => {
+                        angular.forEach(projects, (project) => {
 
-                        var deferred = this.$q.defer<void>();
-                        promises.push(deferred.promise);
+                            var deferred = this.$q.defer<void>();
+                            promises.push(deferred.promise);
 
-                        this.storageService.save(this.PROJECT_OBJECT_TYPE, null, project.id, project)
-                            .then(() => { deferred.resolve(); }, (err) => { deferred.reject(err); });
-                    });
+                            this.storageService.save(this.PROJECT_OBJECT_TYPE, null, project.id, project)
+                                .then(() => { deferred.resolve(); }, (err) => { deferred.reject(err); });
+                        });
 
-                    this.$q.all(promises).then(() => {
-                        this.projects = undefined;
-                        q.resolve();
-                    });
-                },
-                (err) => { q.reject(err); });
+                        this.$q.all(promises).then(() => {
+                            this.projects = undefined;
+                            q.resolve();
+                        });
+                    },
+                    (err) => { q.reject(err); });
 
             return q.promise
         }
@@ -148,44 +182,44 @@ module App.Services {
 
             this.getFormTemplates()
                 .then(
-                (templates) => {
-                    var promises: Array<ng.IPromise<void>> = [];
+                    (templates) => {
+                        var promises: Array<ng.IPromise<void>> = [];
 
-                    angular.forEach(templates, (template) => {
+                        angular.forEach(templates, (template) => {
 
-                        var deferred = this.$q.defer<void>();
-                        promises.push(deferred.promise);
+                            var deferred = this.$q.defer<void>();
+                            promises.push(deferred.promise);
 
-                        this.getSubmittedSurveys(template.id)
-                            .then((surveys) => {
-                                var surveysToUpload = _.filter(surveys, (survey) => { return survey.dateUploaded === null; });
-                                this.uploadSurveys(surveysToUpload)
-                                    .then(
-                                    () => { deferred.resolve(); },
-                                    (err) => { },
-                                    (state: UploadProgress) => {
-                                        progressStates[template.id] = state;
+                            this.getSubmittedSurveys(template.id)
+                                .then((surveys) => {
+                                    var surveysToUpload = _.filter(surveys, (survey) => { return survey.dateUploaded === null; });
+                                    this.uploadSurveys(surveysToUpload)
+                                        .then(
+                                            () => { deferred.resolve(); },
+                                            (err) => { },
+                                            (state: UploadProgress) => {
+                                                progressStates[template.id] = state;
 
-                                        var progress = new UploadProgress();
-                                        angular.forEach(progressStates, (state: UploadProgress) => {
-                                            progress.totalNumber += state.totalNumber;
-                                            progress.totalProcessed += state.totalProcessed;
-                                            progress.totalSuccessful += state.totalSuccessful;
-                                            progress.totalErrors += state.totalErrors;
-                                            angular.forEach(state.errorMessages, (err) => {
-                                                progress.errorMessages.push(err);
+                                                var progress = new UploadProgress();
+                                                angular.forEach(progressStates, (state: UploadProgress) => {
+                                                    progress.totalNumber += state.totalNumber;
+                                                    progress.totalProcessed += state.totalProcessed;
+                                                    progress.totalSuccessful += state.totalSuccessful;
+                                                    progress.totalErrors += state.totalErrors;
+                                                    angular.forEach(state.errorMessages, (err) => {
+                                                        progress.errorMessages.push(err);
+                                                    });
+                                                });
+
+                                                q.notify(progress);
                                             });
-                                        });
+                                });
+                        });
 
-                                        q.notify(progress);
-                                    });
-                            });
-                    });
+                        this.$q.all(promises).then(() => { q.resolve(); });
 
-                    this.$q.all(promises).then(() => { q.resolve(); });
-
-                },
-                (err) => { q.reject(err); });
+                    },
+                    (err) => { q.reject(err); });
 
             return q.promise;
         }
@@ -205,19 +239,19 @@ module App.Services {
 
                 this.uploadSurvey(survey)
                     .then(
-                    () => {
-                        progress.totalProcessed++
-                        progress.totalSuccessful++;
-                        deferredUpload.resolve();
-                        q.notify(progress);
-                    },
-                    (err) => {
-                        progress.totalProcessed++
-                        progress.totalErrors++;
-                        progress.errorMessages.push(err);
-                        deferredUpload.resolve();
-                        q.notify(progress);
-                    });
+                        () => {
+                            progress.totalProcessed++
+                            progress.totalSuccessful++;
+                            deferredUpload.resolve();
+                            q.notify(progress);
+                        },
+                        (err) => {
+                            progress.totalProcessed++
+                            progress.totalErrors++;
+                            progress.errorMessages.push(err);
+                            deferredUpload.resolve();
+                            q.notify(progress);
+                        });
 
 
             });
@@ -271,13 +305,13 @@ module App.Services {
                     (() => {
                         this.storageService.save(this.SURVEY_OBJECT_TYPE, survey.formTemplateId, survey.id, survey)
                             .then(
-                            (survey) => {
+                                (survey) => {
 
-                                q.resolve(survey);
-                            },
-                            (err) => {
-                                q.reject(err);
-                            })
+                                    q.resolve(survey);
+                                },
+                                (err) => {
+                                    q.reject(err);
+                                })
                     },
                     (err) => { q.reject(err); });
             }
@@ -296,41 +330,41 @@ module App.Services {
                 (updatedSurvey) => {
                     this.httpService.uploadSurvey(updatedSurvey)
                         .then(
-                        () => {
-                            updatedSurvey.dateUploaded = new Date(new Date().toISOString());
-                            this.saveSurvey(updatedSurvey).then(
-                                () => {
-                                    self.userService.getExistingProfiles().then((profiles) => {
-                                        var profile = profiles[0];
-                                        var noStoreEnabled = profile.settings.noStoreEnabled;
+                            () => {
+                                updatedSurvey.dateUploaded = new Date(new Date().toISOString());
+                                this.saveSurvey(updatedSurvey).then(
+                                    () => {
+                                        self.userService.getExistingProfiles().then((profiles) => {
+                                            var profile = profiles[0];
+                                            var noStoreEnabled = profile.settings.noStoreEnabled;
 
-                                        self.config.keepUploadedSurveys = !noStoreEnabled;
+                                            self.config.keepUploadedSurveys = !noStoreEnabled;
 
-                                        if (!this.config.keepUploadedSurveys) {
-                                            self.softDelete(survey.id)
-                                                .then(() => { q.resolve(); });
-                                        }
+                                            if (!this.config.keepUploadedSurveys) {
+                                                self.softDelete(survey.id)
+                                                    .then(() => { q.resolve(); });
+                                            }
 
-                                        q.resolve();
-                                    });
-                                },
-                                (err) => { q.reject(err); });
-                        },
-                        (err) => {
-                            survey.error = err;
+                                            q.resolve();
+                                        });
+                                    },
+                                    (err) => { q.reject(err); });
+                            },
+                            (err) => {
+                                survey.error = err;
 
-                            var statusCode = err.substring(0, 3);
-                            if (statusCode === '401') {
-                                this.toastr.error('Unauthorized to upload record!');
-                                self.softDelete(survey.id).then(() => { q.reject(err); });
-                            }
-                            else {
-                                self.saveSurvey(updatedSurvey)
-                                    .then(
-                                    () => { q.reject(err); },
-                                    () => { q.reject(err); });
-                            }
-                        });
+                                var statusCode = err.substring(0, 3);
+                                if (statusCode === '401') {
+                                    this.toastr.error('Unauthorized to upload record!');
+                                    self.softDelete(survey.id).then(() => { q.reject(err); });
+                                }
+                                else {
+                                    self.saveSurvey(updatedSurvey)
+                                        .then(
+                                            () => { q.reject(err); },
+                                            () => { q.reject(err); });
+                                }
+                            });
                 },
                 (err) => { q.reject(err); });
 
@@ -389,13 +423,40 @@ module App.Services {
             return q.promise;
         }
 
+        getAdviceThreads(): ng.IPromise<Array<Models.FormTemplate>> {
+
+            var q = this.$q.defer<Array<Models.FormTemplate>>();
+            if (this.adviceThreads === undefined) {
+                this.storageService.getAll(this.ADVICE_THREAD_OBJECT_TYPE, null)
+                    .then((templates: Array<Models.FormTemplate>) => {
+                        this.adviceThreads = templates;
+                        let result = this.filterForProject(this.adviceThreads);
+                        _.forEach(result, (template) => {
+                            this.getFormTemplateMetadata(template).then((t) => { template = t; });
+                        });
+
+                        q.resolve(result);
+                    }, (err) => { q.reject(err); });
+            }
+            else {
+                let templates = this.filterForProject(this.adviceThreads);
+                _.forEach(templates, (template) => {
+                    this.getFormTemplateMetadata(template).then((t) => { template = t; });
+                });
+
+                q.resolve(templates);
+            }
+
+            return q.promise;
+        }
+
         getFormTemplate(id: string): ng.IPromise<Models.FormTemplate> {
             var q = this.$q.defer<Models.FormTemplate>();
 
             if (this.formTemplates !== undefined) {
                 let template = _.find(this.formTemplates, { 'id': id });
 
-                if(template !== undefined) {
+                if (template !== undefined) {
                     this.getFormTemplateMetadata(template).then((t) => { template = t; });
                     q.resolve(template);
                 } else {
@@ -410,14 +471,14 @@ module App.Services {
             }
 
             this.storageService.getObj(this.FORM_TEMPLATE_OBJECT_TYPE, id).then((formTemplate: Models.FormTemplate) => {
-                if(formTemplate !== undefined) {
+                if (formTemplate !== undefined) {
                     this.getFormTemplateMetadata(formTemplate).then((template) => {
                         formTemplate = template;
                         q.resolve(template);
                     });
                 } else {
                     this.httpService.getFormTemplate(id)
-                        .then((data: any) => { 
+                        .then((data: any) => {
                             this.getFormTemplateMetadata(data).then((t) => { data = t; });
                             q.resolve(data);
                         });
@@ -453,7 +514,7 @@ module App.Services {
                     this.storageService.save(this.FORM_TEMPLATE_OBJECT_TYPE, null, formTemplate.id, formTemplate)
                         .then((survey) => { q.resolve(survey); }, (err) => { q.reject(err); });
                 },
-                (err) => { q.reject(err); });
+                    (err) => { q.reject(err); });
 
             return q.promise;
         }
@@ -518,13 +579,13 @@ module App.Services {
                         (() => {
                             this.storageService.save(this.SURVEY_OBJECT_TYPE, survey.formTemplateId, survey.id, survey)
                                 .then(
-                                (survey) => { q.resolve(survey) },
-                                (err) => { q.reject(err); })
+                                    (survey) => { q.resolve(survey) },
+                                    (err) => { q.reject(err); })
                         },
                         (err) => { q.reject(err); });
 
                 },
-                (err) => { q.reject(err); });
+                    (err) => { q.reject(err); });
 
             return q.promise;
         }
@@ -559,21 +620,21 @@ module App.Services {
 
             this.locationService.getCurrentPosition()
                 .then(
-                (position) => {
-                    position.event = event;
-                    if (survey.locations === undefined)
-                        survey.locations = [];
-                    survey.locations.push(position);
-                    this.saveSurvey(survey)
-                        .then(() => { q.resolve(); });
-                },
-                (errPosition) => {
-                    if (survey.locations === undefined)
-                        survey.locations = [];
-                    survey.locations.push(errPosition);
-                    this.saveSurvey(survey)
-                        .then(() => { q.reject(); });
-                });
+                    (position) => {
+                        position.event = event;
+                        if (survey.locations === undefined)
+                            survey.locations = [];
+                        survey.locations.push(position);
+                        this.saveSurvey(survey)
+                            .then(() => { q.resolve(); });
+                    },
+                    (errPosition) => {
+                        if (survey.locations === undefined)
+                            survey.locations = [];
+                        survey.locations.push(errPosition);
+                        this.saveSurvey(survey)
+                            .then(() => { q.reject(); });
+                    });
 
             return q.promise;
         }
@@ -627,27 +688,27 @@ module App.Services {
 
             this.getFormTemplates()
                 .then(
-                (templates) => {
-                    var promises: Array<ng.IPromise<void>> = [];
+                    (templates) => {
+                        var promises: Array<ng.IPromise<void>> = [];
 
-                    angular.forEach(templates, (template) => {
+                        angular.forEach(templates, (template) => {
 
-                        var deferred = this.$q.defer<void>();
-                        promises.push(deferred.promise);
+                            var deferred = this.$q.defer<void>();
+                            promises.push(deferred.promise);
 
-                        this.getSubmittedSurveys(template.id)
-                            .then((surveys) => {
-                                for (var i = 0; i < surveys.length; i++)
-                                    surveys[i].formTemplate = template;
-                                allSurveys = allSurveys.concat(surveys);
-                                deferred.resolve();
-                            });
-                    });
+                            this.getSubmittedSurveys(template.id)
+                                .then((surveys) => {
+                                    for (var i = 0; i < surveys.length; i++)
+                                        surveys[i].formTemplate = template;
+                                    allSurveys = allSurveys.concat(surveys);
+                                    deferred.resolve();
+                                });
+                        });
 
-                    this.$q.all(promises).then(() => { q.resolve(allSurveys); });
+                        this.$q.all(promises).then(() => { q.resolve(allSurveys); });
 
-                },
-                (err) => { q.reject(err); });
+                    },
+                    (err) => { q.reject(err); });
 
             return q.promise;
         }
@@ -655,17 +716,17 @@ module App.Services {
         getDrafts(formTemplateId: string): ng.IPromise<Array<Models.Survey>> {
             return this.getAllSavedSurveys(formTemplateId)
                 .then(
-                (savedSurveys) => {
-                    return _.filter(savedSurveys, { 'isSubmitted': false });
-                });
+                    (savedSurveys) => {
+                        return _.filter(savedSurveys, { 'isSubmitted': false });
+                    });
         }
 
         getSubmittedSurveys(formTemplateId: string): ng.IPromise<Array<Models.Survey>> {
             return this.getAllSavedSurveys(formTemplateId)
                 .then(
-                (savedSurveys) => {
-                    return _.filter(savedSurveys, { 'isSubmitted': true });
-                });
+                    (savedSurveys) => {
+                        return _.filter(savedSurveys, { 'isSubmitted': true });
+                    });
         }
 
         getProjects(): ng.IPromise<Array<Models.Project>> {
@@ -677,18 +738,18 @@ module App.Services {
 
             this.getSurvey(surveyId)
                 .then(
-                (survey) => {
-                    var formValues = survey.formValues;
+                    (survey) => {
+                        var formValues = survey.formValues;
 
-                    this.getFormTemplate(survey.formTemplateId)
-                        .then(
-                        (formTemplate) => {
-                            formTemplate.survey = survey;
-                            q.resolve(formTemplate);
-                        },
-                        (err) => { q.reject(err); });
-                },
-                (err) => { q.reject(err); });
+                        this.getFormTemplate(survey.formTemplateId)
+                            .then(
+                                (formTemplate) => {
+                                    formTemplate.survey = survey;
+                                    q.resolve(formTemplate);
+                                },
+                                (err) => { q.reject(err); });
+                    },
+                    (err) => { q.reject(err); });
 
             return q.promise;
         }
@@ -812,13 +873,13 @@ module App.Services {
 
             this.httpService.getUserSurveys(projectId)
                 .then(
-                (data) => {
-                    _.map(data, function (item: Models.Survey) {
-                        return item.isSubmitted = true;
-                    });
+                    (data) => {
+                        _.map(data, function (item: Models.Survey) {
+                            return item.isSubmitted = true;
+                        });
 
-                    q.resolve(data);
-                },
+                        q.resolve(data);
+                    },
                     (err) => { q.reject(err); }
                 );
 

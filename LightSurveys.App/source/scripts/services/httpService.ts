@@ -9,7 +9,7 @@ module App.Services {
         getAuthenticationToken(loginData: ILoginData): angular.IPromise<any>;
         getUserInfo(): angular.IPromise<any>;
         getFormTemplate(id: string): angular.IPromise<angular.IHttpPromiseCallbackArg<Models.FormTemplate>>;
-        getFormTemplates(): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.FormTemplate>>>;
+        getFormTemplates(discriminator: number): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.FormTemplate>>>;
         getProjects(): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.Project>>>;
         getSurvey(id: string): ng.IPromise<Models.Survey>;
         uploadSurvey(survey: Models.Survey): angular.IPromise<angular.IHttpPromiseCallbackArg<any>>;
@@ -114,11 +114,11 @@ module App.Services {
             return deferred.promise;
         }
 
-        getFormTemplates(): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.FormTemplate>>> {
+        getFormTemplates(discriminator: number): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.FormTemplate>>> {
 
             var deferred = this.$q.defer();
 
-            this.$http.get(HttpService.serviceBase + 'api/formtemplates/')
+            this.$http.get(HttpService.serviceBase + 'api/formtemplates/?discriminator=' + discriminator)
                 .success((data) => { deferred.resolve(data); })
                 .error((data, status) => { deferred.reject(this.onError(data, status)); });
 

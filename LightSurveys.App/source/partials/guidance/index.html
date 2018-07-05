@@ -1,30 +1,34 @@
 ﻿<ion-view title="Guidance" id="guidancePage">
     <ion-content class="content padding guidance" ng-cloak>
-        <div class="list">
-            <a class="item item-dark item-icon-left" ui-sref="makingRecords">
-                <i class="icon ion-ios-book-outline"></i>&nbsp;
-                Getting started
-            </a>
-            <a class="item item-dark item-icon-left" ui-sref="gatherEvidence">
-                <i class="icon ion-ios-camera-outline"></i>&nbsp;
-                How to gather evidence
-            </a>
-            <a class="item item-dark item-icon-left" ui-sref="userAgreement">
-                <i class="icon ion-ios-people-outline"></i>&nbsp;
-                Conditions of Use
-            </a>
-            <a class="item item-dark item-icon-left" ui-sref="privacyPolicy">
-                <i class="icon ion-ios-eye"></i>&nbsp;
-                Privacy Policy
-            </a>
-            <a class="item item-dark item-icon-left" ui-sref="acceptableUsePolicy">
-                <i class="icon ion-ios-eye"></i>&nbsp;
-                Acceptable Use Policy
-            </a>
+        <div class="row responsive-lg">
+            <div class="col">
+                <div class="list">
+                    <a class="item item-dark item-icon-left" ui-sref="makingRecords">
+                        <i class="icon ion-ios-book-outline"></i>&nbsp;
+                        Getting started
+                    </a>
+                    <a class="item item-dark item-icon-left" ui-sref="gatherEvidence">
+                        <i class="icon ion-ios-camera-outline"></i>&nbsp;
+                        How to gather evidence
+                    </a>
+                    <a class="item item-dark item-icon-left" ui-sref="userAgreement">
+                        <i class="icon ion-clipboard"></i>&nbsp;
+                        Conditions of Use
+                    </a>
+                    <a class="item item-dark item-icon-left" ui-sref="privacyPolicy">
+                        <i class="icon ion-ios-eye"></i>&nbsp;
+                        Privacy Policy
+                    </a>
+                    <a class="item item-dark item-icon-left" ui-sref="acceptableUsePolicy">
+                        <i class="icon ion-ribbon-b"></i>&nbsp;
+                        Acceptable Use Policy
+                    </a>
+                </div>
+        
+                <a class="button button-light button-clear button-block" ui-sref="home">
+                    <i class="fa fa-arrow-left fa-fw"></i> back to home
+                </a>
+            </div>
         </div>
-
-        <a class="button button-light button-clear button-block" ui-sref="home">
-            <i class="fa fa-arrow-left fa-fw"></i> back to home
-        </a>
     </ion-content>
 </ion-view>

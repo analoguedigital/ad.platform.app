@@ -1,0 +1,40 @@
+<ion-view title="Advice threads" id="adviceThreadsPage" class="advice-threads" cache-view="false">
+    <ion-content has-bouncing="true" padding="true" class="has-header">
+        <ion-refresher pulling-text="Pull to refresh and sync records" on-refresh="doRefresh()"></ion-refresher>
+        
+        <div class="row responsive-lg">
+            <div class="col">
+                <ion-list ng-if="adviceThreads.length">
+                    <ion-item class="item-dark form-item" data-ng-repeat="thread in adviceThreads">
+                        <div class="light">
+                            <span class="color-block" ng-style="{'background-color': thread.colour}"></span> {{thread.title}}
+                        </div>
+                        <div class="small desc">
+                            {{thread.description}}
+                        </div>
+                        <br />
+        
+                        <div>
+                            <a class="button button-dark" ng-click="goDrafts(thread)">
+                                <i class="icon ion-ios-paper-outline" style="vertical-align: middle"></i> 
+                                <span translate>{{thread.draftsNumber}} record{{thread.draftsNumber > 1 ? "s" : ""}}</span>
+                            </a>
+        
+                            <a class="button button-dark right-side" ng-click="startSurvey(thread)">
+                                <span translate style="padding-right: 5px">Start</span>
+                                <i class="icon ion-ios-arrow-forward" style="vertical-align: middle"></i>
+                            </a>
+                        </div>
+                    </ion-item>
+                </ion-list>
+        
+                <div class="card" ng-if="adviceThreads.length < 1">
+                    <div class="item item-text-wrap">No records made yet</div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
+
+
+
