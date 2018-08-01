@@ -38,6 +38,10 @@
                     <i class="icon ion-chatbubbles"></i>
                     <span translate> Advice Threads</span>
                 </ion-item>
+                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="sharedThreads" menu-close="">
+                    <i class="icon ion-usb"></i>
+                    <span translate> Shared Threads</span>
+                </ion-item>
                 <!-- <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="subscriptions" menu-close="">
                     <i class="icon ion-card"></i>
                     <span translate> Subscriptions</span>
@@ -58,7 +62,7 @@
             </ion-list>
         </div>
     </ion-side-menu>
-    <ion-side-menu-content>
+    <ion-side-menu-content drag-content="false">
         <ion-nav-bar text class="bar-stable bar-positive with-button">
             <ion-nav-back-button></ion-nav-back-button>
             <ion-nav-buttons side="{{::getLeft()}}">

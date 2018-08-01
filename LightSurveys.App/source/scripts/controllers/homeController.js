@@ -164,11 +164,11 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
             } else {
                 var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
                 if (firstLogin && firstLogin === true) {
-                    localStorageService.set(FIRST_TIME_LOGIN_KEY, false);
-                    $scope.syncUserRecords();
-                } else {
-                    $scope.loadList();
+                    localStorageService.set(FIRST_TIME_LOGIN_KEY, false);   
                 }
+
+                $scope.loadList();
+                $scope.syncUserRecords();
             }
         }
 

@@ -194,6 +194,35 @@ angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$sco
                 $scope.survey = template.survey;
                 $scope.allFormValues = template.survey.formValues;
                 $scope.numberOfPages = _.max(template.metricGroups, 'page').page;
+
+                var locations = $scope.survey.locations;
+                var positions = [];
+                _.forEach(locations, (function(pos, index) {
+                    positions.push({
+                        center: { latitude: pos.latitude, longitude: pos.longitude },
+                        zoom: 10,
+                        options: { scrollwheel: false },
+                        marker: {
+                            id: index + 1,
+                            coords: { latitude: pos.latitude, longitude: pos.longitude },
+                            options: { draggable: false, title: pos.event },
+                            // events: {
+                            //     click: function(marker, eventName, args) {
+                            //         var position = marker.getPosition();
+                            //         var lat = position.lat();
+                            //         var long = position.lng();
+    
+                            //         var infoWindow = new google.maps.InfoWindow;
+                            //         infoWindow.setContent(marker.title);
+                            //         infoWindow.open($scope.map, marker);
+                            //     }
+                            // }
+                        }
+                    });
+                }));
+
+                $scope.locations = positions;
+
                 goToPageIndex(0);
             },
             function (err) { alertService.show(gettext("Error in loading ... ") + err); });

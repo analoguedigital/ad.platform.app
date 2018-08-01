@@ -17,6 +17,7 @@ angular.module('lm.surveys', [
     'ionic-color-picker',
     "angularMoment",
     'angular-md5',
-    'rzModule'
+    'rzModule',
+    'uiGmapgoogle-maps'
 ]);
 

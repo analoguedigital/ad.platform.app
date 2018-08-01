@@ -1,7 +1,7 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootScope', '$state', '$timeout', '$ionicModal', 'toastr',
     '$ionicPopup', 'alertService', 'userService', 'surveyService', 'passcodeModalService', 'md5', 'fingerprintService',
-    'alternateIconService', 'ngProgress', 'httpService', 'localStorageService', 
+    'alternateIconService', 'ngProgress', 'httpService', 'localStorageService',
     function ($scope, $rootScope, $state, $timeout, $ionicModal, toastr,
         $ionicPopup, alertService, userService, surveyService, passcodeModalService, md5,
         fingerprintService, alternateIconService, ngProgress, httpService, localStorageService) {
@@ -51,8 +51,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                 if (!$scope.passcodeSaved && !$scope.profile.settings.passcodeEnabled) {
                     passcodeModalService.showDialog('setpasscode', 'Enable login by passcode');
                 }
-            }
-            else if (oldValue === true && newValue === false) {
+            } else if (oldValue === true && newValue === false) {
                 if ($scope.passcodeSaved && $scope.profile.settings.passcodeEnabled) {
                     passcodeModalService.showDialog('disable', 'Disable login by passcode');
                 }
@@ -66,14 +65,14 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                 $scope.profile.settings.fingerprintEnabled = false;
 
             if ($scope.profile) {
-                userService.saveProfile($scope.profile).then(function () { });
+                userService.saveProfile($scope.profile).then(function () {});
             }
         });
 
         $scope.$watch('model.noStoreEnabled', function (newValue, oldValue) {
             if ($scope.profile) {
                 $scope.profile.settings.noStoreEnabled = newValue;
-                userService.saveProfile($scope.profile).then(function () { });
+                userService.saveProfile($scope.profile).then(function () {});
             }
         });
 
@@ -129,12 +128,12 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                         if (supported) {
                             alternateIconService.changeIcon(iconName, true)
                                 .then(function () {
-                                    $scope.selectedAppIcon = iconName;
-                                },
-                                function (err) {
-                                    console.error(err);
-                                    alertService.show('could not change app icon!');
-                                });
+                                        $scope.selectedAppIcon = iconName;
+                                    },
+                                    function (err) {
+                                        console.error(err);
+                                        alertService.show('could not change app icon!');
+                                    });
                         } else {
                             alertService.show('appiconchanger is not available');
                         }
@@ -147,8 +146,9 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
         $scope.deleteAllData = function () {
             var confirmPopup = $ionicPopup.confirm({
                 title: 'Delete all data',
-                buttons: [
-                    { text: 'Cancel' },
+                buttons: [{
+                        text: 'Cancel'
+                    },
                     {
                         text: 'Delete',
                         type: 'button-assertive',
@@ -163,8 +163,12 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
             confirmPopup.then(function (res) {
                 if (res) {
                     surveyService.deleteAllData().then(
-                        function () { alertService.show('All local data deleted successfully!'); },
-                        function (err) { alertService.show('Failed: ' + err); });
+                        function () {
+                            alertService.show('All local data deleted successfully!');
+                        },
+                        function (err) {
+                            alertService.show('Failed: ' + err);
+                        });
                 }
             });
         }
@@ -254,6 +258,9 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
                     console.error(err);
                     if (err.exceptionMessage)
                         toastr.error(err.exceptionMessage);
+
+                    if (err.message)
+                        toastr.error(err.message);
                 })
                 .finally(function () {
                     ngProgress.complete();
@@ -300,12 +307,13 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
 
             $scope.openAddPhoneNumberModal();
         }
-        
+
         $scope.removePhoneNumber = function () {
             var confirmPopup = $ionicPopup.confirm({
                 title: 'Remove phone number',
-                buttons: [
-                    { text: 'Cancel' },
+                buttons: [{
+                        text: 'Cancel'
+                    },
                     {
                         text: 'Remove',
                         type: 'button-assertive',
@@ -484,4 +492,5 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
 
         $scope.activate();
 
-    }]);
+    }
+]);

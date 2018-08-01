@@ -14,6 +14,12 @@
                 </div>
             </div>
         </form>
+
+        <div class="map-wrap" ng-repeat="location in locations track by $index">
+            <ui-gmap-google-map center="location.center" zoom="location.zoom" options="location.options" draggable="false">
+                <ui-gmap-marker coords="location.marker.coords" options="location.marker.options" events="location.marker.events" idKey="location.marker.id"></ui-gmap-marker>
+            </ui-gmap-google-map>
+        </div>
     </ion-content>
     <div class="bar bar-footer tabs bar-dark row" ng-if="numberOfPages > 1">
         <a class="tab-item " ng-show="!isFirstPage()" ng-click="goToPreviousPage()"><span translate>Back to page</span> {{currentPageIndex}}</a>

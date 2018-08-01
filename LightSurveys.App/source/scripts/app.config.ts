@@ -159,7 +159,7 @@
             .state('makingRecords', {
                 parent: 'menu',
                 url: '/guidance/making-records',
-                controller: 'staticContentController',
+                controller: 'gettingStartedController',
                 templateUrl: 'partials/guidance/making-records.html'
             })
             .state('account', {
@@ -179,6 +179,12 @@
                 url: '/advice-threads',
                 controller: 'adviceThreadsController',
                 templateUrl: 'partials/advice-threads.html'
+            })
+            .state('sharedThreads', {
+                parent: 'menu',
+                url: '/shared-threads',
+                controller: 'sharedThreadsController',
+                templateUrl: 'partials/shared-threads.html'
             });
 
         $urlRouterProvider.otherwise('/home');

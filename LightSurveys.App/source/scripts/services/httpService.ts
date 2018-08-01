@@ -12,6 +12,7 @@ module App.Services {
         getFormTemplates(discriminator: number): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.FormTemplate>>>;
         getProjects(): angular.IPromise<angular.IHttpPromiseCallbackArg<Array<Models.Project>>>;
         getSurvey(id: string): ng.IPromise<Models.Survey>;
+        getSurveys(discriminator: number, projectId: string): ng.IPromise<Array<Models.Survey>>;
         uploadSurvey(survey: Models.Survey): angular.IPromise<angular.IHttpPromiseCallbackArg<any>>;
         register(registerData: IRegisterData): ng.IPromise<any>;
         deleteFormTemplate(id: string): ng.IPromise<any>;
@@ -20,6 +21,7 @@ module App.Services {
         forgotPassword(model: Models.IForgotPasswordModel): ng.IPromise<void>;
         getDataList(id: string): angular.IPromise<angular.IHttpPromiseCallbackArg<Models.DataListItem[]>>;
         getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>>;
+        
         getServiceBase(): string;
         updateProfile(model: Models.IProfileModel): ng.IPromise<void>;
         changePassword(model: Models.IChangePasswordModel): ng.IPromise<void>;
@@ -39,6 +41,9 @@ module App.Services {
         getOrganizations(): ng.IPromise<any>;
         requestOrgConnection(organisationId: string): ng.IPromise<any>;
         requestOrganization(model: Models.IOrgRequestModel): ng.IPromise<any>;
+
+        getSharedProjects(): ng.IPromise<Models.Project[]>;
+        getSharedThreads(projectId: string): ng.IPromise<Models.FormTemplate[]>;
     }
 
     export class HttpService implements IHttpService {
@@ -482,6 +487,36 @@ module App.Services {
             var deferred = this.$q.defer<void>();
 
             this.$http.post(HttpService.serviceBase + 'api/orgRequests/', model)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        getSharedProjects(): ng.IPromise<Models.Project[]> {
+            var deferred = this.$q.defer<Models.Project[]>();
+
+            this.$http.get(HttpService.serviceBase + 'api/projects/shared')
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        getSharedThreads(projectId: string): ng.IPromise<Models.FormTemplate[]> {
+            var deferred = this.$q.defer<Models.FormTemplate[]>();
+
+            this.$http.get(HttpService.serviceBase + 'api/formtemplates/shared/' + projectId)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        getSurveys(discriminator: number, projectId: string): ng.IPromise<Array<Models.Survey>> {
+            var deferred = this.$q.defer<Models.Survey[]>();
+
+            this.$http.get(HttpService.serviceBase + 'api/surveys/?discriminator=' + discriminator + '&projectId=' + projectId)
                 .success((data: any) => { deferred.resolve(data); })
                 .error((data, status) => { deferred.reject(this.onError(data, status)); });
 

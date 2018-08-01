@@ -600,7 +600,14 @@ module App.Services {
 
             var q = this.$q.defer<Models.Survey>();
             survey.dateUpdated = new Date(new Date().toISOString());
-            survey.projectId = this.userService.current.project.id;
+            // survey.projectId = this.userService.current.project.id;
+
+            this.getFormTemplate(survey.formTemplateId).then((thread) => {
+                survey.projectId = thread.projectId;
+            }, (err) => {
+                console.warn(err);
+            });
+
             survey.isSubmitted = true;
             this.saveSurvey(survey).then((survey) => {
                 q.resolve(survey);
@@ -667,8 +674,9 @@ module App.Services {
 
             this.storageService.getAll(this.SURVEY_OBJECT_TYPE, formTemplateId)
                 .then((surveys: Array<Models.Survey>) => {
-                    let result = _.filter(surveys, { 'projectId': this.userService.current.project.id });
+                    // let result = _.filter(surveys, { 'projectId': this.userService.current.project.id });
 
+                    let result = surveys;
                     _.forEach(result, (survey: Models.Survey) => {
                         this.getSurveyMetadata(survey).then((record) => {
                             survey = record;

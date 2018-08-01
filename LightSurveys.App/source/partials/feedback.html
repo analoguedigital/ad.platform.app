@@ -2,15 +2,26 @@
     <ion-content class="content padding" ng-cloak>
         <div class="row responsive-lg">
             <div class="col">
-                <div class="card" style="margin-top: 0">
+                <div class="card" style="margin-top: 0; margin-bottom: 0">
+                    <div class="item item-divider">How to connect to an organization</div>
                     <div class="item item-text-wrap">
-                        <p class="lead">Find advice and guidance on our website at <a href="#" onclick="window.open('https://onrecord.tech', '_system', 'location=yes'); return false;">https://onrecord.tech</a>.</p>
+                        <p class="lead">- Tap on <b>My Account</b> (your username at the top of the menu).</p>
+                        <p class="lead">- Scroll down to <b>Connect to an Organization</b>.</p>
+                        <p class="lead">- If the organization or professional you want to connect to is not on the list, tap on <b>Request Organization</b> and provide as much detail as possible.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card" style="margin-top: 0; margin-bottom: 0">
+                    <div class="item item-divider">Help from OnRecord</div>
+                    <div class="item item-text-wrap">
+                        <p class="lead">We offer advice (not legal) and help. Get in touch via <a href="#" onclick="window.open('mailto:admin@analogue.digital', '_system'); return false;">admin@analogue.digital</a>.</p>
                     </div>
                     <div class="item item-text-wrap">
-                        <p class="lead">See our <a href="#" onclick="window.open('https://www.youtube.com/channel/UCbySt38csVzV1oI5k4PoSAw', '_system', 'location=yes'); return false;">YouTube Channel</a> for more.</p>
+                        <p class="lead">Find more advice and guidance on our website at <a href="#" onclick="window.open('https://onrecord.tech', '_system', 'location=yes'); return false;">https://onrecord.tech</a>.</p>
                     </div>
                     <div class="item item-text-wrap">
-                        <p class="lead">We are happy to offer individual guidance at <a href="#" onclick="window.open('mailto:admin@analogue.digital', '_system'); return false;">admin@analogue.digital</a>.</p>
+                        <p class="lead">and on our OnRecord YouTube channel at <a href="#" onclick="window.open('https://www.youtube.com/channel/UCbySt38csVzV1oI5k4PoSAw', '_system', 'location=yes'); return false;">https://www.youtube.com/channel/UCbySt38csVzV1oI5k4PoSAw</a>.</p>
                     </div>
                 </div>
             </div>
@@ -21,7 +32,7 @@
                             <h3>We also welcome your feedback:</h3>
                             <br />
                             <label class="item item-input">
-                                <textarea placeholder="Enter your comment and tap send" rows="2" ng-model="model.comment" ng-disabled="feedbackWorking"></textarea>
+                                <textarea placeholder="Enter your comments and tap 'send'" rows="2" ng-model="model.comment" ng-disabled="feedbackWorking"></textarea>
                             </label>
                         </div>
                         <br />
@@ -40,7 +51,7 @@
             </div>
             <div class="col">
                 <div ng-if="feedbackSent">
-                    <div class="card">
+                    <div class="card" style="margin-top: 0; margin-bottom: 0">
                         <div class="item item-text-wrap">
                             <h1 class="text-success"><i class="fa fa-check"></i> Feedback Sent</h1>
                             <br />

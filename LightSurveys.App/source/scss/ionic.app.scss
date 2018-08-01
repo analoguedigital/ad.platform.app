@@ -99,6 +99,11 @@ mwl-calendar.survey-calendar {
 
     .item {
         background-color: transparent;
+        border-top-color: #999 !important;
+    }
+
+    .item.item-body hr {
+        border-color: #999 !important;
     }
 }
 
@@ -582,6 +587,14 @@ progress[value]::-moz-progress-bar {
     border-radius: 2px;
     display: block;
     text-indent: -9999px;
+}
+
+.angular-google-map-container {
+    height: 300px;
+}
+
+.list:last-child.card {
+    margin-bottom: 20px;
 }
 
 /* iPad Pro in landscape */
