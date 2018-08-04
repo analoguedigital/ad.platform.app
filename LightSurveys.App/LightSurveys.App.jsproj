@@ -98,7 +98,6 @@
     <Content Include="source\images\box_background.png" />
     <Content Include="source\images\icon 1.png" />
     <Content Include="source\images\icon 10.png" />
-    <Content Include="source\images\icon 11.png" />
     <Content Include="source\images\icon 12.png" />
     <Content Include="source\images\icon 13.png" />
     <Content Include="source\images\icon 14.png" />
@@ -115,6 +114,7 @@
     <Content Include="source\images\icon 7.png" />
     <Content Include="source\images\icon 8.png" />
     <Content Include="source\images\icon 9.png" />
+    <Content Include="source\images\icon-alt.png" />
     <Content Include="source\index.html" />
     <Content Include="source\partials\account.html" />
     <Content Include="source\partials\add-phonenumber.html" />
@@ -129,6 +129,7 @@
     <Content Include="source\partials\feedback.html" />
     <Content Include="source\partials\forgot-password.html" />
     <Content Include="source\partials\formTemplate.html" />
+    <Content Include="source\partials\guidance\acceptable-use-policy.html" />
     <Content Include="source\partials\guidance\gather-evidence.html" />
     <Content Include="source\partials\guidance\index.html" />
     <Content Include="source\partials\guidance\making-records.html" />
@@ -168,7 +169,6 @@
     <Content Include="source\partials\organizations-modal.html" />
     <Content Include="source\partials\organizations.html" />
     <Content Include="source\partials\passcode-modal.html" />
-    <Content Include="source\partials\records-guide-modal.html" />
     <Content Include="source\partials\redeem-voucher.html" />
     <Content Include="source\partials\register-complete.html" />
     <Content Include="source\partials\register.html" />
@@ -179,9 +179,7 @@
     <Content Include="source\partials\survey.html" />
     <Content Include="source\partials\surveyView.html" />
     <Content Include="source\partials\terms.html" />
-    <Content Include="source\partials\threads-guide-modal.html" />
     <Content Include="source\partials\timeline.html" />
-    <Content Include="source\partials\well-done-modal.html" />
     <Content Include="source\scripts\app.config.ts" />
     <Content Include="source\scripts\app.js" />
     <Content Include="source\scripts\app.models.ts" />
@@ -196,6 +194,7 @@
     <Content Include="source\scripts\controllers\editTemplateController.js" />
     <Content Include="source\scripts\controllers\feedbackController.js" />
     <Content Include="source\scripts\controllers\forgotPasswordController.js" />
+    <Content Include="source\scripts\controllers\guidance\getting-started-controller.js" />
     <Content Include="source\scripts\controllers\guidance\guidanceController.js" />
     <Content Include="source\scripts\controllers\guidance\staticContentController.js" />
     <Content Include="source\scripts\controllers\homeController.js" />
