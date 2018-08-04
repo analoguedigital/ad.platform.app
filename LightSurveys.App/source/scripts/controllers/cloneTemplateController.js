@@ -1,19 +1,17 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('cloneTemplateController', ['$scope', '$state', '$stateParams', '$ionicHistory', 'userService', 'alertService', 'ngProgress', 'surveyService', 'httpService',
-function ($scope, $state, $stateParams, $ionicHistory, userService, alertService, ngProgress, surveyService, httpService) {
+angular.module('lm.surveys').controller('cloneTemplateController', ['$scope', '$state', '$stateParams', '$ionicHistory', 'userService', 'alertService', 'ngProgress', 'surveyService', 'httpService', 'toastr', 
+function ($scope, $state, $stateParams, $ionicHistory, userService, alertService, ngProgress, surveyService, httpService, toastr) {
 
     $scope.templateId = $stateParams.id;
     $scope.formTemplate = null;
     $scope.vm = {
-        title: "",
+        title: "My Thread",
         colour: "",
     };
 
     $scope.submit = function () {
-
-
         if (!$scope.vm.title) {
-            alertService.show("Please enter title");
+            toastr.warning('Please enter title');
         }
         else {
             ngProgress.start();

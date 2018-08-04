@@ -1,6 +1,9 @@
 ﻿'use strict';
-angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicPlatform', '$ionicSideMenuDelegate', '$ionicPopup', 'surveyService', 'userService', 'alertService', 'ngProgress', '$ionicNavBarDelegate', '$ionicHistory', 'storageService', 'httpService', 'localStorageService',
-    function ($scope, $rootScope, $state, $stateParams, $ionicPlatform, $ionicSideMenuDelegate, $ionicPopup, surveyService, userService, alertService, ngProgress, $ionicNavBarDelegate, $ionicHistory, storageService, httpService, localStorageService) {
+angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicPlatform',
+    '$ionicSideMenuDelegate', '$ionicPopup', 'surveyService', 'userService', 'alertService', 'ngProgress', '$ionicNavBarDelegate',
+    '$ionicHistory', 'storageService', 'httpService', 'localStorageService', '$ionicModal', 'toastr', 
+    function ($scope, $rootScope, $state, $stateParams, $ionicPlatform, $ionicSideMenuDelegate, $ionicPopup, surveyService,
+        userService, alertService, ngProgress, $ionicNavBarDelegate, $ionicHistory, storageService, httpService, localStorageService, $ionicModal, toastr) {
         var FIRST_TIME_LOGIN_KEY = 'FIRST_TIME_LOGIN';
 
         //solution to Navbar disappearance issue suggested here https://github.com/ionic-team/ionic/issues/3483
@@ -17,6 +20,10 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         $scope.profile = {};
         $scope.userInfo = {};
 
+        $scope.threadsGuidePopup = undefined;
+        $scope.recordsGuidePopup = undefined;
+        $scope.wellDonePopup = undefined;
+
         $scope.loadList = function () {
             surveyService.getFormTemplates()
                 .then(function (results) {
@@ -29,6 +36,84 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
 
                     $scope.allFormTemplates = results;
                     $scope.formTemplates = results;
+
+                    if (!$scope.formTemplates.length) {
+                        if (userService.current.project.createdBy.id === userService.current.userId) {
+                            var threadsPopupTemplate = "<p>Your records can be grouped in threads.</p>" +
+                                "<p>Threads help you sort and share your information. You can create as many threads as you like and choose who to share them with.</p>" +
+                                "<p>Go ahead and create your first thread now.</p>";
+
+                            if (!$scope.threadsGuidePopup) {
+                                $scope.threadsGuidePopup = $ionicPopup.show({
+                                    template: threadsPopupTemplate,
+                                    title: 'Threads Guide',
+                                    scope: $scope,
+                                    buttons: [
+                                        {
+                                            text: 'Create first thread',
+                                            type: 'button-energized'
+                                        }
+                                    ]
+                                });
+
+                                $scope.threadsGuidePopup.then(function (res) {
+                                    $scope.createFirstThread();
+                                });
+                            }
+                        }
+                    } else if ($scope.formTemplates.length === 1) {
+                        var savedSurveys = surveyService.getAllSavedSurveys($scope.formTemplates[0].id)
+                            .then(function (data) {
+                                if (!data.length) {
+                                    var recordsPopupTemplate = "<p>Records store your information.</p>" +
+                                        "<p>Records allow you to collect the detailed information about a specific day, time or incident. You can upload text, voice and photos. Your records are completely confidential.</p>" +
+                                        "<p>Create your first record now.</p>";
+
+                                    if (!$scope.recordsGuidePopup) {
+                                        $scope.recordsGuidePopup = $ionicPopup.show({
+                                            template: recordsPopupTemplate,
+                                            title: 'Records Guide',
+                                            scope: $scope,
+                                            buttons: [
+                                                {
+                                                    text: 'Create first record',
+                                                    type: 'button-energized'
+                                                }
+                                            ]
+                                        });
+
+                                        $scope.recordsGuidePopup.then(function () {
+                                            $scope.createFirstRecord();
+                                        });
+                                    }
+                                } else if (data.length === 1) {
+                                    if (data[0].isSubmitted) {
+                                        var wellDonePopupShown = localStorageService.get('WELL_DONE_POPUP_SHOWN');
+                                        if (wellDonePopupShown === null || wellDonePopupShown === undefined) {
+                                            var wellDoneTemplate = "<p>You have created your first thread and record. Continue to make records and once you have a few records you can:</p>" +
+                                                "<p><a ng-click='goToTimeline()'>View them on the Timeline</a><br><a ng-click='goToCalendar()'>View them on the Calendar</a><br><a ui-sref='organizations'>Get help</a></p>";
+
+                                            if (!$scope.wellDonePopup) {
+                                                $scope.wellDonePopup = $ionicPopup.show({
+                                                    template: wellDoneTemplate,
+                                                    title: 'Well Done',
+                                                    subTitle: 'Keep going!',
+                                                    scope: $scope,
+                                                    buttons: [
+                                                        {
+                                                            text: 'OK',
+                                                            type: 'button-energized'
+                                                        }
+                                                    ]
+                                                });
+
+                                                localStorageService.set('WELL_DONE_POPUP_SHOWN', true);
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                    }
 
                     // filter results to threads created by current user.
                     // PS this isn't necessary because users can see threads 
@@ -49,6 +134,17 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                     });
                 }, function (err) {});
         };
+
+        $scope.createFirstRecord = function () {
+            var thread = $scope.formTemplates[0];
+            surveyService.startSurvey(thread)
+                .then(function (survey) {
+                    $scope.recordsGuidePopup.close();
+                    $state.go("survey", {
+                        id: survey.id
+                    });
+                }, function (err) { });
+        }
 
         $scope.goDrafts = function (formTemplate) {
             $state.go("drafts", {
@@ -139,12 +235,30 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
 
                                     $scope.loadList();
                                 }, function (err) {
-                                    console.error(err);
+                                    console.warn(err);
+
+                                    if (err.substr(0, 3) === '401')
+                                        toastr.error("Access Denied. You don't have permission to sync records.");
                                 });
                         }
                     }
                 }
             });
+        }
+
+        $scope.createFirstThread = function () {
+            $scope.threadsGuidePopup.close();
+            $scope.cloneTemplate();
+        }
+
+        $scope.goToTimeline = function () {
+            $scope.wellDonePopup.close();
+            $state.go('timeline');
+        }
+
+        $scope.goToCalendar = function () {
+            $scope.wellDonePopup.close();
+            $state.go('calendar');
         }
 
         $scope.activate = function () {

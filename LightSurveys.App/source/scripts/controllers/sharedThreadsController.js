@@ -11,6 +11,10 @@ angular.module('lm.surveys').controller('sharedThreadsController', ['$scope', '$
         $scope.sharedProjects = [];
         $scope.surveys = [];
 
+        $scope.model = {
+            selectedProject: undefined
+        };
+
         $scope.startSurvey = function (formTemplate) {
             surveyService.startSurvey(formTemplate)
                 .then(function (survey) {
@@ -31,49 +35,21 @@ angular.module('lm.surveys').controller('sharedThreadsController', ['$scope', '$
             $scope.downloading = true;
 
             surveyService.uploadAllSurveys();
-            $scope.loadData();
+
+            if ($scope.model.selectedProject) {
+                var pid = $scope.model.selectedProject.id;
+                $scope.reload(pid);
+            }
+            else {
+                $scope.loadData();
+            }
 
             $scope.$broadcast('scroll.refreshComplete');
             $scope.downloading = false;
             ngProgress.complete();
-
-            // not necessary to reload form-templates and advice-threads.
-            // unless refactored into survey service and wired up in the same pipieline.
-            
-            // surveyService.refreshData()
-            //     .then(function () {
-                    
-            //     }, function (err) {
-            //         ngProgress.complete();
-            //         $scope.downloading = false;
-            //         alertService.show(err);
-            //     });
         }
 
-        $scope.loadThreads = function (projectId) {
-            httpService.getSharedThreads(projectId).then(function (threads) {
-                angular.forEach(threads, function (formTemplate) {
-                    storageService.save('formTemplate', null, formTemplate.id, formTemplate)
-                        .then(function () {
-                            // surveyService.getDraftsNumber(formTemplate.id)
-                            //     .then(function (count) {
-                            //         formTemplate.draftsNumber = count;
-                            //     });
-
-                            var res = _.filter($scope.surveys, function(survey) {
-                                return survey.formTemplateId === formTemplate.id;
-                            });
-
-                            formTemplate.draftsNumber = res.length;
-                        });
-                });
-
-                $scope.allSharedThreads = threads;
-                $scope.sharedThreads = threads;
-            });
-        }
-
-        $scope.loadSurveys = function (projectId) {
+        $scope.reload = function (projectId) {
             httpService.getSurveys(0, projectId).then(function (surveys) {
                 try {
                     // fix attachments, and store surveys locally
@@ -91,6 +67,22 @@ angular.module('lm.surveys').controller('sharedThreadsController', ['$scope', '$
                     });
 
                     $scope.surveys = surveys;
+                    
+                    httpService.getSharedThreads(projectId).then(function (threads) {
+                        angular.forEach(threads, function (formTemplate) {
+                            storageService.save('formTemplate', null, formTemplate.id, formTemplate)
+                                .then(function () {
+                                    var res = _.filter($scope.surveys, function (survey) {
+                                        return survey.formTemplateId === formTemplate.id;
+                                    });
+
+                                    formTemplate.draftsNumber = res.length;
+                                });
+                        });
+
+                        $scope.allSharedThreads = threads;
+                        $scope.sharedThreads = threads;
+                    });
                 } catch (err) {
                     console.warn(err);
                 }
@@ -103,12 +95,16 @@ angular.module('lm.surveys').controller('sharedThreadsController', ['$scope', '$
 
                 if (data.length === 1) {
                     var id = data[0].id;
-                    $scope.loadSurveys(id);
-                    $scope.loadThreads(id);
+                    $scope.reload(id);
                 }
             }, function (err) {
                 console.error(err);
             });
+        }
+
+        $scope.selectedProjectChanged = function () {
+            var pid = $scope.model.selectedProject.id;
+            $scope.reload(pid);
         }
 
         $scope.activate = function () {

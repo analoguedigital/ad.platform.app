@@ -10,7 +10,7 @@ angular.module('lm.surveys').controller('forgotPasswordController', ['$scope', '
 
         $scope.resetPassword = function () {
             if (!$scope.model.email || $scope.model.email.length == 0) {
-                toastr.info('Please enter your email address first');
+                toastr.warning('Please enter your email address first');
                 return;
             }
 

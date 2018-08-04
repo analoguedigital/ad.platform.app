@@ -3,16 +3,6 @@
         <div class="row responsive-lg">
             <div class="col">
                 <div class="card" style="margin-top: 0; margin-bottom: 0">
-                    <div class="item item-divider">How to connect to an organization</div>
-                    <div class="item item-text-wrap">
-                        <p class="lead">- Tap on <b>My Account</b> (your username at the top of the menu).</p>
-                        <p class="lead">- Scroll down to <b>Connect to an Organization</b>.</p>
-                        <p class="lead">- If the organization or professional you want to connect to is not on the list, tap on <b>Request Organization</b> and provide as much detail as possible.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card" style="margin-top: 0; margin-bottom: 0">
                     <div class="item item-divider">Help from OnRecord</div>
                     <div class="item item-text-wrap">
                         <p class="lead">We offer advice (not legal) and help. Get in touch via <a href="#" onclick="window.open('mailto:admin@analogue.digital', '_system'); return false;">admin@analogue.digital</a>.</p>
@@ -25,6 +15,18 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col">
+                <div class="card" style="margin-top: 0; margin-bottom: 0">
+                    <div class="item item-divider">How to connect to an organization</div>
+                    <div class="item item-text-wrap">
+                        <p class="lead">- Tap on <b><a ui-sref="account">My Account</a></b> (your username at the top of the menu).</p>
+                        <p class="lead">- Scroll down to <b><a ui-sref="organizations">Connect to an Organization</a></b>.</p>
+                        <p class="lead">- If the organization or professional you want to connect to is not on the list, tap on <b>Request Organization</b> and provide as much detail as possible.</p>
+                    </div>
+                </div>
+            </div>
+            
             <div class="col">
                 <div ng-if="!feedbackSent">
                     <div class="list">

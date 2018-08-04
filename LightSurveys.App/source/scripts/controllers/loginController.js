@@ -24,9 +24,9 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
 
         $scope.login = function () {
             if (!$scope.loginData.email) {
-                alertService.show("Please enter your email");
+                toastr.warning("Please enter your email");
             } else if (!$scope.loginData.password) {
-                alertService.show("Please enter your password");
+                toastr.warning("Please enter your password");
             } else {
                 ngProgress.start();
                 $scope.loginWorking = true;
@@ -52,12 +52,10 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                                             $ionicHistory.clearHistory();
 
                                             var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
-                                            if (firstLogin === null || firstLogin === undefined) {
+                                            if (firstLogin === null || firstLogin === undefined)
                                                 localStorageService.set(FIRST_TIME_LOGIN_KEY, true);
-                                                $state.go('makingRecords');
-                                            } else {
-                                                $state.go('projects');
-                                            }
+
+                                            $state.go('projects');
                                         },
                                         function (err) {
                                             ngProgress.complete();
@@ -68,7 +66,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                         function (err) {
                             ngProgress.complete();
                             $scope.loginWorking = false;
-                            alertService.show(err);
+                            toastr.error(err);
                         });
             }
         };

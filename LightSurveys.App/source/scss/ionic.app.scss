@@ -173,7 +173,9 @@ mwl-calendar.survey-calendar {
 .checkout-subscription-screen,
 .add-phonenumber-screen,
 .organizations-dialog,
-.organization-request-screen {
+.organization-request-screen,
+.threads-guide-screen,
+.records-guide-screen {
     background-color: $base-background-color;
 }
 
@@ -595,6 +597,18 @@ progress[value]::-moz-progress-bar {
 
 .list:last-child.card {
     margin-bottom: 20px;
+}
+
+.landing-page {
+    h2 {
+        color: #fff;
+        font-size: xx-large;
+        text-align: center;
+    }
+
+    p {
+        color: #fff;
+    }
 }
 
 /* iPad Pro in landscape */
