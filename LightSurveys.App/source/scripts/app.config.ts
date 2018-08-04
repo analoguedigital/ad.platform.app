@@ -20,6 +20,14 @@
                 controller: 'menuController',
                 templateUrl: 'partials/menu.html'
             })
+            .state('landing', {
+                url: '/landing',
+                controller: 'landingController',
+                controllerAs: 'ctrl',
+                templateUrl: 'partials/landing-screen.html',
+                data: { cssClassnames: 'landing-page' },
+                cache: false
+            })
             .state('home', {
                 url: '/home',
                 parent: 'menu',

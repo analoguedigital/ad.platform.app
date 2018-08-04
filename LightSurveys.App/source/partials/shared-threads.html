@@ -3,6 +3,16 @@
         <ion-refresher pulling-text="Pull to refresh and sync records" on-refresh="doRefresh()"></ion-refresher>
 
         <div class="row responsive-lg">
+            <div class="col" ng-if="sharedProjects.length > 1">
+                <div class="list">
+                    <label class="item item-input item-select">
+                        <div class="input-label">Project</div>
+                        <select ng-model="model.selectedProject" ng-change="selectedProjectChanged()"
+                                ng-options="project as project.name for project in sharedProjects track by project.id">
+                        </select>
+                    </label>
+                </div>
+            </div>
             <div class="col">
                 <ion-list ng-if="sharedThreads.length">
                     <ion-item class="item-dark form-item" data-ng-repeat="thread in sharedThreads">
@@ -29,7 +39,7 @@
                 </ion-list>
 
                 <div class="card" ng-if="sharedThreads.length < 1">
-                    <div class="item item-text-wrap">No records made yet. Pull down to refresh and sync.</div>
+                    <div class="item item-text-wrap">No records found. If your records are not listed here, pull down to refresh and sync.</div>
                 </div>
             </div>
         </div>
