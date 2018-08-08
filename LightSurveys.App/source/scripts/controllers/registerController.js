@@ -27,72 +27,69 @@ angular.module('lm.surveys').controller('registerController', ['$scope', '$state
 
             if (!$scope.registerData.firstName) {
                 alertService.show("Please enter your name");
-            }
-            else if (!$scope.registerData.surname) {
+            } else if (!$scope.registerData.surname) {
                 alertService.show("Please enter your surname");
-            }
-            else if (!$scope.registerData.email) {
+            } else if (!$scope.registerData.email) {
                 alertService.show("Please enter your email");
-            }
-            else if (!$scope.registerData.confirmEmail) {
+            } else if (!$scope.registerData.confirmEmail) {
                 alertService.show("Please confirm your email");
-            }
-            else if ($scope.registerData.email !== $scope.registerData.confirmEmail) {
+            } else if ($scope.registerData.email !== $scope.registerData.confirmEmail) {
                 alertService.show("Emails do not match! Try again.")
-            }
-            else if (!$scope.registerData.password) {
+            } else if (!$scope.registerData.password) {
                 alertService.show("Please enter your password");
-            }
-            else if ($scope.model.termsAgreed === false) {
+            } else if ($scope.model.termsAgreed === false) {
                 alertService.show("Please agree to usage terms");
-            }
-            else {
+            } else {
                 ngProgress.start();
 
                 userService.register($scope.registerData)
                     .then(function () {
-                        ngProgress.complete();
+                            ngProgress.complete();
 
-                        // disabled temporarily. but we need this in production.
-                        //$state.go('registerComplete');
+                            // disabled temporarily. but we need this in production.
+                            //$state.go('registerComplete');
 
-                        var params = { email: $scope.registerData.email, password: $scope.registerData.password };
-                        ngProgress.start();
+                            var params = {
+                                email: $scope.registerData.email,
+                                password: $scope.registerData.password
+                            };
+                            ngProgress.start();
 
-                        userService.login(params)
-                            .then(function () {
-                                if (navigator.vibrate)
-                                    navigator.vibrate(1000);
+                            userService.login(params)
+                                .then(function () {
+                                        if (navigator.vibrate)
+                                            navigator.vibrate(1000);
 
-                                _.forEach(localStorageService.keys(), function (key) {
-                                    if (_.includes(key, 'user')) {
-                                        localStorageService.remove(key);
-                                    }
-                                });
+                                        _.forEach(localStorageService.keys(), function (key) {
+                                            if (_.includes(key, 'user')) {
+                                                localStorageService.remove(key);
+                                            }
+                                        });
 
-                                surveyService.clearLocalData().then(function () {
-                                    //var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
-                                    //if (firstLogin === null || firstLogin === undefined) {
-                                    //    localStorageService.set(FIRST_TIME_LOGIN_KEY, true);
-                                    //    $state.go('makingRecords');
-                                    //} else {
-                                    //    $state.go('projects');
-                                    //}
+                                        surveyService.clearLocalData().then(function () {
+                                            surveyService.refreshData()
+                                                .then(function () {
+                                                        ngProgress.complete();
+                                                        $ionicHistory.clearHistory();
 
-                                    var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
-                                    if (firstLogin === null || firstLogin === undefined) {
-                                        localStorageService.set(FIRST_TIME_LOGIN_KEY, true);
-                                    }
+                                                        var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
+                                                        if (firstLogin === null || firstLogin === undefined)
+                                                            localStorageService.set(FIRST_TIME_LOGIN_KEY, true);
 
-                                    $state.go('projects');
-                                });
-                            },
-                                function (err) {
-                                    ngProgress.complete();
-                                    $scope.loginWorking = false;
-                                    alertService.show(err);
-                                });
-                    },
+                                                        $state.go('projects');
+                                                    },
+                                                    function (err) {
+                                                        ngProgress.complete();
+                                                        alertService.show(err);
+                                                    });
+                                        });
+                                    },
+                                    function (err) {
+                                        ngProgress.complete();
+                                        $scope.loginWorking = false;
+                                        alertService.show(err);
+                                    });
+                        },
                         function (err) {
                             ngProgress.complete();
                             alertService.show($scope.getValidationErrors(err));
@@ -127,4 +124,5 @@ angular.module('lm.surveys').controller('registerController', ['$scope', '$state
         $scope.closeTermsModal = function () {
             $scope.termsModal.hide();
         }
-    }]);
+    }
+]);

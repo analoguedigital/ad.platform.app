@@ -1,6 +1,6 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('menuController', ['$scope', '$rootScope', '$ionicPopup', '$state',
-    '$timeout', 'surveyService', 'userService', 'alertService', 'ngProgress', 'storageService', 
+    '$timeout', 'surveyService', 'userService', 'alertService', 'ngProgress', 'storageService',
     function ($scope, $rootScope, $ionicPopup, $state, $timeout, surveyService, userService, alertService, ngProgress, storageService) {
         $scope.currentContext = userService.current;
         $scope.downloading = false;
@@ -58,21 +58,23 @@ angular.module('lm.surveys').controller('menuController', ['$scope', '$rootScope
             $timeout(function () {
                 surveyService.uploadAllSurveys()
                     .then(function () {
-                        ngProgress.complete();
-                        $scope.uploading = false;
-                        $timeout(function () { progressPopup.close(); }, 5000);
-                        _loadList();
-                    },
-                    function (err) {
-                        console.log(err);
-                        alertService.show("Error in uploading surveys!");
-                    },
-                    function (state) {
-                        $scope.progressText = state.totalProcessed + ' of ' + state.totalNumber;
-                        $scope.numberOfSuccessfuls = state.totalSuccessful;
-                        $scope.numberOfErrors = state.totalErrors;
-                        console.log(state);
-                    });
+                            ngProgress.complete();
+                            $scope.uploading = false;
+                            $timeout(function () {
+                                progressPopup.close();
+                            }, 5000);
+                            _loadList();
+                        },
+                        function (err) {
+                            console.log(err);
+                            alertService.show("Error in uploading surveys!");
+                        },
+                        function (state) {
+                            $scope.progressText = state.totalProcessed + ' of ' + state.totalNumber;
+                            $scope.numberOfSuccessfuls = state.totalSuccessful;
+                            $scope.numberOfErrors = state.totalErrors;
+                            console.log(state);
+                        });
             }, 500);
 
         };
@@ -94,12 +96,46 @@ angular.module('lm.surveys').controller('menuController', ['$scope', '$rootScope
             $state.go('login');
         };
 
+        $scope.goToSettings = function() {
+            $scope.signOutConfirmPopup.close();
+            $state.go('settings');
+        }
+
         $scope.logOut = function () {
-            surveyService.clearLocalData().then(function () {
-                userService.logOut()
-                    .then(function () {
-                        $state.go('login');
+            var confirmTemplate = "<p>Signing out will clear local data from your device. And you will need to sign in again with your username and password.</p>" + 
+                "<p>You could go to <a ng-click='goToSettings()'>Settings</a> and change your security preferences.</p>" + 
+                "<p>You can enable fingerprint login if your device supports Touch ID. Alternatively, you can create a local PIN code and use that instead.</p>";
+
+            $scope.signOutConfirmPopup = $ionicPopup.confirm({
+                title: 'Sign out',
+                subTitle: 'Are you sure you want to sign out?',
+                template: confirmTemplate,
+                scope: $scope,
+                buttons: [{
+                        text: 'Cancel',
+                        type: 'button-stable'
+                    },
+                    {
+                        text: 'Sign out',
+                        type: 'button-energized',
+                        onTap: function() {
+                            return true;
+                        }
+                    }
+                ]
+            });
+
+            $scope.signOutConfirmPopup.then(function (res) {
+                if (res) {
+                    surveyService.clearLocalData().then(function () {
+                        userService.logOut()
+                            .then(function () {
+                                $state.go('login');
+                            });
                     });
+                } else {
+                    confirmPopup.close();
+                }
             });
         };
 
@@ -109,19 +145,19 @@ angular.module('lm.surveys').controller('menuController', ['$scope', '$rootScope
             ngProgress.start();
             surveyService.refreshData()
                 .then(function () {
-                    $scope.downloading = false;
-                    ngProgress.complete();
-                    userService.currentProfile.lastRefreshTemplate = new Date();
-                    init();
-                },
-                function (err) {
-                    $scope.downloading = false;
-                    ngProgress.complete();
-                    alertService.show(err);
-                });
+                        $scope.downloading = false;
+                        ngProgress.complete();
+                        userService.currentProfile.lastRefreshTemplate = new Date();
+                        init();
+                    },
+                    function (err) {
+                        $scope.downloading = false;
+                        ngProgress.complete();
+                        alertService.show(err);
+                    });
         } else {
             init();
         }
 
-    }]);
-
+    }
+]);
