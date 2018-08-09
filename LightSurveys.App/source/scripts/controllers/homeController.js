@@ -1,7 +1,7 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicPlatform',
     '$ionicSideMenuDelegate', '$ionicPopup', 'surveyService', 'userService', 'alertService', 'ngProgress', '$ionicNavBarDelegate',
-    '$ionicHistory', 'storageService', 'httpService', 'localStorageService', '$ionicModal', 'toastr', 
+    '$ionicHistory', 'storageService', 'httpService', 'localStorageService', '$ionicModal', 'toastr',
     function ($scope, $rootScope, $state, $stateParams, $ionicPlatform, $ionicSideMenuDelegate, $ionicPopup, surveyService,
         userService, alertService, ngProgress, $ionicNavBarDelegate, $ionicHistory, storageService, httpService, localStorageService, $ionicModal, toastr) {
         var FIRST_TIME_LOGIN_KEY = 'FIRST_TIME_LOGIN';
@@ -46,70 +46,60 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                             if (!$scope.threadsGuidePopup) {
                                 $scope.threadsGuidePopup = $ionicPopup.show({
                                     template: threadsPopupTemplate,
-                                    title: 'Threads Guide',
+                                    title: 'Create Threads',
                                     scope: $scope,
                                     buttons: [
                                         {
-                                            text: 'Create first thread',
-                                            type: 'button-energized'
+                                            text: 'Create my first thread',
+                                            type: 'button-energized button-block',
+                                            onTap: function () {
+                                                return true;
+                                            }
+                                        }, {
+                                            text: 'Skip',
+                                            type: 'button-stable button-block',
+                                            onTap: function () {
+                                                return false;
+                                            }
                                         }
                                     ]
                                 });
 
                                 $scope.threadsGuidePopup.then(function (res) {
-                                    $scope.createFirstThread();
+                                    if (res) {
+                                        $scope.createFirstThread();
+                                    } else {
+                                        $scope.threadsGuidePopup = undefined;
+                                    }
                                 });
                             }
                         }
                     } else if ($scope.formTemplates.length === 1) {
                         var savedSurveys = surveyService.getAllSavedSurveys($scope.formTemplates[0].id)
                             .then(function (data) {
-                                if (!data.length) {
-                                    var recordsPopupTemplate = "<p>Records store your information.</p>" +
-                                        "<p>Records allow you to collect the detailed information about a specific day, time or incident. You can upload text, voice and photos. Your records are completely confidential.</p>" +
-                                        "<p>Create your first record now.</p>";
-
-                                    if (!$scope.recordsGuidePopup) {
-                                        $scope.recordsGuidePopup = $ionicPopup.show({
-                                            template: recordsPopupTemplate,
-                                            title: 'Records Guide',
+                                if (data.length === 1 && data[0].isSubmitted) {
+                                    var wellDonePopupShown = localStorageService.get('WELL_DONE_POPUP_SHOWN');
+                                    if (wellDonePopupShown === null || wellDonePopupShown === undefined) {
+                                        var wellDoneTemplate = "<p>You have created your first thread and record. Continue to make records and you can:</p>" +
+                                            "<p><a ng-click='goToTimeline()'><i class='icon ion-ios-film-outline'></i> View them on the Timeline</a><br>" +
+                                            "<a ng-click='goToCalendar()'><i class='icon ion-ios-calendar-outline'></i> View them on the Calendar</a><br>" +
+                                            "<a ui-sref='organizations'><i class='icon ion-help-buoy'></i> Get help and advice</a><br>" +
+                                            "<a href='#' onclick='window.open(&apos;http://feeds.soundcloud.com/users/soundcloud:users:483303747/sounds.rss&apos;, &apos;_system&apos;, &apos;location=yes&apos;); return false;'><i class='icon ion-social-rss'></i> Subscribe to our podcast</a></p>";
+                                        
+                                        $scope.wellDonePopup = $ionicPopup.show({
+                                            template: wellDoneTemplate,
+                                            title: 'Well Done',
+                                            subTitle: 'Keep going!',
                                             scope: $scope,
                                             buttons: [
                                                 {
-                                                    text: 'Create first record',
+                                                    text: 'OK',
                                                     type: 'button-energized'
                                                 }
                                             ]
                                         });
 
-                                        $scope.recordsGuidePopup.then(function () {
-                                            $scope.createFirstRecord();
-                                        });
-                                    }
-                                } else if (data.length === 1) {
-                                    if (data[0].isSubmitted) {
-                                        var wellDonePopupShown = localStorageService.get('WELL_DONE_POPUP_SHOWN');
-                                        if (wellDonePopupShown === null || wellDonePopupShown === undefined) {
-                                            var wellDoneTemplate = "<p>You have created your first thread and record. Continue to make records and once you have a few records you can:</p>" +
-                                                "<p><a ng-click='goToTimeline()'>View them on the Timeline</a><br><a ng-click='goToCalendar()'>View them on the Calendar</a><br><a ui-sref='organizations'>Get help</a></p>";
-
-                                            if (!$scope.wellDonePopup) {
-                                                $scope.wellDonePopup = $ionicPopup.show({
-                                                    template: wellDoneTemplate,
-                                                    title: 'Well Done',
-                                                    subTitle: 'Keep going!',
-                                                    scope: $scope,
-                                                    buttons: [
-                                                        {
-                                                            text: 'OK',
-                                                            type: 'button-energized'
-                                                        }
-                                                    ]
-                                                });
-
-                                                localStorageService.set('WELL_DONE_POPUP_SHOWN', true);
-                                            }
-                                        }
+                                        localStorageService.set('WELL_DONE_POPUP_SHOWN', true);
                                     }
                                 }
                             });
@@ -132,7 +122,7 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                     $state.go("survey", {
                         id: survey.id
                     });
-                }, function (err) {});
+                }, function (err) { });
         };
 
         $scope.createFirstRecord = function () {
@@ -169,11 +159,11 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
 
             surveyService.deleteFormTemplate(formTemplate)
                 .then(function () {
-                        _.remove($scope.formTemplates, function (template) {
-                            return template.id === formTemplate.id
-                        });
-                        ngProgress.complete();
-                    },
+                    _.remove($scope.formTemplates, function (template) {
+                        return template.id === formTemplate.id
+                    });
+                    ngProgress.complete();
+                },
                     function (err) {
                         ngProgress.complete();
                         alertService.show($scope.getValidationErrors(err));
@@ -216,6 +206,46 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
 
                             surveyService.getUserSurveys(projectId)
                                 .then(function (data) {
+                                    if ($scope.formTemplates.length === 1) {
+                                        if (!data.length) {
+                                            var recordsPopupTemplate = "<p>Records store your information.</p>" +
+                                                "<p>Records allow you to collect the detailed information about a specific day, time or incident. You can upload text, voice and photos. Your records are completely confidential.</p>" +
+                                                "<p>Create your first record now.</p>";
+
+                                            if (!$scope.recordsGuidePopup) {
+                                                $scope.recordsGuidePopup = $ionicPopup.show({
+                                                    template: recordsPopupTemplate,
+                                                    title: 'Create Records',
+                                                    scope: $scope,
+                                                    buttons: [
+                                                        {
+                                                            text: 'Create my first record',
+                                                            type: 'button-energized button-block',
+                                                            onTap: function () {
+                                                                return true;
+                                                            }
+                                                        },
+                                                        {
+                                                            text: 'Skip',
+                                                            type: 'button-stable button-block',
+                                                            onTap: function () {
+                                                                return false;
+                                                            }
+                                                        }
+                                                    ]
+                                                });
+
+                                                $scope.recordsGuidePopup.then(function (res) {
+                                                    if (res) {
+                                                        $scope.createFirstRecord();
+                                                    } else {
+                                                        $scope.recordsGuidePopup = undefined;
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+
                                     try {
                                         // fix attachments, and store surveys locally
                                         _.forEach(data, function (survey, index) {
@@ -278,7 +308,7 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
             } else {
                 var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
                 if (firstLogin && firstLogin === true) {
-                    localStorageService.set(FIRST_TIME_LOGIN_KEY, false);   
+                    localStorageService.set(FIRST_TIME_LOGIN_KEY, false);
                 }
 
                 $scope.loadList();

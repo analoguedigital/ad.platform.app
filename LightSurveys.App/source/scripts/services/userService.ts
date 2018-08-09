@@ -64,6 +64,7 @@ module App.Services {
         fingerprintEnabled: boolean;
         passcodeText: string;
         noStoreEnabled: boolean;
+        confirmSignOut: boolean;
     }
 
     class AppContext {
@@ -186,7 +187,8 @@ module App.Services {
                             passcodeEnabled: false,
                             fingerprintEnabled: false,
                             passcodeText: '',
-                            noStoreEnabled: false
+                            noStoreEnabled: false,
+                            confirmSignOut: false
                         }
                     };
 

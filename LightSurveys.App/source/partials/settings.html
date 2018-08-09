@@ -35,13 +35,28 @@
                             </span>
                         </label>
                     </li>
-                    <li class="item item-button-right">
+                    <li class="item item-toggle">
+                        <i class="icon ion-checkmark-circled"></i>
+                        <span class="item-toggle-label">Ask before signing out</span>
+                        <label class="toggle toggle-positive">
+                            <input type="checkbox" ng-model="model.confirmSignOut" />
+                            <span class="track">
+                                <span class="handle"></span>
+                            </span>
+                        </label>
+                    </li>
+                    <!--<li class="item item-button-right">
                         Delete all records on this device
                         <button class="button button-assertive" ng-click="deleteAllData()">
                             <i class="icon ion-ios-trash-outline"></i>
                         </button>
-                    </li>
+                    </li>-->
                 </ul>
+
+                <button class="button button-assertive button-full icon ion-ios-trash-outline" ng-click="deleteAllData()">
+                    Delete all records on this device
+                </button>
+
                 <p class="light">Don't worry, all records you upload will be saved on our secure server.</p>
 
                 <h2 class="light">Account Security</h2>

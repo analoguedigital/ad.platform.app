@@ -35,7 +35,7 @@ module App.Services {
 
     class SurveyService implements ISurveyService {
 
-        static $inject: string[] = ['$q', '$timeout', 'storageService', 'httpService', 'userService', 'locationService', 'toastr'];
+        static $inject: string[] = ['$q', '$timeout', 'storageService', 'localStorageService', 'httpService', 'userService', 'locationService', 'toastr'];
 
         SURVEY_OBJECT_TYPE: string = 'survey';
         FORM_TEMPLATE_OBJECT_TYPE: string = 'formTemplate';
@@ -55,6 +55,7 @@ module App.Services {
             private $q: ng.IQService,
             private $timeout: ng.ITimeoutService,
             private storageService: IStorageService,
+            private localStorageService: ng.local.storage.ILocalStorageService,
             private httpService: IHttpService,
             private userService: IUserService,
             private locationService: ILocationService,
@@ -71,6 +72,9 @@ module App.Services {
             promises.push(this.storageService.deleteAllObjectsOfType(this.ATTACHMENT_OBJECT_TYPE));
 
             this.$q.all(promises).then(() => {
+                this.localStorageService.remove('capture-in-progress');
+                this.localStorageService.remove('WELL_DONE_POPUP_SHOWN');
+
                 q.resolve();
             }, (err) => {
                 q.reject(err);
