@@ -27,15 +27,17 @@ angular.module('lm.surveys').controller('indexController', ["$scope", "$rootScop
         }
 
         $scope.activate = function () {
-            var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
-            if (firstLogin === null || firstLogin === undefined) {
-                $location.path('/landing');
-            } else {
-                if (!$scope.authentication.isAuth)
-                    $location.path('/login');
-                else
-                    $location.path('/home');
-            }
+            $location.path('/landing');
+
+            //var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
+            //if (firstLogin === null || firstLogin === undefined) {
+            //    $location.path('/landing');
+            //} else {
+            //    if (!$scope.authentication.isAuth)
+            //        $location.path('/login');
+            //    else
+            //        $location.path('/home');
+            //}
         }
 
         $scope.activate();

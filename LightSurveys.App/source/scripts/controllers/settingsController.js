@@ -35,6 +35,7 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
             passcodeEnabled: false,
             fingerprintEnabled: false,
             noStoreEnabled: false,
+            confirmSignOut: false,
             password: '',
             newPassword: '',
             confirmPassword: ''
@@ -73,6 +74,13 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
             if ($scope.profile) {
                 $scope.profile.settings.noStoreEnabled = newValue;
                 userService.saveProfile($scope.profile).then(function () {});
+            }
+        });
+
+        $scope.$watch('model.confirmSignOut', function (newValue, oldValue) {
+            if ($scope.profile) {
+                $scope.profile.settings.confirmSignOut = newValue;
+                userService.saveProfile($scope.profile).then(function () { });
             }
         });
 
@@ -145,19 +153,21 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
 
         $scope.deleteAllData = function () {
             var confirmPopup = $ionicPopup.confirm({
-                title: 'Delete all data',
-                buttons: [{
-                        text: 'Cancel'
-                    },
+                title: 'Delete all records', 
+                template: 'Are you sure you want to delete all records on this device? Don\'t worry you won\'t lose your data. This is client-side only and your records will be safe on our servers.',
+                buttons: [
                     {
-                        text: 'Delete',
+                        text: 'Yes, delete',
                         type: 'button-assertive',
                         onTap: function (e) {
                             return true;
                         }
+                    },
+                    {
+                        text: 'Cancel',
+                        type: 'button-stable'
                     }
-                ],
-                template: 'Are you sure you want to delete all data stored on the device?'
+                ]
             });
 
             confirmPopup.then(function (res) {
@@ -464,8 +474,9 @@ angular.module('lm.surveys').controller('settingsController', ['$scope', '$rootS
 
                 $scope.model.passcodeEnabled = $scope.profile.settings.passcodeEnabled;
                 $scope.model.fingerprintEnabled = $scope.profile.settings.fingerprintEnabled;
-                $scope.passcodeSaved = $scope.profile.settings.passcodeEnabled;
                 $scope.model.noStoreEnabled = $scope.profile.settings.noStoreEnabled;
+                $scope.model.confirmSignOut = $scope.profile.settings.confirmSignOut;
+                $scope.passcodeSaved = $scope.profile.settings.passcodeEnabled;
             });
 
             $ionicModal.fromTemplateUrl('partials/change-password.html', {

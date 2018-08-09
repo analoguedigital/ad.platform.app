@@ -611,6 +611,22 @@ progress[value]::-moz-progress-bar {
     }
 }
 
+.popup-buttons {
+    @include flex-wrap(wrap);
+
+    .button.button-block {
+
+        @include flex(none);
+        width: 100% !important;
+        margin-top: 0px;
+
+        &:last-child {
+            margin-right: 0px;
+            margin-bottom: 0px;
+        }
+    }
+}
+
 /* iPad Pro in landscape */
 @media only screen and (min-device-width: 1024px) and (max-device-width: 1366px) and (orientation: landscape) {
     .app-icons .button {

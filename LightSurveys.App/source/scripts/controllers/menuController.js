@@ -101,46 +101,57 @@ angular.module('lm.surveys').controller('menuController', ['$scope', '$rootScope
             $state.go('settings');
         }
 
-        $scope.logOut = function () {
-            var confirmTemplate = "<p>Signing out will clear local data from your device. And you will need to sign in again with your username and password.</p>" + 
-                "<p>You could go to <a ng-click='goToSettings()'>Settings</a> and change your security preferences.</p>" + 
-                "<p>You can enable fingerprint login if your device supports Touch ID. Alternatively, you can create a local PIN code and use that instead.</p>";
-
-            $scope.signOutConfirmPopup = $ionicPopup.confirm({
-                title: 'Sign out',
-                subTitle: 'Are you sure you want to sign out?',
-                template: confirmTemplate,
-                scope: $scope,
-                buttons: [{
-                        text: 'Cancel',
-                        type: 'button-stable'
-                    },
-                    {
-                        text: 'Sign out',
-                        type: 'button-energized',
-                        onTap: function() {
-                            return true;
-                        }
-                    }
-                ]
+        $scope.signOut = function () {
+            surveyService.clearLocalData().then(function () {
+                userService.logOut()
+                    .then(function () {
+                        $state.go('login');
+                    });
             });
+        }
 
-            $scope.signOutConfirmPopup.then(function (res) {
-                if (res) {
-                    surveyService.clearLocalData().then(function () {
-                        userService.logOut()
-                            .then(function () {
-                                $state.go('login');
-                            });
+        $scope.logOut = function () {
+            userService.getExistingProfiles().then(function (profiles) {
+                var profile = profiles[0];
+                var confirmSignOut = profile.settings.confirmSignOut;
+
+                if (confirmSignOut) {
+                    var confirmTemplate = "<p>As a security feature, signing out clears the records from your mobile (but not from the server) and you will need to sign in again with your username and password.</p><p>For quick login, go to <a ng-click='goToSettings()'>settings</a> and change your security preferences - create a PIN or enable fingerprint.</p>";
+
+                    $scope.signOutConfirmPopup = $ionicPopup.confirm({
+                        title: 'Sign out',
+                        subTitle: 'Are you sure you want to sign out?',
+                        template: confirmTemplate,
+                        scope: $scope,
+                        buttons: [
+                            {
+                                text: 'Yes, sign out',
+                                type: 'button-energized button-block',
+                                onTap: function () {
+                                    return true;
+                                }
+                            },
+                            {
+                                text: 'Cancel',
+                                type: 'button-stable button-block'
+                            }
+                        ]
+                    });
+
+                    $scope.signOutConfirmPopup.then(function (res) {
+                        if (res) {
+                            $scope.signOut();
+                        } else {
+                            confirmPopup.close();
+                        }
                     });
                 } else {
-                    confirmPopup.close();
+                    $scope.signOut();
                 }
             });
         };
 
         if (userService.currentProfile !== null && userService.currentProfile.lastRefreshTemplate === undefined) {
-
             $scope.downloading = true;
             ngProgress.start();
             surveyService.refreshData()
