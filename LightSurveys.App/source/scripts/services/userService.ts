@@ -188,7 +188,7 @@ module App.Services {
                             fingerprintEnabled: false,
                             passcodeText: '',
                             noStoreEnabled: false,
-                            confirmSignOut: false
+                            confirmSignOut: true
                         }
                     };
 

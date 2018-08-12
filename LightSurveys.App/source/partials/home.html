@@ -1,7 +1,11 @@
 ﻿<ion-view title="Make and review records" id="homePage" class="home" cache-view="false">
+    <ion-nav-buttons side="right">
+        <button class="button button-positive" ng-click="popover.show($event)"><i class="icon ion-more"></i></button>
+    </ion-nav-buttons>
+
     <ion-content has-bouncing="true" padding="true" class="has-header">
         <ion-refresher pulling-text="Pull down to refresh and sync" on-refresh="doRefresh()"></ion-refresher>
-        
+
         <div class="row responsive-lg">
             <div class="col">
                 <h2 class="padding light m-0" ng-if="formTemplates.length">
@@ -16,13 +20,13 @@
                             {{form.description}}
                         </div>
                         <br />
-        
+
                         <div>
-                            <a class="button button-dark" ng-click="goDrafts(form)"> 
-                                <i class="icon ion-ios-paper-outline" style="vertical-align: middle"></i> 
+                            <a class="button button-dark" ng-click="goDrafts(form)">
+                                <i class="icon ion-ios-paper-outline" style="vertical-align: middle"></i>
                                 <span>{{form.draftsNumber}} record{{form.draftsNumber > 1 ? "s" : ""}}</span>
                             </a>
-        
+
                             <a class="button button-dark right-side" ng-click="startSurvey(form)">
                                 <span translate style="padding-right: 5px">Start</span>
                                 <i class="icon ion-ios-arrow-forward" style="vertical-align: middle"></i>
@@ -32,7 +36,7 @@
                         <ion-option-button ng-if="form.createdById == currentContext.userId" class="button-positive" ng-click="editTemplate(form)">Edit</ion-option-button>
                     </ion-item>
                 </ion-list>
-        
+
                 <div class="card" ng-if="formTemplates.length < 1">
                     <div class="item item-text-wrap">No records found. If your records are not listed here, pull down to refresh and sync.</div>
                 </div>

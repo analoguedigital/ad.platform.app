@@ -105,7 +105,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                         $scope.activateProfile($scope.profile);
                     }, 250);
                 } else {
-                    alertService.show('Invalid code!');
+                    toastr.error('Invalid code. Try again.');
                     passcodeModalService.reset();
                 }
             }

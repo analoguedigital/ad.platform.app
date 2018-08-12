@@ -169,6 +169,7 @@
     <Content Include="source\partials\organizations-modal.html" />
     <Content Include="source\partials\organizations.html" />
     <Content Include="source\partials\passcode-modal.html" />
+    <Content Include="source\partials\popover.html" />
     <Content Include="source\partials\redeem-voucher.html" />
     <Content Include="source\partials\register-complete.html" />
     <Content Include="source\partials\register.html" />

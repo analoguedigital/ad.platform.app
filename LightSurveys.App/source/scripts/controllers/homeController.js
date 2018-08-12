@@ -1,9 +1,9 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicPlatform',
     '$ionicSideMenuDelegate', '$ionicPopup', 'surveyService', 'userService', 'alertService', 'ngProgress', '$ionicNavBarDelegate',
-    '$ionicHistory', 'storageService', 'httpService', 'localStorageService', '$ionicModal', 'toastr',
+    '$ionicHistory', 'storageService', 'httpService', 'localStorageService', '$ionicModal', 'toastr', '$ionicPopover', 
     function ($scope, $rootScope, $state, $stateParams, $ionicPlatform, $ionicSideMenuDelegate, $ionicPopup, surveyService,
-        userService, alertService, ngProgress, $ionicNavBarDelegate, $ionicHistory, storageService, httpService, localStorageService, $ionicModal, toastr) {
+        userService, alertService, ngProgress, $ionicNavBarDelegate, $ionicHistory, storageService, httpService, localStorageService, $ionicModal, toastr, $ionicPopover) {
         var FIRST_TIME_LOGIN_KEY = 'FIRST_TIME_LOGIN';
 
         //solution to Navbar disappearance issue suggested here https://github.com/ionic-team/ionic/issues/3483
@@ -247,17 +247,19 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                                     }
 
                                     try {
-                                        // fix attachments, and store surveys locally
-                                        _.forEach(data, function (survey, index) {
-                                            _.forEach(survey.formValues, function (fv) {
-                                                _.forEach(fv.attachments, function (attachment) {
-                                                    attachment.fileUri = undefined;
-                                                    attachment.mediaType = _.toLower(attachment.typeString);
-                                                    delete attachment.typeString;
+                                        surveyService.deleteAllData().then(function () {
+                                            // fix attachments, and store surveys locally
+                                            _.forEach(data, function (survey, index) {
+                                                _.forEach(survey.formValues, function (fv) {
+                                                    _.forEach(fv.attachments, function (attachment) {
+                                                        attachment.fileUri = undefined;
+                                                        attachment.mediaType = _.toLower(attachment.typeString);
+                                                        delete attachment.typeString;
+                                                    });
                                                 });
-                                            });
 
-                                            storageService.save('survey', survey.formTemplateId, survey.id, survey);
+                                                storageService.save('survey', survey.formTemplateId, survey.id, survey);
+                                            });
                                         });
                                     } catch (err) {
                                         console.warn(err);
@@ -292,6 +294,12 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         }
 
         $scope.activate = function () {
+            $ionicPopover.fromTemplateUrl('partials/popover.html', {
+                scope: $scope,
+            }).then(function (popover) {
+                $scope.popover = popover;
+            });
+            
             userService.getExistingProfiles().then(function (profiles) {
                 if (profiles.length) {
                     $scope.profile = profiles[0];
@@ -311,6 +319,7 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                     localStorageService.set(FIRST_TIME_LOGIN_KEY, false);
                 }
 
+                surveyService.uploadAllSurveys();
                 $scope.loadList();
                 $scope.syncUserRecords();
             }
