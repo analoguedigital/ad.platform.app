@@ -8,7 +8,7 @@ angular.module('lm.surveys').controller('selectProjectController', ['$scope', '$
             surveyService.getProjects().then(
                 function (projects) {
                     if (projects.length === 0) {
-                        $ionicHistory.clearHistory();
+                        // $ionicHistory.clearHistory();
                         $state.go('login');
                     } else if (projects.length === 1) {
                         $scope.selectProject(projects[0]);
@@ -24,13 +24,13 @@ angular.module('lm.surveys').controller('selectProjectController', ['$scope', '$
         $scope.selectProject = function (project) {
             userService.setCurrentProject(project).then(
                 function () {
-                    $ionicHistory.clearCache();
-                    $ionicHistory.clearHistory();
+                    // $ionicHistory.clearCache();
+                    // $ionicHistory.clearHistory();
 
-                    $ionicHistory.nextViewOptions({
-                        historyRoot: true,
-                        disableBack: true
-                    });
+                    // $ionicHistory.nextViewOptions({
+                    //     historyRoot: true,
+                    //     disableBack: true
+                    // });
 
                     userService.getExistingProfiles().then(function (profiles) {
                         if (profiles.length) {

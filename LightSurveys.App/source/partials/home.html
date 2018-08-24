@@ -1,6 +1,9 @@
 ﻿<ion-view title="Make and review records" id="homePage" class="home" cache-view="false">
     <ion-nav-buttons side="right">
-        <button class="button button-positive" ng-click="popover.show($event)"><i class="icon ion-more"></i></button>
+        <!-- <button class="button button-positive" ng-click="popover.show($event)"><i class="icon ion-more"></i></button> -->
+        <button class="button button-positive" ng-click="openFeedbackPopup()">
+            <i class="icon ion-paper-airplane"></i>
+        </button>
     </ion-nav-buttons>
 
     <ion-content has-bouncing="true" padding="true" class="has-header">
@@ -11,8 +14,8 @@
                 <h2 class="padding light m-0" ng-if="formTemplates.length">
                     <a class="button button-light button-clear button-large" ng-click="cloneTemplate()" nav-transition="none"><i class="icon ion-plus"></i> Add a new thread</a>
                 </h2>
-                <ion-list ng-if="formTemplates.length">
-                    <ion-item class="item-dark form-item" data-ng-repeat="form in formTemplates">
+                <ion-list ng-show="formTemplates.length">
+                    <ion-item class="item-dark form-item" ng-repeat="form in formTemplates track by $index">
                         <div class="light">
                             <span class="color-block" ng-style="{'background-color': form.colour}"></span> {{form.title}}
                         </div>

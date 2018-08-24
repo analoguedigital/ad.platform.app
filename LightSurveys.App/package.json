@@ -47,33 +47,33 @@
     "plugins": {
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-geolocation": {
-        "GEOLOCATION_USAGE_DESCRIPTION": "OnRecord would like to access your location to let you track your records."
+        "GEOLOCATION_USAGE_DESCRIPTION": "Location access allows you to capture your geolocation information on to your records."
       },
       "cordova-plugin-file-transfer": {},
       "cordova-plugin-device": {},
       "cordova-plugin-whitelist": {},
       "cordova-plugin-touch-id": {
-        "FACEID_USAGE_DESCRIPTION": "OnRecord would like to access your touch ID to let you log in securely."
+        "FACEID_USAGE_DESCRIPTION": "Touch ID allows you to securely login."
       },
       "cordova-plugin-add-swift-support": {},
       "cordova-plugin-app-icon-changer": {},
       "cordova-plugin-media-capture": {
-        "CAMERA_USAGE_DESCRIPTION": "OnRecord would like to access your camera to let you capture evidence.",
-        "PHOTOLIBRARY_USAGE_DESCRIPTION": "OnRecord would like to access your photo library to let you capture evidence.",
-        "MICROPHONE_USAGE_DESCRIPTION": "OnRecord would like to access your microphone to let you capture evidence."
+        "CAMERA_USAGE_DESCRIPTION": "Camera access allows you to capture and attach photos that you take to your records.",
+        "PHOTOLIBRARY_USAGE_DESCRIPTION": "Photo library access allows you to upload your photos and media files to your records.",
+        "MICROPHONE_USAGE_DESCRIPTION": "Microphone access allows you to capture voice information to your records."
       },
       "cordova-plugin-camera": {
-        "CAMERA_USAGE_DESCRIPTION": "OnRecord would like to access your camera to let you capture evidence.",
-        "PHOTOLIBRARY_USAGE_DESCRIPTION": "OnRecord would like to access your photo library to let you capture evidence."
+        "CAMERA_USAGE_DESCRIPTION": "Camera access allows you to capture and attach photos that you take to your records.",
+        "PHOTOLIBRARY_USAGE_DESCRIPTION": "Photo library access allows you to upload your photos and media files to your records."
       },
       "cordova-plugin-file": {},
       "es6-promise-plugin": {},
       "cordova-plugin-statusbar": {},
       "cordova-plugin-ios-camera-permissions": {
-        "CAMERA_USAGE_DESCRIPTION": "This app needs camera access",
-        "MICROPHONE_USAGE_DESCRIPTION": "This app needs microphone access",
-        "PHOTOLIBRARY_ADD_USAGE_DESCRIPTION": "This app needs write-access to photo library",
-        "PHOTOLIBRARY_USAGE_DESCRIPTION": "This app needs read/write-access photo library access"
+        "CAMERA_USAGE_DESCRIPTION": "Camera access allows you to capture and attach photos that you take to your records.",
+        "MICROPHONE_USAGE_DESCRIPTION": "Microphone access allows you to capture voice information to your records.",
+        "PHOTOLIBRARY_ADD_USAGE_DESCRIPTION": "Photo library access allows you to upload your photos and media files to your records.",
+        "PHOTOLIBRARY_USAGE_DESCRIPTION": "Photo library access allows you to upload your photos and media files to your records."
       },
       "cordova-plugin-crosswalk-webview": {
         "XWALK_VERSION": "23+",

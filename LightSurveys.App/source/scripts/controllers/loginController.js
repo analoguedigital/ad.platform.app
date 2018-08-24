@@ -17,6 +17,11 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
             alertService.show("login timeout expired! Please login again.");
         }
 
+        // $scope.loginData = {
+        //     email: "markb@analogue.digital",
+        //     password: "test1234"
+        // };
+
         $scope.loginData = {
             email: "",
             password: ""
@@ -49,7 +54,7 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                                     .then(function () {
                                             ngProgress.complete();
                                             $scope.loginWorking = false;
-                                            $ionicHistory.clearHistory();
+                                            // $ionicHistory.clearHistory();
 
                                             var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
                                             if (firstLogin === null || firstLogin === undefined)
@@ -75,16 +80,16 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
             ngProgress.start();
             userService.activateProfile(profile);
 
-            $ionicHistory.clearCache();
-            $ionicHistory.clearHistory();
+            // $ionicHistory.clearCache();
+            // $ionicHistory.clearHistory();
 
             $scope.loginValidated = true;
             ngProgress.complete();
 
-            $ionicHistory.nextViewOptions({
-                historyRoot: true,
-                disableBack: true
-            });
+            // $ionicHistory.nextViewOptions({
+            //     historyRoot: true,
+            //     disableBack: true
+            // });
 
             $state.go('home');
         };
@@ -95,15 +100,26 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                 var hashed = md5.createHash(passcode || '');
                 if (hashed === $scope.profile.settings.passcodeText) {
                     toastr.clear();
-                    $timeout(function () {
-                        $scope.loginValidated = true;
+                    // $timeout(function () {
 
-                        if (navigator.vibrate)
-                            navigator.vibrate(1000);
+                    // }, 250);
 
-                        passcodeModalService.hideDialog();
-                        $scope.activateProfile($scope.profile);
-                    }, 250);
+                    $scope.loginValidated = true;
+
+                    if (navigator.vibrate)
+                        navigator.vibrate(1000);
+
+                    passcodeModalService.hideDialog();
+                    // $scope.activateProfile($scope.profile);
+                    userService.activateProfile($scope.profile);
+
+                    surveyService.refreshData()
+                        .then(function () {
+                                $state.go('projects');
+                            },
+                            function (err) {
+                                toastr.error(err);
+                            });
                 } else {
                     toastr.error('Invalid code. Try again.');
                     passcodeModalService.reset();
@@ -146,7 +162,16 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                                                     if (navigator.vibrate)
                                                         navigator.vibrate(1000);
 
-                                                    $scope.activateProfile($scope.profile);
+                                                    // $scope.activateProfile($scope.profile);
+                                                    userService.activateProfile($scope.profile);
+
+                                                    surveyService.refreshData()
+                                                        .then(function () {
+                                                                $state.go('projects');
+                                                            },
+                                                            function (err) {
+                                                                toastr.error(err);
+                                                            });
                                                 } else {
                                                     userService.logOut();
                                                     $scope.fallbackToPasscode();

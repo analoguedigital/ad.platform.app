@@ -124,8 +124,9 @@ angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$sco
             surveyService.submitSurvey($scope.survey)
                 .then(function () {
                     $timeout(function () {
-                        $ionicHistory.goBack();
-                    }, 500);
+                        // $ionicHistory.goBack(); 
+                        $state.go('home');
+                    }, 250);
                 },
                 function (err) {
                     alertService.show(gettext("Error in submitting the recording: ") + err);
