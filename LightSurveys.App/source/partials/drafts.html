@@ -1,7 +1,7 @@
-<ion-view title="Recordings" id="recordingsPage">
+<ion-view title="Records" id="recordingsPage">
     <ion-header-bar align-title="{{getLeft()}}" class="bar bar-subheader bar-light">
         <h2 class="title">
-            <span class="color-block" ng-style="{'background-color': formTemplate.colour}"></span> {{formTemplate.title}}
+            <span class="color-block" ng-style="{'background-color': formTemplate.colour}"></span> {{formTemplate.title}}: <span ng-if="drafts.length">{{drafts.length}} records</span>
         </h2>
     </ion-header-bar>
     <ion-content class="content has-subheader padding" ng-cloak>

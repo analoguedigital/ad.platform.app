@@ -1,6 +1,5 @@
 ﻿<ion-view title="Make and review records" id="homePage" class="home" cache-view="false">
     <ion-nav-buttons side="right">
-        <!-- <button class="button button-positive" ng-click="popover.show($event)"><i class="icon ion-more"></i></button> -->
         <button class="button button-positive" ng-click="openFeedbackPopup()">
             <i class="icon ion-paper-airplane"></i>
         </button>
@@ -11,7 +10,7 @@
 
         <div class="row responsive-lg">
             <div class="col">
-                <h2 class="padding light m-0" ng-if="formTemplates.length">
+                <h2 class="padding light m-0">
                     <a class="button button-light button-clear button-large" ng-click="cloneTemplate()" nav-transition="none"><i class="icon ion-plus"></i> Add a new thread</a>
                 </h2>
                 <ion-list ng-show="formTemplates.length">

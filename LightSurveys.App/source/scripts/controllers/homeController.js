@@ -15,20 +15,17 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
             }
         }
 
-        //solution to Navbar disappearance issue suggested here https://github.com/ionic-team/ionic/issues/3483
-        $scope.$on('$ionicView.enter', function (e) {
+        // solution to the ion-nav-bar disappearance. as suggested here: 
+        // https://stackoverflow.com/questions/39052392/ionic-header-bar-disappears-after-reloading-the-state-in-angularjs/42703366
+        $scope.$on('$ionicView.loaded', function () {
             $timeout(function () {
-                $ionicNavBarDelegate.showBar(true);
-
-                var appNavbar = document.getElementById("app-nav-bar");
-                if (appNavbar.classList) {
-                    if (appNavbar.classList.contains('hide')) {
-                        appNavbar.classList.remove('hide');
+                var header = document.getElementById('app-nav-bar');
+                if (header.classList) {
+                    if (header.classList.contains('hide')) {
+                        header.classList.remove('hide');
                     }
                 }
-            }, 1000);
-            // $ionicHistory.clearCache();
-            // $ionicHistory.clearHistory();
+            }, 500);
         });
 
         $scope.feedbackWorking = false;
@@ -386,12 +383,6 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         }
 
         $scope.activate = function () {
-            // $ionicPopover.fromTemplateUrl('partials/popover.html', {
-            //     scope: $scope,
-            // }).then(function (popover) {
-            //     $scope.popover = popover;
-            // });
-
             // update side-menu's profile widget
             userService.getExistingProfiles().then(function (profiles) {
                 if (profiles.length) {

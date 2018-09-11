@@ -44,6 +44,9 @@ interface Navigator {
                 console.log('Ionic Platform Grade is not A, disabling views transitions');
             }
 
+            // not necessary but it's a good practice. might help with view quirks and the nav-bar disappearance too.
+            $ionicConfig.views.maxCache(0);            
+
             document.addEventListener('pause', function (event) {
                 // release audio playback, if any.
                 if ($rootScope.currentMedia) {

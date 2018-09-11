@@ -83,8 +83,8 @@ angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$sco
             $scope.survey.formValues = $scope.allFormValues;
 
             surveyService.saveDraft($scope.survey).then(
-                function () { alertService.show(gettext("Recording saved successfully!")); },
-                function (err) { alertService.show(gettext("Error in saving the recording: ") + err); });
+                function () { alertService.show(gettext("Record saved successfully!")); },
+                function (err) { alertService.show(gettext("Error in saving the record: ") + err); });
         };
 
         $scope.back = function () {
@@ -92,10 +92,10 @@ angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$sco
         };
 
         $scope.delete = function () {
-            if (confirm(gettext("Are you sure you want to delete this recording?"))) {
+            if (confirm(gettext("Are you sure you want to delete this record?"))) {
                 surveyService.delete($scope.surveyId).then(
                     function () { $ionicHistory.goBack(); },
-                    function (err) { alertService.show(gettext("Error in deleting the recording: ") + err); });
+                    function (err) { alertService.show(gettext("Error in deleting the record: ") + err); });
             }
         };
 

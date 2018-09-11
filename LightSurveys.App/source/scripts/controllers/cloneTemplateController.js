@@ -5,7 +5,7 @@ function ($scope, $state, $stateParams, $ionicHistory, userService, alertService
     $scope.templateId = $stateParams.id;
     $scope.formTemplate = null;
     $scope.vm = {
-        title: "My Thread",
+        title: "",
         colour: "",
     };
 
