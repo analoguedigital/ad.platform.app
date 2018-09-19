@@ -6,6 +6,8 @@
     <ion-content class="content organization-request-screen">
         <div class="row responsive-lg">
             <div class="col">
+                <p class="light">Fill in the form below and tap the 'Send request' button to request the organization.</p>
+
                 <form name="orgRequestForm" novalidate="novalidate">
                     <div class="list list-inset" style="margin-top: 0">
                         <label class="item item-icon-left" ng-disabled="orgRequestWorking">
@@ -17,31 +19,31 @@
                         <label class="item item-icon-left" ng-disabled="orgRequestWorking">
                             <i class="icon ion-map"></i>
                             <span class="item-input">
-                                <input name="address" ng-model="orgRequestModel.address" placeholder="Address" type="text" required autocomplete="off" ng-disabled="orgRequestWorking">
-                            </span>
-                        </label>
-                        <label class="item item-icon-left" ng-disabled="orgRequestWorking">
-                            <i class="icon ion-person"></i>
-                            <span class="item-input">
-                                <input name="contactName" ng-model="orgRequestModel.contactName" placeholder="Contact name" type="text" required autocomplete="off" ng-disabled="orgRequestWorking">
-                            </span>
-                        </label>
-                        <label class="item item-icon-left" ng-disabled="orgRequestWorking">
-                            <i class="icon ion-at"></i>
-                            <span class="item-input">
-                                <input name="email" ng-model="orgRequestModel.email" placeholder="Email address" type="email" required autocomplete="off" ng-disabled="orgRequestWorking">
-                            </span>
-                        </label>
-                        <label class="item item-icon-left" ng-disabled="orgRequestWorking">
-                            <i class="icon ion-information"></i>
-                            <span class="item-input">
-                                <input name="telNumber" ng-model="orgRequestModel.telNumber" placeholder="Telephone" type="text" required autocomplete="off" ng-disabled="orgRequestWorking">
+                                <input name="address" ng-model="orgRequestModel.address" placeholder="Address (required)" type="text" required autocomplete="off" ng-disabled="orgRequestWorking">
                             </span>
                         </label>
                         <label class="item item-icon-left" ng-disabled="orgRequestWorking">
                             <i class="icon ion-pound"></i>
                             <span class="item-input">
-                                <input name="postcode" ng-model="orgRequestModel.postcode" placeholder="Postcode" type="text" required autocomplete="off" ng-disabled="orgRequestWorking">
+                                <input name="postcode" ng-model="orgRequestModel.postcode" placeholder="Postcode" type="text" autocomplete="off" ng-disabled="orgRequestWorking">
+                            </span>
+                        </label>
+                        <label class="item item-icon-left" ng-disabled="orgRequestWorking">
+                            <i class="icon ion-person"></i>
+                            <span class="item-input">
+                                <input name="contactName" ng-model="orgRequestModel.contactName" placeholder="Contact name (required)" type="text" required autocomplete="off" ng-disabled="orgRequestWorking">
+                            </span>
+                        </label>
+                        <label class="item item-icon-left" ng-disabled="orgRequestWorking">
+                            <i class="icon ion-at"></i>
+                            <span class="item-input">
+                                <input name="email" ng-model="orgRequestModel.email" placeholder="Email address (required)" type="email" required autocomplete="off" ng-disabled="orgRequestWorking">
+                            </span>
+                        </label>
+                        <label class="item item-icon-left" ng-disabled="orgRequestWorking">
+                            <i class="icon ion-information"></i>
+                            <span class="item-input">
+                                <input name="telNumber" ng-model="orgRequestModel.telNumber" placeholder="Telephone" type="text" autocomplete="off" ng-disabled="orgRequestWorking">
                             </span>
                         </label>
 

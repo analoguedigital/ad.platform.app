@@ -11,8 +11,8 @@
         </div>
         <div class="row responsive-lg">
             <div class="col col-50 col-offset-25">
-                <form name="registerForm" novalidate="novalidate" ng-show="!isQuickLoginActive" class="col col-50 col-offset-25">
-                    <div class="list list-inset">
+                <form name="registerForm" novalidate="novalidate" ng-show="!isQuickLoginActive" class="col col-50 col-offset-25" style="margin-bottom: 0">
+                    <div class="list list-inset" style="margin-top: 10px; margin-bottom: 0">
                         <label class="item item-icon-left" ng-disabled="loginWorking">
                             <i class="icon ion-ios-person-outline"></i>
                             <span class="item-input">
@@ -47,6 +47,12 @@
                         <a class="button button-clear" ui-sref="forgotPassword" nav-transition="none">Forgot password?</a>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="row responsive-lg">
+            <div class="col">
+                <br><br>
+                <p class="light" style="text-align: center">For quick login next time, set a PIN code or enable fingerprint access in the 'Settings' screen</p>
             </div>
         </div>
     </ion-content>

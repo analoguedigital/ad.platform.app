@@ -5,11 +5,11 @@
             <span class="color-block" ng-style="{'background-color': formTemplate.colour}"></span> {{::formTemplate.title}}
             <!-- {{::formTemplate.title}}: <span>{{currentPageIndex + 1}} <span translate>of</span> {{numberOfPages}}</span> -->
         </h2>
-        <div class="buttons">
+        <!-- <div class="buttons">
             <button class="button button-icon button-clear" ng-click="saveDraft()">
                 <i class="fa fa-floppy-o"></i> Save draft
             </button>
-        </div>
+        </div> -->
     </ion-header-bar>
     <ion-content class="has-subheader padding" ng-class="{'has-footer':numberOfPages > 1}" ng-cloak>
         <form name="surveyForm" novalidate="novalidate" ng-submit="submitSurvey()">

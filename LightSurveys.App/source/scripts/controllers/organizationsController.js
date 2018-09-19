@@ -78,6 +78,21 @@ angular.module('lm.surveys').controller('organizationsController', ['$scope', '$
                 return false;
             }
 
+            if ($scope.orgRequestModel.address.length < 1) {
+                toastr.warning('Address is required');
+                return false;
+            }
+
+            if ($scope.orgRequestModel.contactName.length < 1) {
+                toastr.warning('Contact name is required');
+                return false;
+            }
+
+            if ($scope.orgRequestModel.email.length < 1) {
+                toastr.warning('Email address is required');
+                return false;
+            }
+
             httpService.requestOrganization($scope.orgRequestModel)
                 .then(function (res) {
                     toastr.success('Organization request sent. Thanks!');
