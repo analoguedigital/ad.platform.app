@@ -40,9 +40,6 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                     .then(function () {
                             $scope.loginValidated = true;
 
-                            if (navigator.vibrate)
-                                navigator.vibrate(1000);
-
                             _.forEach(localStorageService.keys(), function (key) {
                                 if (_.includes(key, 'user')) {
                                     localStorageService.remove(key);
@@ -54,7 +51,6 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                                     .then(function () {
                                             ngProgress.complete();
                                             $scope.loginWorking = false;
-                                            // $ionicHistory.clearHistory();
 
                                             var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
                                             if (firstLogin === null || firstLogin === undefined)
@@ -80,16 +76,8 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
             ngProgress.start();
             userService.activateProfile(profile);
 
-            // $ionicHistory.clearCache();
-            // $ionicHistory.clearHistory();
-
             $scope.loginValidated = true;
             ngProgress.complete();
-
-            // $ionicHistory.nextViewOptions({
-            //     historyRoot: true,
-            //     disableBack: true
-            // });
 
             $state.go('home');
         };
@@ -100,17 +88,9 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                 var hashed = md5.createHash(passcode || '');
                 if (hashed === $scope.profile.settings.passcodeText) {
                     toastr.clear();
-                    // $timeout(function () {
-
-                    // }, 250);
-
                     $scope.loginValidated = true;
 
-                    if (navigator.vibrate)
-                        navigator.vibrate(1000);
-
                     passcodeModalService.hideDialog();
-                    // $scope.activateProfile($scope.profile);
                     userService.activateProfile($scope.profile);
 
                     surveyService.refreshData()
@@ -158,11 +138,6 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
                                             fingerprintService.verify().then(function (result) {
                                                 if (result.success === true) {
                                                     $scope.loginValidated = true;
-
-                                                    if (navigator.vibrate)
-                                                        navigator.vibrate(1000);
-
-                                                    // $scope.activateProfile($scope.profile);
                                                     userService.activateProfile($scope.profile);
 
                                                     surveyService.refreshData()

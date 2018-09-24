@@ -23,6 +23,7 @@ module App.Services {
         getTemplateWithValues(surveyId: string): ng.IPromise<Models.FormTemplate>;
         getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>>;
         clearLocalData(): ng.IPromise<void>;
+        deleteSubmittedSurveys(): ng.IPromise<void>;
     }
 
     export class UploadProgress {
@@ -79,6 +80,26 @@ module App.Services {
             }, (err) => {
                 q.reject(err);
             });
+
+            return q.promise;
+        }
+
+        deleteSubmittedSurveys(): ng.IPromise<void> {
+            let q = this.$q.defer<void>();
+            var promises: Array<ng.IPromise<void>> = [];
+
+            var submittedSurveys = this.getAllSubmittedSurveys()
+                .then((surveys) => {
+                    _.forEach(surveys, (s) => {
+                        promises.push(this.storageService.delete(this.SURVEY_OBJECT_TYPE, s.id));
+                    });
+
+                    this.$q.all(promises).then(() => {
+                        q.resolve();
+                    }, (err) => {
+                        q.reject(err);
+                    });
+                });
 
             return q.promise;
         }
@@ -389,7 +410,6 @@ module App.Services {
                     angular.forEach(group.metrics, function (metric) {
                         if (_.includes(metric.type.toLowerCase(), 'time')) {
                             formTemplate.timeMetricId = metric.id;
-                            console.log('formTemplate.timeMetricId', metric.id);
                         }
                     });
                 }

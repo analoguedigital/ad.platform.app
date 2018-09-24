@@ -207,7 +207,7 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
                             surveyService.getUserSurveys(projectId)
                                 .then(function (data) {
                                     try {
-                                        surveyService.deleteAllData().then(function () {
+                                        surveyService.deleteSubmittedSurveys().then(function () {
                                             // fix attachments, and store surveys locally
                                             _.forEach(data, function (survey, index) {
                                                 _.forEach(survey.formValues, function (fv) {

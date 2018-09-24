@@ -57,9 +57,6 @@ angular.module('lm.surveys').controller('registerController', ['$scope', '$state
 
                             userService.login(params)
                                 .then(function () {
-                                        if (navigator.vibrate)
-                                            navigator.vibrate(1000);
-
                                         _.forEach(localStorageService.keys(), function (key) {
                                             if (_.includes(key, 'user')) {
                                                 localStorageService.remove(key);
