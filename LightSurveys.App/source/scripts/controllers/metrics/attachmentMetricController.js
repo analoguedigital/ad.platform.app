@@ -153,7 +153,8 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
                             }
 
                             if (ionic.Platform.isIOS()) {
-                                mediaService.chooseFromICloud().then($scope.addAttachment);
+                                // mediaService.chooseFromICloud().then($scope.addAttachment);
+                                mediaService.pickFromICloud().then($scope.addAttachment);
                             }
                             break;
                         }

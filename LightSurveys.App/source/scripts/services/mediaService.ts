@@ -3,10 +3,12 @@
 
 declare interface Window {
     FilePicker?: any & typeof FilePicker;
+    DocumentPicker?: any & typeof DocumentPicker;
 }
 
 declare var FilePicker: any;
 declare var fileChooser: any;
+declare var DocumentPicker: any;
 
 module App.Services {
     "use strict";
@@ -33,6 +35,44 @@ module App.Services {
                 return true;
 
             return false;
+        }
+
+        pickFromICloud(): ng.IPromise<Models.Attachment> {
+            var self = this;
+            var q = this.$q.defer<Models.Attachment>();
+
+            if (window.DocumentPicker === undefined) {
+                console.warn('DocumentPicker plugin is not available');
+            } else {
+                console.info('DocumentPicker plugin seems to be available');
+            }
+
+            window.DocumentPicker.getFile('all', function(uri) {
+                self.storageService.getFileEntryFromUri(uri).then(
+                    (fileEntry) => {
+                        fileEntry.file(
+                            (file) => {
+                                var mimeType = file.type;
+                                if (!mimeType)
+                                    mimeType = self.getMimeType(uri.split('.').pop());
+                                q.resolve(<Models.Attachment>{
+                                    fileUri: uri,
+                                    type: mimeType,
+                                    mediaType: _.split(mimeType, '/')[0],
+                                    tempStorage: true
+                                });
+                            },
+                            (err) => {
+                                q.reject(err);
+                            }
+                        )
+                    },
+                    (err) => { q.reject(err); })
+            }, function(err) {
+                console.log(err);
+            });
+
+            return q.promise;
         }
 
         chooseFromICloud(): ng.IPromise<Models.Attachment> {

@@ -1,17 +1,17 @@
 ﻿<ion-side-menus>
     <ion-side-menu side="left">
-        <div class="list" style="margin-bottom: 0; padding-bottom: 0">
-            <a class="item item-avatar" ui-sref="account" menu-close style="padding-left: 65px; padding-top: 10px; background: #000; border-top: none; min-height: 63px">
-                <img src="images/avatar-male.png" ng-if="profile.gender === 0">
-                <img src="images/avatar-female.png" ng-if="profile.gender === 1" />
-                <img src="images/avatar-other.png" ng-if="profile.gender === 2" />
+        <ion-content>
+            <div class="list" style="margin-bottom: 0; padding-bottom: 0">
+                <a class="item item-avatar" ui-sref="account" menu-close style="padding-left: 65px; padding-top: 10px; background: #000; border-top: none; min-height: 63px">
+                    <img src="images/avatar-male.png" ng-if="profile.gender === 0">
+                    <img src="images/avatar-female.png" ng-if="profile.gender === 1" />
+                    <img src="images/avatar-other.png" ng-if="profile.gender === 2" />
+    
+                    <h2 style="color: #ccc">{{profile.firstName}} {{ profile.surname}}</h2>
+                    <p>{{profile.email}}</p>
+                </a>
+            </div>
 
-                <h2 style="color: #ccc">{{profile.firstName}} {{ profile.surname}}</h2>
-                <p>{{profile.email}}</p>
-            </a>
-        </div>
-
-        <div>
             <ion-list class="sidemenu-list">
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="home" menu-close="">
                     <i class="icon ion-ios-home-outline"></i>
@@ -30,6 +30,10 @@
                     <i class="icon ion-ios-film-outline"></i>
                     <span translate> Timeline</span>
                 </ion-item>
+                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="account" menu-close="">
+                    <i class="icon ion-person"></i>
+                    <span translate>Account</span>
+                </ion-item>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="settings" menu-close="">
                     <i class="icon ion-ios-cog-outline"></i>
                     <span translate> Settings</span>
@@ -46,6 +50,10 @@
                     <i class="icon ion-card"></i>
                     <span translate> Subscriptions</span>
                 </ion-item> -->
+                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="organizations" menu-close="">
+                    <i class="icon ion-link"></i>
+                    <span translate>Connect to Organization</span>
+                </ion-item>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="feedback" menu-close="">
                     <i class="icon ion-help-buoy"></i>
                     <span translate>Need Help?</span>
@@ -60,7 +68,7 @@
                     <span translate> Sign out</span>
                 </ion-item>
             </ion-list>
-        </div>
+        </ion-content>
     </ion-side-menu>
     <ion-side-menu-content drag-content="false">
         <ion-nav-bar text class="bar-stable bar-positive with-button" id="app-nav-bar">
