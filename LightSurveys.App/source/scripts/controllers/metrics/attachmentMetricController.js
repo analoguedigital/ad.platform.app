@@ -165,6 +165,10 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
             });
         }
 
+        $scope.startAudioCapture = function() {
+            mediaService.recordAudio().then($scope.addAttachment);
+        }
+
         $scope.addAttachment = function (attachment) {
             $timeout(function () {
                 $scope.formValue.attachments.push(attachment);

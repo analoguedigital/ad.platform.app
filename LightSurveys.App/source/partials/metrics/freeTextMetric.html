@@ -5,10 +5,14 @@
                ng-required="metric.mandatory" ng-model="formValue.textValue" placeholder="{{::metric.shortTitle}}">
     </label>
     <label class="item item-input" ng-if="metric.numberOfLine > 1">
-        <textarea name="{{::metric.inputName}}" rows="{{::metric.numberOfLine}}" maxlength="{{::metric.maxLength}}" minlength="{{::metric.minLength}}"
+        <!-- <textarea name="{{::metric.inputName}}" rows="{{::metric.numberOfLine}}" maxlength="{{::metric.maxLength}}" minlength="{{::metric.minLength}}"
                   ng-required="metric.mandatory"
                   ng-model="formValue.textValue"
-                  placeholder="{{::metric.shortTitle}}"></textarea>
+                  placeholder="{{::metric.shortTitle}}"></textarea> -->
+        <textarea name="{{::metric.inputName}}" rows="{{::metric.numberOfLine}}" maxlength="{{::metric.maxLength}}" minlength="{{::metric.minLength}}"
+            ng-required="metric.mandatory"
+            ng-model="formValue.textValue"
+            placeholder="You can type or dictate what happened here"></textarea>
     </label>
     <div class="errors" ng-messages="{{inputError}}">
         <div ng-message="required"><span translate>This is required</span></div>
