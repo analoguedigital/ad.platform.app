@@ -2,7 +2,7 @@
     <ion-content class="content padding settings" ng-cloak>
         <div class="row responsive-lg">
             <div class="col">
-                <h2 class="light">App Security</h2>
+                <h2 class="light">Account Security</h2>
 
                 <ul class="list">
                     <li class="item item-toggle">
@@ -58,8 +58,8 @@
                 </button>
 
                 <p class="light">Don't worry, all records you upload will be saved on our secure server.</p>
+                <br />
 
-                <h2 class="light">Account Security</h2>
                 <div class="list">
                     <div class="item item-button-right" ng-if="!userInfo.phoneNumber.length">
                         <span>Add your phone number</span>
@@ -91,12 +91,13 @@
                     You haven't verified your phone yet. Click the checkmark button to confirm your number.
                 </p>
 
-                <p class="light"><i class="icon ion-information-circled"></i> This function is not available yet. The SMS provider is out of service for now.</p>
+                <p class="light"><i class="icon ion-information-circled"></i> This function is not available yet.</p>
+                <br />
 
                 <h4 class="light">Password Management</h4>
                 <p class="light">It's a good idea to change your passwords frequently. This applies to all your passwords. Choose a strong
                     phrase, something you can remember, and keep it somewhere safe.</p>
-                <button class="button button-energized button-block" ng-click="openModal()">
+                <button class="button button-assertive button-full" ng-click="openModal()">
                     <i class="fa fa-key"></i> Change Password
                 </button>
 
