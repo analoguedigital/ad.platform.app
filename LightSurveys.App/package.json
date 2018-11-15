@@ -4,8 +4,8 @@
   "private": true,
   "main": "Gruntfile.js",
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-angular-gettext": "^2.1.0",
+    "grunt": "^1.0.3",
+    "grunt-angular-gettext": "^2.3.13",
     "grunt-contrib-concat": "^0.5.1",
     "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-cssmin": "^0.14.0",
@@ -16,8 +16,8 @@
     "typescript": "2.2.1"
   },
   "dependencies": {
-    "cordova-android": "^6.3.0",
-    "cordova-ios": "^4.5.4",
+    "cordova-android": "^7.1.2",
+    "cordova-ios": "^4.5.5",
     "cordova-plugin-add-swift-support": "^1.7.1",
     "cordova-plugin-android-fingerprint-auth": "^1.4.1",
     "cordova-plugin-app-icon-changer": "^1.0.0",
