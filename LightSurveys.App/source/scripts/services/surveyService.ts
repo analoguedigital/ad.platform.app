@@ -378,12 +378,19 @@ module App.Services {
                             (err) => {
                                 survey.error = err;
 
-                                var statusCode = err.substring(0, 3);
-                                if (statusCode === '401') {
-                                    this.toastr.error('Unauthorized to upload record!');
-                                    self.softDelete(survey.id).then(() => { q.reject(err); });
-                                }
-                                else {
+                                if (err && err.length) {
+                                    var statusCode = err.substring(0, 3);
+                                    if (statusCode === '401') {
+                                        this.toastr.error('Unauthorized to upload record!');
+                                        self.softDelete(survey.id).then(() => { q.reject(err); });
+                                    }
+                                    else {
+                                        self.saveSurvey(updatedSurvey)
+                                            .then(
+                                                () => { q.reject(err); },
+                                                () => { q.reject(err); });
+                                    }
+                                } else {
                                     self.saveSurvey(updatedSurvey)
                                         .then(
                                             () => { q.reject(err); },
