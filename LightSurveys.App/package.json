@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "cordova-android": "^6.3.0",
-    "cordova-ios": "^4.5.4",
+    "cordova-ios": "^4.5.5",
     "cordova-plugin-add-swift-support": "^1.7.1",
     "cordova-plugin-android-fingerprint-auth": "^1.4.1",
     "cordova-plugin-app-icon-changer": "^1.0.0",
