@@ -135,5 +135,5 @@
     <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0" />
     <plugin name="cordova-plugin-documentpicker" spec="^1.0.0" />
     <engine name="ios" spec="^4.5.5" />
-    <engine name="android" spec="^6.3.0" />
+    <engine name="android" spec="^7.1.2" />
 </widget>
