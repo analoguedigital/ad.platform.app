@@ -10,7 +10,7 @@
 
         <div class="row responsive-lg">
             <div class="col">
-                <h2 class="padding light m-0">
+                <h2 class="padding light m-0" ng-if="!noThreadsFound">
                     <a class="button button-light button-clear button-large" ng-click="cloneTemplate()" nav-transition="none"><i class="icon ion-plus"></i> Add a new thread</a>
                 </h2>
                 <ion-list ng-show="formTemplates.length">
@@ -39,7 +39,43 @@
                     </ion-item>
                 </ion-list>
 
-                <div class="card" ng-if="formTemplates.length < 1">
+                <div class="card" ng-if="noThreadsFound" style="margin-top: 0">
+                    <div class="item item-divider">Create threads</div>
+                    <div class="item item-text-wrap">
+                        <p>Your records can be grouped in threads.</p>
+                        <p>Threads help you sort and share your information. You can create as many threads as you like and choose who to share them with. Go ahead and create your first thread now.</p>
+
+                        <button class="button button-block button-energized" ng-click="createFirstThread()">
+                            Create my first thread
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" ng-if="noRecordsFound">
+                    <div class="item item-divider">Create records</div>
+                    <div class="item item-text-wrap">
+                        <p>Records allow you to collect the detailed information about a specific day, time or incident. You can upload text, voice and photos. Your records are completely confidential. Create your first record now.</p>
+
+                        <button class="button button-block button-energized" ng-click="createFirstRecord()">
+                            Create my first record
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" ng-if="wellDone">
+                    <div class="item item-divider">Well done, keep going!</div>
+                    <div class="item item-text-wrap">
+                        <p>You have created your first thread and record. Continue to make records and you can:</p>
+                        <p>
+                            <a ng-click='goToTimeline()'><i class='icon ion-ios-film-outline'></i> View them on the Timeline</a><br>
+                            <a ng-click='goToCalendar()'><i class='icon ion-ios-calendar-outline'></i> View them on the Calendar</a><br>
+                            <a ui-sref='organizations'><i class='icon ion-help-buoy'></i> Get help and advice</a><br>
+                            <a href='#' onclick='window.open("http://feeds.soundcloud.com/users/soundcloud:users:483303747/sounds.rss", "_system", "location=yes"); return false;'><i class='icon ion-social-rss'></i> Subscribe to our podcast</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card" ng-if="formTemplates.length < 1 && !noThreadsFound">
                     <div class="item item-text-wrap">No records found. If your records are not listed here, pull down to refresh and sync.</div>
                 </div>
             </div>

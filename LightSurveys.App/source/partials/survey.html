@@ -6,7 +6,17 @@
         </h2>
         <div class="buttons">
             <button class="button button-icon button-clear" ng-click="saveDraft()">
-                <i class="fa fa-floppy-o"></i> Save draft
+                <i class="fa fa-floppy-o"></i> Save
+            </button>
+
+            <button class="button button-icon button-clear" ng-click="submitSurvey()" ng-disabled="surveyForm.$invalid || uploadWorking">
+                <span ng-if="!uploadWorking">
+                    <i class="fa fa-cloud-upload"></i>
+                    <span translate>Upload</span>
+                </span>
+                <span ng-if="uploadWorking">
+                    <i class="fa fa-spinner fa-pulse fa-fw"></i> Uploading
+                </span>
             </button>
         </div>
     </ion-header-bar>

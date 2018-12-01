@@ -1,10 +1,10 @@
 ﻿'use strict';
 angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope', '$q', '$state', '$stateParams', '$ionicPlatform',
     '$ionicSideMenuDelegate', '$ionicPopup', 'surveyService', 'userService', 'alertService', 'ngProgress', '$ionicNavBarDelegate',
-    '$ionicHistory', 'storageService', 'httpService', 'localStorageService', '$ionicModal', 'toastr', '$ionicPopover', '$timeout', 'feedbackService',
+    '$ionicHistory', 'storageService', 'httpService', 'localStorageService', '$ionicModal', 'toastr', '$ionicPopover', '$timeout', 'feedbackService', '$ionicLoading',
     function ($scope, $rootScope, $q, $state, $stateParams, $ionicPlatform, $ionicSideMenuDelegate, $ionicPopup, surveyService,
         userService, alertService, ngProgress, $ionicNavBarDelegate, $ionicHistory, storageService, httpService, localStorageService,
-        $ionicModal, toastr, $ionicPopover, $timeout, feedbackService) {
+        $ionicModal, toastr, $ionicPopover, $timeout, feedbackService, $ionicLoading) {
 
         var FIRST_TIME_LOGIN_KEY = 'FIRST_TIME_LOGIN';
 
@@ -40,9 +40,9 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         $scope.profile = {};
         $scope.userInfo = {};
 
-        $scope.threadsGuidePopup = undefined;
-        $scope.recordsGuidePopup = undefined;
-        $scope.wellDonePopup = undefined;
+        $scope.noThreadsFound = false;
+        $scope.noRecordsFound = false;
+        $scope.wellDone = false;
 
         $scope.startSurvey = function (formTemplate) {
             surveyService.startSurvey(formTemplate)
@@ -57,8 +57,6 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
             var thread = $scope.formTemplates[0];
             surveyService.startSurvey(thread)
                 .then(function (survey) {
-                    $scope.recordsGuidePopup.close();
-
                     $state.go("survey", {
                         id: survey.id
                     });
@@ -106,7 +104,12 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         };
 
         $scope.reload = function () {
+            $ionicLoading.show({
+                template: 'Uploading records...'
+            });
+
             surveyService.uploadAllSurveys().then(function () {
+                $ionicLoading.hide();
                 $scope.loadList();
             });
         }
@@ -156,36 +159,7 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
 
                 if (!$scope.formTemplates.length) {
                     if (userService.current.project.createdBy.id === userService.current.userId) {
-                        var threadsPopupTemplate = "<p>Your records can be grouped in threads.</p>" +
-                            "<p>Threads help you sort and share your information. You can create as many threads as you like and choose who to share them with.</p>" +
-                            "<p>Go ahead and create your first thread now.</p>";
-
-                        $scope.threadsGuidePopup = $ionicPopup.show({
-                            template: threadsPopupTemplate,
-                            title: 'Create Threads',
-                            scope: $scope,
-                            buttons: [{
-                                text: 'Create my first thread',
-                                type: 'button-energized button-block',
-                                onTap: function () {
-                                    return true;
-                                }
-                            }, {
-                                text: 'Skip',
-                                type: 'button-stable button-block',
-                                onTap: function () {
-                                    return false;
-                                }
-                            }]
-                        });
-
-                        $scope.threadsGuidePopup.then(function (res) {
-                            if (res) {
-                                $scope.createFirstThread();
-                            } else {
-                                $scope.threadsGuidePopup = undefined;
-                            }
-                        });
+                        $scope.noThreadsFound = true;
                     }
                 }
 
@@ -232,68 +206,10 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
 
                                     if ($scope.formTemplates.length === 1) {
                                         if (!data.length) {
-                                            var recordsPopupTemplate = "<p>Records store your information.</p>" +
-                                                "<p>Records allow you to collect the detailed information about a specific day, time or incident. You can upload text, voice and photos. Your records are completely confidential.</p>" +
-                                                "<p>Create your first record now.</p>";
-
-                                            $scope.recordsGuidePopup = $ionicPopup.show({
-                                                template: recordsPopupTemplate,
-                                                title: 'Create Records',
-                                                scope: $scope,
-                                                buttons: [{
-                                                        text: 'Create my first record',
-                                                        type: 'button-energized button-block',
-                                                        onTap: function () {
-                                                            return true;
-                                                        }
-                                                    },
-                                                    {
-                                                        text: 'Skip',
-                                                        type: 'button-stable button-block',
-                                                        onTap: function () {
-                                                            return false;
-                                                        }
-                                                    }
-                                                ]
-                                            });
-
-                                            $scope.recordsGuidePopup.then(function (res) {
-                                                if (res) {
-                                                    $scope.createFirstRecord();
-                                                } else {
-                                                    $scope.recordsGuidePopup.close();
-                                                }
-                                            });
+                                            $scope.noRecordsFound = true;
                                         } else if (data.length === 1) {
-                                            var wellDonePopupShown = localStorageService.get('WELL_DONE_POPUP_SHOWN');
-                                            if (wellDonePopupShown === null || wellDonePopupShown === undefined) {
-                                                // show only once.
-                                                // $scope.wellDonePopup.then(function () {
-                                                //     localStorageService.set('WELL_DONE_POPUP_SHOWN', true);
-                                                // });
-                                            }
-
-                                            // or show until a 2nd record is created.
-                                            var wellDoneTemplate = "<p>You have created your first thread and record. Continue to make records and you can:</p>" +
-                                                "<p><a ng-click='goToTimeline()'><i class='icon ion-ios-film-outline'></i> View them on the Timeline</a><br>" +
-                                                "<a ng-click='goToCalendar()'><i class='icon ion-ios-calendar-outline'></i> View them on the Calendar</a><br>" +
-                                                "<a ui-sref='organizations'><i class='icon ion-help-buoy'></i> Get help and advice</a><br>" +
-                                                "<a href='#' onclick='window.open(&apos;http://feeds.soundcloud.com/users/soundcloud:users:483303747/sounds.rss&apos;, &apos;_system&apos;, &apos;location=yes&apos;); return false;'><i class='icon ion-social-rss'></i> Subscribe to our podcast</a></p>";
-
-                                            $scope.wellDonePopup = $ionicPopup.show({
-                                                template: wellDoneTemplate,
-                                                title: 'Well Done',
-                                                subTitle: 'Keep going!',
-                                                scope: $scope,
-                                                buttons: [{
-                                                    text: 'OK',
-                                                    type: 'button-energized'
-                                                }]
-                                            });
-
-                                            $scope.wellDonePopup.then(function () {
-                                                $scope.wellDonePopup.close();
-                                            });
+                                            $scope.noRecordsFound = false;
+                                            $scope.wellDone = true;
                                         }
                                     }
                                 }, function (err) {
@@ -309,17 +225,14 @@ angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope
         }
 
         $scope.createFirstThread = function () {
-            $scope.threadsGuidePopup.close();
             $scope.cloneTemplate();
         }
 
         $scope.goToTimeline = function () {
-            $scope.wellDonePopup.close();
             $state.go('timeline');
         }
 
         $scope.goToCalendar = function () {
-            $scope.wellDonePopup.close();
             $state.go('calendar');
         }
 
