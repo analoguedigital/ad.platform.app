@@ -150,10 +150,7 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
                         case 4: {
                             if (ionic.Platform.isAndroid()) {
                                 mediaService.chooseFile().then($scope.addAttachment);
-                            }
-
-                            if (ionic.Platform.isIOS()) {
-                                // mediaService.chooseFromICloud().then($scope.addAttachment);
+                            } else if (ionic.Platform.isIOS()) {
                                 mediaService.pickFromICloud().then($scope.addAttachment);
                             }
                             break;
@@ -167,6 +164,10 @@ angular.module('lm.surveys').controller('attachmentMetricController', ['$scope',
 
         $scope.startAudioCapture = function() {
             mediaService.recordAudio().then($scope.addAttachment);
+        }
+
+        $scope.startVideoCapture = function() {
+            mediaService.recordVideo().then($scope.addAttachment);
         }
 
         $scope.addAttachment = function (attachment) {

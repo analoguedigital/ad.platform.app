@@ -74,25 +74,37 @@ angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$sco
                         $scope.activeGroups.push(group);
                     });
 
-                    // sort metrics by type. we want the attachment metric 
-                    // to be the first displayed on the survey form.
-                    // since we use a single template for all forms,
-                    // it's safe to assume we'll have the same structure.
-                    var metrics = $scope.activeGroups[0].metrics;
+                    // reorder and sort metrics for Survey templates.
+                    if ($scope.formTemplate.discriminator === 0) {
+                        // sort metrics by type. we want the attachment metric 
+                        // to be the first displayed on the survey form.
+                        // since we use a single template for all forms,
+                        // it's safe to assume we'll have the same structure.
+                        var metrics = $scope.activeGroups[0].metrics;
 
-                    var _attachmentMetric = _.filter(metrics, function (m) { return m.type === 'attachmentMetric'; });
-                    var _dateMetric = _.filter(metrics, function (m) { return m.type === 'dateMetric'; });
-                    var _textMetric = _.filter(metrics, function (m) { return m.type === 'freeTextMetric'; });
-                    var _rateMetric = _.filter(metrics, function (m) { return m.type === 'rateMetric'; });
+                        var _attachmentMetric = _.filter(metrics, function (m) {
+                            return m.type === 'attachmentMetric';
+                        });
+                        var _dateMetric = _.filter(metrics, function (m) {
+                            return m.type === 'dateMetric';
+                        });
+                        var _textMetric = _.filter(metrics, function (m) {
+                            return m.type === 'freeTextMetric';
+                        });
+                        var _rateMetric = _.filter(metrics, function (m) {
+                            return m.type === 'rateMetric';
+                        });
 
-                    var sortedMetrics = [];
-                    sortedMetrics.push(_attachmentMetric[0]);
-                    sortedMetrics.push(_dateMetric[0]);
-                    sortedMetrics.push(_textMetric[0]);
-                    sortedMetrics.push(_rateMetric[0]);
+                        var sortedMetrics = [];
+                        sortedMetrics.push(_attachmentMetric[0]);
+                        sortedMetrics.push(_dateMetric[0]);
+                        sortedMetrics.push(_textMetric[0]);
+                        sortedMetrics.push(_rateMetric[0]);
 
-                    $scope.activeGroups[0].metrics = sortedMetrics;
+                        $scope.activeGroups[0].metrics = sortedMetrics;
+                    }
                 }
+                
                 $scope.currentPageIndex = index;
             }
         }

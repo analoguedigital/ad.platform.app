@@ -2,11 +2,9 @@
 /// <reference path="../../../scripts/typings/cordova/plugins/camera.d.ts" />
 
 declare interface Window {
-    FilePicker?: any & typeof FilePicker;
     DocumentPicker?: any & typeof DocumentPicker;
 }
 
-declare var FilePicker: any;
 declare var fileChooser: any;
 declare var DocumentPicker: any;
 
@@ -55,6 +53,7 @@ module App.Services {
                                 var mimeType = file.type;
                                 if (!mimeType)
                                     mimeType = self.getMimeType(uri.split('.').pop());
+                                    
                                 q.resolve(<Models.Attachment>{
                                     fileUri: uri,
                                     type: mimeType,
@@ -69,55 +68,7 @@ module App.Services {
                     },
                     (err) => { q.reject(err); })
             }, function(err) {
-                console.log(err);
-            });
-
-            return q.promise;
-        }
-
-        chooseFromICloud(): ng.IPromise<Models.Attachment> {
-            var self = this;
-            var q = this.$q.defer<Models.Attachment>();
-
-            if (window.FilePicker === undefined) {
-                console.warn('FilePicker plugin is not available');
-            } else {
-                console.info('FilePicker plugin seems to be available');
-            }
-
-            window.FilePicker.isAvailable(function (avail) {
-                var utis = ["public.data", "public.image", "public.audio", "public.movie", "public.mpeg4", "public.text", "public.plain-text", "public.content", "public.utf8-plain-text", "public.archive"];
-                window.FilePicker.pickFile(
-                    function (path) {
-                        console.log('file-picker-result', path);
-
-                        self.storageService.getFileEntryFromUri(path).then(
-                            (fileEntry) => {
-                                console.log('file entry', fileEntry);
-
-                                fileEntry.file(
-                                    (file) => {
-                                        var mimeType = file.type;
-                                        if (!mimeType)
-                                            mimeType = self.getMimeType(path.split('.').pop());
-                                        q.resolve(<Models.Attachment>{
-                                            fileUri: path,
-                                            type: mimeType,
-                                            mediaType: _.split(mimeType, '/')[0],
-                                            tempStorage: true
-                                        });
-                                    },
-                                    (err) => {
-                                        q.reject(err);
-                                    }
-                                )
-                            },
-                            (err) => { q.reject(err); })
-                    },
-                    function (err) {
-                        console.error(err);
-                        q.reject(err);
-                    }, utis);
+                console.log('DocumentPicker Error', err);
             });
 
             return q.promise;
