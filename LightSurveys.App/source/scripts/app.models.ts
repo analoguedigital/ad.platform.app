@@ -173,6 +173,10 @@ module App.Models {
         email: string;
     }
 
+    export interface ISendConfirmationEmailModel {
+        email: string;
+    }
+
     export interface IResetPasswordModel {
         email: string;
         code: string;

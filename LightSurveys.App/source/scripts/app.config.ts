@@ -42,6 +42,13 @@
                 data: { cssClassnames: "login-page" },
                 cache: false
             })
+            .state('confirmEmail', {
+                url: "/confirm-email",
+                controller: "confirmEmailController",
+                templateUrl: "partials/confirm-email.html",
+                data: { cssClassnames: "confirm-email-page" },
+                cache: false
+            })
             .state('forgotPassword', {
                 url: "/forgot-password",
                 controller: "forgotPasswordController",

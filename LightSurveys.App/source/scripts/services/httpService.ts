@@ -44,6 +44,8 @@ module App.Services {
 
         getSharedProjects(): ng.IPromise<Models.Project[]>;
         getSharedThreads(projectId: string): ng.IPromise<Models.FormTemplate[]>;
+
+        sendConfirmationEmail(model: Models.ISendConfirmationEmailModel): ng.IPromise<void>;
     }
 
     export class HttpService implements IHttpService {
@@ -58,6 +60,16 @@ module App.Services {
 
         getServiceBase(): string {
             return HttpService.serviceBase;
+        }
+
+        sendConfirmationEmail(model: Models.ISendConfirmationEmailModel): ng.IPromise<void> {
+            var deferred = this.$q.defer<void>();
+
+            this.$http.post(HttpService.serviceBase + 'api/account/sendEmailConfirmation', JSON.stringify(model))
+                .success((data) => { deferred.resolve(); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
         }
 
         forgotPassword(model: Models.IForgotPasswordModel): ng.IPromise<void> {
