@@ -17,11 +17,6 @@ angular.module('lm.surveys').controller('loginController', ['$scope', '$rootScop
             alertService.show("login timeout expired! Please login again.");
         }
 
-        // $scope.loginData = {
-        //     email: "markb@analogue.digital",
-        //     password: "test1234"
-        // };
-
         $scope.loginData = {
             email: "",
             password: ""

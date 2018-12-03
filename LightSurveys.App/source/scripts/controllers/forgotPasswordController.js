@@ -9,7 +9,7 @@ angular.module('lm.surveys').controller('forgotPasswordController', ['$scope', '
         $scope.isWorking = false;
 
         $scope.resetPassword = function () {
-            if (!$scope.model.email || $scope.model.email.length == 0) {
+            if (!$scope.model.email || $scope.model.email.length === 0) {
                 toastr.warning('Please enter your email address first');
                 return;
             }
@@ -18,6 +18,7 @@ angular.module('lm.surveys').controller('forgotPasswordController', ['$scope', '
             ngProgress.start();
             httpService.forgotPassword($scope.model)
                 .then(function (result) {
+                    $scope.isWorking = false;
                     $scope.emailSent = true;
                 }, function (error) {
                     console.error(error);
@@ -25,7 +26,6 @@ angular.module('lm.surveys').controller('forgotPasswordController', ['$scope', '
                 })
                 .finally(function () {
                     ngProgress.complete();
-                    $scope.isWorking = false;
                 });
         };
 

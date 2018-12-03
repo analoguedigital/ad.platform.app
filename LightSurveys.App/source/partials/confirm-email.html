@@ -1,4 +1,4 @@
-﻿<ion-view view-title="Forgot Password" class="login" cache-view="false">
+﻿<ion-view view-title="Home" class="login" cache-view="false">
     <ion-content class="content has-footer padding" ng-cloak>
         <div class="padding-horizontal">
             <div class="text-center">
@@ -11,19 +11,23 @@
         </div>
         <div class="row responsive-lg" ng-if="!emailSent">
             <div class="col col-50 col-offset-25">
-                <form name="forgotPassForm" novalidate="novalidate">
-                    <div class="list list-inset">
+                <form name="registerForm" novalidate="novalidate" class="col col-50 col-offset-25" style="margin-bottom: 0">
+                    <div class="list list-inset" style="margin-top: 10px; margin-bottom: 0">
                         <label class="item item-icon-left" ng-disabled="isWorking">
                             <i class="icon ion-ios-person-outline"></i>
                             <span class="item-input">
-                                <input name="email" type="email" ng-model="model.email" placeholder="Email address" required autofocus autocomplete="off"
-                                       ng-disabled="isWorking">
+                                <input name="email" type="email" ng-model="model.email" placeholder="Email address" required autocomplete="off" ng-disabled="isWorking">
                             </span>
                         </label>
 
                         <div class="">
-                            <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="resetPassword()" ng-disabled="isWorking">
-                                <i class="fa fa-spinner fa-pulse fa-fw" ng-if="isWorking"></i> Reset Password
+                            <button class="no-margin-top item button button-full button-energized " type="submit" ng-click="sendConfirmation()" ng-disabled="isWorking">
+                                <span ng-if="!isWorking">
+                                    <i class="icon ion-log-in"></i> Send confirmation email
+                                </span>
+                                <span ng-if="isWorking">
+                                    <i class="fa fa-spinner fa-pulse fa-fw"></i> Please wait
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -32,14 +36,12 @@
         </div>
         <div class="row responsive-lg" ng-if="emailSent">
             <div class="col">
-                <div class="card" style="margin-top: 0">
-                    <div class="item item-text-wrap">
-                        <i class="fa fa-check"></i>
-
-                        We have just sent a password reset token to your email address. Make sure to check your Spam folder (just in case). The email
-                        contains a link for you to set a new password.
-                    </div>
-                </div>
+                <h3 class="light">
+                    <i class="icon ion-checkmark-circled"></i> Confirmation email sent
+                </h3>
+                <p class="lead light">
+                    Please check your inbox and your spam folder just in case. You should receive the email shortly.
+                </p>
             </div>
         </div>
     </ion-content>
