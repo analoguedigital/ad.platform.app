@@ -116,7 +116,7 @@ angular.module('lm.surveys').controller('menuController', ['$scope', '$rootScope
                 var confirmSignOut = profile.settings.confirmSignOut;
 
                 if (confirmSignOut) {
-                    var confirmTemplate = "<p>As a security feature, signing out clears the records and drafts from your device (but not from the server) and you will need to sign in again with your username and password. Then refresh the home screen by pulling it down to sync your records.</p><p>For quick login, go to <a ng-click='goToSettings()'>settings</a> and change your security preferences - create a PIN or enable fingerprint login. Then close the app by pressing the Home button. Signing out cancels the PIN or fingerprint setting.</p>";
+                    var confirmTemplate = "<p>For security, signing out here clears all records and drafts from your device and cancels PIN and Fingerprint login. All uploaded records (but NOT drafts) are saved on our server. You will need to sign in again with username and password, then reload your records by pulling down the home screen.</p><p>For quick login, go to <a ng-click='goToSettings()'>settings</a> and change your security preferences - create a PIN or enable fingerprint login. Then close the app by pressing the Home button.</p>";
 
                     $scope.signOutConfirmPopup = $ionicPopup.confirm({
                         title: 'Sign out',
