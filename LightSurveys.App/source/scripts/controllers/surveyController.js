@@ -1,7 +1,8 @@
 'use strict';
 angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$scope', '$ionicHistory', '$stateParams', '$state', 'userService',
-    'surveyService', 'alertService', 'gettext', '$timeout', 'ngProgress', 'httpService',
-    function ($rootScope, $scope, $ionicHistory, $stateParams, $state, userService, surveyService, alertService, gettext, $timeout, ngProgress, httpService) {
+    'surveyService', 'alertService', 'gettext', '$timeout', 'ngProgress', 'httpService', '$ionicPopup', 'toastr', 
+    function ($rootScope, $scope, $ionicHistory, $stateParams, $state, userService, surveyService, alertService,
+        gettext, $timeout, ngProgress, httpService, $ionicPopup, toastr) {
 
         $scope.surveyId = $stateParams.id;
         $scope.formTemplate = null;
@@ -68,8 +69,8 @@ angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$sco
                         return group.page <= index + 1;
                     }), function (group) {
                         if (_.find($scope.activeGroups, {
-                                'id': group.id
-                            }))
+                            'id': group.id
+                        }))
                             return;
                         $scope.activeGroups.push(group);
                     });
@@ -85,12 +86,15 @@ angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$sco
                         var _attachmentMetric = _.filter(metrics, function (m) {
                             return m.type === 'attachmentMetric';
                         });
+
                         var _dateMetric = _.filter(metrics, function (m) {
                             return m.type === 'dateMetric';
                         });
+
                         var _textMetric = _.filter(metrics, function (m) {
                             return m.type === 'freeTextMetric';
                         });
+
                         var _rateMetric = _.filter(metrics, function (m) {
                             return m.type === 'rateMetric';
                         });
@@ -102,12 +106,28 @@ angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$sco
                         sortedMetrics.push(_rateMetric[0]);
 
                         $scope.activeGroups[0].metrics = sortedMetrics;
+                    } else if ($scope.formTemplate.discriminator === 1) {
+                        var adviceMetrics = $scope.activeGroups[0].metrics;
+
+                        var adviceAttachmentMetric = _.filter(adviceMetrics, function (m) {
+                            return m.type === 'attachmentMetric';
+                        });
+
+                        var adviceTextMetric = _.filter(adviceMetrics, function (m) {
+                            return m.type === 'freeTextMetric';
+                        });
+
+                        var sortedAdviceMetrics = [];
+                        sortedAdviceMetrics.push(adviceAttachmentMetric[0]);
+                        sortedAdviceMetrics.push(adviceTextMetric[0]);
+
+                        $scope.activeGroups[0].metrics = sortedAdviceMetrics;
                     }
                 }
-                
+
                 $scope.currentPageIndex = index;
             }
-        }
+        };
 
         $scope.saveDraft = function () {
             if ($scope.formTemplate === null)
@@ -160,21 +180,93 @@ angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$sco
             //populateFormValues();
             $scope.survey.formValues = $scope.allFormValues;
 
-            ngProgress.start();
-            $scope.uploadWorking = true;
-            surveyService.submitSurvey($scope.survey)
-                .then(function () {
-                        $timeout(function () {
-                            // $ionicHistory.goBack(); 
-                            $state.go('home');
-                        }, 250);
-                    },
-                    function (err) {
-                        alertService.show(gettext("Error in submitting the recording: ") + err);
-                    }).finally(function () {
-                    ngProgress.complete();
-                    $scope.uploadWorking = false;
+            var validationErrors = [];
+            var canSubmit = true;
+
+            _.forEach($scope.survey.formValues, function (fv) {
+                _.forEach($scope.formTemplate.metricGroups, function (mg) {
+                    var metric = _.filter(mg.metrics, function (m) {
+                        return m.id === fv.metricId;
+                    });
+
+                    if (metric && metric.length) {
+                        switch (metric[0].type) {
+                            case 'attachmentMetric': {
+                                if (!fv.attachments || fv.attachments.length < 1) {
+                                    validationErrors.push('- No attachments are present');
+                                }
+                                break;
+                            }
+                            case 'rateMetric': {
+                                if (!fv.numericValue || fv.numericValue === 0) {
+                                    validationErrors.push('- Impact rate is zero');
+                                }
+                                break;
+                            }
+                            case 'freeTextMetric': {
+                                if (!fv.textValue || !fv.textValue.length) {
+                                    canSubmit = false;
+                                }
+                                break;
+                            }
+                        }
+                    }
                 });
+            });
+
+            if (!canSubmit) {
+                toastr.error('Tell me what happened first');
+                return false;
+            }
+
+            if (validationErrors.length) {
+                var popupTemplate = "<ul>";
+                _.forEach(validationErrors, function (ve) {
+                    popupTemplate += '<li>' + ve + '</li>';
+                });
+                popupTemplate += "</ul>";
+
+                var validationPopup = $ionicPopup.confirm({
+                    title: 'Record validation',
+                    subTitle: 'Are you sure you want to submit this?',
+                    template: popupTemplate,
+                    scope: $scope,
+                    buttons: [
+                        {
+                            text: 'Yes, continue',
+                            type: 'button-energized button-block',
+                            onTap: function () {
+                                return true;
+                            }
+                        },
+                        {
+                            text: 'Cancel',
+                            type: 'button-stable button-block'
+                        }
+                    ]
+                });
+
+                validationPopup.then(function (res) {
+                    if (res) {
+                        ngProgress.start();
+                        $scope.uploadWorking = true;
+                        surveyService.submitSurvey($scope.survey)
+                            .then(function () {
+                                $timeout(function () {
+                                    $state.go('home');
+                                }, 250);
+                            },
+                                function (err) {
+                                    alertService.show(gettext("Error in submitting the recording: ") + err);
+                                }).finally(function () {
+                                    ngProgress.complete();
+                                    $scope.uploadWorking = false;
+                                });
+                    } else {
+                        validationPopup.close();
+                    }
+                });
+            }
         };
 
         $scope.getMetricShortTitle = function (inputName) {

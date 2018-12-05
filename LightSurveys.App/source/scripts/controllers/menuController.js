@@ -96,10 +96,10 @@ angular.module('lm.surveys').controller('menuController', ['$scope', '$rootScope
             $state.go('login');
         };
 
-        $scope.goToSettings = function() {
+        $scope.goToSettings = function () {
             $scope.signOutConfirmPopup.close();
             $state.go('settings');
-        }
+        };
 
         $scope.signOut = function () {
             surveyService.clearLocalData().then(function () {
@@ -108,7 +108,7 @@ angular.module('lm.surveys').controller('menuController', ['$scope', '$rootScope
                         $state.go('login');
                     });
             });
-        }
+        };
 
         $scope.logOut = function () {
             userService.getExistingProfiles().then(function (profiles) {
