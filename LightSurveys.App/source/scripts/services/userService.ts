@@ -76,7 +76,6 @@ module App.Services {
         profile: IProfileInfo;
     }
 
-
     export interface IUserService {
         current: AppContext;
         currentProfile: IProfile;
@@ -108,7 +107,6 @@ module App.Services {
             this.current = new AppContext();
             this.clearCurrent();
         }
-
 
         setCurrent(profile: IProfile) {
             this.currentProfile = profile;
@@ -160,7 +158,6 @@ module App.Services {
         }
 
         register(registerData: IRegisterData): angular.IPromise<void> {
-
             var deferred = this.$q.defer<void>();
 
             this.httpService.register(registerData)
@@ -203,13 +200,6 @@ module App.Services {
         }
 
         saveProfile(profile: IProfile): ng.IPromise<IProfile> {
-            // instead of storing the user object using storageService, which
-            // uses cordovaFileService on device, use localStorageService.
-            //return this.storageService.deleteByCat(null, this.USER_OBJECT_TYPE, this.current.userId)
-            //    .then(() => {
-            //        return this.storageService.save(null, this.USER_OBJECT_TYPE, profile.userInfo.userId, profile);
-            //    });
-
             var q = this.$q.defer<IProfile>();
 
             var entryKey = 'user/' + profile.userInfo.userId;
@@ -237,15 +227,14 @@ module App.Services {
             var userService = this;
             var q = this.$q.defer<void>();
 
-            // not necessary anymore, since the user object is being stored using localStorageService.
-            //this.storageService.deleteByCat(null, this.USER_OBJECT_TYPE, this.current.userId);
-
             userService.clearCurrent();
             userService.authService.logOutUser();
 
-            _.forEach(this.localStorageService.keys(), (key) => {
-                if (_.includes(key, 'user'))
-                    this.localStorageService.remove(key);
+            var lsKeys = this.localStorageService.keys();
+            var userKeys = _.filter(lsKeys, (key) => { return _.includes(key, 'user'); });
+
+            _.forEach(userKeys, (uk) => {
+                this.localStorageService.remove(uk);
             });
 
             q.resolve();
@@ -264,14 +253,12 @@ module App.Services {
         }
 
         getExistingProfiles(): ng.IPromise<IProfile[]> {
-            //return this.storageService.getAll(null, this.USER_OBJECT_TYPE);
-
             var q = this.$q.defer<any>();
 
             var keys = _.filter(this.localStorageService.keys(), key => _.startsWith(key, 'user/'));
-            var storage = this.localStorageService;
-
-            q.resolve(_.map(keys, key => storage.get(key)));
+            var result = _.map(keys, key => this.localStorageService.get(key));
+            
+            q.resolve(result);
 
             return q.promise;
         }

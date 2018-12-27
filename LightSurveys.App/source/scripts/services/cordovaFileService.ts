@@ -44,8 +44,8 @@ module App.Services {
                         (dir) => {
                             this.ensureDirectoryExists(dir, rest)
                                 .then(
-                                (dir) => { q.resolve(dir); },
-                                (err) => { q.reject(err); });
+                                    (dir) => { q.resolve(dir); },
+                                    (err) => { q.reject(err); });
                         },
                         (err) => { q.reject(err) });
                 }
@@ -58,37 +58,50 @@ module App.Services {
 
 
         getDirectoryEntry(directoryName: string): ng.IPromise<DirectoryEntry> {
+            var q = this.$q.defer<DirectoryEntry>();
 
-            var q = this.$q.defer();
+            // var ensureDirPromise = this.requestFileSystem()
+            //     .then((dir: DirectoryEntry) => {
+            //         // return this.ensureDirectoryExists(dir, "files/" + directoryName);
+            //         return this.ensureDirectoryExists(dir, directoryName);
+            //     }, (err: FileError) => {
+            //         q.reject(err);
+            //     });
 
-            try {
+            // ensureDirPromise
+            //     .then((dir: DirectoryEntry) => {
+            //         q.resolve(dir);
+            //     }, (err: FileError) => {
+            //         q.reject(err);
+            //     });
 
-                var ensureDirPromise = this.requestFileSystem()
-                    .then(
-                    (dir: DirectoryEntry) => { return this.ensureDirectoryExists(dir, "files/" + directoryName); },
-                    (err: FileError) => { q.reject(err); });
+            this.requestFileSystem().then((dir) => {
+                this.ensureDirectoryExists(dir, 'files/' + directoryName)
+                    .then((dir) => {
+                        q.resolve(dir);
+                    }, (err) => {
+                        console.error('ensureDirectoryExists failed', err);
+                        q.reject(err);
+                    });
+            }, (err) => {
+                console.error('requestFileSystem failed', err);
+                q.reject(err);
+            });
 
-                ensureDirPromise
-                    .then(
-                    (dir: DirectoryEntry) => { q.resolve(dir); },
-                    (err: FileError) => { q.reject(err); });
-
-            } catch (e) {
-                q.reject(e);
-            }
             return q.promise;
         }
 
 
         requestFileSystem(): ng.IPromise<DirectoryEntry> {
-
-            var q = this.$q.defer();
+            var q = this.$q.defer<DirectoryEntry>();
 
             try {
                 window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,
-                    (fs) => { q.resolve(fs.root); },
-                    (err) => {
-                        console.log(err); q.reject(err);
+                    (fs) => {
+                        q.resolve(fs.root);
+                    }, (err) => {
+                        console.error('could not request file system', err);
+                        q.reject(err);
                     });
 
             } catch (e) {
@@ -142,12 +155,19 @@ module App.Services {
             var q = this.$q.defer<FileEntry>();
 
             var url = fileUri;
-            if (device.platform === 'iOS' && !_.startsWith(url, 'file://'))
+            // if (device.platform === 'iOS' && !_.startsWith(url, 'file://'))
+            //     url = 'file://' + url;
+
+            if (!_.startsWith(url, 'file://'))
                 url = 'file://' + url;
 
             window.resolveLocalFileSystemURL(url,
-                (fileEntry: FileEntry) => { q.resolve(fileEntry); },
-                (err: FileError) => { q.reject(err); });
+                (fileEntry: FileEntry) => {
+                    q.resolve(fileEntry);
+                },
+                (err: FileError) => {
+                    q.reject(err);
+                });
 
             return q.promise;
         }

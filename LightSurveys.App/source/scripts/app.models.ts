@@ -13,7 +13,8 @@ module App.Models {
 
     export class FormTemplate {
         public id: string;
-        public name: string;
+        public name: string;    // deprecated! we have a title, not a name.
+        public title: string;
         public projectId: string;
         public project: string;
         public isPublished: boolean;

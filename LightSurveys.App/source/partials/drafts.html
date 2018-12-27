@@ -1,10 +1,15 @@
 <ion-view title="Records" id="recordingsPage">
     <ion-header-bar align-title="{{getLeft()}}" class="bar bar-subheader bar-light">
         <h2 class="title">
-            <span class="color-block" ng-style="{'background-color': formTemplate.colour}"></span> {{formTemplate.title}}: <span ng-if="drafts.length">{{drafts.length}} records</span>
+            <span ng-if="drafts.length">
+                <span class="color-block" ng-style="{'background-color': formTemplate.colour}"></span> {{formTemplate.title}}: <span ng-if="drafts.length">{{drafts.length}} records</span>
+            </span>
+            <span ng-if="!drafts.length">
+                    <span class="color-block" ng-style="{'background-color': formTemplate.colour}"></span> {{formTemplate.title}}: no records
+            </span>
         </h2>
     </ion-header-bar>
-    <ion-content class="content has-subheader padding" ng-cloak>
+    <ion-content class="content has-subheader padding" ng-cloak delegate-handle="drafts-handle">
         <div class="card" ng-repeat="draft in drafts | orderBy:'dateUpdated':true" ng-class="{ 'draft': !draft.isSubmitted, 'advice-record': draft.filledById !== currentUserId }" style="margin-top: 15px; margin-bottom: 15px">
             <div class="item item-divider">
                 <span am-time-ago="draft.dateCreated"></span>
@@ -61,12 +66,16 @@
                         <span translate>Edit Draft</span>
                     </a>
 
-                    <a class="right-side" ng-click="viewSurvey(draft)" ng-show="draft.isSubmitted">
+                    <a class="right-side" ng-click="viewSurvey(draft, $index)" ng-show="draft.isSubmitted">
                         <i class="icon ion-eye"></i>
                         <span translate>View Record</span>
                     </a>
                 </p>
             </div>
+        </div>
+
+        <div ng-if="!drafts.length">
+            <p class="lead light"><i class="icon ion-coffee"></i> There are no records to show</p>
         </div>
     </ion-content>
 </ion-view>

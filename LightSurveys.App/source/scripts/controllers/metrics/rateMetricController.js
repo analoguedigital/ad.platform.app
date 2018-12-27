@@ -1,89 +1,97 @@
-'use strict';
-angular.module('lm.surveys').controller('rateMetricController', ['$scope', '$state', '$controller', function ($scope, $state, $controller) {
-
-    $controller('metricController', { $scope: $scope });
-
-    const surveyViewRouteName = "surveyView";
-
-    if (!$scope.metric.isAdHoc) {
-        // basic slider (min/max bound)
-        $scope.sliderOptions = {
-            floor: $scope.metric.minValue,
-            ceil: $scope.metric.maxValue,
-            showTicks: true
-        };
-    } else {
-        // ad-hoc data list. sort values first.
-        var items = $scope.metric.adHocItems;
-        items.sort((a, b) => a.value - b.value);
-
-        let steps = $scope.metric.adHocItems.map((val) => {
-            return {
-                value: val.value,
-                legend: val.text
-            };
+(function () {
+    'use strict';
+    angular.module('lm.surveys').controller('rateMetricController', ['$scope', '$state', '$controller', function ($scope, $state, $controller) {
+        $controller('metricController', {
+            $scope: $scope
         });
 
-        $scope.sliderOptions = {
-            showTicks: true,
-            showTicksValues: true,
-            stepsArray: steps
-        };
-    }
+        var surveyViewRouteName = "surveyView";
 
-    if ($state.current.name === surveyViewRouteName) {
-        $scope.sliderOptions.readOnly = true;
-    }
+        if (!$scope.metric.isAdHoc) {
+            // basic slider (min/max bound)
+            $scope.sliderOptions = {
+                floor: $scope.metric.minValue,
+                ceil: $scope.metric.maxValue,
+                showTicks: true
+            };
+        } else {
+            // ad-hoc data list. sort values first.
+            var items = $scope.metric.adHocItems;
+            // items.sort((a, b) => a.value - b.value);
+            items.sort(function (a, b) {
+                return a.value - b.value;
+            });
 
-    if (_.isEmpty($scope.formValues)) {
-        $scope.formValue = $scope.addFormValue($scope.metric, $scope.dataListItem, $scope.rowNumber);
-        // set default value
-        $scope.formValue.numericValue = $scope.metric.minValue;
-        if ($scope.metric.defaultValue)
-            $scope.formValue.numericValue = $scope.metric.defaultValue;
-    }
-    else {
-        $scope.formValue = $scope.formValues[0];
-    }
+            var steps = $scope.metric.adHocItems.map(function (val) {
+                return {
+                    value: val.value,
+                    legend: val.text
+                };
+            });
 
-    $scope.getStepLabel = function() {
-        var value = $scope.formValue.numericValue;
-        if ($scope.metric.isAdHoc) {
-            var item = _.find($scope.metric.adHocItems, function (item) { return item.value == value });
-            return item.text;
+            $scope.sliderOptions = {
+                showTicks: true,
+                showTicksValues: true,
+                stepsArray: steps
+            };
         }
 
-        return value;
-    }
-}]);
+        if ($state.current.name === surveyViewRouteName) {
+            $scope.sliderOptions.readOnly = true;
+        }
 
-angular.module('lm.surveys').directive('ngMin', function () {
-  return {
-    restrict : 'A',
-    require : ['ngModel'],
-    compile: function($element, $attr) {
-      return function linkDateTimeSelect(scope, element, attrs, controllers) {
-        var ngModelController = controllers[0];
-        scope.$watch($attr.ngMin, function watchNgMin(value) {
-          element.attr('min', value);
-          ngModelController.$render();
-        })
-      }
-    }
-  }
-})
-angular.module('lm.surveys').directive('ngMax', function () {
-  return {
-    restrict : 'A',
-    require : ['ngModel'],
-    compile: function($element, $attr) {
-      return function linkDateTimeSelect(scope, element, attrs, controllers) {
-        var ngModelController = controllers[0];
-        scope.$watch($attr.ngMax, function watchNgMax(value) {
-          element.attr('max', value);
-          ngModelController.$render();
-        })
-      }
-    }
-  }
-})
+        if (_.isEmpty($scope.formValues)) {
+            $scope.formValue = $scope.addFormValue($scope.metric, $scope.dataListItem, $scope.rowNumber);
+            // set default value
+            $scope.formValue.numericValue = $scope.metric.minValue;
+            if ($scope.metric.defaultValue)
+                $scope.formValue.numericValue = $scope.metric.defaultValue;
+        } else {
+            $scope.formValue = $scope.formValues[0];
+        }
+
+        $scope.getStepLabel = function () {
+            var value = $scope.formValue.numericValue;
+            if ($scope.metric.isAdHoc) {
+                var item = _.find($scope.metric.adHocItems, function (item) {
+                    return item.value == value;
+                });
+                return item.text;
+            }
+
+            return value;
+        };
+    }]);
+
+    angular.module('lm.surveys').directive('ngMin', function () {
+        return {
+            restrict: 'A',
+            require: ['ngModel'],
+            compile: function ($element, $attr) {
+                return function linkDateTimeSelect(scope, element, attrs, controllers) {
+                    var ngModelController = controllers[0];
+                    scope.$watch($attr.ngMin, function watchNgMin(value) {
+                        element.attr('min', value);
+                        ngModelController.$render();
+                    });
+                };
+            }
+        };
+    });
+
+    angular.module('lm.surveys').directive('ngMax', function () {
+        return {
+            restrict: 'A',
+            require: ['ngModel'],
+            compile: function ($element, $attr) {
+                return function linkDateTimeSelect(scope, element, attrs, controllers) {
+                    var ngModelController = controllers[0];
+                    scope.$watch($attr.ngMax, function watchNgMax(value) {
+                        element.attr('max', value);
+                        ngModelController.$render();
+                    });
+                };
+            }
+        };
+    });
+}());

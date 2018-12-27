@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' gap://ready file://* *; img-src 'self' content: android-webview-video-poster: data: *; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' gap://ready ms-appdata file://* *; img-src 'self' content: android-webview-video-poster: data: *; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com https://platform.onrecord.tech; media-src *; connect-src *">
 
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta name="format-detection" content="telephone=no">
@@ -50,6 +50,7 @@
     <script src="../bower_components/angularjs-slider/dist/rzslider.js"></script>
     <script src="../bower_components/angular-simple-logger/dist/angular-simple-logger.min.js"></script>
     <script src="../bower_components/angular-google-maps/dist/angular-google-maps.min.js"></script>
+    <script src="../node_modules/ionic-native/dist/ionic.native.min.js"></script>
     <!-- endbuild -->
 
     <!-- build:js js/app.scripts.js -->

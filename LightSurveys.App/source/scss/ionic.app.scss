@@ -12,6 +12,8 @@ $color1: #1695A3;
 $color2: #DF5A2B;
 $color3: #245278;
 $color4: #1D2331;
+$color5: #001770;
+$color6: #0291ce;
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../../www/fonts" !default;
@@ -149,7 +151,6 @@ mwl-calendar.survey-calendar {
 
 .thumbnails { flex-wrap: wrap; display: flex; align-content: flex-start;
     .thumbnail { width: 80px; vertical-align: central; height: 80px; margin: 5px; overflow: hidden;
-        &.add { }
         img, video { position: absolute; width: 70px; height: 70px; }
     }
 }
@@ -219,8 +220,13 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
 
 .chartjs-tooltip-key { display: inline-block; width: 10px; height: 10px; margin-right: 10px; }
 
+.chartjs-tooltip-key, #chartjs-tooltip {
+    font-family: inherit;
+}
+
 .login-header {
-    margin-top: 30px;
+    // margin-top: 30px;
+    margin-top: 15px;
 
     & .brand {
         margin-left: -5px;
@@ -260,7 +266,8 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     }
 
     & .button.active-icon img {
-        border: 2px solid $color2;
+        // border: 2px solid $color2;
+        border: 2px solid gold;
     }
 }
 
@@ -334,10 +341,10 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     background-color: $color4;
 }
 
-.button-clear.active, 
-.button-clear.activated {
-    background-color: #262626 !important;
-}
+// .button-clear.active, 
+// .button-clear.activated {
+//     background-color: #262626 !important;
+// }
 
 .change-pass-errors {
     padding-top: 20px;
@@ -506,9 +513,9 @@ a.button .icon:before, a.button.icon:before, a.button.icon-left:before, a.button
 }
 
 /* PROGRESS BARS - used for monthly quota display */
-progress:not([value]) {
-    /* Styling here */
-}
+// progress:not([value]) {
+//     /* Styling here */
+// }
 
 progress[value] {
     /* Reset the default appearance */

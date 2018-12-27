@@ -18,10 +18,11 @@ module App.Services {
 
 
         private getMergedPath(objectType: string, category: string): string {
+            var email = this.authService.getExistingAuthData().email;
 
             var folder = '';
             if (objectType)
-                folder = this.authService.authentication.email + '/' + objectType + '/';
+                folder = email + '/' + objectType + '/';
 
             if (category != null)
                 folder += category + '/';
@@ -34,9 +35,15 @@ module App.Services {
             var q = this.$q.defer();
 
             try {
-                this.cordovaFileService.getDirectoryEntry(this.getMergedPath(objectType, category))
-                    .then((dir) => { q.resolve(dir); }, (err) => { q.reject(err); });
+                var mergedPath = this.getMergedPath(objectType, category);
+                this.cordovaFileService.getDirectoryEntry(mergedPath)
+                    .then((dir) => {
+                        q.resolve(dir);
+                    }, (err) => {
+                        q.reject(err);
+                    });
             } catch (e) {
+                console.error('could not get dir entry', e);
                 q.reject(e);
             }
 
@@ -139,32 +146,34 @@ module App.Services {
         }
 
         saveFile(objectType: string, category: string, fileUri: string): ng.IPromise<string> {
-
             var q = this.$q.defer<string>();
 
-            this.cordovaFileService.getFileEntryFromUri(fileUri).then
-                ((fileEntry) => {
-                    this.getDirEntry(objectType, category).then
-                        ((dirEntry) => {
-                            fileEntry.copyTo(dirEntry, null,
+            this.cordovaFileService.getFileEntryFromUri(fileUri)
+                .then((fileEntry) => {
+                    this.getDirEntry(objectType, category)
+                        .then((dirEntry) => {
+                            fileEntry.copyTo(dirEntry, fileEntry.name,
                                 (entry: FileEntry) => {
-                                    var url = entry.toURL();
-                                    q.resolve(url);
-                                },
-                                (err) => {
+                                    q.resolve(entry.toURL());
+                                }, (err) => {
+                                    console.error('could not copy file to dir', err);
                                     q.reject(err);
                                 });
-                        },
-                        (err) => { q.reject(err); });
-                },
-                (err) => { q.reject(err); });
+                        }, (err) => {
+                            console.error('could not get dir entry', err);
+                            q.reject(err);
+                        });
+                }, (err) => {
+                    console.error('could not get file entry from uri', err);
+                    q.reject(err);
+                });
 
             return q.promise;
         }
 
         save<T>(objectType: string, category: string, key: string, value: T): ng.IPromise<T> {
 
-            var q = this.$q.defer();
+            var q = this.$q.defer<T>();
 
             try {
 
@@ -189,6 +198,7 @@ module App.Services {
                         });
             }
             catch (e) {
+                console.error('ERROR saving to storage', e);
                 q.reject(e);
             }
 

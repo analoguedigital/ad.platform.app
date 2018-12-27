@@ -4,24 +4,29 @@ module App.Services {
     "use strict";
 
     export interface ISurveyService {
+        refreshData(): ng.IPromise<void>;
+
+        getProjects(): ng.IPromise<Array<Models.Project>>;
         getFormTemplates(): ng.IPromise<Array<Models.FormTemplate>>;
         getAdviceThreads(): ng.IPromise<Array<Models.FormTemplate>>;
+        getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>>;
+
         getFormTemplate(id: string): ng.IPromise<Models.FormTemplate>;
-        refreshData(): ng.IPromise<void>;
-        saveTemplate(template: Models.FormTemplate): ng.IPromise<Models.FormTemplate>;
-        uploadAllSurveys(): ng.IPromise<void>;
-        startSurvey(template: Models.FormTemplate): ng.IPromise<Models.Survey>;
+        getTemplateWithValues(surveyId: string): ng.IPromise<Models.FormTemplate>;
         getSurvey(id: string): ng.IPromise<Models.Survey>;
-        saveDraft(survey: Models.Survey): ng.IPromise<Models.Survey>;
-        submitSurvey(survey: Models.Survey): ng.IPromise<Models.Survey>;
-        delete(id: string): ng.IPromise<void>;
         getDrafts(formTemplateId: string): ng.IPromise<Array<Models.Survey>>;
         getSubmittedSurveys(formTemplateId: string): ng.IPromise<Array<Models.Survey>>;
         getAllSubmittedSurveys(): ng.IPromise<Array<Models.Survey>>;
         getAllSavedSurveys(formTemplateId: string): ng.IPromise<Array<Models.Survey>>;
-        getProjects(): ng.IPromise<Array<Models.Project>>;
-        getTemplateWithValues(surveyId: string): ng.IPromise<Models.FormTemplate>;
-        getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>>;
+
+        startSurvey(template: Models.FormTemplate): ng.IPromise<Models.Survey>;
+        saveDraft(survey: Models.Survey): ng.IPromise<Models.Survey>;
+        saveTemplate(template: Models.FormTemplate): ng.IPromise<Models.FormTemplate>;
+
+        submitSurvey(survey: Models.Survey): ng.IPromise<Models.Survey>;
+        uploadAllSurveys(): ng.IPromise<void>;
+
+        delete(id: string): ng.IPromise<void>;
         clearLocalData(): ng.IPromise<void>;
         deleteSubmittedSurveys(): ng.IPromise<void>;
     }
@@ -35,8 +40,7 @@ module App.Services {
     }
 
     class SurveyService implements ISurveyService {
-
-        static $inject: string[] = ['$q', '$timeout', 'storageService', 'localStorageService', 'httpService', 'userService', 'locationService', 'toastr'];
+        static $inject: string[] = ['$q', '$timeout', 'storageService', 'localStorageService', 'httpService', 'userService', 'locationService', 'toastr', '$ionicLoading'];
 
         SURVEY_OBJECT_TYPE: string = 'survey';
         FORM_TEMPLATE_OBJECT_TYPE: string = 'formTemplate';
@@ -44,9 +48,18 @@ module App.Services {
         PROJECT_OBJECT_TYPE: string = 'project';
         ATTACHMENT_OBJECT_TYPE: string = "attachment";
 
+        SURVEY_KEY = 'survey/';
+        FORM_TEMPLATE_KEY = 'thread/';
+        ADVICE_THREAD_KEY = 'adviceThread/';
+        PROJECT_KEY = 'project/';
+
+        CAPTURE_IN_PROGRESS_KEY = 'capture-in-progress';
+        WELLDONE_POPUP_KEY = 'WELL_DONE_POPUP_SHOWN';
+        APP_BOOTSTRAPPED_KEY = 'APP_BOOTSTRAPPED';
+
+        projects: Models.Project[];
         formTemplates: Models.FormTemplate[];
         adviceThreads: Models.FormTemplate[];
-        projects: Models.Project[];
 
         config = {
             keepUploadedSurveys: true,
@@ -60,22 +73,23 @@ module App.Services {
             private httpService: IHttpService,
             private userService: IUserService,
             private locationService: ILocationService,
-            private toastr: any) { }
+            private toastr: any,
+            private $ionicLoading: ionic.loading.IonicLoadingService) { }
 
         clearLocalData(): ng.IPromise<void> {
             let q = this.$q.defer<void>();
 
-            var promises: Array<ng.IPromise<void>> = [];
-            promises.push(this.storageService.deleteAllObjectsOfType(this.PROJECT_OBJECT_TYPE));
-            promises.push(this.storageService.deleteAllObjectsOfType(this.FORM_TEMPLATE_OBJECT_TYPE));
-            promises.push(this.storageService.deleteAllObjectsOfType(this.ADVICE_THREAD_OBJECT_TYPE));
-            promises.push(this.storageService.deleteAllObjectsOfType(this.SURVEY_OBJECT_TYPE));
-            promises.push(this.storageService.deleteAllObjectsOfType(this.ATTACHMENT_OBJECT_TYPE));
+            this.localStorageService.clearAll(/(project)\//i);
+            this.localStorageService.clearAll(/(thread)\//i);
+            this.localStorageService.clearAll(/(adviceThread)\//i);
+            this.localStorageService.clearAll(/(survey)\//i);
+            this.localStorageService.clearAll(/(scrollPosition)\//i);
 
-            this.$q.all(promises).then(() => {
-                this.localStorageService.remove('capture-in-progress');
-                this.localStorageService.remove('WELL_DONE_POPUP_SHOWN');
+            this.localStorageService.remove(this.CAPTURE_IN_PROGRESS_KEY);
+            this.localStorageService.remove(this.WELLDONE_POPUP_KEY);
+            this.localStorageService.remove(this.APP_BOOTSTRAPPED_KEY);
 
+            this.storageService.deleteAllObjectsOfType(this.ATTACHMENT_OBJECT_TYPE).then(() => {
                 q.resolve();
             }, (err) => {
                 q.reject(err);
@@ -86,319 +100,321 @@ module App.Services {
 
         deleteSubmittedSurveys(): ng.IPromise<void> {
             let q = this.$q.defer<void>();
-            var promises: Array<ng.IPromise<void>> = [];
 
-            var submittedSurveys = this.getAllSubmittedSurveys()
-                .then((surveys) => {
-                    _.forEach(surveys, (s) => {
-                        promises.push(this.storageService.delete(this.SURVEY_OBJECT_TYPE, s.id));
-                    });
+            let lsKeys = this.localStorageService.keys();
+            let surveyKeys = _.filter(lsKeys, (key) => { return _.startsWith(key, this.SURVEY_KEY); });
 
-                    this.$q.all(promises).then(() => {
-                        q.resolve();
-                    }, (err) => {
-                        q.reject(err);
-                    });
-                });
+            let submittedSurveys = [];
+            _.forEach(surveyKeys, (skey) => {
+                let survey: any = this.localStorageService.get(skey);
+                if (survey.isSubmitted == true) {
+                    submittedSurveys.push(skey);
+                }
+            });
+
+            _.forEach(submittedSurveys, (item) => {
+                this.localStorageService.remove(item);
+            });
+
+            q.resolve();
 
             return q.promise;
         }
 
         refreshData(): ng.IPromise<void> {
-            return this.refreshProjects()
-                .then(() => {
-                    return this.refreshTemplates().then(() => {
-                        return this.refreshAdviceThreads();
-                    })
+            let deferred = this.$q.defer<void>();
+
+            let promises: Array<ng.IPromise<void>> = [];
+            promises.push(this.refreshProjects());
+            promises.push(this.refreshTemplates());
+            promises.push(this.refreshAdviceThreads());
+
+            this.$q.all(promises).then(() => {
+                deferred.resolve();
+            }, (err) => {
+                deferred.reject();
+            });
+
+            return deferred.promise;
+        }
+
+        refreshProjects(): ng.IPromise<void> {
+            let q = this.$q.defer<void>();
+
+            this.httpService.getProjects().then((projects) => {
+                angular.forEach(projects, (project) => {
+                    let key = this.PROJECT_KEY + project.id;
+                    this.localStorageService.set(key, project);
                 });
+
+                this.projects = undefined;
+                q.resolve();
+            }, (err) => {
+                q.reject(err);
+            });
+
+            return q.promise
         }
 
         refreshTemplates(): ng.IPromise<void> {
+            let q = this.$q.defer<void>();
 
-            var q = this.$q.defer<void>();
+            // pass in the discriminator:
+            // 0 - regular threads
+            // 1 - advice threads
 
             this.httpService.getFormTemplates(0)
-                .then(
-                    (forms) => {
-                        var promises: Array<ng.IPromise<void>> = [];
+                .then((forms) => {
+                    angular.forEach(forms, (form) => {
+                        let key = this.FORM_TEMPLATE_KEY + form.id;
+                        this.localStorageService.set(key, form);
+                    });
 
-                        angular.forEach(forms, (form) => {
-
-                            var deferred = this.$q.defer<void>();
-                            promises.push(deferred.promise);
-
-                            this.storageService.save(this.FORM_TEMPLATE_OBJECT_TYPE, null, form.id, form)
-                                .then(() => { deferred.resolve(); }, (err) => { deferred.reject(err); });
-                        });
-
-                        this.$q.all(promises).then(() => {
-                            this.formTemplates = undefined;
-                            q.resolve();
-                        });
-                    },
-                    (err) => { q.reject(err); });
+                    this.formTemplates = undefined;
+                    q.resolve();
+                }, (err) => {
+                    q.reject(err);
+                });
 
             return q.promise
         }
 
         refreshAdviceThreads(): ng.IPromise<void> {
-            var q = this.$q.defer<void>();
+            let q = this.$q.defer<void>();
+
+            // pass in the discriminator:
+            // 0 - regular threads
+            // 1 - advice threads
 
             this.httpService.getFormTemplates(1)
-                .then(
-                    (forms) => {
-                        var promises: Array<ng.IPromise<void>> = [];
+                .then((forms) => {
+                    angular.forEach(forms, (form) => {
+                        let key = this.ADVICE_THREAD_KEY + form.id;
+                        this.localStorageService.set(key, form);
+                    });
 
-                        angular.forEach(forms, (form) => {
-                            var deferred = this.$q.defer<void>();
-                            promises.push(deferred.promise);
-
-                            this.storageService.save(this.ADVICE_THREAD_OBJECT_TYPE, null, form.id, form)
-                                .then(() => { deferred.resolve(); }, (err) => { deferred.reject(err); });
-                        });
-
-                        this.$q.all(promises).then(() => {
-                            this.adviceThreads = undefined;
-                            q.resolve();
-                        });
-                    },
-                    (err) => { q.reject(err); });
+                    this.adviceThreads = undefined;
+                    q.resolve();
+                }, (err) => {
+                    q.reject(err);
+                });
 
             return q.promise
         }
 
         saveTemplate(form: Models.FormTemplate): ng.IPromise<Models.FormTemplate> {
-            return this.storageService.save(this.FORM_TEMPLATE_OBJECT_TYPE, null, form.id, form);
-        }
+            let deferred = this.$q.defer<Models.FormTemplate>();
 
-        refreshProjects(): ng.IPromise<void> {
+            let key = this.FORM_TEMPLATE_KEY + form.id;
+            let stored = this.localStorageService.set(key, form);
+            deferred.resolve(form);
 
-            var q = this.$q.defer<void>();
-
-            this.httpService.getProjects()
-                .then(
-                    (projects) => {
-                        var promises: Array<ng.IPromise<void>> = [];
-
-                        angular.forEach(projects, (project) => {
-
-                            var deferred = this.$q.defer<void>();
-                            promises.push(deferred.promise);
-
-                            this.storageService.save(this.PROJECT_OBJECT_TYPE, null, project.id, project)
-                                .then(() => { deferred.resolve(); }, (err) => { deferred.reject(err); });
-                        });
-
-                        this.$q.all(promises).then(() => {
-                            this.projects = undefined;
-                            q.resolve();
-                        });
-                    },
-                    (err) => { q.reject(err); });
-
-            return q.promise
+            return deferred.promise;
         }
 
         uploadAllSurveys(): ng.IPromise<void> {
+            let q = this.$q.defer<void>();
+            let progressStates = {};
 
-            var q = this.$q.defer<void>();
+            this.getFormTemplates().then((templates) => {
+                let promises: Array<ng.IPromise<void>> = [];
 
-            var progressStates = {};
+                angular.forEach(templates, (template) => {
+                    let deferred = this.$q.defer<void>();
+                    promises.push(deferred.promise);
 
-            this.getFormTemplates()
-                .then(
-                    (templates) => {
-                        var promises: Array<ng.IPromise<void>> = [];
+                    this.getSubmittedSurveys(template.id)
+                        .then((surveys) => {
+                            let surveysToUpload = _.filter(surveys, (survey) => { return survey.dateUploaded === null; });
+                            if (surveysToUpload.length) {
+                                this.uploadSurveys(surveysToUpload)
+                                    .then(() => {
+                                        deferred.resolve();
+                                    }, (err) => {
+                                        deferred.reject();
+                                    }, (state: UploadProgress) => {
+                                        progressStates[template.id] = state;
 
-                        angular.forEach(templates, (template) => {
-
-                            var deferred = this.$q.defer<void>();
-                            promises.push(deferred.promise);
-
-                            this.getSubmittedSurveys(template.id)
-                                .then((surveys) => {
-                                    var surveysToUpload = _.filter(surveys, (survey) => { return survey.dateUploaded === null; });
-                                    this.uploadSurveys(surveysToUpload)
-                                        .then(
-                                            () => { deferred.resolve(); },
-                                            (err) => { },
-                                            (state: UploadProgress) => {
-                                                progressStates[template.id] = state;
-
-                                                var progress = new UploadProgress();
-                                                angular.forEach(progressStates, (state: UploadProgress) => {
-                                                    progress.totalNumber += state.totalNumber;
-                                                    progress.totalProcessed += state.totalProcessed;
-                                                    progress.totalSuccessful += state.totalSuccessful;
-                                                    progress.totalErrors += state.totalErrors;
-                                                    angular.forEach(state.errorMessages, (err) => {
-                                                        progress.errorMessages.push(err);
-                                                    });
-                                                });
-
-                                                q.notify(progress);
+                                        let progress = new UploadProgress();
+                                        angular.forEach(progressStates, (state: UploadProgress) => {
+                                            progress.totalNumber += state.totalNumber;
+                                            progress.totalProcessed += state.totalProcessed;
+                                            progress.totalSuccessful += state.totalSuccessful;
+                                            progress.totalErrors += state.totalErrors;
+                                            angular.forEach(state.errorMessages, (err) => {
+                                                progress.errorMessages.push(err);
                                             });
-                                });
+                                        });
+
+                                        q.notify(progress);
+                                    });
+                            } else {
+                                deferred.resolve();
+                            }
+                        }, (err) => {
+                            deferred.reject(err);
                         });
+                });
 
-                        this.$q.all(promises).then(() => { q.resolve(); });
-
-                    },
-                    (err) => { q.reject(err); });
+                this.$q.all(promises).then(() => {
+                    q.resolve();
+                });
+            }, (err) => {
+                q.reject(err);
+            });
 
             return q.promise;
         }
 
         private uploadSurveys(surveys: Array<Models.Survey>): ng.IPromise<void> {
+            let q = this.$q.defer<void>();
+            let uploadPromises: Array<ng.IPromise<void>> = [];
 
-            var q = this.$q.defer<void>();
-            var uploadPromises: Array<ng.IPromise<void>> = [];
-
-            var progress = new UploadProgress();
+            let progress = new UploadProgress();
             progress.totalNumber = surveys.length;
 
             angular.forEach(surveys, (survey) => {
-
-                var deferredUpload = this.$q.defer<void>();
+                let deferredUpload = this.$q.defer<void>();
                 uploadPromises.push(deferredUpload.promise);
 
                 this.uploadSurvey(survey)
-                    .then(
-                        () => {
-                            progress.totalProcessed++
-                            progress.totalSuccessful++;
-                            deferredUpload.resolve();
-                            q.notify(progress);
-                        },
-                        (err) => {
-                            progress.totalProcessed++
-                            progress.totalErrors++;
-                            progress.errorMessages.push(err);
-                            deferredUpload.resolve();
-                            q.notify(progress);
-                        });
-
-
+                    .then(() => {
+                        progress.totalProcessed++
+                        progress.totalSuccessful++;
+                        deferredUpload.resolve();
+                        q.notify(progress);
+                    }, (err) => {
+                        progress.totalProcessed++
+                        progress.totalErrors++;
+                        progress.errorMessages.push(err);
+                        deferredUpload.resolve();
+                        q.notify(progress);
+                        // deferredUpload.reject(err);
+                    });
             });
 
-            this.$q.all(uploadPromises).then(() => { q.resolve(); });
+            this.$q.all(uploadPromises).then(() => {
+                q.resolve();
+            }, (err) => {
+                q.reject(err);
+            });
 
             return q.promise;
         }
 
         private uploadAttachments(survey: Models.Survey): ng.IPromise<Models.Survey> {
+            let self = this;
 
-            var q = this.$q.defer<Models.Survey>();
-
-            var promises: Array<ng.IPromise<void>> = [];
+            let surveyPromise = this.$q.defer<Models.Survey>();
+            let promises: Array<ng.IPromise<void>> = [];
 
             survey.formValues.forEach((formValue) => {
                 if (!formValue.attachments) return;
 
-                var fvPromises: Array<ng.IPromise<void>> = [];
+                let attachmentPromises: Array<ng.IPromise<void>> = [];
+
+                let fvPromise = this.$q.defer<void>();
+                promises.push(fvPromise.promise);
 
                 formValue.attachments.forEach((attachment) => {
                     if (attachment.uploadGuid && attachment.uploadGuid !== '') return;
 
-                    var deferred = this.$q.defer<void>();
-                    promises.push(deferred.promise);
-                    fvPromises.push(deferred.promise);
+                    let deferred = this.$q.defer<void>();
+                    attachmentPromises.push(deferred.promise);
 
-                    this.httpService.uploadFile(attachment).then
-                        ((guid) => {
+                    this.httpService.uploadFile(attachment)
+                        .then((guid) => {
                             attachment.uploadGuid = guid;
                             attachment.uploadError = '';
                             deferred.resolve();
-                        },
-                        (err) => {
+                        }, (err) => {
                             attachment.uploadGuid = '';
                             attachment.uploadError = err;
-                            deferred.reject(deferred);
+                            deferred.reject(err);
                         });;
                 });
 
-                if (fvPromises.length) {
-                    this.$q.all(fvPromises).then(() => {
-                        formValue.textValue = _.map(formValue.attachments, 'uploadGuid').join(',');
-                    })
-                }
+                if (attachmentPromises.length) {
+                    this.$ionicLoading.show({
+                        template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Uploading attachments...'
+                    });
 
+                    this.$q.all(attachmentPromises).then(() => {
+                        this.$ionicLoading.hide();
+                        formValue.textValue = _.map(formValue.attachments, 'uploadGuid').join(',');
+                        fvPromise.resolve();
+                    }, (err) => {
+                        fvPromise.reject();
+                    });
+                } else {
+                    fvPromise.resolve();
+                }
             });
 
             if (promises.length) {
-                this.$q.all(promises).then
-                    (() => {
-                        this.storageService.save(this.SURVEY_OBJECT_TYPE, survey.formTemplateId, survey.id, survey)
-                            .then(
-                                (survey) => {
-
-                                    q.resolve(survey);
-                                },
-                                (err) => {
-                                    q.reject(err);
-                                })
-                    },
-                    (err) => { q.reject(err); });
+                this.$q.all(promises).then(() => {
+                    let key = this.SURVEY_KEY + survey.id;
+                    this.localStorageService.set(key, survey);
+                    surveyPromise.resolve(survey);
+                }, (err) => {
+                    surveyPromise.reject(err);
+                });
             }
             else {
-                q.resolve(survey);
+                surveyPromise.resolve(survey);
             }
 
-            return q.promise;
+            return surveyPromise.promise;
         }
 
         private uploadSurvey(survey: Models.Survey): ng.IPromise<void> {
-            var self = this;
-            var q = this.$q.defer<void>();
+            let q = this.$q.defer<void>();
 
-            this.uploadAttachments(survey).then(
-                (updatedSurvey) => {
-                    this.httpService.uploadSurvey(updatedSurvey)
-                        .then(
-                            () => {
-                                updatedSurvey.dateUploaded = new Date(new Date().toISOString());
-                                this.saveSurvey(updatedSurvey).then(
-                                    () => {
-                                        self.userService.getExistingProfiles().then((profiles) => {
-                                            var profile = profiles[0];
-                                            var noStoreEnabled = profile.settings.noStoreEnabled;
+            this.uploadAttachments(survey)
+                .then((updatedSurvey) => {
+                    this.saveSurvey(updatedSurvey).then(() => {
+                        this.httpService.uploadSurvey(updatedSurvey).then(() => {
+                            updatedSurvey.dateUploaded = new Date(new Date().toISOString());
+                            updatedSurvey.isSubmitted = true;
 
-                                            self.config.keepUploadedSurveys = !noStoreEnabled;
+                            this.saveSurvey(updatedSurvey).then(() => {
+                                this.userService.getExistingProfiles().then((profiles) => {
+                                    let profile = profiles[0];
+                                    let noStoreEnabled = profile.settings.noStoreEnabled;
 
-                                            if (!this.config.keepUploadedSurveys) {
-                                                self.softDelete(survey.id)
-                                                    .then(() => { q.resolve(); });
-                                            }
-
+                                    this.config.keepUploadedSurveys = !noStoreEnabled;
+                                    if (!this.config.keepUploadedSurveys) {
+                                        this.softDelete(survey.id).then(() => {
                                             q.resolve();
                                         });
-                                    },
-                                    (err) => { q.reject(err); });
-                            },
-                            (err) => {
-                                survey.error = err;
-
-                                if (err && err.length) {
-                                    var statusCode = err.substring(0, 3);
-                                    if (statusCode === '401') {
-                                        this.toastr.error('Unauthorized to upload record!');
-                                        self.softDelete(survey.id).then(() => { q.reject(err); });
+                                    } else {
+                                        q.resolve();
                                     }
-                                    else {
-                                        self.saveSurvey(updatedSurvey)
-                                            .then(
-                                                () => { q.reject(err); },
-                                                () => { q.reject(err); });
-                                    }
-                                } else {
-                                    self.saveSurvey(updatedSurvey)
-                                        .then(
-                                            () => { q.reject(err); },
-                                            () => { q.reject(err); });
-                                }
+                                });
+                            }, (err) => {
+                                q.reject(err);
                             });
-                },
-                (err) => { q.reject(err); });
+                        }, (err) => {
+                            survey.error = err;
+
+                            if (err && err.length) {
+                                let statusCode = err.substring(0, 3);
+                                if (statusCode === '401') {
+                                    this.toastr.error('Unauthorized to upload record!');
+                                    this.softDelete(survey.id).then(() => { q.reject(err); });
+                                }
+                                else {
+                                    this.saveSurvey(updatedSurvey)
+                                        .then(() => { q.reject(err); }, (err) => { q.reject(err); });
+                                }
+                            } else {
+                                this.saveSurvey(updatedSurvey).then(() => { q.reject(err); }, () => { q.reject(err); });
+                            }
+                        });
+                    });
+                }, (err) => {
+                    q.reject(err);
+                });
 
             return q.promise;
         }
@@ -410,11 +426,11 @@ module App.Services {
         }
 
         getFormTemplateMetadata(formTemplate: Models.FormTemplate): ng.IPromise<Models.FormTemplate> {
-            var d = this.$q.defer<Models.FormTemplate>();
+            let d = this.$q.defer<Models.FormTemplate>();
 
-            angular.forEach(formTemplate.metricGroups, function (group) {
+            _.forEach(formTemplate.metricGroups, (group) => {
                 if (!group.isRepeater) {
-                    angular.forEach(group.metrics, function (metric) {
+                    _.forEach(group.metrics, (metric) => {
                         if (_.includes(metric.type.toLowerCase(), 'time')) {
                             formTemplate.timeMetricId = metric.id;
                         }
@@ -428,19 +444,25 @@ module App.Services {
         }
 
         getFormTemplates(): ng.IPromise<Array<Models.FormTemplate>> {
+            let q = this.$q.defer<Array<Models.FormTemplate>>();
 
-            var q = this.$q.defer<Array<Models.FormTemplate>>();
             if (this.formTemplates === undefined) {
-                this.storageService.getAll(this.FORM_TEMPLATE_OBJECT_TYPE, null)
-                    .then((templates: Array<Models.FormTemplate>) => {
-                        this.formTemplates = templates;
-                        let result = this.filterForProject(this.formTemplates);
-                        _.forEach(result, (template) => {
-                            this.getFormTemplateMetadata(template).then((t) => { template = t; });
-                        });
+                let lsKeys = this.localStorageService.keys();
+                let threadKeys = _.filter(lsKeys, (key) => { return _.startsWith(key, this.FORM_TEMPLATE_KEY); });
 
-                        q.resolve(result);
-                    }, (err) => { q.reject(err); });
+                let templates = [];
+                _.forEach(threadKeys, (tk) => {
+                    templates.push(this.localStorageService.get(tk));
+                });
+
+                this.formTemplates = templates;
+                let result = this.filterForProject(this.formTemplates);
+
+                _.forEach(result, (template) => {
+                    this.getFormTemplateMetadata(template).then((t) => { template = t; });
+                });
+
+                q.resolve(result);
             }
             else {
                 let templates = this.filterForProject(this.formTemplates);
@@ -455,22 +477,29 @@ module App.Services {
         }
 
         getAdviceThreads(): ng.IPromise<Array<Models.FormTemplate>> {
+            let q = this.$q.defer<Array<Models.FormTemplate>>();
 
-            var q = this.$q.defer<Array<Models.FormTemplate>>();
             if (this.adviceThreads === undefined) {
-                this.storageService.getAll(this.ADVICE_THREAD_OBJECT_TYPE, null)
-                    .then((templates: Array<Models.FormTemplate>) => {
-                        this.adviceThreads = templates;
-                        let result = this.filterForProject(this.adviceThreads);
-                        _.forEach(result, (template) => {
-                            this.getFormTemplateMetadata(template).then((t) => { template = t; });
-                        });
+                let lsKeys = this.localStorageService.keys();
+                let adviceThreadKeys = _.filter(lsKeys, (key) => { return _.startsWith(key, this.ADVICE_THREAD_KEY); });
 
-                        q.resolve(result);
-                    }, (err) => { q.reject(err); });
+                let templates = [];
+                _.forEach(adviceThreadKeys, (atk) => {
+                    templates.push(this.localStorageService.get(atk));
+                });
+
+                this.adviceThreads = templates;
+                let result = this.filterForProject(this.adviceThreads);
+
+                _.forEach(result, (template) => {
+                    this.getFormTemplateMetadata(template).then((t) => { template = t; });
+                });
+
+                q.resolve(result);
             }
             else {
                 let templates = this.filterForProject(this.adviceThreads);
+
                 _.forEach(templates, (template) => {
                     this.getFormTemplateMetadata(template).then((t) => { template = t; });
                 });
@@ -482,93 +511,114 @@ module App.Services {
         }
 
         getFormTemplate(id: string): ng.IPromise<Models.FormTemplate> {
-            var q = this.$q.defer<Models.FormTemplate>();
+            let q = this.$q.defer<Models.FormTemplate>();
 
             if (this.formTemplates !== undefined) {
                 let template = _.find(this.formTemplates, { 'id': id });
-
                 if (template !== undefined) {
-                    this.getFormTemplateMetadata(template).then((t) => { template = t; });
-                    q.resolve(template);
+                    this.getFormTemplateMetadata(template).then((t) => {
+                        template = t;
+                        q.resolve(template);
+                    }, (err) => {
+                        q.reject(err);
+                    });
                 } else {
                     this.httpService.getFormTemplate(id)
                         .then((data: any) => {
-                            this.getFormTemplateMetadata(data).then((t) => { data = t; });
-                            q.resolve(data);
-                        })
+                            this.getFormTemplateMetadata(data).then((t) => {
+                                data = t;
+                                q.resolve(data);
+                            }, (err) => {
+                                q.reject(err);
+                            });
+                        }, (err) => {
+                            q.reject(err);
+                        });
                 }
 
                 return q.promise;
             }
 
-            this.storageService.getObj(this.FORM_TEMPLATE_OBJECT_TYPE, id).then((formTemplate: Models.FormTemplate) => {
-                if (formTemplate !== undefined) {
-                    this.getFormTemplateMetadata(formTemplate).then((template) => {
-                        formTemplate = template;
-                        q.resolve(template);
-                    });
-                } else {
-                    this.httpService.getFormTemplate(id)
-                        .then((data: any) => {
-                            this.getFormTemplateMetadata(data).then((t) => { data = t; });
-                            q.resolve(data);
-                        });
-                }
-            });
+            let key = this.FORM_TEMPLATE_KEY + id;
+            let formTemplate: Models.FormTemplate = <Models.FormTemplate>this.localStorageService.get(key);
+
+            if (formTemplate !== undefined) {
+                this.getFormTemplateMetadata(formTemplate).then((template) => {
+                    formTemplate = template;
+                    q.resolve(template);
+                });
+            } else {
+                this.httpService.getFormTemplate(id).then((data: any) => {
+                    this.getFormTemplateMetadata(data).then((t) => { data = t; });
+                    q.resolve(data);
+                });
+            }
 
             return q.promise;
         }
 
         startSurvey(template: Models.FormTemplate): ng.IPromise<Models.Survey> {
-            var survey = new Models.Survey(this.userService.current.userId, this.userService.current.project.id, template.id);
-            return this.storageService.save(this.SURVEY_OBJECT_TYPE, template.id, survey.id, survey);
+            let deferred = this.$q.defer<Models.Survey>();
+            let survey = new Models.Survey(this.userService.current.userId, this.userService.current.project.id, template.id);
+
+            let key = this.SURVEY_KEY + survey.id;
+            this.localStorageService.set(key, survey);
+            deferred.resolve(survey);
+
+            return deferred.promise;
         }
 
         getSurvey(id: string): ng.IPromise<Models.Survey> {
-            var d = this.$q.defer<Models.Survey>();
+            let d = this.$q.defer<Models.Survey>();
 
-            this.storageService.getObj(this.SURVEY_OBJECT_TYPE, id).then((survey: Models.Survey) => {
-                this.getSurveyMetadata(survey).then((s) => {
-                    d.resolve(s);
-                });
+            let key = this.SURVEY_KEY + id;
+            let survey: any = this.localStorageService.get(key);
+
+            this.getSurveyMetadata(survey).then((s) => {
+                d.resolve(s);
             });
 
             return d.promise;
         }
 
         deleteFormTemplate(formTemplate: Models.FormTemplate) {
-            var q = this.$q.defer();
+            let q = this.$q.defer();
             formTemplate.isPublished = false;
 
             this.httpService.deleteFormTemplate(formTemplate.id)
                 .then(() => {
-                    this.storageService.save(this.FORM_TEMPLATE_OBJECT_TYPE, null, formTemplate.id, formTemplate)
-                        .then((survey) => { q.resolve(survey); }, (err) => { q.reject(err); });
-                },
-                    (err) => { q.reject(err); });
+                    let key = this.FORM_TEMPLATE_KEY + formTemplate.id;
+                    this.localStorageService.set(key, formTemplate);
+
+                    q.resolve(formTemplate);
+                }, (err) => {
+                    q.reject(err);
+                });
 
             return q.promise;
         }
 
         saveSurvey(survey: Models.Survey): ng.IPromise<Models.Survey> {
-            var q = this.$q.defer<Models.Survey>();
+            let q = this.$q.defer<Models.Survey>();
 
-            var promises: Array<ng.IPromise<void>> = [];
-
-            let template = this.getFormTemplate(survey.formTemplateId)
+            this.getFormTemplate(survey.formTemplateId)
                 .then((template) => {
+                    let promises: Array<ng.IPromise<void>> = [];
+                    let attachmentPromises: Array<ng.IPromise<void>> = [];
+
                     _.forEach(survey.formValues, (fv: Models.FormValue) => {
                         if (fv.dateValue) {
                             let deferred = this.$q.defer<void>();
                             promises.push(deferred.promise);
 
                             let dateMetric: Models.Metric = undefined;
+
                             _.forEach(template.metricGroups, (metricGroup) => {
                                 dateMetric = _.find(metricGroup.metrics, (metric) => { return metric.id == fv.metricId });
                             });
 
                             if (dateMetric) {
-                                var dateValue = fv.dateValue;
+                                let dateValue = fv.dateValue;
                                 if (!dateMetric.hasTimeValue) {
                                     dateValue.setUTCHours(0);
                                     dateValue.setUTCMinutes(0);
@@ -576,219 +626,308 @@ module App.Services {
                                     dateValue.setUTCMilliseconds(0);
                                 }
 
-                                var isoString = dateValue.toISOString();
+                                let isoString = dateValue.toISOString();
                                 fv.dateValue = new Date(isoString);
 
                                 deferred.resolve();
+                            } else {
+                                deferred.reject();
                             }
                         }
                     });
-                });
 
-            this.storageService.save(this.SURVEY_OBJECT_TYPE, survey.formTemplateId, survey.id, survey)
-                .then((survey) => {
-                    survey.formValues.forEach((formValue) => {
+                    _.forEach(survey.formValues, (formValue) => {
                         if (!formValue.attachments) return;
 
                         formValue.attachments.forEach((attachment) => {
                             if (!attachment.tempStorage) return;
 
-                            var deferred = this.$q.defer<void>();
-                            promises.push(deferred.promise);
+                            let attPromise = this.$q.defer<void>();
+                            attachmentPromises.push(attPromise.promise);
 
-                            this.storageService.saveFile(this.ATTACHMENT_OBJECT_TYPE, "", attachment.fileUri).then
-                                ((newFileUri) => {
+                            this.storageService.saveFile(this.ATTACHMENT_OBJECT_TYPE, 'attachments_' + survey.id, attachment.fileUri)
+                                .then((newFileUri) => {
                                     attachment.fileUri = newFileUri;
                                     attachment.tempStorage = false;
-                                    deferred.resolve();
-                                },
-                                (err) => { deferred.reject(deferred); });;
+                                    console.log('attachment file saved: ' + attachment.mediaType);
+                                    attPromise.resolve();
+                                }, (err) => {
+                                    console.error('could not save attachment file');
+                                    console.error(err);
+                                    attPromise.reject(err);
+                                });
                         });
                     });
 
-                    this.$q.all(promises).then
-                        (() => {
-                            this.storageService.save(this.SURVEY_OBJECT_TYPE, survey.formTemplateId, survey.id, survey)
-                                .then(
-                                    (survey) => { q.resolve(survey) },
-                                    (err) => { q.reject(err); })
-                        },
-                        (err) => { q.reject(err); });
+                    let allDateMetricPromises = this.$q.all(promises);
+                    let allAttachmentPromises = this.$q.all(attachmentPromises);
 
-                },
-                    (err) => { q.reject(err); });
+                    this.$q.all([allDateMetricPromises, allAttachmentPromises]).then(() => {
+                        let key = this.SURVEY_KEY + survey.id;
+                        this.localStorageService.set(key, survey);
+                        q.resolve(survey);
+                    }, (err) => {
+                        q.reject(err);
+                    });
+                }, (err) => {
+                    q.reject(err);
+                });
 
             return q.promise;
         }
 
         saveDraft(survey: Models.Survey): ng.IPromise<Models.Survey> {
-            survey.dateUpdated = new Date(new Date().toISOString());
-            survey.projectId = this.userService.current.project.id;
-            return this.saveSurvey(survey);
+            let deferred = this.$q.defer<Models.Survey>();
+
+            this.getFormTemplate(survey.formTemplateId)
+                .then((template) => {
+                    survey.dateUpdated = new Date(new Date().toISOString());
+                    survey.projectId = template.projectId;
+                    // survey.projectId = this.userService.current.project.id;
+
+                    this.saveSurvey(survey).then((value) => {
+                        deferred.resolve(value);
+                    }, (err) => {
+                        deferred.reject(err);
+                    });
+                }, (err) => {
+                    deferred.reject(err);
+                });
+
+            return deferred.promise;
         }
 
         submitSurvey(survey: Models.Survey): ng.IPromise<Models.Survey> {
+            let q = this.$q.defer<Models.Survey>();
 
-            var q = this.$q.defer<Models.Survey>();
             survey.dateUpdated = new Date(new Date().toISOString());
-            // survey.projectId = this.userService.current.project.id;
 
-            this.getFormTemplate(survey.formTemplateId).then((thread) => {
+            this.getFormTemplate(survey.formTemplateId).then((thread: Models.FormTemplate) => {
+                // shouldn't use the current projectId, because
+                // it wouldn't work for shared threads. instead, 
+                // read the ID from the survey template.
+                // survey.projectId = this.userService.current.project.id;
                 survey.projectId = thread.projectId;
-            }, (err) => {
-                console.warn(err);
-            });
 
-            survey.isSubmitted = true;
-            this.saveSurvey(survey).then((survey) => {
-                q.resolve(survey);
-                this.updateLocation(survey, Models.PositionEvents.Submission).then(() => {
-                    this.uploadSurvey(survey);
+                this.saveSurvey(survey).then((survey) => {
+                    this.updateLocation(survey, Models.PositionEvents.Submission).then(() => {
+                        this.uploadSurvey(survey).then((res) => {
+                            q.resolve(survey);
+                        }, (err) => {
+                            q.reject(err);
+                        });
+                    }, (err) => {
+                        q.reject(err);
+                    });
                 }, (err) => {
-                    this.uploadSurvey(survey);
+                    q.reject(err);
                 });
+            }, (err) => {
+                q.reject(err);
             });
 
             return q.promise;
         }
 
         updateLocation(survey: Models.Survey, event: string): ng.IPromise<void> {
-
-            var q = this.$q.defer<void>();
+            let q = this.$q.defer<void>();
 
             this.locationService.getCurrentPosition()
-                .then(
-                    (position) => {
-                        position.event = event;
-                        if (survey.locations === undefined)
-                            survey.locations = [];
-                        survey.locations.push(position);
-                        this.saveSurvey(survey)
-                            .then(() => { q.resolve(); });
-                    },
-                    (errPosition) => {
-                        if (survey.locations === undefined)
-                            survey.locations = [];
-                        survey.locations.push(errPosition);
-                        this.saveSurvey(survey)
-                            .then(() => { q.reject(); });
+                .then((position) => {
+                    position.event = event;
+
+                    if (survey.locations === undefined)
+                        survey.locations = [];
+
+                    survey.locations.push(position);
+
+                    this.saveSurvey(survey).then(() => {
+                        q.resolve();
+                    }, (err) => {
+                        q.reject(err);
                     });
+                }, (errPosition) => {
+                    if (survey.locations === undefined)
+                        survey.locations = [];
+
+                    survey.locations.push(errPosition);
+
+                    this.saveSurvey(survey).then(() => {
+                        q.resolve();
+                    }, (err) => {
+                        q.reject(err);
+                    });
+                });
 
             return q.promise;
         }
 
         delete(id: string): ng.IPromise<void> {
-            return this.storageService.delete(this.SURVEY_OBJECT_TYPE, id);
+            let deferred = this.$q.defer<void>();
+
+            let key = this.SURVEY_KEY + id;
+            this.localStorageService.remove(key);
+            deferred.resolve();
+
+            return deferred.promise;
         }
 
         softDelete(id: string): ng.IPromise<void> {
-            return this.storageService.softDelete(this.SURVEY_OBJECT_TYPE, id);
+            let deferred = this.$q.defer<void>();
+
+            let key = this.SURVEY_KEY + id;
+            this.localStorageService.remove(key);
+            deferred.resolve();
+
+            return deferred.promise;
         }
 
         deleteAllData(): ng.IPromise<void> {
-            return this.storageService.deleteAllObjectsOfType(this.SURVEY_OBJECT_TYPE);
+            let deferred = this.$q.defer<void>();
+
+            this.localStorageService.clearAll(/(survey)\//i);
+            deferred.resolve();
+
+            return deferred.promise;
         }
 
         getDraftsNumber(formTemplateId: string): ng.IPromise<number> {
-            var q = this.$q.defer<number>();
+            let q = this.$q.defer<number>();
 
             this.getAllSavedSurveys(formTemplateId)
                 .then((surveys: Array<Models.Survey>) => {
-                    q.resolve(_.filter(surveys, { 'projectId': this.userService.current.project.id }).length);
+                    let count = _.filter(surveys, { 'projectId': this.userService.current.project.id }).length;
+                    q.resolve(count);
+                }, (err) => {
+                    q.reject(err);
                 });
 
             return q.promise;
         }
 
         getAllSavedSurveys(formTemplateId: string): ng.IPromise<Array<Models.Survey>> {
-            var q = this.$q.defer<Array<Models.Survey>>();
+            let q = this.$q.defer<Array<Models.Survey>>();
 
-            this.storageService.getAll(this.SURVEY_OBJECT_TYPE, formTemplateId)
-                .then((surveys: Array<Models.Survey>) => {
-                    // let result = _.filter(surveys, { 'projectId': this.userService.current.project.id });
+            let lsKeys = this.localStorageService.keys();
+            let surveyKeys = _.filter(lsKeys, (key) => { return _.startsWith(key, this.SURVEY_KEY); });
 
-                    let result = surveys;
-                    _.forEach(result, (survey: Models.Survey) => {
-                        this.getSurveyMetadata(survey).then((record) => {
-                            survey = record;
-                        });
-                    });
+            let surveys = [];
+            _.forEach(surveyKeys, (skey) => {
+                let surveyData: any = this.localStorageService.get(skey);
+                if (surveyData.formTemplateId === formTemplateId) {
+                    surveys.push(surveyData);
+                }
+            });
 
-                    q.resolve(result);
+            // old code. filter surveys by current project.
+            // let result = _.filter(surveys, { 'projectId': this.userService.current.project.id });
+
+            _.forEach(surveys, (survey) => {
+                this.getSurveyMetadata(survey).then((result) => {
+                    survey = result;
                 });
+            });
+
+            q.resolve(surveys);
 
             return q.promise;
         }
 
         getAllSubmittedSurveys(): ng.IPromise<Array<Models.Survey>> {
-
-            var allSurveys = [];
-            var q = this.$q.defer<Array<Models.Survey>>();
+            let q = this.$q.defer<Array<Models.Survey>>();
+            let allSurveys = [];
 
             this.getFormTemplates()
-                .then(
-                    (templates) => {
-                        var promises: Array<ng.IPromise<void>> = [];
+                .then((templates) => {
+                    let promises: Array<ng.IPromise<void>> = [];
 
-                        angular.forEach(templates, (template) => {
+                    angular.forEach(templates, (template) => {
+                        let deferred = this.$q.defer<void>();
+                        promises.push(deferred.promise);
 
-                            var deferred = this.$q.defer<void>();
-                            promises.push(deferred.promise);
-
-                            this.getSubmittedSurveys(template.id)
-                                .then((surveys) => {
-                                    for (var i = 0; i < surveys.length; i++)
-                                        surveys[i].formTemplate = template;
-                                    allSurveys = allSurveys.concat(surveys);
-                                    deferred.resolve();
+                        this.getSubmittedSurveys(template.id)
+                            .then((surveys) => {
+                                _.forEach(surveys, (survey) => {
+                                    survey.formTemplate = template;
                                 });
-                        });
 
-                        this.$q.all(promises).then(() => { q.resolve(allSurveys); });
+                                allSurveys = allSurveys.concat(surveys);
+                                deferred.resolve();
+                            });
+                    });
 
-                    },
-                    (err) => { q.reject(err); });
+                    this.$q.all(promises).then(() => {
+                        q.resolve(allSurveys);
+                    }, (err) => {
+                        q.reject(err);
+                    });
+                }, (err) => {
+                    q.reject(err);
+                });
 
             return q.promise;
         }
 
         getDrafts(formTemplateId: string): ng.IPromise<Array<Models.Survey>> {
-            return this.getAllSavedSurveys(formTemplateId)
-                .then(
-                    (savedSurveys) => {
-                        return _.filter(savedSurveys, { 'isSubmitted': false });
-                    });
+            let deferred = this.$q.defer<Array<Models.Survey>>();
+
+            this.getAllSavedSurveys(formTemplateId)
+                .then((savedSurveys) => {
+                    let result = _.filter(savedSurveys, { 'isSubmitted': false });
+                    deferred.resolve(result);
+                }, (err) => {
+                    deferred.reject(err);
+                });
+
+            return deferred.promise;
         }
 
         getSubmittedSurveys(formTemplateId: string): ng.IPromise<Array<Models.Survey>> {
-            return this.getAllSavedSurveys(formTemplateId)
-                .then(
-                    (savedSurveys) => {
-                        return _.filter(savedSurveys, { 'isSubmitted': true });
-                    });
+            let deferred = this.$q.defer<Array<Models.Survey>>();
+
+            this.getAllSavedSurveys(formTemplateId)
+                .then((savedSurveys) => {
+                    let result = _.filter(savedSurveys, { 'isSubmitted': true });
+                    deferred.resolve(result);
+                }, (err) => {
+                    deferred.reject(err);
+                });
+
+            return deferred.promise;
         }
 
         getProjects(): ng.IPromise<Array<Models.Project>> {
-            return this.storageService.getAll(this.PROJECT_OBJECT_TYPE, null);
+            let deferred = this.$q.defer<Array<Models.Project>>();
+
+            let lsKeys = this.localStorageService.keys();
+            let projectKeys = _.filter(lsKeys, (key) => { return _.startsWith(key, this.PROJECT_KEY); });
+            let projects = [];
+
+            _.forEach(projectKeys, (pk) => {
+                projects.push(this.localStorageService.get(pk));
+            });
+
+            deferred.resolve(projects);
+
+            return deferred.promise;
         }
 
         getTemplateWithValues(surveyId: string): ng.IPromise<Models.FormTemplate> {
-            var q = this.$q.defer<Models.FormTemplate>();
+            let q = this.$q.defer<Models.FormTemplate>();
 
-            this.getSurvey(surveyId)
-                .then(
-                    (survey) => {
-                        var formValues = survey.formValues;
+            this.getSurvey(surveyId).then((survey) => {
+                let formValues = survey.formValues;
 
-                        this.getFormTemplate(survey.formTemplateId)
-                            .then(
-                                (formTemplate) => {
-                                    formTemplate.survey = survey;
-                                    q.resolve(formTemplate);
-                                },
-                                (err) => { q.reject(err); });
-                    },
-                    (err) => { q.reject(err); });
+                this.getFormTemplate(survey.formTemplateId)
+                    .then((formTemplate) => {
+                        formTemplate.survey = survey;
+                        q.resolve(formTemplate);
+                    }, (err) => {
+                        q.reject(err);
+                    });
+            }, (err) => {
+                q.reject(err);
+            });
 
             return q.promise;
         }
@@ -846,37 +985,39 @@ module App.Services {
         getDescription(survey: Models.Survey, descriptionMetrics: Models.IGetDescriptionMetricsDTO): string {
             let self = this;
             let q = this.$q.defer();
-
             let result: string = descriptionMetrics.descriptionFormat;
+
             _.forEach(descriptionMetrics.descriptionMetrics, (metric: Models.Metric) => {
                 let formValue = _.find(survey.formValues, (fv) => { return fv.metricId == metric.id; });
                 if (formValue) {
                     let value = self.getFormValueText(formValue, metric);
                     if (value == undefined) value = '';
+
                     let segment = "{{" + _.toLower(metric.shortTitle) + "}}";
                     result = _.replace(result, segment, value);
                 }
             });
 
             if (result === descriptionMetrics.descriptionFormat) result = '';
+
             return result;
         }
 
         getSurveyMetadata(survey: Models.Survey): ng.IPromise<Models.Survey> {
-            var d = this.$q.defer<Models.Survey>();
+            let d = this.$q.defer<Models.Survey>();
 
             this.getFormTemplate(survey.formTemplateId).then((template) => {
                 this.getDescirptionMetrics(template).then((descMetrics) => {
                     survey.description = this.getDescription(survey, descMetrics);
                 });
 
-                var dateFormValue = _.find(survey.formValues, { 'metricId': template.calendarDateMetricId });
+                let dateFormValue = _.find(survey.formValues, { 'metricId': template.calendarDateMetricId });
                 if (dateFormValue) {
-                    var utcDate = moment.utc(dateFormValue.dateValue);
-                    var hours = utcDate.hour();
-                    var minutes = utcDate.minutes();
+                    let utcDate = moment.utc(dateFormValue.dateValue);
+                    let hours = utcDate.hour();
+                    let minutes = utcDate.minutes();
 
-                    var localDate = utcDate.local().toDate();
+                    let localDate = utcDate.local().toDate();
                     if (hours == 0 && minutes == 0) {
                         localDate.setHours(0);
                         localDate.setMinutes(0);
@@ -886,11 +1027,11 @@ module App.Services {
 
                     survey.surveyDate = localDate;
                 } else {
-                    var utcDate = moment.utc(survey.surveyDate);
-                    var hours = utcDate.hour();
-                    var minutes = utcDate.minutes();
+                    let utcDate = moment.utc(survey.surveyDate);
+                    let hours = utcDate.hour();
+                    let minutes = utcDate.minutes();
 
-                    var localDate = utcDate.local().toDate();
+                    let localDate = utcDate.local().toDate();
                     if (hours == 0 && minutes == 0) {
                         localDate.setHours(0);
                         localDate.setMinutes(0);
@@ -908,19 +1049,18 @@ module App.Services {
         }
 
         getUserSurveys(projectId: string): ng.IPromise<Array<Models.Survey>> {
-            var q = this.$q.defer<Array<Models.Survey>>();
+            let q = this.$q.defer<Array<Models.Survey>>();
 
             this.httpService.getUserSurveys(projectId)
-                .then(
-                    (data) => {
-                        _.map(data, function (item: Models.Survey) {
-                            return item.isSubmitted = true;
-                        });
+                .then((data) => {
+                    _.map(data, function(item: Models.Survey) {
+                        return item.isSubmitted = true;
+                    });
 
-                        q.resolve(data);
-                    },
-                    (err) => { q.reject(err); }
-                );
+                    q.resolve(data);
+                }, (err) => {
+                    q.reject(err);
+                });
 
             return q.promise;
         }

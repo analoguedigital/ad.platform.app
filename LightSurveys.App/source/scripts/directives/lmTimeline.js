@@ -39,7 +39,7 @@
                 return {
                     day: moment(day).toDate(),
                     surveys: group
-                }
+                };
             });
             occurences = _.sortBy(occurences, 'day');
 
@@ -76,21 +76,21 @@
                 var missingTicks = Math.floor((maxTicks - occurences.length) / 2);
 
                 // padding to start
-                for (var i = 1; i <= missingTicks; i++) {
-                    var date = moment(minDate).add(-i, 'days').toDate();
+                for (var k = 1; k <= missingTicks; k++) {
+                    var date = moment(minDate).add(-k, 'days').toDate();
                     xAxesTicks.unshift(date);
                 }
 
                 // padding to end
-                for (var i = 1; i <= missingTicks; i++) {
-                    var date = moment(maxDate).add(i, 'days').toDate();
-                    xAxesTicks.push(date);
+                for (var j = 1; j <= missingTicks; j++) {
+                    var endDate = moment(maxendDate).add(j, 'days').toDate();
+                    xAxesTicks.push(endDate);
                 }
 
                 if (xAxesTicks.length < maxTicks) {
                     var firstTick = xAxesTicks[0];
-                    var date = new moment(firstTick).add(-1, 'days').toDate();
-                    xAxesTicks.unshift(date);
+                    var _date = new moment(firstTick).add(-1, 'days').toDate();
+                    xAxesTicks.unshift(_date);
                 }
             }
 
@@ -109,7 +109,9 @@
                 var currentMonth = moment(scope.currentDate).format('MM-YYYY');
                 var surveyMonth = moment(survey.surveyDate).format('MM-YYYY');
 
-                if (surveyMonth === currentMonth) { return survey; }
+                if (surveyMonth === currentMonth) {
+                    return survey;
+                }
             });
 
             var groupedSurveys = _.groupBy(currentMonthSurveys, function (survey) {
@@ -120,7 +122,7 @@
                 return {
                     day: moment(day).toDate(),
                     surveys: group
-                }
+                };
             });
             occurences = _.sortBy(occurences, 'day');
 
@@ -133,8 +135,7 @@
                     xAxesTicks.push(tick);
                 }
                 xAxesTicks.push(lastDayOfMonth);
-            }
-            else {
+            } else {
                 // display 10 ticks only
                 var hasFirstDayOfMonth = _.filter(occurences, function (oc) {
                     return moment(oc.day).format('MM-DD-YYYY') === moment(firstDayOfMonth).format('MM-DD-YYYY');
@@ -157,9 +158,9 @@
                     missingDays -= 1;
 
                 // build ticks from 2nd day to last day
-                for (var i = 2; i <= daysInMonth; i++) {
+                for (var _index = 2; _index <= daysInMonth; _index++) {
                     var hasData = _.filter(occurences, function (oc) {
-                        return moment(oc.day).date() == i;
+                        return moment(oc.day).date() == _index;
                     });
 
                     if (hasData.length) {
@@ -167,9 +168,9 @@
                         xAxesTicks.push(occurence.day);
                     } else {
                         if (missingDays > 0) {
-                            var daysToAdd = -(currentDay - i);
-                            var tick = moment(scope.currentDate).add(daysToAdd, 'day').toDate();
-                            xAxesTicks.push(tick);
+                            var _daysToAdd = -(currentDay - _index);
+                            var missingTick = moment(scope.currentDate).add(_daysToAdd, 'day').toDate();
+                            xAxesTicks.push(missingTick);
                             missingDays -= 1;
                         }
                     }
@@ -187,7 +188,9 @@
 
             _.forEach(scope.formTemplates, function (template) {
                 var data = [];
-                var records = _.filter(scope.surveys, function (survey) { return survey.formTemplateId == template.id });
+                var records = _.filter(scope.surveys, function (survey) {
+                    return survey.formTemplateId == template.id;
+                });
 
                 _.forEach(xAxesTicks, function (tick) {
                     var foundSurveys = _.filter(records, function (record) {
@@ -199,7 +202,9 @@
                     if (foundSurveys.length) {
                         var impactSum = 0;
                         _.forEach(foundSurveys, function (survey) {
-                            var timelineBarFormValue = _.filter(survey.formValues, { 'metricId': template.timelineBarMetricId })[0];
+                            var timelineBarFormValue = _.filter(survey.formValues, {
+                                'metricId': template.timelineBarMetricId
+                            })[0];
                             if (timelineBarFormValue) {
                                 var value = timelineBarFormValue.numericValue;
 
@@ -269,7 +274,7 @@
             if (!tooltipEl) {
                 tooltipEl = document.createElement('div');
                 tooltipEl.id = 'chartjs-tooltip';
-                tooltipEl.innerHTML = "<table></table>"
+                tooltipEl.innerHTML = "<table></table>";
                 this._chart.canvas.parentNode.appendChild(tooltipEl);
             }
 
@@ -345,7 +350,7 @@
             tooltipEl.style.fontSize = tooltip.bodyFontSize;
             tooltipEl.style.fontStyle = tooltip._fontStyle;
             tooltipEl.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px';
-        };
+        }
 
         function renderTimelineChart() {
             var canvas = element[0];
@@ -491,7 +496,9 @@
                             var data = dataset.data[index];
                             var impact = parseInt(data);
 
-                            var foundTemplate = _.filter(scope.formTemplates, function (template) { return template.id === dataset.formTemplateId; });
+                            var foundTemplate = _.filter(scope.formTemplates, function (template) {
+                                return template.id === dataset.formTemplateId;
+                            });
                             if (foundTemplate.length) {
                                 var template = foundTemplate[0];
                                 var tickData = scope.tickData[index];
@@ -552,11 +559,11 @@
 
         scope.timelineNextMonth = function () {
             scope.currentDate = moment(scope.currentDate).add(1, 'months').toDate();
-        }
+        };
 
         scope.timelinePreviousMonth = function () {
             scope.currentDate = moment(scope.currentDate).subtract(1, 'months').toDate();
-        }
+        };
 
         scope.$watchGroup(['formTemplates', 'surveys'], function (data) {
             buildTimeline();

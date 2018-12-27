@@ -20,12 +20,13 @@ module App.Services {
     }
 
     class MediaService implements IMediaService {
-        static $inject: string[] = ['$q', 'localStorageService', 'storageService'];
+        static $inject: string[] = ['$q', 'localStorageService', 'storageService', '$cordovaCamera'];
 
         constructor(
             private $q: angular.IQService,
             private localStorageService: angular.local.storage.ILocalStorageService,
-            private storageService: IStorageService) {
+            private storageService: IStorageService,
+            private $cordovaCamera: any) {
         }
 
         isCaptureInProgress(): boolean {
@@ -46,27 +47,30 @@ module App.Services {
             }
 
             window.DocumentPicker.getFile('all', function(uri) {
-                self.storageService.getFileEntryFromUri(uri).then(
-                    (fileEntry) => {
-                        fileEntry.file(
-                            (file) => {
-                                var mimeType = file.type;
-                                if (!mimeType)
-                                    mimeType = self.getMimeType(uri.split('.').pop());
-                                    
-                                q.resolve(<Models.Attachment>{
-                                    fileUri: uri,
-                                    type: mimeType,
-                                    mediaType: _.split(mimeType, '/')[0],
-                                    tempStorage: true
-                                });
-                            },
-                            (err) => {
-                                q.reject(err);
-                            }
-                        )
-                    },
-                    (err) => { q.reject(err); })
+                try {
+                    self.storageService.getFileEntryFromUri(uri).then(
+                        (fileEntry) => {
+                            fileEntry.file(
+                                (file) => {
+                                    var mimeType = file.type;
+                                    if (!mimeType)
+                                        mimeType = self.getMimeType(uri.split('.').pop());
+
+                                    q.resolve(<Models.Attachment>{
+                                        fileUri: uri,
+                                        type: mimeType,
+                                        mediaType: _.split(mimeType, '/')[0],
+                                        tempStorage: true
+                                    });
+                                },
+                                (err) => {
+                                    q.reject(err);
+                                }
+                            )
+                        }, (err) => { q.reject(err); })
+                } catch (error) {
+                    console.error(error);
+                }
             }, function(err) {
                 console.log('DocumentPicker Error', err);
             });
@@ -80,7 +84,7 @@ module App.Services {
 
             this.startCapture();
 
-            fileChooser.open(function (uri) {
+            fileChooser.open(function(uri) {
                 self.endCapture();
 
                 self.storageService.getFileEntryFromUri(uri).then(
@@ -105,7 +109,7 @@ module App.Services {
                             });
                     },
                     (err) => { q.reject(err); })
-            }, function (err) {
+            }, function(err) {
                 self.endCapture();
                 console.error(err);
                 q.reject(err);
@@ -123,39 +127,98 @@ module App.Services {
             }
 
             this.startCapture();
+            console.log('get picture from library...');
 
-            navigator.camera.getPicture(
-                (fileUri: string) => {
-                    this.endCapture();
-                    this.storageService.getFileEntryFromUri(fileUri).then(
-                        (fileEntry) => {
+            let cameraOptions = {
+                quality: 100,
+                destinationType: 1, // FILE URI
+                sourceType: 0,  // PHOTOLIBRARY
+                encodingType: 0,    // JPEG
+                mediaType: 2,   // ALLMEDIA
+                correctOrientation: true
+            };
+
+            let self = this;
+
+            this.$cordovaCamera.getPicture(cameraOptions)
+                .then(function(fileUri) {
+                    console.info('FILE_URI', fileUri);
+
+                    self.endCapture();
+
+                    self.storageService.getFileEntryFromUri(fileUri)
+                        .then((fileEntry) => {
+                            console.info('library file entry', fileEntry);
+
                             fileEntry.file(
                                 (file) => {
                                     var mimeType = file.type;
                                     if (!mimeType)
-                                        mimeType = this.getMimeType(fileUri.split('.').pop());
+                                        mimeType = self.getMimeType(fileUri.split('.').pop());
+
                                     q.resolve(<Models.Attachment>{
                                         fileUri: fileUri,
                                         type: mimeType,
                                         mediaType: _.split(mimeType, '/')[0],
                                         tempStorage: true
                                     });
-                                },
-                                (err) => {
+                                }, (err) => {
+                                    console.error('fileEntry.file ERROR', err);
                                     q.reject(err);
                                 }
                             )
-                        },
-                        (err) => { q.reject(err); })
-                },
-                (err: string) => {
-                    this.endCapture();
+                        }, (err) => {
+                            console.error('getFileEntryFromUri failed', err);
+                            q.reject(err);
+                        });
+                }, function(err) {
+                    console.error('$cordovaCamera.getPicture ERROR', err);
                     q.reject(err);
-                },
-                {
-                    sourceType: Camera.PictureSourceType.PHOTOLIBRARY
                 });
 
+            // navigator.camera.getPicture(
+            //     (fileUri: string) => {
+            //         console.log('got picture from library', fileUri);
+
+            //         this.endCapture();
+
+            //         this.storageService.getFileEntryFromUri(fileUri)
+            //             .then((fileEntry) => {
+            //                 console.info('library file entry', fileEntry);
+
+            //                 fileEntry.file(
+            //                     (file) => {
+            //                         var mimeType = file.type;
+            //                         if (!mimeType)
+            //                             mimeType = this.getMimeType(fileUri.split('.').pop());
+
+            //                         q.resolve(<Models.Attachment>{
+            //                             fileUri: fileUri,
+            //                             type: mimeType,
+            //                             mediaType: _.split(mimeType, '/')[0],
+            //                             tempStorage: true
+            //                         });
+            //                     }, (err) => {
+            //                         q.reject(err);
+            //                     }
+            //                 )
+            //             }, (err) => {
+            //                 console.error('getFileEntryFromUri failed', err);
+            //                 q.reject(err);
+            //             });
+            //     }, (err: string) => {
+            //         console.error('getPicture failed', err);
+
+            //         this.endCapture();
+            //         q.reject(err);
+            //     }, {
+            //         sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+            //         destinationType: Camera.DestinationType.FILE_URI,
+            //         targetWidth: 1000,
+            //         targetHeight: 1000,
+            //         quality: 100,
+            //         mediaType: Camera.MediaType.ALLMEDIA
+            //     });
 
             //navigator.device.capture.captureImage(
             //    (mediaFiles) => {

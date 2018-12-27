@@ -1,6 +1,6 @@
-﻿'use strict';
-angular.module('lm.surveys').controller('staticContentController', ['$scope', 'localStorageService',
-    function ($scope, localStorageService) {
+﻿(function () {
+    'use strict';
+    angular.module('lm.surveys').controller('staticContentController', ['$scope', 'localStorageService', function ($scope, localStorageService) {
         $scope.firstLogin = false;
 
         var FIRST_TIME_LOGIN_KEY = 'FIRST_TIME_LOGIN';
@@ -9,4 +9,4 @@ angular.module('lm.surveys').controller('staticContentController', ['$scope', 'l
             $scope.firstLogin = true;
         }
     }]);
-
+}());

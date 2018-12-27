@@ -13,7 +13,7 @@ interface Navigator {
         .run(SetupLoginTransitionControls);
 
     RunIonic.$inject = ["$rootScope", "$state", "$ionicPlatform", "$ionicConfig", "$ionicHistory", "$route",
-        "$ionicSideMenuDelegate", "$ionicPopup", "gettext", "userService", "mediaService"];
+        "$ionicSideMenuDelegate", "$ionicPopup", "gettext", "userService", "mediaService", "$timeout", "$ionicScrollDelegate"];
     function RunIonic(
         $rootScope: ng.IRootScopeService,
         $state: ng.ui.IStateService,
@@ -25,7 +25,9 @@ interface Navigator {
         $ionicPopup: ionic.popup.IonicPopupService,
         gettext: any,
         userService: App.Services.IUserService,
-        mediaService: App.Services.IMediaService) {
+        mediaService: App.Services.IMediaService,
+        $timeout: ng.ITimeoutService,
+        $ionicScrollDelegate: ionic.scroll.IonicScrollDelegate) {
 
         $ionicPlatform.ready(function () {
             if (window.StatusBar) {
@@ -47,15 +49,24 @@ interface Navigator {
             // not necessary but it's a good practice. might help with view quirks and the nav-bar disappearance too.
             $ionicConfig.views.maxCache(0);            
 
+            // enable JS scrolling
+            $ionicConfig.scrolling.jsScrolling(true);
+
             document.addEventListener('pause', function (event) {
+                console.warn('application paused', event);
+
                 // release audio playback, if any.
                 if ($rootScope.currentMedia) {
-                    $rootScope.currentMedia.stop();
-                    $rootScope.currentMedia.release();
+                    try {
+                        $rootScope.currentMedia.stop();
+                        $rootScope.currentMedia.release();
 
-                    if ($rootScope.mediaModal) {
-                        $rootScope.mediaModal.hide();
-                        $rootScope.mediaModal.remove();
+                        if ($rootScope.mediaModal) {
+                            $rootScope.mediaModal.hide();
+                            $rootScope.mediaModal.remove();
+                        }
+                    } catch (error) {
+                        console.error('could not dispose media', error);
                     }
                 }
 
@@ -69,6 +80,8 @@ interface Navigator {
             });
 
             document.addEventListener('resume', function (event) {
+                console.warn('application resumed', event);
+
                 if (!mediaService.isCaptureInProgress()) {
                     $state.go('login');
                 }

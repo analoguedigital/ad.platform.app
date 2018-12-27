@@ -76,7 +76,7 @@
             })
             .state('surveyView', {
                 parent: 'menu',
-                url: "/surveyView/:id",
+                url: "/surveyView/:id/:index/:total",
                 controller: "surveyController",
                 templateUrl: "partials/surveyView.html"
             })

@@ -1,6 +1,6 @@
-'use strict';
-angular.module('lm.surveys').controller('gettingStartedController', ['$scope', 'localStorageService',
-    function ($scope, localStorageService) {
+(function () {
+    'use strict';
+    angular.module('lm.surveys').controller('gettingStartedController', ['$scope', 'localStorageService', function ($scope, localStorageService) {
         $scope.firstLogin = false;
 
         var FIRST_TIME_LOGIN_KEY = 'FIRST_TIME_LOGIN';
@@ -13,7 +13,7 @@ angular.module('lm.surveys').controller('gettingStartedController', ['$scope', '
             loop: false,
             effect: 'slide',
             speed: 500,
-        }
+        };
 
         $scope.$on("$ionicSlides.sliderInitialized", function (event, data) {
             // data.slider is the instance of Swiper
@@ -29,5 +29,5 @@ angular.module('lm.surveys').controller('gettingStartedController', ['$scope', '
             $scope.activeIndex = data.slider.activeIndex;
             $scope.previousIndex = data.slider.previousIndex;
         });
-    }
-]);
+    }]);
+}());

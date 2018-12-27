@@ -259,6 +259,7 @@ module App.Services {
             var options = <FileUploadOptions>{};
             options.fileKey = "file";
             options.fileName = attchment.fileUri.substr(attchment.fileUri.lastIndexOf('/') + 1);
+            options.chunkedMode = true;
 
             if (options.fileName.lastIndexOf('.') === -1) {
                 var fileExtension = this.getFileExtension(attchment);
@@ -268,6 +269,7 @@ module App.Services {
             options.mimeType = attchment.type;
             options.params = {};
             options.httpMethod = "POST";
+
             var headers: any = {};
             options.headers = headers;
             options.headers['timezoneOffset'] = new Date().getTimezoneOffset();
@@ -278,18 +280,21 @@ module App.Services {
             }
 
             var ft = new FileTransfer();
+            var serverUri = encodeURI(HttpService.serviceBase + 'api/files');
 
-            ft.upload(attchment.fileUri, encodeURI(HttpService.serviceBase + 'api/files'),
+            ft.upload(attchment.fileUri, serverUri,
                 (response: FileUploadResult) => {
+                    console.log('upload success: ' + response.responseCode);
+                    console.log(response.bytesSent + ' bytes sent');
                     deferred.resolve(response.response.replace(/\"/g, ""));
                 },
                 (err) => {
+                    console.error('Error uploading file ' + attchment.fileUri + ': ' + err.code);
                     deferred.reject(err);
                 },
                 options);
 
             return deferred.promise;
-
         }
 
         uploadFeedback(feedback: Models.IFeedbackData): ng.IPromise<void> {
