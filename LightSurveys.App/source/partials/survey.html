@@ -22,7 +22,7 @@
     </ion-header-bar>
     <ion-content class="has-subheader padding" ng-class="{'has-footer':numberOfPages > 1}" ng-cloak>
         <form name="surveyForm" novalidate="novalidate" ng-submit="submitSurvey()">
-            <div class="list card">
+            <div class="list card" style="margin-bottom: 10px">
                 <div ng-repeat="metricGroup in activeGroups" ng-controller="metricGroupController">
                     <div ng-if="!metricGroup.isRepeater" ng-include="'partials/metrics/metricGroup.html'" ng-show="isCurrentPage(metricGroup)"></div>
                     <div ng-if="metricGroup.isRepeater" ng-include="'partials/metrics/metricGroupRepeater.html'" ng-show="isCurrentPage(metricGroup)"></div>
@@ -37,7 +37,27 @@
                     </ul>
                 </div>-->
             </div>
-            <div class="padding">
+            <div class="list">
+                <div class="card" style="margin-top: 0; margin-bottom: 0">
+                    <div class="item item-divider">Location</div>
+                    <div class="item item-text-wrap">
+                        <label class="item item-input" style="padding-left: 0">
+                            <input type="text" placeholder="Address" ng-model="geocoding.address" style="padding-right: 0">
+                        </label>
+
+                        <div class="button-bar">
+                            <button type="button" class="button button-small button-royal" ng-click="getAddress()"><i class="fa fa-map"></i> Input Address</button>
+                            <button type="button" class="button button-small button-royal" ng-click="getMyLocation()"><i class="fa fa-location-arrow"></i> Get My Location</button>
+                        </div>
+
+                        <div ng-show="geocoding.hasLocation">
+                            <hr>
+                            <div id="map_canvas"  style="width: 100%; height: 300px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
                 <!--<button ng-show="isLastPage()" class="button button-block button-energized" type="submit" ng-disabled="surveyForm.$invalid || uploadWorking">
                     <span ng-if="!uploadWorking">
                         <i class="fa fa-cloud-upload"></i>
@@ -48,7 +68,7 @@
                     </span>
                 </button>-->
 
-                <button ng-show="isLastPage()" class="button button-block button-energized" type="submit" ng-disabled="uploadWorking">
+                <button ng-show="isLastPage()" class="button button-full button-energized" type="submit" ng-disabled="uploadWorking">
                     <span ng-if="!uploadWorking">
                         <i class="fa fa-cloud-upload"></i>
                         <span translate>Upload</span>

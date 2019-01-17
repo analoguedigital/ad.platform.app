@@ -1,5 +1,7 @@
 <ion-view title="Organizations" id="organizationsPage">
     <ion-content class="content padding organizations" ng-cloak>
+        <ion-refresher pulling-text="Pull down to refresh organizations" on-refresh="doRefresh()"></ion-refresher>
+
         <div class="row responsive-lg">
             <div class="col" style="margin-bottom: 0" ng-if="!requestSent">
                 <p class="light">If you need help, go to our <strong>Need Help?</strong> tab in the menu. Otherwise select the organization you wish to connect to, and confirm the action. We will review your request as soon as possible and get back to you.</p>
@@ -7,13 +9,16 @@
             <div class="col">
                 <div ng-if="!requestSent">
                     <div class="list">
-                        <a class="item" href="" ng-repeat="org in organizations track by org.id" ng-click="selectOrganization(org)">
+                        <label class="item item-input">
+                            <input type="text" placeholder="Search by name" ng-model="model.searchTerm">
+                        </label>
+                    </div>
+
+                    <div class="list">
+                        <a class="item" href="" ng-repeat="org in organizations | filter:{name:model.searchTerm} | orderBy:'name'" ng-click="selectOrganization(org)">
                             <h2 style="font-weight: bold">{{org.name}}</h2>
                             <p ng-if="org.county.length"><b>County</b> {{org.county}}</p>
                             <p ng-if="org.town.length"><b>Town</b> {{org.town}}</p>                        
-                            <p ng-if="org.addressLine1.length"><b>Address 1</b> {{org.addressLine1}}</p>
-                            <p ng-if="org.addressLine2.length"><b>Address 2</b> {{org.addressLine2}}</p>
-                            <p ng-if="org.postcode.length"><b>PostCode</b> {{org.postcode}}</p>
                         </a>
                     </div>
                         

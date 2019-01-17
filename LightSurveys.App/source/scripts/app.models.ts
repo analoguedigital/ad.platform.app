@@ -97,7 +97,8 @@ module App.Models {
             public longitude: number,
             public accuracy: number,
             public error: string,
-            public event: string) { }
+            public event: string,
+            public address?: string,) { }
     }
 
     export class Metric {

@@ -87,8 +87,6 @@
             };
 
             $scope.viewSurvey = function (survey, index) {
-                console.info('record ' + index + 1 + ' of ' + $scope.drafts.length);
-
                 $state.go('surveyView', {
                     id: survey.id,
                     index: index + 1,
