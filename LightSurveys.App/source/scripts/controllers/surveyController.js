@@ -1,9 +1,9 @@
 (function () {
     'use strict';
     angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$scope', '$ionicHistory', '$stateParams', '$state', 'userService',
-        'surveyService', 'alertService', 'gettext', '$timeout', 'ngProgress', 'httpService', '$ionicPopup', 'toastr', '$ionicLoading',
+        'surveyService', 'alertService', 'gettext', '$timeout', 'ngProgress', 'httpService', '$ionicPopup', 'toastr', '$ionicLoading', 'locationService', 
         function ($rootScope, $scope, $ionicHistory, $stateParams, $state, userService, surveyService, alertService,
-            gettext, $timeout, ngProgress, httpService, $ionicPopup, toastr, $ionicLoading) {
+            gettext, $timeout, ngProgress, httpService, $ionicPopup, toastr, $ionicLoading, locationService) {
 
             $scope.surveyId = $stateParams.id;
             $scope.surveyIndex = $stateParams.index;
@@ -14,6 +14,15 @@
             $scope.activeGroups = [];
             $scope.allFormValues = [];
             $scope.uploadWorking = false;
+
+            $scope.geocoding = {
+                latitude: undefined,
+                longitude: undefined,
+                accuracy: 0,
+                address: '',
+                formattedAddress: '',
+                hasLocation: false
+            };
 
             var populateFormValues = function () {
                 $scope.survey.formValues = [];
@@ -198,11 +207,9 @@
                     return;
                 }
 
-                //populateFormValues();
                 $scope.survey.formValues = $scope.allFormValues;
 
                 var validationErrors = [];
-                // var canSubmit = true;
 
                 _.forEach($scope.survey.formValues, function (fv) {
                     _.forEach($scope.formTemplate.metricGroups, function (mg) {
@@ -226,22 +233,14 @@
                                         }
                                         break;
                                     }
-                                    // case 'freeTextMetric':
-                                    //     {
-                                    //         if (!fv.textValue || !fv.textValue.length) {
-                                    //             canSubmit = false;
-                                    //         }
-                                    //         break;
-                                    //     }
                             }
                         }
                     });
                 });
 
-                // if (!canSubmit) {
-                //     toastr.error('You forgot to tell me what happened');
-                //     return false;
-                // }
+                if (!$scope.geocoding.hasLocation) {
+                    validationErrors.push('- record location has not been set');
+                }
 
                 if (validationErrors.length) {
                     var popupTemplate = "<ul>";
@@ -284,6 +283,19 @@
             $scope.doSubmit = function () {
                 ngProgress.start();
                 $scope.uploadWorking = true;
+
+                // set location values.
+                if ($scope.geocoding.hasLocation) {
+                    $scope.survey.locations = [];
+                    $scope.survey.locations.push({
+                        latitude: $scope.geocoding.latitude,
+                        longitude: $scope.geocoding.longitude,
+                        accuracy: $scope.geocoding.accuracy,
+                        address: $scope.geocoding.formattedAddress,
+                        error: '',
+                        event: 'Submission'
+                    });
+                }
 
                 $ionicLoading.show({
                     template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Submitting record...'
@@ -364,6 +376,149 @@
                     });
             };
 
+            $scope.getAddress = function () {
+                var geocoder = new google.maps.Geocoder();
+                var address = $scope.geocoding.address;
+
+                if (address.length < 1) {
+                    toastr.error('Please enter an address first');
+                    return;
+                }
+
+                $ionicLoading.show({
+                    template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Geocoding address...'
+                });
+
+                geocoder.geocode({ 'address': address }, function (result, status) {
+                    $ionicLoading.hide();
+
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        var formattedAddress = result[0].formatted_address;
+                        var lat = result[0].geometry.location.lat();
+                        var lng = result[0].geometry.location.lng();
+
+                        $scope.$apply(function () {
+                            $scope.geocoding.latitude = lat;
+                            $scope.geocoding.longitude = lng;
+                            $scope.geocoding.address = formattedAddress;
+                            $scope.geocoding.formattedAddress = formattedAddress;
+                            $scope.geocoding.hasLocation = true;
+                        });
+
+                        $scope.getMap(lat, lng, formattedAddress);
+                    } else {
+                        toastr.error('Something went wrong, could not fetch location');
+                    }
+                });
+            }
+
+            $scope.getMyLocation = function () {
+                $ionicLoading.show({
+                    template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Getting your location...'
+                });
+
+                locationService.getCurrentPosition()
+                    .then(function (result) {
+                        var latitude = result.latitude;
+                        var longitude = result.longitude;
+                        var accuracy = result.accuracy;
+
+                        var geocoder = new google.maps.Geocoder();
+                        var latLng = new google.maps.LatLng(latitude, longitude);
+
+                        geocoder.geocode({ 'latLng': latLng }, function (res, status) {
+                            $ionicLoading.hide();
+                            
+                            if (status == google.maps.GeocoderStatus.OK) {
+                                if (res[0]) {
+                                    var formattedAddress = res[0].formatted_address;
+
+                                    $scope.$apply(function () {
+                                        $scope.geocoding.latitude = latitude;
+                                        $scope.geocoding.longitude = longitude;
+                                        $scope.geocoding.accuracy = accuracy;
+                                        $scope.geocoding.address = formattedAddress;
+                                        $scope.geocoding.formattedAddress = formattedAddress;
+                                        $scope.geocoding.hasLocation = true;
+                                    });
+
+                                    $scope.getMap(latitude, longitude, formattedAddress);
+                                } else {
+                                    console.warn('address not found!');
+                                    toastr.error('Address not found!');
+                                }
+                            } else {
+                                toastr.error('Something went wrong, address not found');
+                            }
+                        });
+                    }, function (err) {
+                        $ionicLoading.hide();
+                        console.error(err);
+                        toastr.error('Something went wrong, could not fetch location');
+                    });
+            }
+
+            $scope.getMap = function (latitude, longitude, address) {
+                var latlng = new google.maps.LatLng(latitude,longitude);
+
+                var mapOptions = {
+                    zoom: 14,
+                    center: latlng,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    mapTypeControl: true,
+                    streetViewControl: false
+                };
+
+                var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+
+                var marker = new google.maps.Marker({
+                    position: latlng, 
+                    map: map, 
+                    draggable: true,
+                    title: address
+                });
+
+                google.maps.event.addListener(marker, 'dragend', function (e) {
+                    var lat = e.latLng.lat();
+                    var lng = e.latLng.lng();
+
+                    var geocoder = new google.maps.Geocoder();
+                    var latLng = new google.maps.LatLng(lat, lng);
+
+                    $ionicLoading.show({
+                        template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Geocoding location...'
+                    });
+
+                    geocoder.geocode({ 'latLng': latLng }, function (res, status) {
+                        $ionicLoading.hide();
+                        
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            if (res[0]) {
+                                var formattedAddress = res[0].formatted_address;
+
+                                $scope.$apply(function () {
+                                    $scope.geocoding.latitude = lat;
+                                    $scope.geocoding.longitude = lng;
+                                    $scope.geocoding.address = formattedAddress;
+                                    $scope.geocoding.formattedAddress = formattedAddress;
+                                });
+                            } else {
+                                console.warn('address not found!');
+                                toastr.error('Address not found!');
+                            }
+                        } else {
+                            toastr.error('Something went wrong, address not found');
+                        }
+                    });
+                });
+
+                google.maps.event.addListener(marker, 'click', function (e) {
+                    var infoWindow = new google.maps.InfoWindow();
+                    infoWindow.setContent(address);
+                    infoWindow.open(map, marker);
+                });
+            }
+
             $scope.activate = function () {
                 $ionicLoading.show({
                     template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Loading...'
@@ -393,7 +548,9 @@
                                 },
                                 zoom: 10,
                                 options: {
-                                    scrollwheel: false
+                                    scrollwheel: false,
+                                    streetViewControl: false,
+                                    mapTypeControl: true
                                 },
                                 marker: {
                                     id: index + 1,
@@ -403,19 +560,22 @@
                                     },
                                     options: {
                                         draggable: false,
-                                        title: pos.event
+                                        title: pos.address
                                     },
-                                    // events: {
-                                    //     click: function(marker, eventName, args) {
-                                    //         var position = marker.getPosition();
-                                    //         var lat = position.lat();
-                                    //         var long = position.lng();
+                                    events: {
+                                        click: function(marker, eventName, args) {
+                                            var infoWindow = new google.maps.InfoWindow;
+                                            var popupContent;
+                                            if (pos.address && pos.address.length) {
+                                                popupContent = "<p style='margin: 0'><span><b>Serial:</b> #" + $scope.survey.serial + "</span><br><span style='display: block; padding-top: 5px'>" + pos.address + "</span></p>";
+                                            } else {
+                                                popupContent = "<p style='margin: 0'><span><b>Serial:</b> #" + $scope.survey.serial + "</span></p>";
+                                            }
 
-                                    //         var infoWindow = new google.maps.InfoWindow;
-                                    //         infoWindow.setContent(marker.title);
-                                    //         infoWindow.open($scope.map, marker);
-                                    //     }
-                                    // }
+                                            infoWindow.setContent(popupContent);
+                                            infoWindow.open($scope.map, marker);
+                                        }
+                                    }
                                 }
                             });
                         }));

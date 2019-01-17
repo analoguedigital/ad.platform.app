@@ -1,7 +1,7 @@
 (function () {
     'use strict';
-    angular.module('lm.surveys').controller('organizationsController', ['$scope', 'httpService', 'toastr', 'ngProgress', '$ionicModal', '$ionicLoading',
-        function ($scope, httpService, toastr, ngProgress, $ionicModal, $ionicLoading) {
+    angular.module('lm.surveys').controller('organizationsController', ['$scope', 'httpService', 'toastr', 'ngProgress', '$ionicModal', '$ionicLoading', 'localStorageService',
+        function ($scope, httpService, toastr, ngProgress, $ionicModal, $ionicLoading, localStorageService) {
             $scope.organizationsDialog = {};
             $scope.orgRequestModal = {};
 
@@ -13,7 +13,8 @@
             $scope.orgRequestWorking = false;
 
             $scope.model = {
-                orgName: ''
+                orgName: '',
+                searchTerm: ''
             };
 
             $scope.orgRequestModel = {
@@ -119,6 +120,65 @@
                     });
             };
 
+            $scope.doRefresh = function () {
+                ngProgress.start();
+                $ionicLoading.show({
+                    template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Refreshing data...'
+                });
+
+                httpService.getOrganizations().then(function (data) {
+                    $scope.organizations = data;
+
+                    _.forEach(data, function (item) {
+                        localStorageService.set('organization/' + item.id, item);
+                    });
+                }).finally(function () {
+                    ngProgress.complete();
+                    $ionicLoading.hide();
+                    $scope.$broadcast('scroll.refreshComplete');
+                });
+            };
+
+            $scope.fetchOrganizations = function () {
+                ngProgress.start();
+                $ionicLoading.show({
+                    template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Loading organizations...'
+                });
+
+                httpService.getOrganizations().then(function (data) {
+                    $scope.organizations = data;
+
+                    _.forEach(data, function (item) {
+                        localStorageService.set('organization/' + item.id, item);
+                    });
+
+                    console.log('data fetched from server');
+                }).finally(function () {
+                    ngProgress.complete();
+                    $ionicLoading.hide();
+                });
+            }
+
+            $scope.loadOrganizations = function () {
+                var lsKeys = localStorageService.keys();
+                var organizationKeys = _.filter(lsKeys, function (key) {
+                    return _.startsWith(key, 'organization/');
+                });
+
+                var _organizations = [];
+                _.forEach(organizationKeys, function (orgKey) {
+                    var org = localStorageService.get(orgKey);
+                    _organizations.push(org);
+                });
+
+                if (_organizations.length) {
+                    $scope.organizations = _organizations;
+                    console.log('data loaded from localStorage');
+                } else {
+                    $scope.fetchOrganizations();
+                }
+            }
+
             $scope.activate = function () {
                 $ionicModal.fromTemplateUrl('partials/organizations-modal.html', {
                     scope: $scope,
@@ -134,17 +194,7 @@
                     $scope.orgRequestModal = modal;
                 });
 
-                ngProgress.start();
-                $ionicLoading.show({
-                    template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Loading organizations...'
-                });
-
-                httpService.getOrganizations().then(function (data) {
-                    $scope.organizations = data;
-                }).finally(function () {
-                    ngProgress.complete();
-                    $ionicLoading.hide();
-                });
+                $scope.loadOrganizations();
             };
 
             $scope.activate();

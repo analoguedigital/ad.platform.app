@@ -52,6 +52,7 @@ module App.Services {
         FORM_TEMPLATE_KEY = 'thread/';
         ADVICE_THREAD_KEY = 'adviceThread/';
         PROJECT_KEY = 'project/';
+        ORGANIZATION_KEY = 'organization/';
 
         CAPTURE_IN_PROGRESS_KEY = 'capture-in-progress';
         WELLDONE_POPUP_KEY = 'WELL_DONE_POPUP_SHOWN';
@@ -83,6 +84,7 @@ module App.Services {
             this.localStorageService.clearAll(/(thread)\//i);
             this.localStorageService.clearAll(/(adviceThread)\//i);
             this.localStorageService.clearAll(/(survey)\//i);
+            this.localStorageService.clearAll(/(organization)\//i);
             this.localStorageService.clearAll(/(scrollPosition)\//i);
 
             this.localStorageService.remove(this.CAPTURE_IN_PROGRESS_KEY);
@@ -710,12 +712,8 @@ module App.Services {
                 survey.projectId = thread.projectId;
 
                 this.saveSurvey(survey).then((survey) => {
-                    this.updateLocation(survey, Models.PositionEvents.Submission).then(() => {
-                        this.uploadSurvey(survey).then((res) => {
-                            q.resolve(survey);
-                        }, (err) => {
-                            q.reject(err);
-                        });
+                    this.uploadSurvey(survey).then((res) => {
+                        q.resolve(survey);
                     }, (err) => {
                         q.reject(err);
                     });
