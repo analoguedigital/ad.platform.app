@@ -1,7 +1,8 @@
 ﻿(function () {
     'use strict';
-    angular.module('lm.surveys').controller('feedbackController', ['$scope', 'alertService', 'userService', 'ngProgress', 'feedbackService', '$ionicLoading', 'toastr', 
-        function ($scope, alertService, userService, ngProgress, feedbackService, $ionicLoading, toastr) {
+    angular.module('lm.surveys').controller('feedbackController', ['$scope', 'alertService', 'userService',
+        'feedbackService', '$ionicLoading', 'toastr', 
+        function ($scope, alertService, userService, feedbackService, $ionicLoading, toastr) {
             $scope.feedbackSent = false;
             $scope.feedbackWorking = false;
 
@@ -16,7 +17,6 @@
                     comment: $scope.model.comment
                 };
 
-                ngProgress.start();
                 $scope.feedbackWorking = true;
 
                 $ionicLoading.show({
@@ -33,7 +33,6 @@
                     }, function (error) {
                         console.error('could not send feedback', error);
                     }).finally(function () {
-                        ngProgress.complete();
                         $scope.feedbackWorking = false;
                         $ionicLoading.hide();
                     });

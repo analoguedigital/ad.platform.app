@@ -1,4 +1,4 @@
-﻿<ion-view title="Calendar" id="calendarPage" cache-view="false">
+﻿<ion-view title="Calendar" id="calendarPage" cache-view="false" class="calendar_screen">
     <ion-header-bar align-title="{{getLeft()}}" class="bar bar-subheader bar-positive calendar" ng-style="CalendarHeaderBarStyle">
         <button ng-if="cal.calendarView==='day'" class="button button-icon button-clear ion-ios-calendar-outline" ng-click="backToMonthView()"></button>
         <h2 ng-if="cal.calendarView==='day'" class="title">{{cal.viewDate | date:'fullDate'}}</h2>
@@ -20,7 +20,7 @@
             {{months[((cal.viewDate.getMonth()+1)%12)]}}
         </button>
     </ion-header-bar>
-    <ion-content class="content has-subheader padding" ng-cloak ng-style="CalendarContentStyle">
+    <ion-content class="content has-subheader padding" ng-style="CalendarContentStyle">
         <mwl-calendar class="survey-calendar"
                       view="cal.calendarView"
                       view-date="cal.viewDate"

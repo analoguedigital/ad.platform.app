@@ -1,9 +1,9 @@
 (function () {
     'use strict';
     angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$scope', '$ionicHistory', '$stateParams', '$state', 'userService',
-        'surveyService', 'alertService', 'gettext', '$timeout', 'ngProgress', 'httpService', '$ionicPopup', 'toastr', '$ionicLoading', 'locationService', 
-        function ($rootScope, $scope, $ionicHistory, $stateParams, $state, userService, surveyService, alertService,
-            gettext, $timeout, ngProgress, httpService, $ionicPopup, toastr, $ionicLoading, locationService) {
+        'surveyService', 'gettext', '$timeout', 'httpService', '$ionicPopup', 'toastr', '$ionicLoading', 'locationService', 
+        function ($rootScope, $scope, $ionicHistory, $stateParams, $state, userService, surveyService,
+            gettext, $timeout, httpService, $ionicPopup, toastr, $ionicLoading, locationService) {
 
             $scope.surveyId = $stateParams.id;
             $scope.surveyIndex = $stateParams.index;
@@ -155,10 +155,8 @@
 
                 surveyService.saveDraft($scope.survey)
                     .then(function () {
-                        // alertService.show(gettext("Record saved successfully!"));
                         toastr.success('Draft saved successfully');
                     }, function (err) {
-                        // alertService.show(gettext("Error in saving the record: ") + err);
                         console.error('could not save draft', err);
                         toastr.error('Could not save your draft, sorry');
                     }).finally(function () {
@@ -180,7 +178,6 @@
                         .then(function () {
                             $ionicHistory.goBack();
                         }, function (err) {
-                            // alertService.show(gettext("Error in deleting the record: ") + err);
                             console.error('could not delete record', err);
                             toastr.error('Could not delete record, sorry');
                         }).finally(function () {
@@ -222,7 +219,7 @@
                                 case 'attachmentMetric':
                                     {
                                         if (!fv.attachments || fv.attachments.length < 1) {
-                                            validationErrors.push('- No attachments are present');
+                                            validationErrors.push('- No attachments made');
                                         }
                                         break;
                                     }
@@ -243,7 +240,7 @@
                 }
 
                 if (validationErrors.length) {
-                    var popupTemplate = "<ul>";
+                    var popupTemplate = "<ul class='lead validation_error_list'>";
                     _.forEach(validationErrors, function (ve) {
                         popupTemplate += '<li>' + ve + '</li>';
                     });
@@ -255,8 +252,8 @@
                         template: popupTemplate,
                         scope: $scope,
                         buttons: [{
-                                text: 'Yes, continue',
-                                type: 'button-energized button-block',
+                                text: 'Yes, proceed',
+                                type: 'button-royal button-block',
                                 onTap: function () {
                                     return true;
                                 }
@@ -281,7 +278,6 @@
             };
 
             $scope.doSubmit = function () {
-                ngProgress.start();
                 $scope.uploadWorking = true;
 
                 // set location values.
@@ -312,10 +308,8 @@
                             $ionicLoading.hide();
                             console.error('could not submit survey', err);
                             toastr.error('Could not submit your record, sorry');
-                            // alertService.show(gettext("Error in submitting the recording: ") + err);
                         })
                     .finally(function () {
-                        ngProgress.complete();
                         $scope.uploadWorking = false;
                     });
             };
@@ -340,7 +334,6 @@
             };
 
             $scope.doRefresh = function () {
-                ngProgress.start();
                 $ionicLoading.show({
                     template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Loading...'
                 });
@@ -364,13 +357,11 @@
                                 $scope.goToPageIndex(0);
                             },
                             function (err) {
-                                // alertService.show(gettext("Error in loading ... ") + err);
                                 console.error('could not load template with values', err);
                             });
                     }, function (err) {
                         console.error('could not reload survey', err);
                     }).finally(function () {
-                        ngProgress.complete();
                         $scope.$broadcast('scroll.refreshComplete');
                         $ionicLoading.hide();
                     });
@@ -456,6 +447,17 @@
                         console.error(err);
                         toastr.error('Something went wrong, could not fetch location');
                     });
+            }
+
+            $scope.clearLocation = function () {
+                $scope.geocoding = {
+                    latitude: undefined,
+                    longitude: undefined,
+                    accuracy: 0,
+                    address: '',
+                    formattedAddress: '',
+                    hasLocation: false
+                };
             }
 
             $scope.getMap = function (latitude, longitude, address) {
@@ -583,7 +585,6 @@
                         $scope.locations = positions;
                         $scope.goToPageIndex(0);
                     }, function (err) {
-                        // alertService.show(gettext("Error in loading ... ") + err);
                         toastr.error('Error in loading data, sorry');
                     }).finally(function () {
                         $ionicLoading.hide();

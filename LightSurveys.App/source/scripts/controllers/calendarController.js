@@ -98,7 +98,6 @@
                 surveyService.getFormTemplates()
                     .then(function (templates) {
                         $scope.formTemplates = templates;
-                        console.log('got templates: ' + templates.length);
 
                         var promises = [];
 
@@ -108,8 +107,6 @@
 
                             surveyService.getSubmittedSurveys(template.id)
                                 .then(function (surveys) {
-                                    console.log('got surveys: ' + surveys.length);
-
                                     _.forEach(surveys, function(s) {
                                         s.formTemplateTitle = template.title;
                                         s.formTemplateColor = template.colour;
@@ -121,8 +118,6 @@
                         });
 
                         $q.all(promises).then(function () {
-                            console.log('promises resolved: ' + $scope.surveys.length);
-
                             angular.forEach($scope.surveys, function (survey) {
                                 var utcDate = moment.utc(survey.surveyDate);
                                 var localDate = utcDate.local().toDate();

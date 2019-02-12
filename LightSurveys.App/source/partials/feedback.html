@@ -27,45 +27,38 @@
                 </div>
             </div>
             
-            <div class="col">
-                <div ng-if="!feedbackSent">
-                    <div class="list">
-                        <div class="item item-text-wrap" ng-disabled="feedbackWorking">
-                            <h3>We also welcome your feedback:</h3>
-                            <br />
-                            <label class="item item-input">
-                                <textarea placeholder="Enter your comments and tap 'send'" rows="2" ng-model="model.comment" ng-disabled="feedbackWorking"></textarea>
-                            </label>
-                        </div>
-                        <br />
-                        <p class="lead light">We read all the feedback and take it seriously. We may sometimes get back to you for clarification.</p>
+            <div class="col" ng-if="!feedbackSent">
+                <div class="list">
+                    <div class="item item-text-wrap" ng-disabled="feedbackWorking">
+                        <h3 style="margin-bottom: 15px">We also welcome your feedback:</h3>
+                        <label class="item item-input">
+                            <textarea placeholder="Enter your comments and tap 'send'" rows="2" ng-model="model.comment" ng-disabled="feedbackWorking"></textarea>
+                        </label>
                     </div>
-        
-                    <button class="button button-positive button-block" ng-disabled="model.comment.length < 1 || feedbackWorking" ng-click="sendFeedback()">
-                        <span ng-if="!feedbackWorking">
-                            <i class="icon ion-paper-airplane"></i> Send feedback
-                        </span>
-                        <span ng-if="feedbackWorking">
-                            <i class="fa fa-spinner fa-pulse fa-fw"></i> Sending feedback
-                        </span>
-                    </button>
+                    <br />
+                    <p class="lead" style="margin-bottom: 0">We read all the feedback and take it seriously. We may sometimes get back to you for clarification.</p>
                 </div>
+
+                <button class="button button-royal button-block" ng-disabled="model.comment.length < 1 || feedbackWorking" ng-click="sendFeedback()">
+                    <span ng-if="!feedbackWorking">
+                        <i class="icon ion-paper-airplane"></i> Send feedback
+                    </span>
+                    <span ng-if="feedbackWorking">
+                        <i class="fa fa-spinner fa-pulse fa-fw"></i> Sending feedback
+                    </span>
+                </button>
             </div>
-            <div class="col">
-                <div ng-if="feedbackSent">
-                    <div class="card" style="margin-top: 0; margin-bottom: 0">
-                        <div class="item item-text-wrap">
-                            <h1 class="text-success"><i class="fa fa-check"></i> Feedback Sent</h1>
-                            <br />
-                            <p>We read all the feedback and take it seriously. We may sometimes get back to you for clarification.</p>
-                            <br />
-                        </div>
+            <div class="col" ng-if="feedbackSent">
+                <div class="card" style="margin-top: 0; margin-bottom: 0">
+                    <div class="item item-text-wrap">
+                        <h2 class="text-success" style="margin-bottom: 15px; font-size: 20px"><i class="fa fa-check"></i> Feedback Sent</h2>
+                        <p>We read all the feedback and take it seriously. We may sometimes get back to you for clarification.</p>
                     </div>
-        
-                    <a class="button button-light button-clear button-block" ui-sref="home">
-                        <i class="fa fa-arrow-left fa-fw"></i> back to home
-                    </a>
                 </div>
+
+                <!--<a class="button button-light button-clear button-block" ui-sref="home">
+                    <i class="fa fa-arrow-left fa-fw"></i> back to home
+                </a>-->
             </div>
         </div>
     </ion-content>

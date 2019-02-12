@@ -1,5 +1,5 @@
-<h3 ng-hide="metricGroup.isRepeater"> {{::metric.description}} </h3>
-<div class=" range range-positive" ng-controller="rateMetricController">
+<h3 class="metric_heading" ng-hide="metricGroup.isRepeater"> {{::metric.description}} </h3>
+<div class="range range-positive" ng-controller="rateMetricController">
     <rzslider rz-slider-options="sliderOptions" rz-slider-model="formValue.numericValue"></rzslider>
 </div>
 <script>

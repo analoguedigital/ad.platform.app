@@ -1,0 +1,60 @@
+﻿@import "_appicons";
+@import "_passcode_screen";
+
+.settings_screen {
+    ul.list {
+        margin-bottom: 0;
+    }
+
+    .list .item-toggle {
+        border: none;
+
+        .icon::before {
+            font-size: 24px;
+        }
+
+        .item-toggle-label {
+            position: absolute;
+            padding: 3px 0 0 10px;
+            font-size: 16px;
+        }
+    }
+
+    .list .item-toggle {
+        background-color: inherit;
+    }
+
+    h3 {
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
+
+    .app-icons-wrap {
+        padding-top: 15px;
+    }
+}
+
+.add_phone_number_screen,
+.change_password_modal_screen {
+    button[type=submit] {
+        margin-top: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+
+    .list.list-inset {
+        margin: 0;
+    }
+}
+
+.change_password_modal_screen {
+    .change-pass-errors {
+        p {
+            color: $assertive;
+            padding: 0 10px;
+            margin-bottom: 10px;
+        }
+    }
+}

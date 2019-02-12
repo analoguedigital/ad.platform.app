@@ -1,79 +1,77 @@
-﻿<ion-view title="My Account" id="accountPage">
-    <ion-content class="content padding account" ng-cloak>
+﻿<ion-view title="My Account" id="accountPage" class="account_screen">
+    <ion-content class="content padding">
         <ion-refresher pulling-text="Pull to refresh account information" on-refresh="doRefresh()"></ion-refresher>
         <div class="row responsive-lg">
-            <div class="col" style="margin-bottom: 0">
+            <div class="col">
                 <form name="accountForm" novalidate="novalidate">
-                    <div class="list list-inset" style="margin-top:0">
+                    <div class="list list-inset">
                         <label class="item item-icon-left">
                             <i class="icon ion-person"></i>
-                            <div class="item-input">
+                            <span class="item-input">
                                 <input name="firstName" type="text" ng-model="model.firstName" placeholder="Name (required)" required autofocus>
-                            </div>
+                            </span>
                         </label>
                         <label class="item item-icon-left">
                             <i class="icon ion-person-stalker"></i>
-                            <div class="item-input">
+                            <span class="item-input">
                                 <input name="surname" type="text" ng-model="model.surname" placeholder="Surname (required)" required autofocus>
-                            </div>
+                            </span>
                         </label>
                         <label class="item item-icon-left">
                             <i class="icon ion-transgender"></i>
-                            <div class="item-input item-select">
-                                <div class="input-label">Gender</div>
+                            <span class="item-input item-select">
+                                <span class="input-label">Gender</span>
                                 <select name="gender" ng-model="model.gender" ng-options="obj.value as obj.text for obj in genders"></select>
-                            </div>
+                            </span>
                         </label>
                         <label class="item item-icon-left">
                             <i class="icon ion-ios-calendar-outline"></i>
-                            <div class="item-input">
+                            <span class="item-input">
                                 <input name="birthdate" ng-model="model.birthdate" placeholder="Birthdate" type="date" required>
-                            </div>
+                            </span>
                         </label>
                         <label class="item item-icon-left">
                             <i class="icon ion-ios-home-outline"></i>
-                            <div class="item-input">
+                            <span class="item-input">
                                 <textarea name="address" ng-model="model.address" placeholder="Address" rows="2" required></textarea>
-                            </div>
+                            </span>
                         </label>
                         <label class="item item-icon-left" ng-class="{ 'disabled': model.phoneNumberConfirmed }">
                             <i class="icon ion-ios-telephone-outline"></i>
-                            <div class="item-input">
+                            <span class="item-input">
                                 <input type="text" name="phone" placeholder="Phone number" ng-model="model.phoneNumber" ng-disabled="model.phoneNumberConfirmed">
-                            </div>
+                            </span>
                         </label>
-                        <div class="">
-                            <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="saveChanges()" ng-disabled="requestWorking">
-                                <span ng-if="!requestWorking">
-                                    <i class="icon ion-edit"></i> Save changes
-                                </span>
-                                <span ng-if="requestWorking">
-                                    <i class="fa fa-spinner fa-pulse fa-fw"></i> Saving changes
-                                </span>
-                            </button>
-                        </div>
+                        <button class="button button-royal button-full" style="margin-top: 0; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px" type="submit" ng-click="saveChanges()" ng-disabled="requestWorking">
+                            <span ng-if="!requestWorking">
+                                <i class="icon ion-edit"></i> Save changes
+                            </span>
+                            <span ng-if="requestWorking">
+                                <i class="fa fa-spinner fa-pulse fa-fw"></i> Saving changes
+                            </span>
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
 
         <div class="row responsive-lg">
-            <div class="col" style="margin-bottom: 0">
-                <div class="card" style="margin-top: 10px; margin-bottom: 10px">
+            <div class="col">
+                <div class="card">
                     <div class="item item-divider">Monthly Quota</div>
                     <div class="item item-text-wrap">
-                        <p class="light" ng-if="monthlyQuota.quota">
+                        <p ng-if="monthlyQuota.quota">
                             You have used {{monthlyQuota.used}} of {{monthlyQuota.quota}} records this month.
                         </p>
-                        <p class="light" ng-if="!monthlyQuota.quota">
+                        <p ng-if="!monthlyQuota.quota">
                             You have used {{monthlyQuota.used}} record<span ng-if="monthlyQuota.used > 1">s</span> this month.
                         </p>
             
                         <!-- determinate progress -->
-                        <progress max="{{monthlyQuota.quota}}" value="{{monthlyQuota.used}}" ng-if="monthlyQuota.quota" style="margin: 0 auto 10px auto">
-                            <div class="progress-bar">
+                        <progress max="{{monthlyQuota.quota}}" value="{{monthlyQuota.used}}" ng-if="monthlyQuota.quota">
+                            <span class="progress-bar">
                                 <span style="width: {{monthlyQuota.used}}%;">Used: {{monthlyQuota.used}}%</span>
-                            </div>
+                            </span>
                         </progress>
             
                         <!-- indeterminate progress -->
@@ -84,25 +82,25 @@
         </div>
 
         <div class="row responsive-lg">
-            <div class="col" style="margin-bottom: 0">
-                <div ng-if="activeSubscription">
-                    <div class="card" ng-if="activeSubscription.type === 0" style="margin-top: 10px; margin-bottom: 10px">
+            <div class="col">
+                <div class="active_subscription_wrap" ng-if="activeSubscription">
+                    <div class="card" ng-if="activeSubscription.type === 0">
                         <div class="item item-divider">Active Subscription</div>
                         <div class="item item-text-wrap">
-                            <p class="light">
+                            <p>
                                 Your next renewal is on <strong>{{profile.userInfo.profile.expiryDate| amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong>
                             </p>
-                            <p class="light">Starting from <strong>{{activeSubscription.startDate | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong></p>
-                            <p class="light">Paid plan: {{activeSubscription.subscriptionPlan.name}}</p>                        
+                            <p>Starting from <strong>{{activeSubscription.startDate | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong></p>
+                            <p>Paid plan: {{activeSubscription.subscriptionPlan.name}}</p>                        
     
-                            <p class="light">
+                            <p>
                                 <span ng-if="!activeSubscription.subscriptionPlan.isLimited">No upload limits.</span>
                                 <span ng-if="activeSubscription.subscriptionPlan.isLimited">
                                     Limited to {{activeSubscription.subscriptionPlan.monthlyQuota}} records per month.
                                 </span>
                             </p>
     
-                            <p class="light">
+                            <p>
                                 PDF Export:
                                 <span ng-if="activeSubscription.subscriptionPlan.pdfExport">
                                     <i class="icon ion-ios-checkmark-outline"></i> Yes
@@ -112,7 +110,7 @@
                                 </span>
                             </p>
     
-                            <p class="light">
+                            <p>
                                 Zip Export:
                                 <span ng-if="activeSubscription.subscriptionPlan.zipExport">
                                     <i class="icon ion-ios-checkmark-outline"></i> Yes
@@ -124,22 +122,22 @@
                         </div>
                     </div>
     
-                    <div class="card" ng-if="activeSubscription.type === 1" style="margin-top: 10px; margin-bottom: 10px">
+                    <div class="card" ng-if="activeSubscription.type === 1">
                         <div class="item item-divider">Active Subscription</div>
                         <div class="item item-text-wrap">
-                            <p class="light">Starting from <strong>{{activeSubscription.startDate | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong></p>
-                            <p class="light">{{activeSubscription.note}}</p>
+                            <p>Starting from <strong>{{activeSubscription.startDate | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong></p>
+                            <p>{{activeSubscription.note}}</p>
                         </div>
                     </div>
     
-                    <div class="card" ng-if="activeSubscription.type === 2" style="margin-top: 10px; margin-bottom: 10px">
+                    <div class="card" ng-if="activeSubscription.type === 2">
                         <div class="item item-divider">Active Subscription</div>
                         <div class="item item-text-wrap">
-                            <p class="light">
+                            <p>
                                 Your next renewal is on <strong>{{profile.userInfo.profile.expiryDate| amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong>
                             </p>
-                            <p class="light">{{activeSubscription.note}}.</p>
-                            <p class="light">Starting from <strong>{{activeSubscription.startDate | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong></p>
+                            <p>{{activeSubscription.note}}.</p>
+                            <p>Starting from <strong>{{activeSubscription.startDate | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong></p>
                         </div>
                     </div>
                 </div>
@@ -147,8 +145,8 @@
         </div>
 
         <div class="row responsive-lg">
-            <div class="col" style="margin-bottom: 0">
-                <button class="button button-positive button-block" ui-sref="organizations">
+            <div class="col">
+                <button class="button button-balanced button-block" ui-sref="organizations">
                     <i class="icon ion-link"></i> Connect to an Organization
                 </button>
             </div>

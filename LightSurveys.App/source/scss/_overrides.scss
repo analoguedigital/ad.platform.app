@@ -1,0 +1,107 @@
+﻿@import "_variables.scss";
+
+b, strong {
+    font-weight: 600;
+}
+
+.padding {
+    padding: 7px;
+}
+
+.scroll-refresher .ionic-refresher-content {
+    color: #000;
+}
+
+.button-compact {
+    min-height: 40px !important;
+    height: 40px !important;
+    line-height: 33px !important;
+
+    .icon::before {
+        line-height: 15px !important;
+    }
+}
+
+.button-italic {
+    font-style: italic !important;
+}
+
+.button-bold {
+    font-weight: 600 !important;
+}
+
+#loading-bar .bar {
+    background: $positive !important;
+}
+
+#loading-bar .peg {
+    -moz-box-shadow: $positive 1px 0 6px 1px;
+    -webkit-box-shadow: $positive 1px 0 6px 1px;
+    box-shadow: $positive 1px 0 6px 1px;
+}
+
+.item-divider {
+    background-color: #eee;
+    color: #000;
+}
+
+label.item.item-input {
+    border-radius: 4px !important;
+    padding: 0 10px !important;
+}
+
+.item-input input {
+    padding: 0;
+}
+
+.list .item:first-child {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.list .item:last-child {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.checkbox input:checked:before, 
+.checkbox input:checked + .checkbox-icon:before {
+    background: $royal !important;
+    border-color: $royal !important;
+}
+
+.card {
+    border-radius: 4px;
+}
+
+.popup-container .popup {
+    border-radius: 4px;
+}
+
+.popup-head {
+    background: #eee;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.popup-buttons .button {
+    border-radius: 4px;
+}
+
+.rzslider .rz-pointer {
+    background-color: $positive !important;
+}
+
+.rzslider .rz-pointer.rz-active:after {
+    background-color: $royal !important;
+}
+
+.action-sheet-cancel .button {
+    font-weight: 400;
+}
+
+.action-sheet .button {
+    color: $positive;
+}

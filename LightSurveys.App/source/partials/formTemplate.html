@@ -1,4 +1,4 @@
-<ion-view title="Thread Details" id="FormTemplate" cache-view="false">
+<ion-view title="Thread Details" id="FormTemplate" cache-view="false" class="clone_template_screen">
     <ion-content class="content padding" has-bouncing="false" ng-cloak>
         <div class="row responsive-lg">
             <div class="col">
@@ -6,22 +6,20 @@
                     <div class="list list-inset">
                         <label class="item item-input">
                             <span class="input-label">Title</span>
-                            <div class="item-input">
+                            <span class="item-input">
                                 <input name="title" type="text" ng-model="vm.title" placeholder="My Thread" required autofocus>
-                            </div>
+                            </span>
                         </label>
                         <label class="item item-input">
-                            <span class="input-label">Color</span>
-                            <button class="button" header-footer-class="bar-positive" color-picker="" model-mode="" color-mode="name" ng-model="vm.colour" modal-title="Choose!" color-box="{{vm.colour}}">
+                            <span class="input-label">Colour</span>
+                            <button class="button button-block button-compact" style="margin-top: 10px; margin-bottom: 10px;" header-footer-class="bar-positive" color-picker="" model-mode="" color-mode="name" ng-model="vm.colour" modal-title="Choose a colour" color-box="{{vm.colour}}">
                                 {{vm.colour || &apos;Choose a colour&apos; }}
                             </button>
                         </label>
                     </div>
-                    <div class="">
-                        <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="submit()">
-                            Submit
-                        </button>
-                    </div>
+                    <button class="button button-block button-royal" type="submit" ng-click="submit()" ng-disabled="cloneForm.$invalid">
+                        Submit
+                    </button>
                 </form>
             </div>
         </div>

@@ -1,0 +1,30 @@
+﻿$screen-xs: 480px !default;
+$screen-sm: 768px !default;
+$screen-md: 992px !default;
+$screen-mobile: 320px !default;
+
+$medium-screen: "(min-width: #{$screen-sm}) and (max-width: #{$screen-md})";
+$small-screen: "only screen and (max-width: #{$screen-sm})";
+$xs-screen: "only screen and (max-width: #{$screen-xs})";
+$mobile-screen: "only screen and (max-width: #{$screen-mobile})";
+
+$positive: #0092CC !default;
+$dark: #000 !default;
+$royal: #001670 !default;
+$assertive: #CC2014 !default;
+$balanced: #1E5F7D !default;
+
+$button-font-size: 16px !default;
+$button-height: 60px !default;
+$button-icon-size: 30px !default;
+
+$bar-height: 60px !default;
+
+$button-border-width: 0px !default;
+
+$item-dark-border: lighten($dark,8);
+$item-positive-border: lighten($positive,4);
+$item-padding: 12px;
+
+$menu-side-shadow: 0;
+$content-padding: 14px !default;

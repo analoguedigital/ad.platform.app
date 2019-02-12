@@ -1,319 +1,191 @@
-﻿$screen-xs: 480px !default;
-$screen-sm: 768px !default;
-$screen-md: 992px !default;
-$screen-mobile: 320px !default;
-
-$medium-screen: "(min-width: #{$screen-sm}) and (max-width: #{$screen-md})";
-$small-screen: "only screen and (max-width: #{$screen-sm})";
-$xs-screen: "only screen and (max-width: #{$screen-xs})";
-$mobile-screen: "only screen and (max-width: #{$screen-mobile})";
-
-$color1: #1695A3;
-$color2: #DF5A2B;
-$color3: #245278;
-$color4: #1D2331;
-$color5: #001770;
-$color6: #0291ce;
-
-// The path for our ionicons font files, relative to the built CSS in www/css
+﻿// The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../../www/fonts" !default;
 
-$light: #fdfdfd !default;
-$positive: $color1 !default;
-$energized: $color2 !default;
-$dark: $color3 !default;
-
-$button-font-size: 16px !default;
-$button-height: 60px !default;
-
-$button-icon-size: 30px !default;
-
-$bar-height: 60px !default;
-$button-border-width: 0px !default;
-$item-dark-border: lighten($dark,8);
-$item-positive-border: lighten($positive,4);
-$item-padding: 12px;
-
-$menu-bg: $color1 !default;
-$menu-side-shadow: 0;
-$content-padding: 14px !default;
-
-$base-background-color: #245278 !default;
-
-// Include all of Ionic
+@import "_variables.scss";
 @import "../../bower_components/ionic/scss/ionic.scss";
+@import "_overrides.scss";
+
+@import "_platforms.scss";
+@import "_sidemenu.scss";
+
+@import "_landing_screen";
+@import "_login_screen.scss";
+@import "_forgot_password_screen";
+@import "_confirm_email_screen";
+@import "_register_screen";
+@import "_register_complete_screen";
+
+@import "_home_screen";
+@import "_clone_template_screen";
+@import "_records_screen";
+@import "_survey_form_screen";
+@import "_survey_screen";
+@import "_account_screen";
+@import "_organizations_screen";
+@import "_settings_screen";
+@import "_advice_threads_screen";
+@import "_map_view_screen";
+@import "_calendar_screen";
+@import "_guidance_screen";
+
+@import "_progressbar.scss";
+
+.error-block {
+    color: $assertive;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.button.button-light.button-clear {
+    color: #fff !important;
+}
 
 hr {
     margin-top: 15px;
     margin-bottom: 15px;
 }
 
-.bar { border-width: 0; height: 61px; background-image: none !important; }
-.row { margin: 0 !important; }
-.item-icon-left .icon.fa, .item-icon-right .icon.fa { font-size: 20px; }
-.right-side { float: right; }
-.no-margin-top { margin-top: 0 !important; }
+.bar {
+    border-width: 0;
+    height: 61px;
+    background-image: none !important;
+}
+
+.row {
+    margin: 0 !important;
+}
+
+.item-icon-left .icon.fa, .item-icon-right .icon.fa {
+    font-size: 20px;
+}
+
+.right-side {
+    float: right;
+}
+
+.no-margin-top {
+    margin-top: 0 !important;
+}
 
 label.item,
 .item-select select {
     background: white;
 }
 
-.register { background-color: $positive;
-    .fa { color: lighten($dark,40); font-size: 20px !important; }
-    .item-input { padding-top: 1px; padding-bottom: 0 }
+.bar.calendar button {
+    height: 50px;
 }
 
-mwl-calendar.survey-calendar {
-    .cal-row-head { color: $light; }
-    .cal-month-box { border: 0;
-        .cal-row-fluid { border: 3px solid transparent; color: $light; }
-        .cal-month-day { background-color: black; padding: 5px; }
-        [class*=cal-cell] { border-right: 6px solid transparent; }
-        .cal-day-today { background-color: $positive; }
-        .cal-slide-content { padding: 14px; color: #fff; background-color: lighten($dark,10); -webkit-box-shadow: inset 0 0 0 0 rgba(0,0,0,.5); box-shadow: inset 0 0 0 0 rgba(0,0,0,.5); }
-        span[data-cal-date] { opacity: 1; }
-    }
-    .cal-day-box .cal-day-hour-part .cal-day-hour-part-time { color: white; }
-    .cal-day-box .cal-day-hour:nth-child(odd) { background-color: transparent; }
-    .cal-day-box .cal-day-panel { border: 0; }
-    .cal-month-day .cal-events-num { margin-left: 0; margin-top: 0; }
-    span[data-cal-date] { margin-top: 0; margin-right: 0; }
-}
-
-.bar.calendar button { height: 50px; }
 .bar.timeline {
-    button { height: 50px; }
-    .title { left: 0 !important; right: 0 !important; }
+    button {
+        height: 50px;
+    }
+
+    .title {
+        left: 0 !important;
+        right: 0 !important;
+    }
 }
 
-.bar .button.button-icon:before, .bar .button .icon:before, .bar .button.icon:before, .bar .button.icon-left:before, .bar .button.icon-right:before, .bar button.button-icon:before, .bar button .icon:before, .bar button.icon:before, .bar button.icon-left:before, .bar button.icon-right:before { padding-left: 5px; padding-right: 5px; }
-
-.metric label.item.item-input { border-bottom: 0; }
-
-.progress-bar { margin-bottom: 0; }
-.card.draft { background-color: lightyellow;
-    .item { background-color: transparent; }
+.bar .button.button-icon:before, .bar .button .icon:before, .bar .button.icon:before, .bar .button.icon-left:before, .bar .button.icon-right:before, .bar button.button-icon:before, .bar button .icon:before, .bar button.icon:before, .bar button.icon-left:before, .bar button.icon-right:before {
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
-.card.advice-record {
-    background-color: lightgreen;
+.metric label.item.item-input {
+    border-bottom: 0;
+}
+
+.card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+}
+
+.card.draft {
+    background-color: lightyellow;
 
     .item {
         background-color: transparent;
-        border-top-color: #999 !important;
-    }
-
-    .item.item-body hr {
-        border-color: #999 !important;
     }
 }
 
-.login { background-color: $positive;
-    &.pane { background-color: $positive }
-    h1 { font-size: 350%; padding: 14px 0; }
-    h2 { font-size: 140%; font-weight: normal; }
-    .slogan {
-        @include transition(0.4s);
-    }
-    form {
-        @include transition(0.4s);
-    }
-}
+.image-modal {
+    width: 100% !important;
+    height: 100%;
+    top: 0 !important;
+    left: 0 !important;
+    background-color: transparent !important;
 
-@media (max-height: 600px) {
-    .login {
-        h1 { padding-bottom: 0; margin-bottom: 0; }
-        .slogan { height: 0; overflow-y: hidden; padding-top: 0; padding-bottom: 0; }
-        .list { margin-top: 0; margin-bottom: 0 }
+    .fullscreen-image {
+        max-width: 90%;
+        max-height: 75%;
+        bottom: 0;
+        left: 0;
+        margin: auto;
+        overflow: auto;
+        position: fixed;
+        right: 0;
+        top: 0;
     }
-}
 
-/*
- * Credits to https://forum.ionicframework.com/t/actionsheets-android-ugly-styling-need-help/18462/12
- */
-.platform-android {
-    .action-sheet-backdrop.active { background-color: rgba(0, 0, 0, 0.1); }
-    .action-sheet { align-content: center; margin: auto; max-width: 96vw; border-radius: 5px; margin-bottom: 10px;
-        .action-sheet-title, .platform-android .action-sheet .button { text-align: left; font-size: 16px; color: inherit; }
-        .action-sheet-title { font-size: 14px; padding: 16px; color: #666; }
-        .button { border-color: #e2e2e2; padding-left: 16px; color: #104e89; }
-        .button.destructive { color: red; }
-        .button.active, .platform-android .action-sheet .button.activated { background: #e8e8e8; }
-    }
-    .action-sheet-group { border-radius: 0; background-color: #fafafa; }
-    .action-sheet-cancel { display: none; }
-    .action-sheet-has-icons {
-        .button { padding-left: 56px; }
+    .slider {
+        width: 100%;
+        height: 100%;
     }
 }
 
-
-.thumbnails { flex-wrap: wrap; display: flex; align-content: flex-start;
-    .thumbnail { width: 80px; vertical-align: central; height: 80px; margin: 5px; overflow: hidden;
-        img, video { position: absolute; width: 70px; height: 70px; }
-    }
+.modal-backdrop {
+    background-color: rgba(0,0,0,0.5) !important
 }
 
-.image-modal { width: 100% !important; height: 100%; top: 0 !important; left: 0 !important; background-color: transparent !important;
-    .fullscreen-image { max-width: 90%; max-height: 75%; bottom: 0; left: 0; margin: auto; overflow: auto; position: fixed; right: 0; top: 0; }
-    .slider { width: 100%; height: 100%; }
+.toast {
+    padding: 15px 15px 15px 50px !important;
+    box-shadow: none !important;
+    background-color: red
 }
 
-.modal-backdrop { background-color: rgba(0,0,0,0.5) !important }
-
-.list .item-toggle { background-color: inherit; border-color: $base-background-color; color: #ddd; }
-
-.toast { padding: 15px 15px 15px 50px !important; box-shadow: none !important;background-color:red }
-
-.toast-bottom-center { bottom: 20px !important; }
-
-.change-password-screen,
-.redeem-voucher-screen,
-.join-organization-screen,
-.checkout-subscription-screen,
-.add-phonenumber-screen,
-.organizations-dialog,
-.organization-request-screen,
-.threads-guide-screen,
-.records-guide-screen {
-    background-color: $base-background-color;
+.toast-bottom-center {
+    bottom: 20px !important;
 }
-
-.passcode-screen { background-color: $base-background-color; color: white; display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; -webkit-box-direction: normal; -moz-box-direction: normal; -webkit-box-orient: horizontal; -moz-box-orient: horizontal; -webkit-flex-direction: row; -ms-flex-direction: row; flex-direction: row; -webkit-flex-wrap: nowrap; -ms-flex-wrap: nowrap; flex-wrap: nowrap; -webkit-box-pack: center; -moz-box-pack: center; -ms-flex-pack: center; justify-content: center; -webkit-align-content: stretch; -ms-flex-line-pack: stretch; align-content: stretch; -webkit-box-align: center; -moz-box-align: center; -ms-flex-align: center; align-items: center; }
-
-.passcode-screen > * { -webkit-box-ordinal-group: 1; -moz-box-ordinal-group: 1; -ms-flex-order: 0; order: 0; -webkit-box-flex: 1; -moz-box-flex: 1; -webkit-flex: 1 1 auto; -ms-flex: 1 1 auto; flex: 1 1 auto; -ms-flex-item-align: auto; align-self: flex-start; }
-
-.passcode-screen .passcode-modal-heading { padding-top: 30px; }
-
-.passcode-screen h3 { color: white; text-align: center; }
-
-.passcode-screen p { text-align: center; }
-
-.passcode-screen .button-stretch { background: inherit !important; border: 2px solid $positive !important; border-radius: 50%; color: white; font-size: 18px; min-width: 55px; min-height: 55px; height: 55px; width: 55px; line-height: 50px; }
-
-.passcode-screen .button-stretch.activated { border: 2px solid white !important; }
-
-.passcode-screen .button-white { color: white; font-size: inherit; }
-
-.passcode-screen .button.icon.ion-ios-arrow-back::before { line-height: 50px; }
-
-.passcode-screen .button-save-passcode::before { line-height: 50px; }
-
-.passcode-screen .col.first-digit { margin-left: 15%; }
-
-.passcode-screen .bullet { font-size: 26px; }
-
-.passcode-screen .digit-box { border-bottom: 2px solid #555 !important; font-size: 22px; padding-bottom: 10px; }
-
-.passcode-screen .digits-panel { margin-top: 20px; }
-
-.passcode-screen .forgot-pass-container { text-align: center; }
 
 /* timeline styles */
-canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; }
-
-#chartjs-tooltip { opacity: 1; position: absolute; background: rgba(0, 0, 0, .7); color: white; border-radius: 3px; -webkit-transition: all .1s ease; transition: all .1s ease; pointer-events: none; -webkit-transform: translate(-50%, 0); transform: translate(-50%, 0);
-
-    & table tbody tr td { white-space: nowrap; }
+canvas {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }
 
-.chartjs-tooltip-key { display: inline-block; width: 10px; height: 10px; margin-right: 10px; }
+#chartjs-tooltip {
+    opacity: 1;
+    position: absolute;
+    background: rgba(0, 0, 0, .7);
+    color: white;
+    border-radius: 3px;
+    -webkit-transition: all .1s ease;
+    transition: all .1s ease;
+    pointer-events: none;
+    -webkit-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+
+    & table tbody tr td {
+        white-space: nowrap;
+    }
+}
+
+.chartjs-tooltip-key {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+}
 
 .chartjs-tooltip-key, #chartjs-tooltip {
     font-family: inherit;
 }
 
-.login-header {
-    // margin-top: 30px;
-    margin-top: 15px;
-
-    & .brand {
-        margin-left: -5px;
-        color: white;
-        padding-top: 40px;
-        font-size: 40px;
-        font-weight: bold;
-    }
-
-    @media #{$mobile-screen} {
-        & .brand {
-            font-size: 36px;
-        }
-    }
+.pull-right {
+    float: right;
 }
-
-.login-footer {
-    display: block;
-    height: 15px;
-    background: #245278;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-}
-
-.app-icons {
-    padding-bottom: 10px;
-
-    & .button {
-        padding: 0 5px;
-    }
-
-    & .app-icon {
-        width: 100%;
-        border-radius: 2px;
-    }
-
-    & .button.active-icon img {
-        // border: 2px solid $color2;
-        border: 2px solid gold;
-    }
-}
-
-.guidance-content {
-    color: $light;
-
-    & h1, h2 {
-        color: inherit;
-    }
-
-    & h3, h4, h5 {
-        color: $light;
-    }
-
-    & ul {
-        list-style: disc;
-        padding-left: 30px;
-    }
-
-    .home {
-        .list {
-            .item {
-                .item-content:active {
-                    background-color: $color3;
-                }
-
-                .desc {
-                    margin-top: 10px;
-                    white-space: normal;
-                }
-            }
-        }
-    }
-}
-
-.terms-modal-content {
-    padding: 0 15px;
-}
-
-.terms-checkbox {
-    & .terms-checkbox-input {
-        margin-left: 0 !important;
-    }
-}
-
-.pull-right { float: right; }
 
 .rzslider .rz-tick-legend {
     max-width: 150px !important;
@@ -331,82 +203,12 @@ canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: non
     }
 }
 
-.home {
-    .form-item .desc {
-        white-space: normal !important;
-    }
-}
-
-.button.button-light.button-clear.button-block {
-    background-color: $color4;
-}
-
-// .button-clear.active, 
-// .button-clear.activated {
-//     background-color: #262626 !important;
-// }
-
-.change-pass-errors {
-    padding-top: 20px;
-
-    p {
-        color: $color2;
-        padding: 0 20px;
-    }
-}
-
-.sidemenu-list .item.item-positive {
-    border-color: #222;
-}
-
-.sidemenu-list .item.item-positive.activated {
-    background-color: $color3;
-}
-
-.menu {
-    background: #171717;
-
-    .item.item-avatar.activated {
-        background: $color3 !important;
-    }
-
-    .item.item-avatar.activated h2+p {
-        color: #ccc;
-    }
-}
-
-.menu .item {
-    padding: 0;
-    background: #171717;
-    color: #ccc;
-
-    .item-content {
-        padding: 15px 20px;
-    }
-
-    span {
-        display: inline-block;
-        padding-left: 15px;
-        font-size: 16px;
-        vertical-align: baseline;
-    }
-}
-
-.menu .item .item-content.activated {
-    background-color: $color3 !important;
-    border-color: $color3 !important;
-}
-
-.thumbnail-placeholder {
-    width: 70px;
-    height: 70px;
-}
-
 .color-block {
     width: 14px;
     height: 14px;
     display: inline-block;
     vertical-align: baseline;
+    border-radius: 50%;
 }
 
 input[disabled=disabled],
@@ -439,7 +241,7 @@ label.item[disabled=disabled] i.icon {
     margin: 0 !important;
 }
 
-.item-complex.item-dark > .item-content {
+.item-complex.item-light > .item-content {
     padding: 15px !important;
 }
 
@@ -458,29 +260,8 @@ a.button .icon:before, a.button.icon:before, a.button.icon-left:before, a.button
     margin-top: -2px;
 }
 
-.list .item-toggle {
-    .icon::before {
-        font-size: 24px;
-    }
-
-    .item-toggle-label {
-        position: absolute;
-        padding: 3px 0 0 10px;
-        font-size: 16px;
-    }
-}
-
 .menu-header {
-    background: $color3;
     width: 100%;
-}
-
-.scroll-refresher .ionic-refresher-content.ionic-refresher-with-text {
-    color: #ddd;
-}
-
-.toggle .track {
-    background-color: transparent;
 }
 
 .has-subheader {
@@ -491,131 +272,12 @@ a.button .icon:before, a.button.icon:before, a.button.icon-left:before, a.button
     bottom: 20px;
 }
 
-.platform-ios {
-    .bar-header .title,
-    .bar-header .buttons {
-        margin-top: 0 !important;
-    }
-
-    .bar-header {
-        height: 60px !important;
-    }
-
-    .bar-subheader,
-    .has-subheader,
-    .has-header {
-        margin-top: -20px !important;
-    }
-
-    .scroll-content .has-header {
-        top: 60px !important;
-    }
-}
-
-/* PROGRESS BARS - used for monthly quota display */
-// progress:not([value]) {
-//     /* Styling here */
-// }
-
-progress[value] {
-    /* Reset the default appearance */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    /* Get rid of default border in Firefox. */
-    border: none;
-    /* Dimensions */
-    width: 100%;
-    height: 20px;
-    /* For IE10 */
-    color: blue;
-}
-
-progress[value]::-webkit-progress-bar {
-    background-color: #eee;
-    border-radius: 2px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
-}
-
-progress[value]::-webkit-progress-value::before {
-    content: '80%';
-    position: absolute;
-    right: 0;
-    top: -125%;
-}
-
-@-webkit-keyframes animate-stripes {
-    100% {
-        background-position: -100px 0px;
-    }
-}
-
-@keyframes animate-stripes {
-    100% {
-        background-position: -100px 0px;
-    }
-}
-
-progress[value]::-webkit-progress-value {
-    background-image: -webkit-linear-gradient(-45deg, transparent 33%, rgba(0, 0, 0, .1) 33%, rgba(0,0, 0, .1) 66%, transparent 66%), -webkit-linear-gradient(top, rgba(255, 255, 255, .25), rgba(0, 0, 0, .25)), -webkit-linear-gradient(left, #09c, #f44);
-    border-radius: 2px;
-    background-size: 35px 20px, 100% 100%, 100% 100%;
-    // -webkit-animation: animate-stripes 5s linear infinite;
-    // animation: animate-stripes 5s linear infinite;
-}
-
-progress[value]::-webkit-progress-value::after {
-    content: '';
-    width: 6px;
-    height: 6px;
-    position: absolute;
-    border-radius: 100%;
-    right: 7px;
-    top: 7px;
-    background-color: white;
-}
-
-progress[value]::-moz-progress-bar {
-    background-image: -moz-linear-gradient( 135deg, transparent 33%, rgba(0, 0, 0, 0.1) 33%, rgba(0, 0, 0, 0.1) 66%, transparent 66% ), -moz-linear-gradient( top, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.25) ), -moz-linear-gradient( left, #09c, #f44 );
-    border-radius: 2px;
-    background-size: 35px 20px, 100% 100%, 100% 100%;
-}
-
-.progress-bar {
-    background-color: whiteSmoke;
-    border-radius: 2px;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25) inset;
-    width: 250px;
-    height: 20px;
-    position: relative;
-    display: block;
-}
-
-.progress-bar > span {
-    background-color: blue;
-    border-radius: 2px;
-    display: block;
-    text-indent: -9999px;
-}
-
 .angular-google-map-container {
     height: 350px;
 }
 
 .list:last-child.card {
     margin-bottom: 20px;
-}
-
-.landing-page {
-    h2 {
-        color: #fff;
-        font-size: xx-large;
-        text-align: center;
-    }
-
-    p {
-        color: #fff;
-    }
 }
 
 .popup-buttons {
@@ -634,79 +296,3 @@ progress[value]::-moz-progress-bar {
     }
 }
 
-/* iPad Pro in landscape */
-@media only screen and (min-device-width: 1024px) and (max-device-width: 1366px) and (orientation: landscape) {
-    .app-icons .button {
-        min-height: 320px !important;
-    }
-}
-
-/* iPad in landscape */
-@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
-    .app-icons .button {
-        min-height: 240px !important;
-    }
-}
-
-/* iPad in portrait */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation: portrait) {
-    .app-icons .button {
-        min-height: 175px !important;
-    }
-}
-
-/* iPad Pro in portrait */
-@media only screen and (min-device-width: 1024px) and (max-device-width: 1366px) and (orientation: portrait) {
-    .app-icons .button {
-        min-height: 240px !important;
-    }
-}
-
-/* iPhone X in portrait */
-@media only screen and (min-device-width : 375px) and (max-device-width : 812px) and (orientation: portrait) and (-webkit-device-pixel-ratio : 3) {
-    .app-icons .button {
-        min-height: 80px !important;
-    }
-}
-
-/* iPhone X in landscape */
-@media only screen and (min-device-width: 812px) and (max-device-width: 812px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
-    .app-icons .button {
-        min-height: 190px !important;
-    }
-}
-
-/* iPhone 6,7,8 Plus in portrait */
-@media only screen and (min-device-width : 414px) and (max-device-height : 736px) and (orientation : portrait) {
-    .app-icons .button {
-        min-height: 90px !important;
-    }
-}
-
-/* iPhone 6,7,8 in portrait */
-@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (orientation: portrait) {
-    .app-icons .button {
-        min-height: 80px !important;
-    }
-}
-
-/* iPhone 6,7,8 Plus in landscape */
-@media only screen and (min-device-width : 414px) and (max-device-width : 736px) and (orientation : landscape) {
-    .app-icons .button {
-        min-height: 170px !important;
-    }
-}
-
-/* iPhone 6,7,8 in landscape */
-@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (orientation: landscape) {
-    .app-icons .button {
-        min-height: 148.5px !important;
-    }
-}
-
-/* iPhone 5 & 5S in landscape */
-@media only screen and (min-device-width : 320px) and (max-device-width : 568px) and (orientation : landscape) {
-    .app-icons .button {
-        min-height: 130px !important;
-    }
-}

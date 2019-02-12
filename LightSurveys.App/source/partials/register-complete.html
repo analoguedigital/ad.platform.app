@@ -1,22 +1,24 @@
-﻿<ion-view view-title="Account Created" class="register-completed" cache-view="false">
-    <ion-header-bar class="bar-positive bar-stable with-button">
+﻿<ion-view view-title="Account Created" class="register_complete_screen" cache-view="false">
+    <ion-header-bar class="bar bar-header bar-positive">
         <h1 class="title" translate>Account Created</h1>
     </ion-header-bar>
     <ion-content class="content has-header has-footer register-completed" ng-cloak>
         <div>
             <div class="row responsive-lg">
                 <div class="col">
-                    <h2 class="light">Welcome to OnRecord!</h2>
-                    <p class="light">To complete your registration you need to confirm your email address.</p>
-                    <p class="light">We just sent you a confirmation email. Don't forget to check your spam folder, just in case.</p>
+                    <div class="card welcome_card">
+                        <h3><i class="fa fa-check-circle"></i> Welcome to OnRecord!</h3>
+                        <p class="lead">To complete your registration you need to confirm your email address.</p>
+                        <p class="lead">We just sent you a confirmation email. Don't forget to check your spam folder, just in case.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </ion-content>
-    <div class="bar bar-footer bar-default" style="background-color: #1D2331; color: white">
+    <div class="bar bar-footer bar-positive">
         <div class="title">
             <small>
-                <a ui-sref="login" nav-transition="none">Confirmed your account? Sign In</a>
+                <a ui-sref="login">Confirmed your account? Sign In</a>
             </small>
         </div>
     </div>

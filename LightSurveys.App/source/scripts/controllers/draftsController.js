@@ -98,16 +98,18 @@
                 var title = draft.isSubmitted ? "Delete record" : "Delete draft";
                 var confirmPopup = $ionicPopup.confirm({
                     title: title,
-                    buttons: [{
-                            text: 'Cancel'
-                        },
+                    buttons: [
                         {
                             text: 'Delete',
                             type: 'button-assertive',
                             onTap: function (e) {
                                 return true;
                             }
-                        }
+                        },
+                        {
+                            text: 'Cancel',
+                            type: 'button-stable'
+                        },
                     ],
                     template: 'Are you sure you want to delete this record from your device?'
                 });

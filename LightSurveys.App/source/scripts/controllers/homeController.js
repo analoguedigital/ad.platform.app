@@ -1,12 +1,9 @@
 ﻿(function () {
     'use strict';
-    angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope', '$q', '$state', '$stateParams', '$ionicPlatform',
-        '$ionicSideMenuDelegate', '$ionicPopup', 'surveyService', 'userService', 'alertService', 'ngProgress', '$ionicNavBarDelegate', 
-        '$ionicHistory', 'storageService', 'httpService', 'localStorageService', '$ionicModal', 'toastr', '$ionicPopover', '$timeout', 
-        'feedbackService', '$ionicLoading', '$ionicScrollDelegate', 
-        function ($scope, $rootScope, $q, $state, $stateParams, $ionicPlatform, $ionicSideMenuDelegate, $ionicPopup, surveyService,
-            userService, alertService, ngProgress, $ionicNavBarDelegate, $ionicHistory, storageService, httpService, localStorageService,
-            $ionicModal, toastr, $ionicPopover, $timeout, feedbackService, $ionicLoading, $ionicScrollDelegate) {
+    angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope', '$q', '$state', '$ionicPopup', 'surveyService',
+        'userService', 'localStorageService', 'toastr', '$timeout',
+        'feedbackService', '$ionicLoading', '$ionicScrollDelegate',
+        function ($scope, $rootScope, $q, $state, $ionicPopup, surveyService, userService, localStorageService, toastr, $timeout, feedbackService, $ionicLoading, $ionicScrollDelegate) {
 
             var FIRST_TIME_LOGIN_KEY = 'FIRST_TIME_LOGIN';
 
@@ -48,7 +45,7 @@
                         $state.go("survey", {
                             id: survey.id
                         });
-                    }, function (err) {});
+                    }, function (err) { });
             };
 
             $scope.createFirstRecord = function () {
@@ -87,19 +84,37 @@
             };
 
             $scope.deleteTemplate = function (formTemplate) {
-                ngProgress.start();
-                surveyService.deleteFormTemplate(formTemplate)
-                    .then(function () {
-                        _.remove($scope.formTemplates, function (template) {
-                            return template.id === formTemplate.id;
-                        });
+                var confirmPopup = $ionicPopup.confirm({
+                    title: 'Archive thread',
+                    template: "Are you sure you want to archive this thread? Your data will still be available on our platform but archived threads won't be listed in the app anymore.",
+                    buttons: [{
+                        text: 'Yes, archive',
+                        type: 'button-balanced',
+                        onTap: function (e) {
+                            return true;
+                        }
+                    },
+                    {
+                        text: 'Cancel',
+                        type: 'button-stable'
+                    }]
+                });
 
-                        $scope.clearScrollPosition();
-                        ngProgress.complete();
-                    }, function (err) {
-                        ngProgress.complete();
-                        alertService.show($scope.getValidationErrors(err));
-                    });
+                confirmPopup.then(function (res) {
+                    if (res) {
+                        surveyService.deleteFormTemplate(formTemplate)
+                            .then(function () {
+                                _.remove($scope.formTemplates, function (template) {
+                                    return template.id === formTemplate.id;
+                                });
+
+                                $scope.clearScrollPosition();
+                            }, function (err) {
+                                console.error(err);
+                                toastr.error($scope.getValidationErrors(err));
+                            });
+                    }
+                });
             };
 
             $scope.editTemplate = function (formTemplate) {
@@ -157,7 +172,7 @@
                         });
 
                         $q.all(promises).then(function () {
-                            var sortedTemplates = _.sortBy(templates, function(t) { return t.title; });
+                            var sortedTemplates = _.sortBy(templates, function (t) { return t.title; });
                             q.resolve(sortedTemplates);
                         }, function (err) {
                             q.reject(err);
@@ -302,7 +317,7 @@
 
             $scope.openFeedbackPopup = function () {
                 var template = "<p>We’ll help you set up your threads and start making records. We're happy to help and we'll get back to you as soon as possible.</p>" +
-                    "<textarea name='feedbackText' rows='3' ng-model='feedbackModel.text' placeholder='Be specific with details, help us help you' required></textarea>";
+                    "<textarea name='feedbackText' rows='3' class='feedback-popup-input' ng-model='feedbackModel.text' placeholder='Be specific with details, help us help you' required></textarea>";
 
                 $scope.feedbackPopup = $ionicPopup.show({
                     template: template,
@@ -310,22 +325,22 @@
                     subTitle: 'Summarise your situation',
                     scope: $scope,
                     buttons: [{
-                            text: 'Send Message',
-                            type: 'button-energized button-block',
-                            onTap: function () {
-                                if ($scope.feedbackModel.text.length)
-                                    return true;
-                                else
-                                    toastr.warning('Enter your message first');
-                            }
-                        },
-                        {
-                            text: 'Cancel',
-                            type: 'button-stable button-block',
-                            onTap: function () {
-                                return false;
-                            }
+                        text: 'Send',
+                        type: 'button-royal',
+                        onTap: function () {
+                            if ($scope.feedbackModel.text.length)
+                                return true;
+                            else
+                                toastr.error('Please enter your message first');
                         }
+                    },
+                    {
+                        text: 'Cancel',
+                        type: 'button-stable',
+                        onTap: function () {
+                            return false;
+                        }
+                    }
                     ]
                 });
 
@@ -343,7 +358,6 @@
                     comment: $scope.feedbackModel.text
                 };
 
-                ngProgress.start();
                 $scope.feedbackWorking = true;
                 feedbackService.sendFeedback(feedback)
                     .then(function (result) {
@@ -354,7 +368,6 @@
                     }, function (error) {
                         console.error(error);
                     }).finally(function () {
-                        ngProgress.complete();
                         $scope.feedbackWorking = false;
                     });
             };

@@ -1,4 +1,4 @@
-<h3 ng-hide="metricGroup.isRepeater"> {{::metric.description}} </h3>
+<h3 class="metric_heading" ng-hide="metricGroup.isRepeater"> {{::metric.description}} </h3>
 <div ng-controller="dateMetricController">
     <div class="item item-input" ng-if="isPersian">
         <div class="persianDateInput">{{dateToString(formValue.dateValue)}}</div>

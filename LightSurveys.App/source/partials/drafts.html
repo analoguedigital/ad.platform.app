@@ -1,5 +1,5 @@
-<ion-view title="Records" id="recordingsPage">
-    <ion-header-bar align-title="{{getLeft()}}" class="bar bar-subheader bar-light">
+<ion-view title="Records" id="recordingsPage" class="records_screen">
+    <ion-header-bar align-title="{{getLeft()}}" class="bar bar-subheader bar-balanced">
         <h2 class="title">
             <span ng-if="drafts.length">
                 <span class="color-block" ng-style="{'background-color': formTemplate.colour}"></span> {{formTemplate.title}}: <span ng-if="drafts.length">{{drafts.length}} records</span>
@@ -9,11 +9,11 @@
             </span>
         </h2>
     </ion-header-bar>
-    <ion-content class="content has-subheader padding" ng-cloak delegate-handle="drafts-handle">
-        <div class="card" ng-repeat="draft in drafts | orderBy:'dateUpdated':true" ng-class="{ 'draft': !draft.isSubmitted, 'advice-record': draft.filledById !== currentUserId }" style="margin-top: 15px; margin-bottom: 15px">
-            <div class="item item-divider">
+    <ion-content class="content has-subheader" ng-cloak delegate-handle="drafts-handle">
+        <div class="card" ng-repeat="draft in drafts | orderBy:'dateUpdated':true" ng-class="{ 'draft': !draft.isSubmitted }" style="margin-top: 15px; margin-bottom: 15px">
+            <div class="item item-divider" ng-class="{ 'item-royal': draft.filledById !== currentUserId }">
                 <span am-time-ago="draft.dateCreated"></span>
-                <small class="text-muted">({{draft.dateCreated | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}})</small>
+                <small>({{draft.dateCreated | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}})</small>
                 <span class="right-side">
                     <i class="icon ion-clock"></i> {{draft.dateCreated | amUtc | amLocal | amDateFormat:'HH:mm'}}
                 </span>
@@ -56,8 +56,8 @@
                 <hr />
 
                 <p>
-                    <a ng-click="delete(draft)">
-                        <i class="icon ion-ios-trash"></i>
+                    <a class="delete_button" ng-click="delete(draft)">
+                        <i class="icon ion-trash-b"></i>
                         <span translate> Delete</span>
                     </a>
 
@@ -68,7 +68,7 @@
 
                     <a class="right-side" ng-click="viewSurvey(draft, $index)" ng-show="draft.isSubmitted">
                         <i class="icon ion-eye"></i>
-                        <span translate>View Record</span>
+                        <span translate>View</span>
                     </a>
                 </p>
             </div>

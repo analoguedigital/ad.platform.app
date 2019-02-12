@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
-    angular.module('lm.surveys').controller('indexController', ["$scope", '$location', 'authService',
-        function ($scope, $location, authService) {
+    angular.module('lm.surveys').controller('indexController', ["$scope", '$location', 'authService', 'localStorageService', 
+        function ($scope, $location, authService, localStorageService) {
             $scope.authentication = authService.authentication;
             $scope.expiryDate = undefined;
 
@@ -26,17 +26,15 @@
             };
 
             $scope.activate = function () {
-                $location.path('/landing');
-
-                //var firstLogin = localStorageService.get('FIRST_TIME_LOGIN');
-                //if (firstLogin === null || firstLogin === undefined) {
-                //    $location.path('/landing');
-                //} else {
-                //    if (!$scope.authentication.isAuth)
-                //        $location.path('/login');
-                //    else
-                //        $location.path('/home');
-                //}
+                var firstLogin = localStorageService.get('FIRST_TIME_LOGIN');
+                if (firstLogin === null || firstLogin === undefined) {
+                    $location.path('/landing');
+                } else {
+                    if (!$scope.authentication.isAuth)
+                        $location.path('/login');
+                    else
+                        $location.path('/home');
+                }
             };
 
             $scope.activate();

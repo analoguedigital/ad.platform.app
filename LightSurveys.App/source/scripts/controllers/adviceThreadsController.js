@@ -1,9 +1,8 @@
 (function () {
     'use strict';
-    angular.module('lm.surveys').controller('adviceThreadsController', ['$scope', '$state', '$q', 'surveyService', 'userService',
-        'alertService', 'ngProgress', 'storageService', 'httpService', 'toastr', '$ionicLoading',
-        function ($scope, $state, $q, surveyService, userService,
-            alertService, ngProgress, storageService, httpService, toastr, $ionicLoading) {
+    angular.module('lm.surveys').controller('adviceThreadsController', ['$scope', '$state', '$q', 'surveyService',
+        'userService', 'storageService', 'toastr', '$ionicLoading',
+        function ($scope, $state, $q, surveyService, userService, storageService, toastr, $ionicLoading) {
 
             $scope.currentContext = userService.current;
             $scope.allAdviceThreads = [];
@@ -27,7 +26,6 @@
             };
 
             $scope.doRefresh = function () {
-                ngProgress.start();
                 $scope.downloading = true;
                 $ionicLoading.show({
                     template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Refreshing data...'
@@ -52,7 +50,6 @@
                         toastr.error(err);
                     }).finally(function () {
                         $ionicLoading.hide();
-                        ngProgress.complete();
                         $scope.downloading = false;
                     });
             };
@@ -141,15 +138,17 @@
 
                                 surveyService.getUserSurveys(projectId)
                                     .then(function (records) {
-                                        surveyService.deleteSubmittedSurveys().then(function () {
-                                            $scope.sortRecords(records).then(function () {
-                                                $scope.loadList();
-                                            }, function (err) {
-                                                console.error('could not sort records');
-                                            }).finally(function () {
-                                                $ionicLoading.hide();
-                                                $scope.$broadcast('scroll.refreshComplete');
-                                            });
+                                        //surveyService.deleteSubmittedSurveys().then(function () {
+                                            // this causes all records to be lost. debug and refactor!
+                                        //});
+
+                                        $scope.sortRecords(records).then(function () {
+                                            $scope.loadList();
+                                        }, function (err) {
+                                            console.error('could not sort records');
+                                        }).finally(function () {
+                                            $ionicLoading.hide();
+                                            $scope.$broadcast('scroll.refreshComplete');
                                         });
                                     }, function (err) {
                                         console.error('getUserSurveys ERROR', err);
@@ -158,11 +157,12 @@
                                             toastr.error("Access Denied. You don't have permission to sync records.");
                                     });
                             } else {
-                                console.warn('NO_STORE ENABLED. sync cancelled.');
                                 $ionicLoading.hide();
                                 $scope.$broadcast('scroll.refreshComplete');
                             }
                         }
+                    } else {
+                        $scope.$broadcast('scroll.refreshComplete');
                     }
                 });
             };

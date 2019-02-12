@@ -5,6 +5,11 @@
     angular.module('lm.surveys').controller('attachmentMetricController', ['$scope', '$sce', '$rootScope', '$timeout', 'mediaService',
         '$ionicModal', '$ionicActionSheet', '$controller', 'userService', 'Upload', 'localStorageService', 'httpService',
         function ($scope, $sce, $rootScope, $timeout, mediaService, $ionicModal, $ionicActionSheet, $controller, userService, Upload, localStorageService, httpService) {
+            $scope.hasImages = false;
+            $scope.hasAudios = false;
+            $scope.hasVideos = false;
+            $scope.hasDocuments = false;
+            $scope.hasOtherAttachments = false;
 
             $controller('metricController', {
                 $scope: $scope
@@ -40,6 +45,34 @@
                 $scope.formValue.attachments = [];
             } else {
                 $scope.formValue = $scope.formValues[0];
+
+                var images = _.filter($scope.formValue.attachments, function (a) {
+                    return a.mediaType == 'image';
+                });
+
+                var audios = _.filter($scope.formValue.attachments, function (a) {
+                    return a.mediaType == 'audio';
+                });
+
+                var videos = _.filter($scope.formValue.attachments, function (a) {
+                    return a.mediaType == 'video';
+                });
+
+                var documents = _.filter($scope.formValue.attachments, function (a) {
+                    return a.mediaType == 'document';
+                });
+
+                var otherAttachments = _.filter($scope.formValue.attachments, function (a) {
+                    if (a.mediaType !== 'image' && a.mediaType !== 'audio' && a.mediaType !== 'video' && a.mediaType !== 'document') {
+                        return a;
+                    }
+                });
+
+                $scope.hasImages = images.length > 0;
+                $scope.hasAudios = audios.length > 0;
+                $scope.hasVideos = videos.length > 0;
+                $scope.hasDocuments = documents.length > 0;
+                $scope.hasOtherAttachments = otherAttachments.length > 0;
             }
 
             if ($scope.formValue.textValue === undefined)
@@ -194,7 +227,7 @@
             $scope.deleteAttachment = function (attachment) {
                 var hideSheet = $ionicActionSheet.show({
                     buttons: [{
-                        text: 'Yes, delete it'
+                        text: 'Yes, remove it'
                     }],
                     titleText: 'Do you want to remove this attachment?',
                     cancelText: 'Cancel',

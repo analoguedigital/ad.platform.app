@@ -1,15 +1,15 @@
-<ion-modal-view>
+<ion-modal-view class="request_organization_modal_screen">
     <ion-header-bar class="bar-stable bar-positive with-button">
         <h1 class="title">Request Organization</h1>
         <button class="button button-icon button-clear ion-ios-close-outline" ng-click="closeOrgRequestDialog()" style="margin-top: 0"></button>
     </ion-header-bar>
-    <ion-content class="content organization-request-screen">
+    <ion-content class="content padding">
         <div class="row responsive-lg">
             <div class="col">
-                <p class="light">Fill in the form below and tap the 'Send request' button to request the organization.</p>
+                <p class="lead">Fill in the form below and tap the 'Send request' button to request the organization.</p>
 
                 <form name="orgRequestForm" novalidate="novalidate">
-                    <div class="list list-inset" style="margin-top: 0">
+                    <div class="list list-inset">
                         <label class="item item-icon-left" ng-disabled="orgRequestWorking">
                             <i class="icon ion-clipboard"></i>
                             <span class="item-input">
@@ -47,16 +47,16 @@
                             </span>
                         </label>
 
-                        <div class="">
-                            <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="sendOrgRequest()" ng-disabled="orgRequestWorking">
-                                <span ng-if="!orgRequestWorking">
-                                    <i class="icon ion-paper-airplane"></i> Send request
-                                </span>
-                                <span ng-if="orgRequestWorking">
-                                    <i class="fa fa-spinner fa-pulse fa-fw"></i> Sending request
-                                </span>
-                            </button>
-                        </div>
+                        <button class="button button-full button-royal" type="submit"
+                                ng-click="sendOrgRequest()"
+                                ng-disabled="orgRequestWorking || orgRequestForm.$invalid">
+                            <span ng-if="!orgRequestWorking">
+                                <i class="icon ion-paper-airplane"></i> Send request
+                            </span>
+                            <span ng-if="orgRequestWorking">
+                                <i class="fa fa-spinner fa-pulse fa-fw"></i> Sending request
+                            </span>
+                        </button>
                     </div>
                 </form>
             </div>

@@ -79,9 +79,9 @@
             });
 
             $scope.activate = function () {
-                // $ionicLoading.show({
-                //     template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Loading...'
-                // });
+                 $ionicLoading.show({
+                     template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Loading...'
+                 });
 
                 $timeout(function () {
                     $scope.orientation = $scope.getScreenOrientation();
@@ -98,7 +98,7 @@
                         $scope.templates = templates;
                         $scope.surveys = surveys;
                     }).finally(function () {
-                        // $ionicLoading.hide();
+                         $ionicLoading.hide();
                     });
             };
 

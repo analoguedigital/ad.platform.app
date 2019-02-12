@@ -1,10 +1,10 @@
-<ion-view title="Organizations" id="organizationsPage">
-    <ion-content class="content padding organizations" ng-cloak>
+<ion-view title="Organizations" id="organizationsPage" class="organizations_screen">
+    <ion-content class="content padding">
         <ion-refresher pulling-text="Pull down to refresh organizations" on-refresh="doRefresh()"></ion-refresher>
 
         <div class="row responsive-lg">
             <div class="col" style="margin-bottom: 0" ng-if="!requestSent">
-                <p class="light">If you need help, go to our <strong>Need Help?</strong> tab in the menu. Otherwise select the organization you wish to connect to, and confirm the action. We will review your request as soon as possible and get back to you.</p>
+                <p class="lead">If you need help, go to our <strong>Need Help?</strong> tab in the menu. Otherwise select the organization you wish to connect to, and confirm the action. We will review your request as soon as possible and get back to you.</p>
             </div>
             <div class="col">
                 <div ng-if="!requestSent">
@@ -16,27 +16,27 @@
 
                     <div class="list">
                         <a class="item" href="" ng-repeat="org in organizations | filter:{name:model.searchTerm} | orderBy:'name'" ng-click="selectOrganization(org)">
-                            <h2 style="font-weight: bold">{{org.name}}</h2>
+                            <h2 style="font-weight: 600">{{org.name}}</h2>
                             <p ng-if="org.county.length"><b>County</b> {{org.county}}</p>
                             <p ng-if="org.town.length"><b>Town</b> {{org.town}}</p>                        
                         </a>
                     </div>
                         
                     <div ng-if="!feedbackSent">
-                        <p class="light">If the organization you're looking for is not listed here, tap the button below and send us the details. We'll investigate and get back to you as soon as possible.</p>
+                        <p class="lead">If the organization you're looking for is not listed here, tap the button below and send us the details. We'll investigate and get back to you as soon as possible.</p>
 
-                        <button class="button button-positive button-block" ng-click="openOrgRequestDialog()">
-                            <i class="icon ion-person-add"></i> Request organization
+                        <button class="button button-royal button-block" ng-click="openOrgRequestDialog()">
+                            <i class="icon ion-person-add" style="vertical-align: middle"></i> <span style="vertical-align: middle">Request organization</span>
                         </button>
                     </div>
 
                     <div ng-if="feedbackSent">
-                        <p class="light"><i class="icon ion-checkmark"></i> Your request has been sent. We'll review your information and get back to you if need be.</p>
+                        <p class="lead"><i class="icon ion-checkmark"></i> Your request has been sent. We'll review your information and get back to you if need be.</p>
                     </div>
                 </div>
 
                 <div ng-if="requestSent">
-                    <p class="light">
+                    <p class="lead">
                         <i class="icon ion-checkmark-circled"></i> Your request has been sent, and our team will process your information as soon as possible. Thank you.
                     </p>
                 </div>

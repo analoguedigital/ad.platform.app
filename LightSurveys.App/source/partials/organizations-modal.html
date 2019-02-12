@@ -1,17 +1,14 @@
-<ion-modal-view>
+<ion-modal-view class="organization_modal_screen">
     <ion-header-bar class="bar-stable bar-positive with-button">
         <h1 class="title">Connect to an Organization</h1>
         <button class="button button-icon button-clear ion-ios-close-outline" ng-click="closeOrganizationsDialog()" style="margin-top: 0"></button>
     </ion-header-bar>
-    <ion-content class="content organizations-dialog">
+    <ion-content class="content padding">
         <div class="row responsive-lg">
             <div class="col">
-                <div class="light">
-                    <!-- <p>Please confirm your action by tapping the join button below. After approval, your personal case will be moved to your new organization and you will have a new subscription.</p> -->
-                    <p>Please confirm your request by tapping the 'Request to Join' button below. If the organization accepts your request, they will then be able to see your records. You can cancel this at any time.</p>
-                </div>
+                <p class="lead">Please confirm your request by tapping the 'Request to Join' button below. If the organization accepts your request, they will then be able to see your records. You can cancel this at any time.</p>
 
-                <div class="card" style="margin-left: 0; margin-right: 0">
+                <div class="card">
                     <div class="item item-divider">Selected Organization</div>
                     <div class="item item-text-wrap">
                         <h2>{{selectedOrganization.name}}</h2>
@@ -22,7 +19,25 @@
                     </div>
                 </div>
 
-                <button class="button button-positive button-block" ng-click="requestToJoin()">
+                <div class="organization-terms-wrap" ng-if="needsToConfirmTerms">
+                    <p class="lead">
+                        You can share your records with <b>{{selectedOrganization.name}}</b> if you are already a member. If you are not yet a member, join up and try again.<br />
+                        Remember, though, that if the issues you are concerned about started before you became a member, then our help to you is going to be limited.
+                    </p>
+                    <p class="lead">
+                        Your records must not name or contain photographs of children, parents or professionals which would allow them to be recognised by others. Use another way of  identifying people.
+                    </p>
+
+                    <label class="item item-checkbox terms-checkbox">
+                        <span class="checkbox">
+                            <input type="checkbox" ng-model="model.termsAgreed" class="terms-checkbox-input">
+                        </span>
+                        Confirm
+                    </label>
+                </div>
+
+                <button class="button button-royal button-block" ng-click="requestToJoin()"
+                        ng-disabled="needsToConfirmTerms && !model.termsAgreed">
                     <i class="icon ion-person-add"></i> Request to Join
                 </button>
             </div>

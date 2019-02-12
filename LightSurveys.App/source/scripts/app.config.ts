@@ -8,7 +8,13 @@
         .config(ConfigRoutes)
         .config(ConfigToastr)
         .config(ConfigHttpProvider)
-        .config(ConfigCalendar);
+        .config(ConfigCalendar)
+        .config(ConfigLoadingBar);
+
+    ConfigLoadingBar.$inject = ['cfpLoadingBarProvider'];
+    function ConfigLoadingBar(cfpLoadingBarProvider) {
+        cfpLoadingBarProvider.includeSpinner = false;
+    }
 
     ConfigRoutes.$inject = ["$stateProvider", "$urlRouterProvider"];
     function ConfigRoutes($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular.ui.IUrlRouterProvider) {
@@ -161,7 +167,7 @@
             })
             .state('acceptableUsePolicy', {
                 parent: 'menu',
-                url: '/guidance/privacy-policy',
+                url: '/guidance/acceptable-use-policy',
                 controller: 'staticContentController',
                 templateUrl: 'partials/guidance/acceptable-use-policy.html'
             })
@@ -184,10 +190,10 @@
                 templateUrl: 'partials/account.html'
             })
             .state('organizations', {
-               parent: 'menu',
-               url: '/organizations',
-               controller: 'organizationsController',
-               templateUrl: 'partials/organizations.html' 
+                parent: 'menu',
+                url: '/organizations',
+                controller: 'organizationsController',
+                templateUrl: 'partials/organizations.html'
             })
             .state('adviceThreads', {
                 parent: 'menu',
@@ -200,6 +206,12 @@
                 url: '/shared-threads',
                 controller: 'sharedThreadsController',
                 templateUrl: 'partials/shared-threads.html'
+            })
+            .state('mapView', {
+                parent: 'menu',
+                url: '/map-view',
+                controller: 'mapViewController',
+                templateUrl: 'partials/map-view.html'
             });
 
         $urlRouterProvider.otherwise('/home');
@@ -209,6 +221,10 @@
     function ConfigIonic($ionicConfigProvider: ionic.utility.IonicConfigProvider, $compileProvider) {
         $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|content|blob|ms-appx|x-wmapp0):|data:image\//)
         $ionicConfigProvider.views.maxCache(0);
+
+        $ionicConfigProvider.backButton.previousTitleText(false);
+        $ionicConfigProvider.backButton.icon('ion-chevron-left');
+        $ionicConfigProvider.backButton.text('Back');
     }
 
     ConfigToastr.$inject = ["toastrConfig"];

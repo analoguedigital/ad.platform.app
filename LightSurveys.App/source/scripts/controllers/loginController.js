@@ -1,8 +1,10 @@
 ﻿(function () {
     'use strict';
     angular.module('lm.surveys').controller('loginController', ['$scope', '$state', '$stateParams', 'userService',
-        'alertService', 'ngProgress', 'surveyService', 'fingerprintService', 'passcodeModalService', 'md5', 'toastr', 'localStorageService', '$ionicLoading',
-        function ($scope, $state, $stateParams, userService, alertService, ngProgress, surveyService, fingerprintService, passcodeModalService, md5, toastr, localStorageService, $ionicLoading) {
+        'surveyService', 'fingerprintService', 'passcodeModalService', 'md5', 'toastr', 'localStorageService', '$ionicLoading',
+        function ($scope, $state, $stateParams, userService, surveyService,
+            fingerprintService, passcodeModalService, md5, toastr, localStorageService, $ionicLoading) {
+
             $scope.existingProfiles = [];
             $scope.profile = undefined;
             $scope.loginValidated = false;
@@ -13,7 +15,6 @@
 
             if (rejected) {
                 userService.logOut();
-                // alertService.show("login timeout expired! Please login again.");
                 toastr.error('Login token expired. Please log in again');
             }
 
@@ -24,11 +25,10 @@
 
             $scope.login = function () {
                 if (!$scope.loginData.email) {
-                    toastr.warning("Please enter your email");
+                    toastr.error("Please enter your email address");
                 } else if (!$scope.loginData.password) {
-                    toastr.warning("Please enter your password");
+                    toastr.error("Please enter your password");
                 } else {
-                    ngProgress.start();
                     $scope.loginWorking = true;
 
                     userService.login($scope.loginData)
@@ -48,7 +48,6 @@
                                 surveyService.clearLocalData().then(function () {
                                     surveyService.refreshData()
                                         .then(function () {
-                                                ngProgress.complete();
                                                 $scope.loginWorking = false;
 
                                                 var firstLogin = localStorageService.get(FIRST_TIME_LOGIN_KEY);
@@ -60,14 +59,11 @@
                                             },
                                             function (err) {
                                                 $ionicLoading.hide();
-                                                ngProgress.complete();
-                                                // alertService.show(err);
                                                 toastr.error(err);
                                             });
                                 });
                             },
                             function (err) {
-                                ngProgress.complete();
                                 $scope.loginWorking = false;
                                 $ionicLoading.hide();
                                 toastr.error(err);
