@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
-    angular.module('lm.surveys').controller('accountController', ['$scope', '$rootScope', 'userService', 'moment', 'httpService', 'toastr', 'ngProgress', '$ionicLoading',
-        function ($scope, $rootScope, userService, moment, httpService, toastr, ngProgress, $ionicLoading) {
+    angular.module('lm.surveys').controller('accountController', ['$scope', '$rootScope', 'userService', 'moment', 'httpService', 'toastr', '$ionicLoading',
+        function ($scope, $rootScope, userService, moment, httpService, toastr, $ionicLoading) {
             $scope.profile = {};
             $scope.userInfo = {};
 
@@ -48,7 +48,6 @@
                     return false;
                 }
 
-                ngProgress.start();
                 $scope.requestWorking = true;
                 $ionicLoading.show({
                     template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Saving profile...'
@@ -71,7 +70,6 @@
                         toastr.error(err);
                     })
                     .finally(function () {
-                        ngProgress.complete();
                         $scope.requestWorking = false;
                         $ionicLoading.hide();
                     });

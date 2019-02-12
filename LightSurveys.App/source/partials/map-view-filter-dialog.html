@@ -1,0 +1,24 @@
+﻿<ion-modal-view>
+    <ion-header-bar class="bar-stable bar-positive with-button">
+        <h1 class="title">Map Filter Options</h1>
+        <button class="button button-icon button-clear ion-ios-close-outline" ng-click="closeFilterDialog()" style="margin-top: 0"></button>
+    </ion-header-bar>
+    <ion-content class="content padding map-view-filter-dialog">
+        <div class="row responsive-lg">
+            <div class="col">
+                <p class="lead">Select the threads you want, then tap apply to filter your map. Tap the reset button to reload.</p>
+
+                <ion-list>
+                    <ion-checkbox ng-repeat="thread in threads track by $index" ng-model="thread.isSelected">
+                        <span class="color-block" ng-style="{ 'background-color': '{{thread.colour}}' }"></span> <span style="vertical-align: middle">{{thread.title}}</span>
+                    </ion-checkbox>
+                </ion-list>
+                <br />
+                <div class="button-bar">
+                    <button class="button button-positive button-compact" ng-click="applyFilter()">Apply</button>
+                    <button class="button button-stable button-compact" ng-click="resetFilter()">Reset</button>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>

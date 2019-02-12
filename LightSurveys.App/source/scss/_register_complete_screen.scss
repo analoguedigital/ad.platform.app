@@ -1,0 +1,10 @@
+﻿.register_complete_screen {
+    .welcome_card {
+        margin: 7px;
+        padding: 10px 15px;
+
+        & p.lead {
+            margin-bottom: 10px;
+        }
+    }
+}

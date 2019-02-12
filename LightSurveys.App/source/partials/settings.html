@@ -1,14 +1,14 @@
-﻿<ion-view title="Settings" id="settingsPage">
-    <ion-content class="content padding settings" ng-cloak>
+﻿<ion-view title="Settings" id="settingsPage" class="settings_screen">
+    <ion-content class="content padding">
         <div class="row responsive-lg">
             <div class="col">
-                <h2 class="light">Account Security</h2>
+                <h3>Account Security</h3>
 
                 <ul class="list">
                     <li class="item item-toggle">
                         <i class="icon ion-ios-keypad-outline"></i>
                         <span class="item-toggle-label">Passcode Login</span>
-                        <label class="toggle toggle-positive">
+                        <label class="toggle toggle-royal">
                             <input type="checkbox" ng-model="model.passcodeEnabled">
                             <span class="track">
                                 <span class="handle"></span>
@@ -18,7 +18,7 @@
                     <li class="item item-toggle">
                         <i class="icon ion-ios-barcode-outline"></i>
                         <span class="item-toggle-label">Fingerprint Login</span>
-                        <label class="toggle toggle-positive">
+                        <label class="toggle toggle-royal">
                             <input type="checkbox" ng-model="model.fingerprintEnabled" ng-disabled="!fingerprintHardwareDetected">
                             <span class="track">
                                 <span class="handle"></span>
@@ -28,7 +28,7 @@
                     <li class="item item-toggle">
                         <i class="icon ion-eye-disabled"></i>
                         <span class="item-toggle-label">Don't store on this device</span>
-                        <label class="toggle toggle-positive">
+                        <label class="toggle toggle-royal">
                             <input type="checkbox" ng-model="model.noStoreEnabled" />
                             <span class="track">
                                 <span class="handle"></span>
@@ -38,73 +38,66 @@
                     <li class="item item-toggle">
                         <i class="icon ion-checkmark-circled"></i>
                         <span class="item-toggle-label">Ask before signing out</span>
-                        <label class="toggle toggle-positive">
+                        <label class="toggle toggle-royal">
                             <input type="checkbox" ng-model="model.confirmSignOut" />
                             <span class="track">
                                 <span class="handle"></span>
                             </span>
                         </label>
                     </li>
-                    <!--<li class="item item-button-right">
-                        Delete all records on this device
-                        <button class="button button-assertive" ng-click="deleteAllData()">
-                            <i class="icon ion-ios-trash-outline"></i>
-                        </button>
-                    </li>-->
                 </ul>
 
-                <button class="button button-assertive button-full icon ion-ios-trash-outline" ng-click="deleteAllData()">
+                <button class="button button-assertive button-block icon ion-trash-b" ng-click="deleteAllData()">
                     Delete all records on this device
                 </button>
 
-                <p class="light">Don't worry, all records you upload will be saved on our secure server.</p>
-                <br />
+                <p class="lead">Don't worry, all records you upload will be saved on our secure server.</p>
 
                 <div class="list">
                     <div class="item item-button-right" ng-if="!userInfo.phoneNumber.length">
                         <span>Add your phone number</span>
-                        <button class="button button-positive" ng-click="openAddPhoneNumberModal()">
+                        <button class="button button-royal" ng-click="openAddPhoneNumberModal()">
                             <i class="icon ion-ios-telephone-outline"></i>
                         </button>
                     </div>
                     <div class="item item-button-right" ng-if="userInfo.phoneNumber.length && !userInfo.phoneNumberConfirmed">
                         Verify number
                         <strong>{{userInfo.phoneNumber}}</strong>
-                        <button class="button button-positive" ng-click="confirmPhoneNumber()">
+                        <button class="button button-royal" ng-click="confirmPhoneNumber()">
                             <i class="icon ion-ios-checkmark-outline"></i>
                         </button>
                     </div>
                     <div class="item item-button-right" ng-if="userInfo.phoneNumber.length && userInfo.phoneNumberConfirmed">
                         Change your phone number
-                        <button class="button button-positive" ng-click="openChangePhoneNumberModal()">
+                        <button class="button button-royal" ng-click="openChangePhoneNumberModal()">
                             <i class="icon ion-ios-compose-outline"></i>
                         </button>
                     </div>
                     <div class="item item-button-right" ng-if="userInfo.phoneNumber.length && userInfo.phoneNumberConfirmed">
                         Remove your phone number
-                        <button class="button button-energized" ng-click="removePhoneNumber()">
+                        <button class="button button-assertive" ng-click="removePhoneNumber()">
                             <i class="icon ion-ios-close-outline"></i>
                         </button>
                     </div>
                 </div>
-                <p class="light" ng-if="userInfo.phoneNumber.length && !userInfo.phoneNumberConfirmed">
+                
+                <p ng-if="userInfo.phoneNumber.length && !userInfo.phoneNumberConfirmed">
                     You haven't verified your phone yet. Click the checkmark button to confirm your number.
                 </p>
 
-                <p class="light"><i class="icon ion-information-circled"></i> This function is not available yet.</p>
+                <p class="lead" style="margin-bottom: 0"><i class="icon ion-information-circled"></i> This function is not available yet.</p>
                 <br />
 
-                <h4 class="light">Password Management</h4>
-                <p class="light">It's a good idea to change your passwords frequently. This applies to all your passwords. Choose a strong
+                <h3>Password Management</h3>
+                <p class="lead" style="margin-bottom: 0">It's a good idea to change your passwords frequently. This applies to all your passwords. Choose a strong
                     phrase, something you can remember, and keep it somewhere safe.</p>
-                <button class="button button-assertive button-full" ng-click="openModal()">
+                <button class="button button-royal button-block" ng-click="openModal()">
                     <i class="fa fa-key"></i> Change Password
                 </button>
 
                 <!-- app icon changer -->
-                <div ng-if="canChangeAppIcon">
-                    <h2 class="light">Choose App Icon</h2>
-                    <br />
+                <div class="app-icons-wrap" ng-if="canChangeAppIcon">
+                    <h3>Choose App Icon</h3>
 
                     <div class="button-bar app-icons">
                         <a class="button button-clear" ng-click="changeAppIcon('icon1')" ng-class="{ 'active-icon': selectedAppIcon == 'icon1' }">

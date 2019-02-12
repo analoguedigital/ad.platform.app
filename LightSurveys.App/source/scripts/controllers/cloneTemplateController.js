@@ -1,8 +1,8 @@
 ﻿(function () {
     'use strict';
     angular.module('lm.surveys').controller('cloneTemplateController', ['$scope', '$stateParams', '$ionicHistory',
-        'userService', 'ngProgress', 'surveyService', 'httpService', 'toastr', '$ionicLoading',
-        function ($scope, $stateParams, $ionicHistory, userService, ngProgress, surveyService, httpService, toastr, $ionicLoading) {
+        'userService', 'surveyService', 'httpService', 'toastr', '$ionicLoading',
+        function ($scope, $stateParams, $ionicHistory, userService, surveyService, httpService, toastr, $ionicLoading) {
             $scope.templateId = $stateParams.id;
             $scope.formTemplate = null;
             $scope.vm = {
@@ -14,7 +14,6 @@
                 if (!$scope.vm.title) {
                     toastr.error('Please enter thread title');
                 } else {
-                    ngProgress.start();
                     $ionicLoading.show({
                         template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Creating thread...'
                     });
@@ -31,7 +30,6 @@
                                 }, function (err) {
                                     console.error('could not refresh templates', err);
                                 }).finally(function () {
-                                    ngProgress.complete();
                                     $ionicLoading.hide();
                                 });
                         }, function (err) {
@@ -42,7 +40,6 @@
                             toastr.error(errorMessage);
                         }).finally(function () {
                             $ionicLoading.hide();
-                            ngProgress.complete();
                         });
                 }
             };

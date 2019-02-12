@@ -1,25 +1,24 @@
-﻿<h3 ng-hide="metricGroup.isRepeater"> {{::metric.description}} </h3>
+﻿<!--<h3 ng-hide="metricGroup.isRepeater">{{::metric.description}}</h3>-->
+<p class="lead" ng-hide="metricGroup.isRepeater" style="padding: 10px 15px; font-weight: 400">{{::metric.description}}</p>
 <div ng-controller="attachmentMetricController">
-
-    <div class="thumbnails">
-        <div class="thumbnail add button button-stable" ng-click="startAudioCapture()" style="height: auto !important; background: green; color: white">
-            <i class="fa fa-3x fa-microphone" style="padding-top: 15px"></i>
+    <div class="thumbnails attachment-controls-wrap">
+        <div class="thumbnail add button button-balanced button-add-audio" ng-click="startAudioCapture()">
+            <i class="fa fa-2x fa-microphone"></i>
         </div>
-        <div class="thumbnail add button button-stable" ng-click="startVideoCapture()" style="height: auto !important; background: green; color: white">
-            <i class="fa fa-3x fa-video-camera" style="padding-top: 15px"></i>
+        <div class="thumbnail add button button-balanced button-add-video" ng-click="startVideoCapture()">
+            <i class="fa fa-video-camera"></i>
         </div>
-        <div class="thumbnail add button button-stable" ng-click="startCapture()" style="height: auto !important; background: red; color: white">
-            <i class="fa fa-3x fa-plus" style="padding-top: 15px"></i>
+        <div class="thumbnail add button button-positive button-add-attachment" ng-click="startCapture()">
+            <i class="fa fa-2x fa-plus"></i>
         </div>
     </div>
     <div class="thumbnails">
-        <div class="thumbnail" ng-repeat="attachment in formValue.attachments" on-hold="deleteAttachment(attachment)" ng-click="showImages($index)">
+        <div class="thumbnail" ng-repeat="attachment in formValue.attachments track by $index" on-hold="deleteAttachment(attachment)" ng-click="showImages($index)">
             <img ng-if="attachment.mediaType==='image'" ng-src="{{attachment.fileUri | trusted}}" />
             <video ng-if="attachment.mediaType==='video'" ng-src="{{attachment.fileUri | trusted}}" />
             <div ng-if="attachment.mediaType!=='image' && attachment.mediaType!=='video'" ng-src="{{attachment.fileUri | trusted}}" class="fullscreen-image">{{attachment.mediaType}}</div>
         </div>
     </div>
-
 
     <!--<table>
         <tbody>

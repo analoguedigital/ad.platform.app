@@ -416,7 +416,7 @@
                             callback: function (value) {
                                 return moment(value).format('MMM D');
                             },
-                            fontColor: '#CCCCCC'
+                            fontColor: '#444'
                         }
                     }],
                     yAxes: [{
@@ -430,12 +430,12 @@
                             stepSize: 1,
                             max: maxImpact,
                             min: minImpact,
-                            fontColor: '#CCCCCC'
+                            fontColor: '#444'
                         },
                         scaleLabel: {
                             display: true,
                             labelString: 'Impact',
-                            fontColor: '#CCCCCC'
+                            fontColor: '#444'
                         }
                     }]
                 },
@@ -448,7 +448,7 @@
                 },
                 legend: {
                     labels: {
-                        fontColor: '#CCCCCC'
+                        fontColor: '#444'
                     }
                 }
             };

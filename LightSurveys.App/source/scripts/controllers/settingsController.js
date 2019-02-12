@@ -1,10 +1,10 @@
 ﻿(function () {
     'use strict';
     angular.module('lm.surveys').controller('settingsController', ['$scope', '$state', '$ionicModal', 'toastr',
-        '$ionicPopup', 'alertService', 'userService', 'surveyService', 'passcodeModalService', 'md5', 'fingerprintService',
-        'alternateIconService', 'ngProgress', 'httpService', 'localStorageService', '$ionicLoading',
-        function ($scope, $state, $ionicModal, toastr, $ionicPopup, alertService, userService, surveyService, passcodeModalService, md5,
-            fingerprintService, alternateIconService, ngProgress, httpService, localStorageService, $ionicLoading) {
+        '$ionicPopup', 'userService', 'surveyService', 'passcodeModalService', 'md5', 'fingerprintService',
+        'alternateIconService', 'httpService', 'localStorageService', '$ionicLoading',
+        function ($scope, $state, $ionicModal, toastr, $ionicPopup, userService, surveyService, passcodeModalService, md5,
+            fingerprintService, alternateIconService, httpService, localStorageService, $ionicLoading) {
 
             $scope.profile = undefined;
             $scope.userInfo = undefined;
@@ -94,13 +94,11 @@
 
                     userService.saveProfile($scope.profile).then(function () {
                         passcodeModalService.hideDialog();
-                        // alertService.show('Passcode disabled');
                         toastr.success('Passcode disabled successfully');
                     });
                 } else {
                     passcodeModalService.hideDialog();
                     $scope.model.passcodeEnabled = true;
-                    // alertService.show('Invalid passcode!');
                     toastr.error('Invalid passcode. Try again.');
                 }
             });
@@ -116,7 +114,6 @@
                 $scope.profile.settings.passcodeText = md5.createHash(args || '');
 
                 userService.saveProfile($scope.profile).then(function () {
-                    // alertService.show('Passcode set!');
                     toastr.success('Passcode enabled successfully');
                     $scope.passcodeSaved = true;
                     passcodeModalService.hideDialog();
@@ -133,6 +130,8 @@
             });
 
             $scope.changeAppIcon = function (iconName) {
+                $scope.selectedAppIcon = iconName;
+
                 try {
                     alternateIconService.isSupported()
                         .then(function (supported) {
@@ -142,11 +141,9 @@
                                         $scope.selectedAppIcon = iconName;
                                     }, function (err) {
                                         console.error('could not change app icon', err);
-                                        // alertService.show('could not change app icon!');
                                         toastr.error('Could not change app icon');
                                     });
                             } else {
-                                // alertService.show('appiconchanger is not available');
                                 toastr.error('App Icon Changer is not available');
                             }
                         });
@@ -181,10 +178,8 @@
 
                         surveyService.deleteAllData()
                             .then(function () {
-                                // alertService.show('All local data deleted successfully!');
                                 toastr.success('Local data deleted successfully');
                             }, function (err) {
-                                // alertService.show('Failed: ' + err);
                                 console.error('could not delete all data', err);
                                 toastr.error('Could not delete all data');
                             }).finally(function () {
@@ -236,7 +231,6 @@
                     confirmPassword: $scope.model.confirmPassword
                 };
 
-                ngProgress.start();
                 $scope.changePwdWorking = true;
 
                 $ionicLoading.show({
@@ -262,7 +256,6 @@
 
                         $scope.errors = errors;
                     }).finally(function () {
-                        ngProgress.complete();
                         $scope.changePwdWorking = false;
                         $ionicLoading.hide();
                     });
@@ -275,12 +268,7 @@
                     return false;
                 }
 
-                ngProgress.start();
                 $scope.addPhoneNumberWorking = true;
-
-                $ionicLoading.show({
-                    template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Adding phone number...'
-                });
 
                 httpService.addPhoneNumber(phoneNumber)
                     .then(function (res) {
@@ -295,9 +283,7 @@
                         if (err.message)
                             toastr.error(err.message);
                     }).finally(function () {
-                        ngProgress.complete();
                         $scope.addPhoneNumberWorking = false;
-                        $ionicLoading.hide();
                     });
             };
 
@@ -310,7 +296,6 @@
                     return false;
                 }
 
-                ngProgress.start();
                 $scope.verifyPhoneNumberWorking = true;
 
                 $ionicLoading.show({
@@ -333,7 +318,6 @@
                         if (err.message)
                             toastr.error(err.message);
                     }).finally(function () {
-                        ngProgress.complete();
                         $scope.verifyPhoneNumberWorking = false;
                         $ionicLoading.hide();
                     });
@@ -369,7 +353,6 @@
                             template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Removing phone number...'
                         });
 
-                        ngProgress.start();
                         httpService.removePhoneNumber()
                             .then(function (res) {
                                 toastr.success("Phone number removed successfully");
@@ -378,7 +361,6 @@
                                 console.error('could not remove phone number', err);
                                 toastr.error("Could not remove phone number, sorry");
                             }).finally(function () {
-                                ngProgress.complete();
                                 $ionicLoading.hide();
                             });
                     }
@@ -398,12 +380,7 @@
                     return false;
                 }
 
-                ngProgress.start();
                 $scope.changePhoneNumberWorking = true;
-
-                $ionicLoading.show({
-                    template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Changing phone number...'
-                });
 
                 httpService.changePhoneNumber(phoneNumber)
                     .then(function (res) {
@@ -416,9 +393,7 @@
                         if (err.exceptionMessage)
                             toastr.error(err.exceptionMessage);
                     }).finally(function () {
-                        ngProgress.complete();
                         $scope.changePhoneNumberWorking = false;
-                        $ionicLoading.hide();
                     });
             };
 
@@ -431,12 +406,7 @@
                     return false;
                 }
 
-                ngProgress.start();
                 $scope.verifyChangePhoneWorking = true;
-
-                $ionicLoading.show({
-                    template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Verifying phone number...'
-                });
 
                 httpService.verifyChangedPhoneNumber(phoneNumber, code)
                     .then(function (res) {
@@ -454,9 +424,7 @@
                         if (err.message)
                             toastr.error(err.message);
                     }).finally(function () {
-                        ngProgress.complete();
                         $scope.verifyChangePhoneWorking = false;
-                        $ionicLoading.hide();
                     });
             };
 

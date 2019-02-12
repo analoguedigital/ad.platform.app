@@ -1,8 +1,8 @@
-﻿<div class="item item-text-wrap">
+﻿<!--<div class="item item-text-wrap">
     <h3>{{::metricGroup.title}}</h3>
-</div>
-<div class="item item-text-wrap">
+</div>-->
+<div class="item item-text-wrap metric_group_container">
     <ion-list>
-        <div class="item metric" ng-repeat="metric in metricGroup.metrics" ng-include="'partials/metricViews/'+metric.type+'.html'"></div>
+        <div class="item metric metric_container" ng-repeat="metric in metricGroup.metrics" ng-include="'partials/metricViews/'+metric.type+'.html'"></div>
     </ion-list>
 </div>

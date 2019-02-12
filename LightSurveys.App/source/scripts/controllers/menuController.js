@@ -1,8 +1,8 @@
 ﻿(function () {
     'use strict';
     angular.module('lm.surveys').controller('menuController', ['$scope', '$rootScope', '$ionicPopup', '$state',
-        '$timeout', 'surveyService', 'userService', 'alertService', 'ngProgress', '$ionicLoading', 'toastr',
-        function ($scope, $rootScope, $ionicPopup, $state, $timeout, surveyService, userService, alertService, ngProgress, $ionicLoading, toastr) {
+        '$timeout', 'surveyService', 'userService', 'alertService', '$ionicLoading', 'toastr',
+        function ($scope, $rootScope, $ionicPopup, $state, $timeout, surveyService, userService, alertService, $ionicLoading, toastr) {
             $scope.currentContext = userService.current;
             $scope.downloading = false;
             $scope.uploading = false;
@@ -30,7 +30,6 @@
             };
 
             $scope.refresh = function () {
-                ngProgress.start();
                 $scope.downloading = true;
 
                 $ionicLoading.show({
@@ -45,7 +44,6 @@
                         console.error('could not refresh data', err);
                         toastr.error(err);
                     }).finally(function () {
-                        ngProgress.complete();
                         $scope.downloading = false;
                         $ionicLoading.hide();
                     });
@@ -54,8 +52,6 @@
             $scope.uploadAll = function () {
                 if ($scope.uploading) return;
                 $scope.uploading = true;
-
-                ngProgress.start();
 
                 $scope.progressText = '';
                 $scope.numberOfSuccessfuls = 0;
@@ -70,7 +66,6 @@
                 $timeout(function () {
                     surveyService.uploadAllSurveys()
                         .then(function () {
-                                ngProgress.complete();
                                 $scope.uploading = false;
                                 $timeout(function () {
                                     progressPopup.close();
@@ -163,8 +158,6 @@
             $scope.activate = function () {
                 if (userService.currentProfile !== null && userService.currentProfile.lastRefreshTemplate === undefined) {
                     $scope.downloading = true;
-                    ngProgress.start();
-
                     $ionicLoading.show({
                         template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Refreshing data...'
                     });
@@ -179,7 +172,6 @@
                             toastr.error(err);
                         }).finally(function () {
                             $scope.downloading = false;
-                            ngProgress.complete();
                             $ionicLoading.hide();
                         });
                 } else {

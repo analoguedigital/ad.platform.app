@@ -1,11 +1,13 @@
-<ion-view title="Review" id="surveyViewPage">
-    <ion-header-bar align-title="{{::getLeft()}}" class="bar bar-subheader bar-light">
+<ion-view title="Review" id="surveyViewPage" class="survey_screen">
+    <ion-header-bar align-title="{{::getLeft()}}" class="bar bar-subheader bar-balanced">
         <h2 class="title">
-            <span class="color-block" ng-style="{'background-color': formTemplate.colour}"></span> {{::formTemplate.title}}: {{surveyIndex}} of {{totalRecords}}
+            <span class="color-block" ng-style="{'background-color': formTemplate.colour}"></span> {{::formTemplate.title}}: 
+            <span ng-if="surveyIndex">{{surveyIndex}} of {{totalRecords}}</span>
+            <span ng-if="!surveyIndex">#{{survey.serial}}</span>
             <!-- :<span>{{currentPageIndex+1}} <span translate>of</span> {{numberOfPages}}</span> -->
         </h2>
     </ion-header-bar>
-    <ion-content class="has-subheader has-footer padding" ng-cloak>
+    <ion-content class="has-subheader">
         <ion-refresher pulling-text="Pull to refresh this record" on-refresh="doRefresh()"></ion-refresher>
         <form name="surveyForm" novalidate="novalidate" ng-submit="submitSurvey()">
             <div class="list card">
@@ -16,10 +18,13 @@
             </div>
         </form>
 
-        <div class="map-wrap" ng-repeat="location in locations track by $index">
-            <ui-gmap-google-map center="location.center" zoom="location.zoom" options="location.options" draggable="false">
-                <ui-gmap-marker coords="location.marker.coords" options="location.marker.options" events="location.marker.events" idKey="location.marker.id"></ui-gmap-marker>
-            </ui-gmap-google-map>
+        <div class="card location_card" ng-repeat="location in locations track by $index">
+            <div class="item item-divider">Location</div>
+            <div class="map-wrap">
+                <ui-gmap-google-map center="location.center" zoom="location.zoom" options="location.options" draggable="false">
+                    <ui-gmap-marker coords="location.marker.coords" options="location.marker.options" events="location.marker.events" idKey="location.marker.id"></ui-gmap-marker>
+                </ui-gmap-google-map>
+            </div>
         </div>
     </ion-content>
     <div class="bar bar-footer tabs bar-dark row" ng-if="numberOfPages > 1">

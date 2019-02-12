@@ -1,11 +1,11 @@
-<ion-view title="Record" id="surveyPage">
-    <ion-header-bar align-title="{{::getLeft()}}" class="bar bar-subheader bar-light">
+<ion-view title="Record" id="surveyPage" class="survey_form_screen">
+    <ion-header-bar align-title="{{::getLeft()}}" class="bar bar-subheader bar-balanced">
         <h2 class="title">
             <span class="color-block" ng-style="{'background-color': formTemplate.colour}"></span> {{::formTemplate.title}}
             <!-- {{::formTemplate.title}}: <span>{{currentPageIndex + 1}} <span translate>of</span> {{numberOfPages}}</span> -->
         </h2>
         <div class="buttons">
-            <button class="button button-icon button-clear" ng-click="saveDraft()">
+            <button class="button button-icon button-clear draft_button" ng-click="saveDraft()">
                 <i class="fa fa-floppy-o"></i> Draft
             </button>
 
@@ -20,9 +20,9 @@
             </button>
         </div>
     </ion-header-bar>
-    <ion-content class="has-subheader padding" ng-class="{'has-footer':numberOfPages > 1}" ng-cloak>
+    <ion-content class="has-subheader" ng-class="{'has-footer':numberOfPages > 1}">
         <form name="surveyForm" novalidate="novalidate" ng-submit="submitSurvey()">
-            <div class="list card" style="margin-bottom: 10px">
+            <div class="list card metrics-list">
                 <div ng-repeat="metricGroup in activeGroups" ng-controller="metricGroupController">
                     <div ng-if="!metricGroup.isRepeater" ng-include="'partials/metrics/metricGroup.html'" ng-show="isCurrentPage(metricGroup)"></div>
                     <div ng-if="metricGroup.isRepeater" ng-include="'partials/metrics/metricGroupRepeater.html'" ng-show="isCurrentPage(metricGroup)"></div>
@@ -37,27 +37,30 @@
                     </ul>
                 </div>-->
             </div>
-            <div class="list">
-                <div class="card" style="margin-top: 0; margin-bottom: 0">
+            <div class="list location-card-wrap">
+                <div class="card location-card">
                     <div class="item item-divider">Location</div>
                     <div class="item item-text-wrap">
                         <label class="item item-input" style="padding-left: 0">
                             <input type="text" placeholder="Address" ng-model="geocoding.address" style="padding-right: 0">
                         </label>
 
-                        <div class="button-bar">
-                            <button type="button" class="button button-small button-royal" ng-click="getAddress()"><i class="fa fa-map"></i> Input Address</button>
-                            <button type="button" class="button button-small button-royal" ng-click="getMyLocation()"><i class="fa fa-location-arrow"></i> Get My Location</button>
+                        <div class="button-bar location-button-bar">
+                            <button type="button" class="button button-small button-positive button-outline" ng-click="getAddress()"><i class="fa fa-map"></i> Input Address</button>
+                            <button type="button" class="button button-small button-positive button-outline" ng-click="getMyLocation()"><i class="fa fa-location-arrow"></i> Get My Location</button>
+                        </div>
+                        <div class="button-bar" style="margin-top: 5px" ng-show="geocoding.hasLocation">
+                            <button type="button" class="button button-small button-outline button-positive" ng-click="clearLocation()"><i class="fa fa-eraser"></i> Clear location</button>
                         </div>
 
                         <div ng-show="geocoding.hasLocation">
                             <hr>
-                            <div id="map_canvas"  style="width: 100%; height: 300px"></div>
+                            <div id="map_canvas"></div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div>
+            <div class="upload_button_wrap">
                 <!--<button ng-show="isLastPage()" class="button button-block button-energized" type="submit" ng-disabled="surveyForm.$invalid || uploadWorking">
                     <span ng-if="!uploadWorking">
                         <i class="fa fa-cloud-upload"></i>
@@ -68,7 +71,7 @@
                     </span>
                 </button>-->
 
-                <button ng-show="isLastPage()" class="button button-full button-energized" type="submit" ng-disabled="uploadWorking">
+                <button ng-show="isLastPage()" class="button button-royal button-block" type="submit" ng-disabled="uploadWorking">
                     <span ng-if="!uploadWorking">
                         <i class="fa fa-cloud-upload"></i>
                         <span translate>Upload</span>
@@ -79,9 +82,8 @@
                 </button>
             </div>
         </form>
-
     </ion-content>
-    <div class="bar bar-footer tabs bar-dark row" ng-if="numberOfPages > 1">
+    <div class="bar bar-footer tabs bar-positive row" ng-if="numberOfPages > 1">
         <a class="tab-item " ng-show="!isFirstPage()" ng-click="goToPreviousPage()"><span translate>Back to page</span> {{currentPageIndex}}</a>
         <a class="tab-item"></a>
         <a class='tab-item item-icon-{{getRight()}}' ng-disabled="surveyForm.$invalid" ng-click="goToNextPage()" ng-show="!isLastPage()">

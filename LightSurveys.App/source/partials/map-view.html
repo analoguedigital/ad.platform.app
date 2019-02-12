@@ -1,0 +1,24 @@
+﻿<ion-view title="Map View" id="mapViewPage" class="map_view_screen">
+    <ion-nav-buttons side="right">
+        <button class="button button-positive" ng-click="setBounds()">
+            <i class="icon ion-arrow-resize"></i>
+        </button>
+
+        <button class="button button-positive" ng-click="openFilterDialog()">
+            <i class="icon ion-ios-settings"></i>
+        </button>
+    </ion-nav-buttons>
+    <ion-content scroll="false" data-tap-disabled="true">
+        <ui-gmap-google-map ng-if="map.center" bounds="bd" center="map.center" zoom="map.zoom" options="map.options" events="map.events" draggable="true">
+            <ui-gmap-marker ng-repeat="marker in markers"
+                            coords="marker.coords"
+                            options="marker.options"
+                            events="marker.events"
+                            idKey="marker.id">
+            </ui-gmap-marker>
+        </ui-gmap-google-map>
+    </ion-content>
+</ion-view>
+
+
+

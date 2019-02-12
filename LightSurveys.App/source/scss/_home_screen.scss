@@ -1,0 +1,25 @@
+﻿@import "_variables";
+
+.home_screen {
+    .thread_title span {
+        vertical-align: middle;
+    }
+
+    .list {
+        .item {
+            .desc {
+                margin-top: 10px;
+                white-space: normal;
+            }
+        }
+    }
+
+    .form-item .desc {
+        white-space: normal !important;
+        font-style: italic;
+    }
+}
+
+.feedback-popup-input {
+    padding: 10px;
+}

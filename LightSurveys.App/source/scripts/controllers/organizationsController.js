@@ -1,7 +1,7 @@
 (function () {
     'use strict';
-    angular.module('lm.surveys').controller('organizationsController', ['$scope', 'httpService', 'toastr', 'ngProgress', '$ionicModal', '$ionicLoading', 'localStorageService',
-        function ($scope, httpService, toastr, ngProgress, $ionicModal, $ionicLoading, localStorageService) {
+    angular.module('lm.surveys').controller('organizationsController', ['$scope', 'httpService', 'toastr', '$ionicModal', '$ionicLoading', 'localStorageService',
+        function ($scope, httpService, toastr, $ionicModal, $ionicLoading, localStorageService) {
             $scope.organizationsDialog = {};
             $scope.orgRequestModal = {};
 
@@ -14,7 +14,8 @@
 
             $scope.model = {
                 orgName: '',
-                searchTerm: ''
+                searchTerm: '',
+                termsAgreed: false
             };
 
             $scope.orgRequestModel = {
@@ -25,6 +26,8 @@
                 telNumber: '',
                 postcode: ''
             };
+
+            $scope.needsToConfirmTerms = true;
 
             $scope.openOrganizationsDialog = function () {
                 $scope.organizationsDialog.show();
@@ -53,13 +56,21 @@
 
             $scope.selectOrganization = function (organization) {
                 $scope.selectedOrganization = organization;
+
+                // IWGB Foster Carers Union
+                $scope.needsToConfirmTerms = organization.id == '698dcc30-49fe-46ca-9654-df9806b09500';
+
                 $scope.openOrganizationsDialog();
             };
 
             $scope.requestToJoin = function () {
+                if ($scope.needsToConfirmTerms && !$scope.model.termsAgreed) {
+                    toastr.error('Please confirm organization terms first');
+                    return false;
+                }
+
                 var orgId = $scope.selectedOrganization.id;
 
-                ngProgress.start();
                 $ionicLoading.show({
                     template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Sending request...'
                 });
@@ -75,7 +86,6 @@
                         if (err.message)
                             toastr.error(err.message);
                     }).finally(function () {
-                        ngProgress.complete();
                         $ionicLoading.hide();
                     });
             };
@@ -121,7 +131,6 @@
             };
 
             $scope.doRefresh = function () {
-                ngProgress.start();
                 $ionicLoading.show({
                     template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Refreshing data...'
                 });
@@ -133,14 +142,12 @@
                         localStorageService.set('organization/' + item.id, item);
                     });
                 }).finally(function () {
-                    ngProgress.complete();
                     $ionicLoading.hide();
                     $scope.$broadcast('scroll.refreshComplete');
                 });
             };
 
             $scope.fetchOrganizations = function () {
-                ngProgress.start();
                 $ionicLoading.show({
                     template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Loading organizations...'
                 });
@@ -151,10 +158,7 @@
                     _.forEach(data, function (item) {
                         localStorageService.set('organization/' + item.id, item);
                     });
-
-                    console.log('data fetched from server');
                 }).finally(function () {
-                    ngProgress.complete();
                     $ionicLoading.hide();
                 });
             }
@@ -173,7 +177,6 @@
 
                 if (_organizations.length) {
                     $scope.organizations = _organizations;
-                    console.log('data loaded from localStorage');
                 } else {
                     $scope.fetchOrganizations();
                 }

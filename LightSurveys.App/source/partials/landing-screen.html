@@ -1,5 +1,5 @@
 ﻿<ion-view view-title="Landing" class="login" cache-view="false">
-    <ion-content class="content has-footer padding" ng-cloak>
+    <ion-content class="content has-footer padding">
         <div class="padding-horizontal">
             <div class="text-center">
                 <div class="inline text-center login-header">
@@ -9,20 +9,29 @@
         </div>
         <div class="row responsive-lg">
             <div class="col">
-                <h2>You've got the app, you're nearly there!</h2>
+                <p class="lead">When making records using OnRecord you can:</p>
+                <p class="lead">
+                    - Attach photos, voices, videos and documents.<br />
+                    - See your records on a timeline, calendar or map.<br />
+                    - Link to professionals who can help.<br />
+                    - Set PIN or fingerprint login.<br />
+                    - Use the security features to conceal your records.
+                </p>
+                <p class="lead">
+                    Sign up to open your free account.<br />
+                    Or sign in if you already have an account.
+                </p>
 
-                <p class="lead"><br /></p>
-                <p class="lead">Sign up for your free account, make a thread, upload text, voice, photos and documents.</p>
-                <p class="lead">Get advice from professionals who can help.</p>
-                <p class="lead" ng-if="platformIsIOS"><br /></p>
-                <p class="lead" ng-if="platformIsIOS"><br /></p>
-
-                <button class="button button-full button-energized icon ion-log-in" ui-sref="login">
+                <button class="button button-block button-royal icon ion-log-in" ui-sref="login">
                     Have an account? Sign in
                 </button>
-                <button class="button button-full button-royal icon ion-person-add" ui-sref="register">
+                <button class="button button-block button-positive icon ion-person-add" ui-sref="register">
                     Sign up now
                 </button>
+
+                <p class="lead text-center">
+                    For help getting started, go to our YouTube channel <a class="youtube_link" href="#" onclick="window.open('https://www.youtube.com/channel/UCIOsMJFjleok9ZXxt4n7SCA/playlists', '_system', 'location=yes'); return false;">OnRecord Flash Videos</a>.
+                </p>
             </div>
         </div>
     </ion-content>

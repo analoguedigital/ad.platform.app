@@ -1,0 +1,88 @@
+﻿@import "_variables.scss";
+
+mwl-calendar.survey-calendar {
+    .cal-row-head {
+        font-weight: 300;
+    }
+
+    .cal-month-box {
+        border: 0;
+
+        .cal-row-fluid {
+            border: 3px solid transparent;
+        }
+
+        .cal-month-day {
+            background-color: #eee;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        [class*=cal-cell] {
+            border-right: 6px solid transparent;
+        }
+
+        .cal-day-today {
+            background-color: $positive;
+
+            span[data-cal-date] {
+                color: white;
+            }
+        }
+
+        .cal-slide-content {
+            padding: 20px 15px;
+            color: #fff;
+            background-color: $royal;
+            margin-left: 4px;
+            margin-right: 10px;
+            border-radius: 4px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
+
+        span[data-cal-date] {
+            opacity: 1;
+        }
+    }
+
+    .cal-day-box .cal-day-hour:nth-child(odd) {
+        background-color: transparent;
+    }
+
+    .cal-day-box .cal-day-panel {
+        border: 0;
+    }
+
+    .cal-day-box .cal-day-panel-hour {
+        padding-top: 10px;
+    }
+
+    .cal-month-day .cal-events-num {
+        margin-left: 0;
+        margin-top: 0;
+    }
+
+    span[data-cal-date] {
+        margin-top: 0;
+        margin-right: 0;
+    }
+
+    .badge-important {
+        background-color: #333 !important;
+        color: white !important;
+        font-weight: normal;
+        border-radius: 4px;
+        padding: 3px 6px;
+    }
+
+    .cal-day-tick {
+        border-color: #eee;
+        border-radius: 4px;
+        background-color: #eee;
+    }
+
+    .cal-day-box .day-highlight {
+        padding: 3px 10px !important;
+    }
+}

@@ -1,0 +1,82 @@
+﻿@import "../../bower_components/ionic/scss/_mixins.scss";
+@import "_variables.scss";
+
+.login_screen {
+    h1 {
+        font-size: 350%;
+        padding: 14px 0;
+    }
+
+    h2 {
+        font-size: 140%;
+        font-weight: normal;
+    }
+
+    .slogan {
+        @include transition(0.4s);
+    }
+
+    form {
+        @include transition(0.4s);
+    }
+
+    .list label.item:last-child {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .login-button {
+        margin-top: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .login-header {
+        margin-top: 15px;
+
+        & .brand {
+            margin-left: -5px;
+            color: white;
+            padding-top: 40px;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        @media #{$mobile-screen} {
+            & .brand {
+                font-size: 36px;
+            }
+        }
+    }
+
+    .login-footer {
+        display: block;
+        height: 15px;
+        background: #245278;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+}
+
+@media (max-height: 600px) {
+    .login_screen {
+        h1 {
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .slogan {
+            height: 0;
+            overflow-y: hidden;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .list {
+            margin-top: 0;
+            margin-bottom: 0
+        }
+    }
+}

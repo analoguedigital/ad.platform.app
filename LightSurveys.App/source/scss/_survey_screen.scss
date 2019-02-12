@@ -1,0 +1,83 @@
+﻿.survey_screen {
+    .list.card {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .metric_group_container,
+    .metric_container {
+        padding: 0;
+    }
+
+    .metric_heading {
+        background: #eee;
+        padding: 10px 15px;
+        margin: 0;
+    }
+
+    .metric_container {
+        .item.item-input {
+            padding: 15px;
+        }
+
+        .range.range-positive {
+            padding: 15px;
+        }
+    }
+
+    .location_card {
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+
+    .attachments-wrap {
+        max-height: 100px;
+        white-space: nowrap;
+
+        .attachment-tile {
+            display: inline-block;
+            width: 70px;
+            height: 70px;
+            margin: 10px 5px;
+
+            img, video {
+                width: 70px;
+                height: 70px;
+            }
+        }
+
+        .attachment-tile:first-child {
+            margin-left: 10px;
+        }
+
+        .attachment-tile:last-child {
+            margin-right: 10px;
+        }
+
+        .thumbnail-placeholder {
+            width: 70px;
+            height: 70px;
+        }
+    }
+
+    .thumbnails {
+        flex-wrap: wrap;
+        display: flex;
+        align-content: flex-start;
+        padding: 5px 10px;
+
+        .thumbnail {
+            width: 70px;
+            height: 70px;
+            vertical-align: central;
+            margin: 5px;
+            overflow: hidden;
+
+            img, video {
+                position: absolute;
+                width: 70px;
+                height: 70px;
+            }
+        }
+    }
+}

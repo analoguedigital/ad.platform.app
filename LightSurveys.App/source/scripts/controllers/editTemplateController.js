@@ -1,8 +1,8 @@
 ﻿(function () {
     'use strict';
     angular.module('lm.surveys').controller('editTemplateController', ['$scope', '$stateParams', '$ionicHistory',
-        'alertService', 'ngProgress', 'surveyService', 'httpService', 'toastr', '$ionicLoading',
-        function ($scope, $stateParams, $ionicHistory, alertService, ngProgress, surveyService, httpService, toastr, $ionicLoading) {
+        'surveyService', 'httpService', 'toastr', '$ionicLoading',
+        function ($scope, $stateParams, $ionicHistory, surveyService, httpService, toastr, $ionicLoading) {
             $scope.templateId = $stateParams.id;
             $scope.formTemplate = null;
             $scope.vm = {
@@ -12,7 +12,6 @@
 
             $scope.submit = function () {
                 if (!$scope.vm.title) {
-                    // alertService.show("Please enter thread title");
                     toastr.error('Please enter thread title');
                     return false;
                 }
@@ -20,7 +19,6 @@
                 $scope.formTemplate.colour = $scope.vm.colour;
                 $scope.formTemplate.title = $scope.vm.title;
 
-                ngProgress.start();
                 $ionicLoading.show({
                     template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Updating thread...'
                 });
@@ -36,11 +34,9 @@
                     }, function (err) {
                         console.error('could not update template', err);
 
-                        // alertService.show($scope.getValidationErrors(err));
                         var errorMessage = $scope.getValidationErrors(err);
                         toastr.error(errorMessage);
                     }).finally(function () {
-                        ngProgress.complete();
                         $ionicLoading.hide();
                     });
             };

@@ -1,0 +1,35 @@
+﻿.guidance_screen {
+    .list {
+        margin-bottom: 0;
+    }
+}
+
+.guidance-content {
+    padding: 14px !important;
+
+    ul {
+        list-style-type: lower-alpha;
+        padding-left: 20px;
+
+        ul {
+            list-style-type: lower-roman;
+        }
+    }
+
+    h4 {
+        margin-top: 0;
+        font-weight: 400;
+    }
+
+    .section-heading {
+        background: #e8e8e8;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 0;
+        font-weight: 400;
+    }
+
+    .indent-container {
+        padding-left: 15px;
+    }
+}

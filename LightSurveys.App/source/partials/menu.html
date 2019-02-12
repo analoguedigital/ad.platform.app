@@ -2,12 +2,12 @@
     <ion-side-menu side="left">
         <ion-content>
             <div class="list" style="margin-bottom: 0; padding-bottom: 0">
-                <a class="item item-avatar" ui-sref="account" menu-close style="padding-left: 65px; padding-top: 10px; background: #000; border-top: none; min-height: 63px">
+                <a class="item item-avatar" ui-sref="account" menu-close>
                     <img src="images/avatar-male.png" ng-if="profile.gender === 0">
                     <img src="images/avatar-female.png" ng-if="profile.gender === 1" />
                     <img src="images/avatar-other.png" ng-if="profile.gender === null || profile.gender === 2" />
     
-                    <h2 style="color: #ccc">{{profile.firstName}} {{ profile.surname}}</h2>
+                    <h2>{{profile.firstName}} {{ profile.surname}}</h2>
                     <p>{{profile.email}}</p>
                 </a>
             </div>
@@ -30,6 +30,10 @@
                     <i class="icon ion-ios-film-outline"></i>
                     <span translate> Timeline</span>
                 </ion-item>
+                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="mapView" menu-close="">
+                    <i class="icon ion-map"></i>
+                    <span translate> Map View</span>
+                </ion-item>
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="account" menu-close="">
                     <i class="icon ion-person"></i>
                     <span translate>Account</span>
@@ -42,14 +46,14 @@
                     <i class="icon ion-chatbubbles"></i>
                     <span translate> Advice Threads</span>
                 </ion-item>
-                <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="sharedThreads" menu-close="">
+                <!--<ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="sharedThreads" menu-close="">
                     <i class="icon ion-usb"></i>
                     <span translate> Shared Threads</span>
-                </ion-item>
+                </ion-item>-->
                 <!-- <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="subscriptions" menu-close="">
-                    <i class="icon ion-card"></i>
-                    <span translate> Subscriptions</span>
-                </ion-item> -->
+        <i class="icon ion-card"></i>
+        <span translate> Subscriptions</span>
+    </ion-item> -->
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="organizations" menu-close="">
                     <i class="icon ion-link"></i>
                     <span translate>Connect to Organization</span>

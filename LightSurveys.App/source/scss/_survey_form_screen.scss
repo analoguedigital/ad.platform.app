@@ -1,0 +1,119 @@
+﻿.survey_form_screen {
+    .draft_button {
+        margin-right: 10px;
+    }
+
+    .location-card-wrap {
+        margin-bottom: 0;
+        padding-bottom: 5px;
+    }
+
+    .location-card {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    #map_canvas {
+        width: 100%;
+        height: 300px
+    }
+
+    .upload_button_wrap {
+        margin-left: 14px;
+        margin-right: 14px;
+    }
+
+    .location-button-bar {
+        margin-top: 10px;
+    }
+
+    ul.validation_error_list {
+        margin-bottom: 0;
+    }
+
+    .metrics-list {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .metric_heading {
+        background: #eee;
+        padding: 10px 15px;
+        margin: 0;
+    }
+
+    .metric_group_container,
+    .metric_container {
+        padding: 0;
+    }
+
+    .metric_container {
+        .item.item-input {
+            padding: 15px;
+        }
+
+        .range.range-positive {
+            padding: 15px;
+        }
+    }
+
+    .attachment-controls-wrap {
+        padding: 0 10px !important;
+
+        .button-add-audio {
+            height: auto !important;
+            color: white;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .button-add-video {
+            height: auto !important;
+            color: white;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .button-add-attachment {
+            height: auto !important;
+            color: white;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .button-add-audio,
+        .button-add-attachment {
+            i.fa {
+                padding-top: 20px;
+            }
+        }
+
+        .button-add-video {
+            i.fa {
+                font-size: 1.8em;
+                padding-top: 22px;
+            }
+        }
+    }
+
+    .thumbnails {
+        flex-wrap: wrap;
+        display: flex;
+        align-content: flex-start;
+        padding: 0 10px 5px;
+
+        .thumbnail {
+            width: 70px;
+            height: 70px;
+            vertical-align: central;
+            margin: 5px;
+            overflow: hidden;
+
+            img, video {
+                position: absolute;
+                width: 70px;
+                height: 70px;
+            }
+        }
+    }
+}

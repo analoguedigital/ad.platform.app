@@ -1,0 +1,33 @@
+﻿.account_screen {
+    .list.list-inset {
+        margin: 0;
+    }
+
+    .card {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .active_subscription_wrap {
+        .card {
+            margin-bottom: 15px;
+        }
+
+        .card:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .col {
+        margin-bottom: 0;
+    }
+
+    .button.button-full,
+    .button.button-block {
+        margin: 0;
+    }
+
+    progress {
+        margin: 0 auto !important;
+    }
+}

@@ -1,13 +1,13 @@
-﻿<ion-modal-view>
+﻿<ion-modal-view class="add_phone_number_screen">
     <ion-header-bar class="bar-stable bar-positive with-button">
         <h1 class="title" ng-if="!changePhoneNumberModel.phoneNumberAdded">Change Your Number</h1>
         <h1 class="title" ng-if="changePhoneNumberModel.phoneNumberAdded">Verify New Number</h1>
         <button class="button button-icon button-clear ion-ios-close-outline" ng-click="closeChangePhoneNumberModal()" style="margin-top: 0"></button>
     </ion-header-bar>
-    <ion-content class="content add-phonenumber-screen">
+    <ion-content class="content">
         <div class="row responsive-lg">
             <div class="col">
-                <div class="change-pass-errors">
+                <div class="change-pass-errors" ng-if="errors && errors.length">
                     <p ng-repeat="err in errors track by $index">{{err}}</p>
                 </div>
     
@@ -19,16 +19,15 @@
                                 <input name="phoneNumber" ng-model="changePhoneNumberModel.phoneNumber" placeholder="e.g. +44xxx-xxx-xxxx without dashes" type="text" required autocomplete="off" ng-disabled="changePhoneNumberWorking">
                             </span>
                         </label>
-                        <div class="">
-                            <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="changePhoneNumber()" ng-disabled="changePhoneNumberWorking">
-                                <span ng-if="!changePhoneNumberWorking">
-                                    <i class="icon ion-edit"></i> Change phone number
-                                </span>
-                                <span ng-if="changePhoneNumberWorking">
-                                    <i class="fa fa-spinner fa-pulse fa-fw"></i> Changing your phone number
-                                </span>
-                            </button>
-                        </div>
+                        <button class="button button-block button-royal" type="submit" ng-click="changePhoneNumber()"
+                                ng-disabled="changePhoneNumberWorking || changePhoneForm.$invalid">
+                            <span ng-if="!changePhoneNumberWorking">
+                                <i class="icon ion-edit"></i> Change phone number
+                            </span>
+                            <span ng-if="changePhoneNumberWorking">
+                                <i class="fa fa-spinner fa-pulse fa-fw"></i> Changing your phone number
+                            </span>
+                        </button>
                     </div>
                 </form>
     
@@ -41,7 +40,9 @@
                             </span>
                         </label>
                         <div class="">
-                            <button class="no-margin-top item button button-full button-energized" type="submit" ng-click="verifyChangedNumber()" ng-disabled="verifyChangePhoneWorking">
+                            <button class="button button-block button-royal" type="submit"
+                                    ng-click="verifyChangedNumber()"
+                                    ng-disabled="verifyChangePhoneWorking || verifyChangePhoneForm.$invalid">
                                 <span ng-if="!verifyChangePhoneWorking">
                                     <i class="icon ion-edit"></i> Verify phone number
                                 </span>

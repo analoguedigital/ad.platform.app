@@ -1,5 +1,5 @@
-﻿<ion-view view-title="Home" class="login" cache-view="false">
-    <ion-content class="content has-footer padding" ng-cloak>
+﻿<ion-view view-title="Home" class="login_screen" cache-view="false">
+    <ion-content class="content has-footer padding">
         <div class="padding-horizontal">
             <div class="text-center">
                 <div class="inline text-center login-header">
@@ -8,8 +8,8 @@
             </div>
         </div>
         <div class="row responsive-lg">
-            <div class="col col-50 col-offset-25">
-                <form name="registerForm" novalidate="novalidate" ng-show="!isQuickLoginActive" class="col col-50 col-offset-25" style="margin-bottom: 0">
+            <div class="col col-50 col-offset-25" style="margin-bottom: 0">
+                <form name="loginForm" novalidate="novalidate" ng-show="!isQuickLoginActive" class="col col-50 col-offset-25" style="margin-bottom: 0">
                     <div class="list list-inset" style="margin-top: 10px; margin-bottom: 0">
                         <label class="item item-icon-left" ng-disabled="loginWorking">
                             <i class="icon ion-ios-person-outline"></i>
@@ -25,7 +25,7 @@
                             </span>
                         </label>
                         <div class="">
-                            <button class="no-margin-top item button button-full button-energized " type="submit" ng-click="login()" ng-disabled="loginWorking">
+                            <button class="button button-block button-royal login-button" type="submit" ng-click="login()" ng-disabled="loginWorking">
                                 <span ng-if="!loginWorking">
                                     <i class="icon ion-log-in"></i> Sign in
                                 </span>
@@ -43,18 +43,18 @@
         </div>
         <div class="row responsive-lg">
             <div class="col">
-                <div class="bar bar-positive">
+                <div class="bar bar-light">
                     <div class="title">
-                        <a class="button button-clear" ui-sref="forgotPassword" nav-transition="none">Forgot password?</a>
+                        <a class="button button-clear button-italic" ui-sref="forgotPassword">Forgot password?</a>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row responsive-lg">
             <div class="col">
-                <div class="bar bar-positive">
+                <div class="bar bar-light">
                     <div class="title">
-                        <a class="button button-clear" ui-sref="confirmEmail" nav-transition="none">Resend email confirmation</a>
+                        <a class="button button-clear button-italic" ui-sref="confirmEmail">Resend email confirmation</a>
                     </div>
                 </div>
             </div>
@@ -62,15 +62,15 @@
         <div class="row responsive-lg">
             <div class="col">
                 <br><br>
-                <p class="light" style="text-align: center">For quick login next time, set a PIN code or enable fingerprint access in the 'Settings' screen</p>
+                <p class="positive" style="text-align: center">For quick login next time, set a PIN code or enable fingerprint access in the 'Settings' screen</p>
             </div>
         </div>
     </ion-content>
 
-    <div class="bar bar-footer bar-positive">
+    <div class="bar bar-footer bar-light">
         <div class="title">
-            <button class="button button-clear" ui-sref="register" nav-transition="none">Create Account</button>
+            <button class="button button-clear button-bold" ui-sref="register">Create Account</button>
         </div>
-        <div class="login-footer"></div>
+        <!--<div class="login-footer"></div>-->
     </div>
 </ion-view>

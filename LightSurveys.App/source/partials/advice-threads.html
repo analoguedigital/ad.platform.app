@@ -1,28 +1,28 @@
-<ion-view title="Advice threads" id="adviceThreadsPage" class="advice-threads" cache-view="false">
+<ion-view title="Advice threads" id="adviceThreadsPage" class="advice_threads_screen" cache-view="false">
     <ion-content has-bouncing="true" padding="true" class="has-header">
         <ion-refresher pulling-text="Pull down to refresh and sync" on-refresh="doRefresh()"></ion-refresher>
         
         <div class="row responsive-lg">
             <div class="col">
                 <ion-list ng-if="adviceThreads.length">
-                    <ion-item class="item-dark form-item" data-ng-repeat="thread in adviceThreads">
-                        <div class="light">
+                    <ion-item class="item-light form-item" data-ng-repeat="thread in adviceThreads">
+                        <div class="thread_title">
                             <span class="color-block" ng-style="{'background-color': thread.colour}"></span> {{thread.title}}
                         </div>
-                        <div class="small desc">
+                        <div class="small desc" style="white-space: nowrap">
                             {{thread.description}}
                         </div>
                         <br />
         
                         <div>
-                            <a class="button button-dark" ng-click="goDrafts(thread)">
+                            <a class="button button-stable button-compact" ng-click="goDrafts(thread)">
                                 <i class="icon ion-ios-paper-outline" style="vertical-align: middle"></i> 
-                                <span translate>{{thread.draftsNumber}} record{{thread.draftsNumber > 1 ? "s" : ""}}</span>
+                                <span translate style="vertical-align: middle">{{thread.draftsNumber}} record{{thread.draftsNumber > 1 ? "s" : ""}}</span>
                             </a>
         
-                            <a class="button button-dark right-side" ng-click="startSurvey(thread)">
-                                <span translate style="padding-right: 5px">Start</span>
-                                <i class="icon ion-ios-arrow-forward" style="vertical-align: middle"></i>
+                            <a class="button button-royal button-compact right-side" ng-click="startSurvey(thread)">
+                                <span translate style="vertical-align: middle; padding-right: 5px">New record</span>
+                                <i class="icon ion-plus" style="vertical-align: middle"></i>
                             </a>
                         </div>
                     </ion-item>
