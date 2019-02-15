@@ -28,7 +28,7 @@
     <div class="thumbnails" ng-if="hasAudios">
         <div class="thumbnail" ng-repeat="attachment in formValue.attachments | filter:{mediaType: 'audio'}" ng-click="showImages($index)">
             <div class="thumbnail-placeholder" cover-image="images/70x70.png">
-                <div class="audio-thumbnail">
+                <div class="audio-thumbnail" style="width: 100%; height: 100%; padding-top: 20px">
                     <i class="icon ion-play"></i>
                 </div>
             </div>

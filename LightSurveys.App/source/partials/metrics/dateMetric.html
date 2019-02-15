@@ -6,7 +6,7 @@
     <div class="item item-input" ng-if="isPersian">
         <div class="persianCalendar" persiandatepicker="formValue.dateValue"></div>
     </div>
-    <label class="item item-input" style="padding-top: 5px !important; padding-bottom: 5px !important" ng-if="!isPersian">
+    <label class="item item-input" style="padding-top: 15px !important;" ng-if="!isPersian">
         <input type="date" name="{{::metric.inputName}}" ng-required="metric.mandatory" ng-model="formValue.dateValue" ng-if="!metric.hasTimeValue" style="padding: 0">
         <input type="datetime-local" name="{{::metric.inputName}}" ng-required="metric.mandatory" ng-model="formValue.dateValue" ng-if="metric.hasTimeValue" style="padding: 0">
     </label>

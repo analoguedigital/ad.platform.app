@@ -1,5 +1,5 @@
 <ion-view title="Thread Details" id="FormTemplate" cache-view="false" class="clone_template_screen">
-    <ion-content class="content padding" has-bouncing="false" ng-cloak>
+    <ion-content class="content padding">
         <div class="row responsive-lg">
             <div class="col">
                 <form name="cloneForm" novalidate="novalidate">
@@ -12,7 +12,7 @@
                         </label>
                         <label class="item item-input">
                             <span class="input-label">Colour</span>
-                            <button class="button button-block button-compact" style="margin-top: 10px; margin-bottom: 10px;" header-footer-class="bar-positive" color-picker="" model-mode="" color-mode="name" ng-model="vm.colour" modal-title="Choose a colour" color-box="{{vm.colour}}">
+                            <button class="button button-compact" style="margin: 10px 0 10px !important; width: 200px" header-footer-class="bar-positive" color-picker="" model-mode="" color-mode="name" ng-model="vm.colour" modal-title="Choose a colour" color-box="{{vm.colour}}">
                                 {{vm.colour || &apos;Choose a colour&apos; }}
                             </button>
                         </label>

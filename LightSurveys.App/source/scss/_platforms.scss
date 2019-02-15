@@ -11,11 +11,15 @@
     .bar-subheader,
     .has-subheader,
     .has-header {
-        /*margin-top: -20px !important;*/
+        margin-top: -20px !important;
     }
 
     .scroll-content .has-header {
         top: 60px !important;
+    }
+
+    .button-compact {
+        padding-top: 2px !important;
     }
 }
 
