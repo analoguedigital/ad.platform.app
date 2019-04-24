@@ -70,7 +70,13 @@
                             surveyService.getDraftsNumber(formTemplate.id)
                                 .then(function (count) {
                                     formTemplate.draftsNumber = count;
-                                    deferred.resolve();
+
+                                    surveyService.getAdviceResponseCount(formTemplate.id)
+                                        .then(function (count) {
+                                            formTemplate.responseCount = count;
+
+                                            deferred.resolve();
+                                        });
                                 }, function (err) {
                                     deferred.reject();
                                 });

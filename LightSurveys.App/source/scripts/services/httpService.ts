@@ -41,6 +41,9 @@ module App.Services {
         getOrganizations(): ng.IPromise<any>;
         requestOrgConnection(organisationId: string): ng.IPromise<any>;
         requestOrganization(model: Models.IOrgRequestModel): ng.IPromise<any>;
+        unlinkFromOrganization(orgId: string, userId: string): ng.IPromise<void>;
+
+        markAdviceResponseAsRead(surveyId: string): ng.IPromise<void>;
 
         getSharedProjects(): ng.IPromise<Models.Project[]>;
         getSharedThreads(projectId: string): ng.IPromise<Models.FormTemplate[]>;
@@ -534,6 +537,26 @@ module App.Services {
             var deferred = this.$q.defer<Models.Survey[]>();
 
             this.$http.get(HttpService.serviceBase + 'api/surveys/?discriminator=' + discriminator + '&projectId=' + projectId)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        unlinkFromOrganization(orgId: string, userId: string): ng.IPromise<any> {
+            var deferred = this.$q.defer<void>();
+
+            this.$http.delete(HttpService.serviceBase + 'api/organisations/' + orgId + '/revoke/' + userId, null)
+                .success((data: any) => { deferred.resolve(data); })
+                .error((data, status) => { deferred.reject(this.onError(data, status)); });
+
+            return deferred.promise;
+        }
+
+        markAdviceResponseAsRead(surveyId: string): ng.IPromise<void> {
+            var deferred = this.$q.defer<void>();
+
+            this.$http.post(HttpService.serviceBase + 'api/surveys/' + surveyId + '/mark-as-read', null)
                 .success((data: any) => { deferred.resolve(data); })
                 .error((data, status) => { deferred.reject(this.onError(data, status)); });
 

@@ -3,9 +3,9 @@
         <ion-refresher pulling-text="Pull down to refresh organizations" on-refresh="doRefresh()"></ion-refresher>
 
         <div class="row responsive-lg">
-            <div class="col" style="margin-bottom: 0" ng-if="!requestSent">
+            <!--<div class="col" style="margin-bottom: 0" ng-if="!requestSent">
                 <p class="lead">If you need help, go to our <strong>Need Help?</strong> tab in the menu. Otherwise select the organization you wish to connect to, and confirm the action. We will review your request as soon as possible and get back to you.</p>
-            </div>
+            </div>-->
             <div class="col">
                 <div ng-if="!requestSent">
                     <div class="list">
@@ -32,6 +32,22 @@
 
                     <div ng-if="feedbackSent">
                         <p class="lead"><i class="icon ion-checkmark"></i> Your request has been sent. We'll review your information and get back to you if need be.</p>
+                    </div>
+
+                    <!-- active organization subscription, and unlink button -->
+                    <div ng-if="activeSubscription.type === 1">
+                        <div class="card" style="margin: 15px 0">
+                            <div class="item item-divider">Current Organization</div>
+                            <div class="item item-text-wrap">
+                                <p>Starting from <strong>{{activeSubscription.startDate | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}}</strong></p>
+                                <p>{{activeSubscription.note}}</p>
+                            </div>
+                        </div>
+
+                        <p class="lead">If you wish to unlink from your organization <b>{{activeSubscription.organisation.name}}</b>, tap the button below.</p>
+                        <button class="button button-assertive button-block" ng-click="unlinkFromOrganization()">
+                            <i class="icon ion-arrow-swap" style="vertical-align: middle"></i> <span style="vertical-align: middle"></span> Unlink from organization
+                        </button>
                     </div>
                 </div>
 

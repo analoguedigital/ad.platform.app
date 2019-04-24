@@ -45,6 +45,7 @@
                 <ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="adviceThreads" menu-close="">
                     <i class="icon ion-chatbubbles"></i>
                     <span translate> Advice Threads</span>
+                    <span class="badge badge-positive" ng-if="notifications.adviceRecords">{{notifications.adviceRecords}}</span>
                 </ion-item>
                 <!--<ion-item ng-disabled="uploading" class="item item-positive item-icon-{{::getLeft()}}" ui-sref="sharedThreads" menu-close="">
                     <i class="icon ion-usb"></i>

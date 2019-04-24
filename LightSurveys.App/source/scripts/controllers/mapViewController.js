@@ -1,8 +1,8 @@
 ﻿(function () {
     'use strict';
     angular.module('lm.surveys').controller('mapViewController', ['$scope', '$q', 'surveyService', 'localStorageService',
-        '$ionicModal', '$timeout', '$ionicLoading', '$compile', '$window', 'uiGmapGoogleMapApi',
-        function ($scope, $q, surveyService, localStorageService, $ionicModal, $timeout, $ionicLoading, $compile, $window, uiGmapGoogleMapApi) {
+        '$ionicModal', '$timeout', '$compile', '$window',
+        function ($scope, $q, surveyService, localStorageService, $ionicModal, $timeout, $compile, $window) {
             $scope.threads = [];
             $scope.surveys = [];
             $scope.locations = [];
@@ -271,6 +271,9 @@
             }
 
             $scope.applyFilter = function () {
+                var selectedThreads = _.map(_.filter($scope.threads, function (t) { return t.isSelected == true; }), function (item) { return item.id; });
+                localStorageService.set('mapview_selected_threads', selectedThreads);
+
                 $scope.reloadMap(true);
                 $scope.closeFilterDialog();
             }
@@ -280,7 +283,10 @@
                     thread.isSelected = true;
                 });
 
-                $scope.reloadMap();
+                var selectedThreads = _.map($scope.threads, function (t) { return t.id; });
+                localStorageService.set('mapview_selected_threads', selectedThreads);
+
+                $scope.reloadMap(true);
                 $scope.closeFilterDialog();
             }
 
@@ -296,10 +302,20 @@
                     var threads = res[0];
                     var surveys = res[1];
 
-                    _.forEach(threads, function (t) { t.isSelected = true; });
-
                     $scope.threads = threads;
                     $scope.surveys = surveys;
+
+                    var selectedThreads = localStorageService.get('mapview_selected_threads');
+                    if (selectedThreads !== null) {
+                        _.forEach(selectedThreads, function (item) {
+                            var thread = _.filter($scope.threads, function (t) { return t.id === item; });
+                            if (thread.length) {
+                                thread[0].isSelected = true;
+                            }
+                        });
+                    } else {
+                        _.forEach(threads, function (t) { t.isSelected = true; });
+                    }
 
                     $scope.reloadMap();
                 });

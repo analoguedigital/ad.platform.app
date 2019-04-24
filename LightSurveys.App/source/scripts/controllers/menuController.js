@@ -9,8 +9,14 @@
             $scope.numberOfAvailableProjects = 0;
             $scope.profile = {};
 
+            $scope.notifications = {
+                adviceRecords: undefined,
+                connectionRequests: undefined
+            };
+
             $rootScope.$on("update-menu-profile", function (event, args) {
                 $scope.profile = args.profile;
+                $scope.notifications = args.notifications;
             });
 
             $scope.initialize = function () {
@@ -40,7 +46,6 @@
                     .then(function () {
                         _loadList();
                     }, function (err) {
-                        // alertService.show(err);
                         console.error('could not refresh data', err);
                         toastr.error(err);
                     }).finally(function () {
@@ -145,8 +150,6 @@
                         $scope.signOutConfirmPopup.then(function (res) {
                             if (res) {
                                 $scope.signOut();
-                            } else {
-                                confirmPopup.close();
                             }
                         });
                     } else {

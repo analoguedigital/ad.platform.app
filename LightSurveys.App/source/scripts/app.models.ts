@@ -48,6 +48,7 @@ module App.Models {
         public description: string;
 
         public isSubmitted: boolean;
+        public isRead?: boolean;
 
         constructor(filledById: string, projectId: string, formTemplateId: string) {
 

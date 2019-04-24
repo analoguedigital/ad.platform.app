@@ -1,9 +1,10 @@
 (function () {
     'use strict';
-    angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$scope', '$ionicHistory', '$stateParams', '$state', 'userService',
-        'surveyService', 'gettext', '$timeout', 'httpService', '$ionicPopup', 'toastr', '$ionicLoading', 'locationService', 
+    angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$scope', '$ionicHistory', '$stateParams',
+        '$state', 'userService', 'surveyService', 'gettext', '$timeout', 'httpService', '$ionicPopup', 'toastr',
+        '$ionicLoading', 'locationService', 'localStorageService', 
         function ($rootScope, $scope, $ionicHistory, $stateParams, $state, userService, surveyService,
-            gettext, $timeout, httpService, $ionicPopup, toastr, $ionicLoading, locationService) {
+            gettext, $timeout, httpService, $ionicPopup, toastr, $ionicLoading, locationService, localStorageService) {
 
             $scope.surveyId = $stateParams.id;
             $scope.surveyIndex = $stateParams.index;
@@ -521,6 +522,35 @@
                 });
             }
 
+            $scope.checkForAdviceResponse = function () {
+                if ($scope.formTemplate.discriminator === 1 && $scope.survey.isSubmitted === true && $scope.survey.isRead === false) {
+                    if ($scope.survey.projectId === userService.current.project.id && userService.current.project.createdBy.id === userService.current.userId) {
+                        httpService.markAdviceResponseAsRead($scope.survey.id)
+                            .then(function (res) {
+                                $scope.survey.isRead = true;
+                                var lsKey = 'survey/' + $scope.survey.id;
+                                localStorageService.set(lsKey, $scope.survey);
+
+                                userService.getExistingProfiles().then(function (profiles) {
+                                    var profile = profiles[0];
+                                    if (profile.userInfo.notifications && profile.userInfo.notifications.adviceRecords !== null && profile.userInfo.notifications.adviceRecords > 0) {
+                                        profile.userInfo.notifications.adviceRecords -= 1;
+                                        userService.saveProfile(profile).then(function () {
+                                            // profile updated
+                                            $rootScope.$broadcast('update-menu-profile', {
+                                                profile: profile.userInfo.profile,
+                                                notifications: profile.userInfo.notifications
+                                            });
+                                        });
+                                    }
+                                });
+                            }, function (err) {
+                                console.error(err);
+                            });
+                    }
+                }
+            }
+
             $scope.activate = function () {
                 $ionicLoading.show({
                     template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Loading...'
@@ -584,6 +614,8 @@
 
                         $scope.locations = positions;
                         $scope.goToPageIndex(0);
+
+                        $scope.checkForAdviceResponse();
                     }, function (err) {
                         toastr.error('Error in loading data, sorry');
                     }).finally(function () {

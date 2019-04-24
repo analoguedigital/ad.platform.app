@@ -1,7 +1,8 @@
 (function () {
     'use strict';
-    angular.module('lm.surveys').controller('organizationsController', ['$scope', 'httpService', 'toastr', '$ionicModal', '$ionicLoading', 'localStorageService',
-        function ($scope, httpService, toastr, $ionicModal, $ionicLoading, localStorageService) {
+    angular.module('lm.surveys').controller('organizationsController', ['$scope', 'httpService', 'toastr', '$ionicModal',
+        '$ionicLoading', 'localStorageService', 'userService', '$ionicPopup',
+        function ($scope, httpService, toastr, $ionicModal, $ionicLoading, localStorageService, userService, $ionicPopup) {
             $scope.organizationsDialog = {};
             $scope.orgRequestModal = {};
 
@@ -26,8 +27,6 @@
                 telNumber: '',
                 postcode: ''
             };
-
-            $scope.needsToConfirmTerms = true;
 
             $scope.openOrganizationsDialog = function () {
                 $scope.organizationsDialog.show();
@@ -56,33 +55,27 @@
 
             $scope.selectOrganization = function (organization) {
                 $scope.selectedOrganization = organization;
-
-                // IWGB Foster Carers Union
-                $scope.needsToConfirmTerms = organization.id == '698dcc30-49fe-46ca-9654-df9806b09500';
-
                 $scope.openOrganizationsDialog();
             };
 
             $scope.requestToJoin = function () {
-                if ($scope.needsToConfirmTerms && !$scope.model.termsAgreed) {
+                if ($scope.selectedOrganization.requiresAgreement && !$scope.model.termsAgreed) {
                     toastr.error('Please confirm organization terms first');
                     return false;
                 }
-
-                var orgId = $scope.selectedOrganization.id;
 
                 $ionicLoading.show({
                     template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Sending request...'
                 });
 
+                var orgId = $scope.selectedOrganization.id;
                 httpService.requestOrgConnection(orgId)
                     .then(function (res) {
                         $scope.requestSent = true;
                         toastr.success('Connection request sent successfully');
                         $scope.closeOrganizationsDialog();
                     }, function (err) {
-                        console.error('could not send organization connection', err);
-
+                        console.error(err);
                         if (err.message)
                             toastr.error(err.message);
                     }).finally(function () {
@@ -182,6 +175,42 @@
                 }
             }
 
+            $scope.unlinkFromOrganization = function () {
+                var confirmPopup = $ionicPopup.confirm({
+                    title: 'Unlink from organization',
+                    template: 'Are you sure you want to unlink yourself from your organization?',
+                    buttons: [{
+                        text: 'Yes, proceed',
+                        type: 'button-assertive',
+                        onTap: function (e) {
+                            return true;
+                        }
+                    },
+                    {
+                        text: 'Cancel',
+                        type: 'button-stable'
+                    }
+                    ]
+                });
+
+                confirmPopup.then(function (res) {
+                    if (res) {
+                        var userId = userService.current.userId;
+                        var orgId = userService.current.project.organisation.id;
+
+                        $ionicLoading.show({
+                            template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Processing...'
+                        });
+
+                        httpService.unlinkFromOrganization(orgId, userId).then(function (data) {
+                            console.log(data);
+                        }).finally(function () {
+                            $ionicLoading.hide();
+                        });
+                    }
+                });
+            }
+
             $scope.activate = function () {
                 $ionicModal.fromTemplateUrl('partials/organizations-modal.html', {
                     scope: $scope,
@@ -195,6 +224,12 @@
                     animation: 'slide-in-up'
                 }).then(function (modal) {
                     $scope.orgRequestModal = modal;
+                });
+
+                userService.getExistingProfiles().then(function (profiles) {
+                    var userProfile = profiles[0];
+                    var activeSubscription = userProfile.userInfo.profile.lastSubscription;
+                    $scope.activeSubscription = activeSubscription;
                 });
 
                 $scope.loadOrganizations();

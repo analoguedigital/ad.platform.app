@@ -1,0 +1,35 @@
+﻿<ion-modal-view class="timeline_date_modal_screen">
+    <ion-header-bar class="bar-stable bar-positive with-button">
+        <h1 class="title">Change calendar date</h1>
+        <button class="button button-icon button-clear ion-ios-close-outline" ng-click="closeChangeDateDialog()" style="margin-top: 0"></button>
+    </ion-header-bar>
+    <ion-content class="content padding">
+        <div class="row responsive-lg">
+            <div class="col">
+                <ion-list>
+                    <label class="item item-input item-select">
+                        <span class="input-label">
+                            Month
+                        </span>
+                        <select ng-model="dateModel.month" ng-options="month for month in monthNames" required></select>
+                    </label>
+
+                    <label class="item item-input item-select">
+                        <span class="input-label">
+                            Year
+                        </span>
+                        <select ng-model="dateModel.year" ng-options="year for year in years" required></select>
+                    </label>
+                </ion-list>
+            </div>
+        </div>
+        <div class="row responsive-lg">
+            <div class="col">
+                <div class="button-bar">
+                    <button class="button button-positive button-compact" ng-click="changeCalendarDate()">Apply</button>
+                    <button class="button button-stable button-compact" ng-click="resetCalendarDate()">Reset</button>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>

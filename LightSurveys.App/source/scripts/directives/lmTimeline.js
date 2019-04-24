@@ -590,5 +590,9 @@
                 buildTimeline();
             }, 100);
         });
+
+        $rootScope.$on('timeline-change-date', function (evt, args) {
+            scope.currentDate = args;
+        });
     }
 }]);
