@@ -12,18 +12,21 @@
                         <div class="small desc" style="white-space: nowrap">
                             {{thread.description}}
                         </div>
-                        <br />
-        
+
                         <div>
                             <a class="button button-stable button-compact" ng-click="goDrafts(thread)">
-                                <i class="icon ion-ios-paper-outline" style="vertical-align: middle"></i> 
+                                <i class="icon ion-ios-paper-outline" style="vertical-align: middle"></i>
                                 <span translate style="vertical-align: middle">{{thread.draftsNumber}} record{{thread.draftsNumber > 1 ? "s" : ""}}</span>
                             </a>
-        
+
                             <a class="button button-royal button-compact right-side" ng-click="startSurvey(thread)">
                                 <span translate style="vertical-align: middle; padding-right: 5px">New record</span>
                                 <i class="icon ion-plus" style="vertical-align: middle"></i>
                             </a>
+                        </div>
+
+                        <div ng-if="thread.responseCount > 0" style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 4px; margin-top: 15px">
+                            <i class="icon ion-radio-waves"> {{thread.responseCount}} unread</span></i>
                         </div>
                     </ion-item>
                 </ion-list>

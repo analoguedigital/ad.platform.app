@@ -54,6 +54,13 @@ module App.Services {
         PROJECT_KEY = 'project/';
         ORGANIZATION_KEY = 'organization/';
 
+        TIMELINE_CURRENT_DATE_KEY = 'timeline_current_date';
+        CALENDAR_CURRENT_DATE_KEY = 'calendar_current_date';
+
+        MAP_CENTER_KEY = 'map_center';
+        MAP_ZOOM_LEVEL_KEY = 'map_zoom_level';
+        MAP_SELECTED_THREADS_KEY = 'mapview_selected_threads';
+
         CAPTURE_IN_PROGRESS_KEY = 'capture-in-progress';
         WELLDONE_POPUP_KEY = 'WELL_DONE_POPUP_SHOWN';
         APP_BOOTSTRAPPED_KEY = 'APP_BOOTSTRAPPED';
@@ -85,7 +92,15 @@ module App.Services {
             this.localStorageService.clearAll(/(adviceThread)\//i);
             this.localStorageService.clearAll(/(survey)\//i);
             this.localStorageService.clearAll(/(organization)\//i);
+
             this.localStorageService.clearAll(/(scrollPosition)\//i);
+            this.localStorageService.remove('scrollPosition/home');
+
+            this.localStorageService.remove(this.TIMELINE_CURRENT_DATE_KEY);
+            this.localStorageService.remove(this.CALENDAR_CURRENT_DATE_KEY);
+            this.localStorageService.remove(this.MAP_CENTER_KEY);
+            this.localStorageService.remove(this.MAP_ZOOM_LEVEL_KEY);
+            this.localStorageService.remove(this.MAP_SELECTED_THREADS_KEY);
 
             this.localStorageService.remove(this.CAPTURE_IN_PROGRESS_KEY);
             this.localStorageService.remove(this.WELLDONE_POPUP_KEY);
@@ -795,6 +810,22 @@ module App.Services {
             this.getAllSavedSurveys(formTemplateId)
                 .then((surveys: Array<Models.Survey>) => {
                     let count = _.filter(surveys, { 'projectId': this.userService.current.project.id }).length;
+                    q.resolve(count);
+                }, (err) => {
+                    q.reject(err);
+                });
+
+            return q.promise;
+        }
+
+        getAdviceResponseCount(formTemplateId: string): ng.IPromise<number> {
+            let q = this.$q.defer<number>();
+
+            this.getAllSavedSurveys(formTemplateId)
+                .then((surveys: Array<Models.Survey>) => {
+                    let userRecords = _.filter(surveys, { 'projectId': this.userService.current.project.id });
+                    let count = _.filter(userRecords, (r) => { return r.isRead === false; }).length;
+
                     q.resolve(count);
                 }, (err) => {
                     q.reject(err);

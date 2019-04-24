@@ -1,4 +1,9 @@
 ﻿<ion-view title="Timeline" id="timelinePage" cache-view="false">
+    <ion-nav-buttons side="right">
+        <button class="button button-positive" ng-click="openChangeDateDialog()">
+            <i class="icon ion-calendar"></i>
+        </button>
+    </ion-nav-buttons>
     <ion-header-bar align-title="center" class="bar bar-subheader bar-positive timeline" ng-style="TimelineHeaderBarStyle">
         <button class="button button-clear icon-left ion-ios-arrow-left" ng-click="previousMonth()">
             {{months[(today.getMonth()+11)%12]}}

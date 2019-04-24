@@ -1,15 +1,23 @@
 (function () {
     'use strict';
-    angular.module('lm.surveys').controller('calendarController', ['$scope', '$state', 'surveyService', '$q', '$timeout', '$ionicNavBarDelegate', '$ionicLoading',
-        function ($scope, $state, surveyService, $q, $timeout, $ionicNavBarDelegate, $ionicLoading) {
+    angular.module('lm.surveys').controller('calendarController', ['$scope', '$state', 'surveyService',
+        '$q', '$timeout', '$ionicNavBarDelegate', '$ionicLoading', 'localStorageService', '$ionicModal', 
+        function ($scope, $state, surveyService, $q, $timeout, $ionicNavBarDelegate, $ionicLoading, localStorageService, $ionicModal) {
             $scope.formTemplates = [];
             $scope.surveys = [];
 
             $scope.cal = {};
             $scope.cal.calendarView = 'month';
-            $scope.cal.viewDate = new Date();
 
             $scope.months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+            $scope.monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            $scope.years = [];
+            $scope.dateModel = {
+                month: undefined,
+                year: undefined
+            };
+
             $scope.cal.events = [];
             $scope.orientation = '';
             $scope.CalendarHeaderBarStyle = {};
@@ -72,7 +80,6 @@
                     $scope.CalendarContentStyle = {};
                 }
             };
-
 
             $scope.$on('$ionicView.loaded', function () {
                 window.onresize = function () {
@@ -138,7 +145,82 @@
                     });
             };
 
+            $scope.$watch('cal.viewDate', function (newVal, oldVal) {
+                var newDate = moment(newVal).toDate();
+
+                $scope.dateModel = {
+                    month: $scope.monthNames[newDate.getMonth()],
+                    year: newDate.getFullYear()
+                };
+
+                localStorageService.set('calendar_current_date', newDate);
+            });
+
+            $scope.openChangeDateDialog = function () {
+                $scope.changeDateModal.show();
+            }
+
+            $scope.closeChangeDateDialog = function () {
+                $scope.changeDateModal.hide();
+            }
+
+            $scope.changeCalendarDate = function () {
+                var monthIndex = $scope.monthNames.indexOf($scope.dateModel.month);
+                var year = $scope.dateModel.year;
+
+                $scope.cal.viewDate = moment(new Date(year, monthIndex, 1)).toDate();
+
+                localStorageService.set('calendar_current_date', $scope.cal.viewDate);
+                $scope.closeChangeDateDialog();
+            }
+
+            $scope.resetCalendarDate = function () {
+                var today = new Date();
+                $scope.cal.viewDate = today;
+
+                $scope.dateModel = {
+                    month: $scope.monthNames[today.getMonth()],
+                    year: today.getFullYear()
+                };
+
+                localStorageService.set('calendar_current_date', $scope.cal.viewDate);
+                $scope.closeChangeDateDialog();
+            }
+
             $scope.activate = function () {
+                $ionicModal.fromTemplateUrl('partials/calendar-date-modal.html', {
+                    scope: $scope,
+                    animation: 'slide-in-up'
+                }).then(function (modal) {
+                    $scope.changeDateModal = modal;
+                });
+
+                // populate the years select
+                var currentYear = new Date().getFullYear();
+                for (var i = currentYear - 10; i < currentYear; i++) {
+                    $scope.years.push(i);
+                }
+
+                $scope.years.push(currentYear);
+
+                for (var i = currentYear + 1; i < currentYear + 11; i++) {
+                    $scope.years.push(i);
+                }
+
+                // get current date from local storage
+                var currentDate = localStorageService.get('calendar_current_date');
+                if (currentDate !== null)
+                    $scope.cal.viewDate = moment(currentDate).toDate();
+                else
+                    $scope.cal.viewDate = new Date();
+
+                $scope.dateModel = {
+                    month: $scope.monthNames[$scope.cal.viewDate.getMonth()],
+                    year: $scope.cal.viewDate.getFullYear()
+                };
+
+                localStorageService.set('calendar_current_date', $scope.cal.viewDate);
+
                 $scope.loadData();
 
                 $timeout(function () {

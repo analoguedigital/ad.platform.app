@@ -1,4 +1,9 @@
 ﻿<ion-view title="Calendar" id="calendarPage" cache-view="false" class="calendar_screen">
+    <ion-nav-buttons side="right">
+        <button class="button button-positive" ng-click="openChangeDateDialog()">
+            <i class="icon ion-calendar"></i>
+        </button>
+    </ion-nav-buttons>
     <ion-header-bar align-title="{{getLeft()}}" class="bar bar-subheader bar-positive calendar" ng-style="CalendarHeaderBarStyle">
         <button ng-if="cal.calendarView==='day'" class="button button-icon button-clear ion-ios-calendar-outline" ng-click="backToMonthView()"></button>
         <h2 ng-if="cal.calendarView==='day'" class="title">{{cal.viewDate | date:'fullDate'}}</h2>

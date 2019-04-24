@@ -66,7 +66,8 @@
                             function (err) {
                                 $scope.loginWorking = false;
                                 $ionicLoading.hide();
-                                toastr.error(err);
+                                if (err && err.length)
+                                    toastr.error(err);
                             });
                 }
             };

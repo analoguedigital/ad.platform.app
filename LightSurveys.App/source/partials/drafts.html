@@ -12,6 +12,9 @@
     <ion-content class="content has-subheader" ng-cloak delegate-handle="drafts-handle">
         <div class="card" ng-repeat="draft in drafts | orderBy:'dateUpdated':true" ng-class="{ 'draft': !draft.isSubmitted }" style="margin-top: 15px; margin-bottom: 15px">
             <div class="item item-divider" ng-class="{ 'item-royal': draft.filledById !== currentUserId }">
+                <span ng-if="draft.isRead === false">
+                    <i class="icon ion-ribbon-b"></i>
+                </span>
                 <span am-time-ago="draft.dateCreated"></span>
                 <small>({{draft.dateCreated | amUtc | amLocal | amDateFormat:'MMM DD YYYY'}})</small>
                 <span class="right-side">
@@ -65,7 +68,7 @@
                         <i class="icon ion-edit"></i>
                         <span translate>Edit Draft</span>
                     </a>
-
+                    
                     <a class="right-side" ng-click="viewSurvey(draft, $index)" ng-show="draft.isSubmitted">
                         <i class="icon ion-eye"></i>
                         <span translate>View</span>

@@ -288,7 +288,7 @@
                                         console.error('getUserSurveys ERROR', err);
                                         $ionicLoading.hide();
 
-                                        if (err.substr(0, 3) === '401')
+                                        if (err && err.length && err.substr(0, 3) === '401')
                                             toastr.error("Access Denied. You don't have permission to sync records.");
                                     }).finally(function () {
                                         $scope.$broadcast('scroll.refreshComplete');
@@ -403,7 +403,8 @@
                         $scope.userInfo = $scope.profile.userInfo;
 
                         $rootScope.$broadcast('update-menu-profile', {
-                            profile: $scope.userInfo.profile
+                            profile: $scope.userInfo.profile,
+                            notifications: $scope.userInfo.notifications
                         });
                     }
                 });

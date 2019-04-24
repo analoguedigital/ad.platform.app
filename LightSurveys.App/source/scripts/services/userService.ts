@@ -29,7 +29,13 @@ module App.Services {
         email: string;
         calendar: string;
         language: string;
+        notifications: IUserNotifications;
         profile: IProfileInfo;
+    }
+
+    interface IUserNotifications {
+        adviceRecords?: number;
+        connectionRequests?: number;
     }
 
     interface IProfile {
@@ -73,6 +79,7 @@ module App.Services {
         calendar: string;
         language: string;
         project: Models.Project;
+        notifications: IUserNotifications;
         profile: IProfileInfo;
     }
 
@@ -116,6 +123,7 @@ module App.Services {
             this.current.userEmail = profile.userInfo.email;
             this.current.project = profile.currentProject;
             this.current.profile = profile.userInfo.profile;
+            this.current.notifications = profile.userInfo.notifications;
         }
 
         clearCurrent() {
@@ -125,6 +133,7 @@ module App.Services {
             this.current.userId = '';
             this.current.userEmail = '';
             this.current.project = null;
+            this.current.notifications = null;
         }
 
 
