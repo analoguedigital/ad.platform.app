@@ -5,9 +5,10 @@
                 <h3>Account Security</h3>
 
                 <ul class="list">
+                    <!-- passcode login -->
                     <li class="item item-toggle">
                         <i class="icon ion-ios-keypad-outline"></i>
-                        <span class="item-toggle-label">Passcode Login</span>
+                        <span class="item-toggle-label">Passcode (PIN) Login</span>
                         <label class="toggle toggle-royal">
                             <input type="checkbox" ng-model="model.passcodeEnabled">
                             <span class="track">
@@ -15,6 +16,7 @@
                             </span>
                         </label>
                     </li>
+                    <!-- fingerprint login -->
                     <li class="item item-toggle">
                         <i class="icon ion-ios-barcode-outline"></i>
                         <span class="item-toggle-label">Fingerprint Login</span>
@@ -25,6 +27,18 @@
                             </span>
                         </label>
                     </li>
+                    <!-- auto lockout -->
+                    <li class="item item-toggle">
+                        <i class="icon ion-bonfire"></i>
+                        <span class="item-toggle-label">Turn on auto-lockout</span>
+                        <label class="toggle toggle-royal">
+                            <input type="checkbox" ng-model="model.autoLockoutEnabled">
+                            <span class="track">
+                                <span class="handle"></span>
+                            </span>
+                        </label>
+                    </li>
+                    <!-- do not store on this device -->
                     <li class="item item-toggle">
                         <i class="icon ion-eye-disabled"></i>
                         <span class="item-toggle-label">Don't store on this device</span>
@@ -35,6 +49,7 @@
                             </span>
                         </label>
                     </li>
+                    <!-- ask before logout -->
                     <li class="item item-toggle">
                         <i class="icon ion-checkmark-circled"></i>
                         <span class="item-toggle-label">Ask before signing out</span>
@@ -47,19 +62,21 @@
                     </li>
                 </ul>
 
+                <!-- delete all records from device -->
                 <button class="button button-assertive button-block icon ion-trash-b" ng-click="deleteAllData()">
                     Delete all records on this device
                 </button>
-
                 <p class="lead">Don't worry, all records you upload will be saved on our secure server.</p>
 
                 <div class="list">
+                    <!-- add phone number -->
                     <div class="item item-button-right" ng-if="!userInfo.phoneNumber.length">
                         <span>Add your phone number</span>
                         <button class="button button-royal" ng-click="openAddPhoneNumberModal()">
                             <i class="icon ion-ios-telephone-outline"></i>
                         </button>
                     </div>
+                    <!-- verify phone number -->
                     <div class="item item-button-right" ng-if="userInfo.phoneNumber.length && !userInfo.phoneNumberConfirmed">
                         Verify number
                         <strong>{{userInfo.phoneNumber}}</strong>
@@ -67,12 +84,14 @@
                             <i class="icon ion-ios-checkmark-outline"></i>
                         </button>
                     </div>
+                    <!-- change phone number -->
                     <div class="item item-button-right" ng-if="userInfo.phoneNumber.length && userInfo.phoneNumberConfirmed">
                         Change your phone number
                         <button class="button button-royal" ng-click="openChangePhoneNumberModal()">
                             <i class="icon ion-ios-compose-outline"></i>
                         </button>
                     </div>
+                    <!-- remove phone number -->
                     <div class="item item-button-right" ng-if="userInfo.phoneNumber.length && userInfo.phoneNumberConfirmed">
                         Remove your phone number
                         <button class="button button-assertive" ng-click="removePhoneNumber()">
@@ -88,6 +107,7 @@
                 <p class="lead" style="margin-bottom: 0"><i class="icon ion-information-circled"></i> This function is not available yet.</p>
                 <br />
 
+                <!-- change password -->
                 <h3>Password Management</h3>
                 <p class="lead" style="margin-bottom: 0">It's a good idea to change your passwords frequently. This applies to all your passwords. Choose a strong
                     phrase, something you can remember, and keep it somewhere safe.</p>

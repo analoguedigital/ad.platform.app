@@ -71,11 +71,17 @@ interface Navigator {
                 }
 
                 // if we're not coming back from media-capture, 
-                // release active profile and enfore relog.
+                // release active profile and enforce relog.
                 if (!mediaService.isCaptureInProgress()) {
-                    $ionicHistory.clearHistory();
-                    $ionicHistory.clearCache();
-                    userService.clearCurrent();
+                    userService.getExistingProfiles().then((profiles) => {
+                        var profile = profiles[0];
+                        var autoLockoutEnabled = profile.settings.autoLockoutEnabled;
+                        if (autoLockoutEnabled === true) {
+                            $ionicHistory.clearHistory();
+                            $ionicHistory.clearCache();
+                            userService.clearCurrent();
+                        }
+                    });
                 }
             });
 
@@ -83,7 +89,13 @@ interface Navigator {
                 console.warn('application resumed', event);
 
                 if (!mediaService.isCaptureInProgress()) {
-                    $state.go('login');
+                    userService.getExistingProfiles().then((profiles) => {
+                        var profile = profiles[0];
+                        var autoLockoutEnabled = profile.settings.autoLockoutEnabled;
+                        if (autoLockoutEnabled === true) {
+                            $state.go('login');
+                        }
+                    });
                 }
             });
         });
@@ -107,6 +119,11 @@ interface Navigator {
                 }
             }
         }, 100);
+    }
+
+    configAngularMoment.$inject = ["amMoment", "$locale"];
+    function configAngularMoment(amMoment, $locale) {
+        amMoment.changeLocale("en-GB");
     }
 
     SetupLoginTransitionControls.$inject = ["$rootScope", "userService", "$ionicHistory"];
@@ -139,11 +156,6 @@ interface Navigator {
                 });
             }
         });
-    }
-
-    configAngularMoment.$inject = ["amMoment", "$locale"];
-    function configAngularMoment(amMoment, $locale) {
-        amMoment.changeLocale("en-GB");
     }
 
     // refactor this filter to a separate file.

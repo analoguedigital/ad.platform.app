@@ -34,6 +34,7 @@
             $scope.model = {
                 passcodeEnabled: false,
                 fingerprintEnabled: false,
+                autoLockoutEnabled: false,
                 noStoreEnabled: false,
                 confirmSignOut: false,
                 password: '',
@@ -67,6 +68,17 @@
 
                 if ($scope.profile) {
                     userService.saveProfile($scope.profile).then(function () {});
+                }
+            });
+
+            $scope.$watch('model.autoLockoutEnabled', function (newValue, oldValue) {
+                if (oldValue === false && newValue === true)
+                    $scope.profile.settings.autoLockoutEnabled = true;
+                else if (oldValue === true && newValue === false)
+                    $scope.profile.settings.autoLockoutEnabled = false;
+
+                if ($scope.profile) {
+                    userService.saveProfile($scope.profile).then(function () { });
                 }
             });
 
@@ -517,6 +529,7 @@
 
                     $scope.model.passcodeEnabled = $scope.profile.settings.passcodeEnabled;
                     $scope.model.fingerprintEnabled = $scope.profile.settings.fingerprintEnabled;
+                    $scope.model.autoLockoutEnabled = $scope.profile.settings.autoLockoutEnabled;
                     $scope.model.noStoreEnabled = $scope.profile.settings.noStoreEnabled;
                     $scope.model.confirmSignOut = $scope.profile.settings.confirmSignOut;
                     $scope.passcodeSaved = $scope.profile.settings.passcodeEnabled;
