@@ -1,8 +1,10 @@
 (function () {
     'use strict';
-    angular.module('lm.surveys').controller('organizationsController', ['$scope', 'httpService', 'toastr', '$ionicModal',
+    angular.module('lm.surveys').controller('organizationsController', ['$scope', '$rootScope', 'httpService', 'toastr', '$ionicModal',
         '$ionicLoading', 'localStorageService', 'userService', '$ionicPopup',
-        function ($scope, httpService, toastr, $ionicModal, $ionicLoading, localStorageService, userService, $ionicPopup) {
+        function ($scope, $rootScope, httpService, toastr, $ionicModal, $ionicLoading, localStorageService, userService, $ionicPopup) {
+            $scope.userProfile = undefined;
+
             $scope.organizationsDialog = {};
             $scope.orgRequestModal = {};
 
@@ -12,6 +14,9 @@
             $scope.feedbackSent = false;
             $scope.requestWorking = false;
             $scope.orgRequestWorking = false;
+
+            $scope.belongsToOnRecord = false;
+            $scope.hasUnlinked = false;
 
             $scope.model = {
                 orgName: '',
@@ -54,6 +59,12 @@
             };
 
             $scope.selectOrganization = function (organization) {
+                if (organization.linkedinUrl.length)
+                    organization.linkedinUrl = _.replace(organization.linkedinUrl, 'https://www.linkedin.com', '');
+
+                if (organization.youTubeUrl.length)
+                    organization.youTubeUrl = _.replace(organization.youTubeUrl, 'https://www.youtube.com', '');
+
                 $scope.selectedOrganization = organization;
                 $scope.openOrganizationsDialog();
             };
@@ -175,6 +186,28 @@
                 }
             }
 
+            $scope.refreshUserProfile = function () {
+                httpService.getUserInfo()
+                    .then(function (data) {
+                        $scope.userProfile.userInfo = data;
+
+                        $rootScope.$broadcast('update-menu-profile', {
+                            profile: data.profile,
+                            notifications: data.notifications
+                        });
+
+                        userService.saveProfile($scope.userProfile).then(function (res) {
+                            // profile data updated
+                        });
+                    }, function (err) {
+                        console.error(err);
+                    })
+                    .finally(function () {
+                        $scope.$broadcast('scroll.refreshComplete');
+                        $ionicLoading.hide();
+                    });
+            }
+
             $scope.unlinkFromOrganization = function () {
                 var confirmPopup = $ionicPopup.confirm({
                     title: 'Unlink from organization',
@@ -203,7 +236,11 @@
                         });
 
                         httpService.unlinkFromOrganization(orgId, userId).then(function (data) {
-                            console.log(data);
+                            $scope.hasUnlinked = true;
+                            $scope.refreshUserProfile();
+                        }).catch(function (err) {
+                            if (err.message && err.message.length)
+                                toastr.error(err.message);
                         }).finally(function () {
                             $ionicLoading.hide();
                         });
@@ -229,7 +266,12 @@
                 userService.getExistingProfiles().then(function (profiles) {
                     var userProfile = profiles[0];
                     var activeSubscription = userProfile.userInfo.profile.lastSubscription;
+
+                    $scope.userProfile = userProfile;
                     $scope.activeSubscription = activeSubscription;
+
+                    if (activeSubscription.organisation && activeSubscription.organisation.name === 'OnRecord')
+                        $scope.belongsToOnRecord = true;
                 });
 
                 $scope.loadOrganizations();

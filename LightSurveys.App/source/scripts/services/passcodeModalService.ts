@@ -64,14 +64,14 @@ module App.Services {
                                 self.$rootScope.$broadcast('passcode-modal-pin-entered', self.modalScope.passcode);
                             else if (self.modalScope.dialogMode === 'setpasscode') {
                                 if (self.modalScope.firstPasscode.length == 0) {
-                                    self.alertService.show('please confirm your passcode');
+                                    self.alertService.show('please confirm your PIN');
                                     self.modalScope.firstPasscode = self.modalScope.passcode;
                                     self.reset();
                                 } else {
                                     if (self.modalScope.firstPasscode !== self.modalScope.passcode) {
                                         self.modalScope.firstPasscode = '';
                                         self.reset();
-                                        self.alertService.show('Passcodes did not match! try again');
+                                        self.alertService.show('PINs did not match! try again');
                                     } else {
                                         // passcode confirmed
                                         self.$rootScope.$broadcast('passcode-modal-pin-confirmed', self.modalScope.passcode);

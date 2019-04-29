@@ -99,7 +99,8 @@
                         $scope.model.phoneNumberConfirmed = $scope.profile.userInfo.phoneNumberConfirmed;
 
                         $rootScope.$broadcast('update-menu-profile', {
-                            profile: data.profile
+                            profile: data.profile,
+                            notifications: data.notifications
                         });
 
                         userService.saveProfile($scope.profile).then(function () {

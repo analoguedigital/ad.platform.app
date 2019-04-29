@@ -11,24 +11,46 @@
                 <div class="card">
                     <div class="item item-divider">{{selectedOrganization.name}}</div>
                     <div class="item item-text-wrap">
-                        <center ng-if="selectedOrganization.logoUrl.length">
+                        <center ng-if="selectedOrganization.logoUrl && selectedOrganization.logoUrl.length">
                             <img src="{{selectedOrganization.logoUrl}}" alt="logo" width="128" height="128" />
                         </center>
 
                         <div ng-if="selectedOrganization.description.length">
                             <p ng-bind-html="selectedOrganization.description"></p>
-                            <br />
+                            <hr />
                         </div>
+
                         <p>{{selectedOrganization.county}}</p>
                         <p>{{selectedOrganization.addressLine1}}</p>
                         <p ng-if="selectedOrganization.addressLine2.length">{{selectedOrganization.addressLine2}}</p>
                         <p ng-if="selectedOrganization.postcode.length">{{selectedOrganization.postcode}}</p>
                         <p ng-if="selectedOrganization.website.length">
-                            <a href="{{selectedOrganization.website}}">{{selectedOrganization.website}}</a>
+                            <i class="fa fa-globe"></i> <a href="{{selectedOrganization.website}}">{{selectedOrganization.website}}</a>
+                        </p>
+                        <hr />
+                        <!-- social profiles -->
+                        <p ng-if="selectedOrganization.facebookId.length">
+                            <i class="fa fa-facebook-official"></i> {{selectedOrganization.facebookId}}
+                        </p>
+                        <p ng-if="selectedOrganization.twitterId.length">
+                            <i class="fa fa-twitter"></i> @{{selectedOrganization.twitterId}}
+                        </p>
+                        <p ng-if="selectedOrganization.instagramId.length">
+                            <i class="fa fa-instagram"></i> @{{selectedOrganization.instagramId}}
+                        </p>
+                        <p ng-if="selectedOrganization.skypeId.length">
+                            <i class="fa fa-skype"></i> {{selectedOrganization.skypeId}}
+                        </p>
+                        <p ng-if="selectedOrganization.linkedinUrl.length">
+                            <i class="fa fa-linkedin"></i> {{selectedOrganization.linkedinUrl}}
+                        </p>
+                        <p ng-if="selectedOrganization.youTubeUrl.length">
+                            <i class="fa fa-youtube"></i> {{selectedOrganization.youTubeUrl}}
                         </p>
                     </div>
                 </div>
 
+                <!-- organization terms & conditions -->
                 <div class="organization-terms-wrap" ng-if="selectedOrganization.requiresAgreement">
                     <h4>Terms &amp; conditions</h4>
                     <p class="lead" ng-bind-html="selectedOrganization.termsAndConditions"></p>
@@ -40,6 +62,7 @@
                     </label>
                 </div>
 
+                <!-- request button -->
                 <button class="button button-royal button-block" ng-click="requestToJoin()"
                         ng-disabled="selectedOrganization.requiresAgreement && !model.termsAgreed">
                     <i class="icon ion-person-add"></i> Request to Join

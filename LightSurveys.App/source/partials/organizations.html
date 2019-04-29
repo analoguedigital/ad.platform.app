@@ -35,7 +35,7 @@
                     </div>
 
                     <!-- active organization subscription, and unlink button -->
-                    <div ng-if="activeSubscription.type === 1">
+                    <div ng-if="activeSubscription.type === 1 && !hasUnlinked">
                         <div class="card" style="margin: 15px 0">
                             <div class="item item-divider">Current Organization</div>
                             <div class="item item-text-wrap">
@@ -44,10 +44,18 @@
                             </div>
                         </div>
 
-                        <p class="lead">If you wish to unlink from your organization <b>{{activeSubscription.organisation.name}}</b>, tap the button below.</p>
-                        <button class="button button-assertive button-block" ng-click="unlinkFromOrganization()">
-                            <i class="icon ion-arrow-swap" style="vertical-align: middle"></i> <span style="vertical-align: middle"></span> Unlink from organization
-                        </button>
+                        <div ng-if="!belongsToOnRecord">
+                            <p class="lead">If you wish to unlink from <b>{{activeSubscription.organisation.name}}</b> tap the button below.</p>
+                            <button class="button button-assertive button-block" ng-click="unlinkFromOrganization()">
+                                <i class="icon ion-arrow-swap" style="vertical-align: middle"></i> <span style="vertical-align: middle"></span> Unlink from organization
+                            </button>
+                        </div>
+                    </div>
+                    <div ng-if="hasUnlinked">
+                        <p class="lead text-success">
+                            <br />
+                            <i class="icon ion-checkmark"></i> You have successfully unlinked from your organization, and moved back to OnRecord.
+                        </p>
                     </div>
                 </div>
 
