@@ -59,10 +59,10 @@
             };
 
             $scope.selectOrganization = function (organization) {
-                if (organization.linkedinUrl.length)
+                if (organization.linkedinUrl !== null && organization.linkedinUrl.length)
                     organization.linkedinUrl = _.replace(organization.linkedinUrl, 'https://www.linkedin.com', '');
 
-                if (organization.youTubeUrl.length)
+                if (organization.youTubeUrl !== null && organization.youTubeUrl.length)
                     organization.youTubeUrl = _.replace(organization.youTubeUrl, 'https://www.youtube.com', '');
 
                 $scope.selectedOrganization = organization;
@@ -211,9 +211,9 @@
             $scope.unlinkFromOrganization = function () {
                 var confirmPopup = $ionicPopup.confirm({
                     title: 'Unlink from organization',
-                    template: 'Are you sure you want to unlink yourself from your organization?',
+                    template: 'Are you sure you want to unlink from this organization?',
                     buttons: [{
-                        text: 'Yes, proceed',
+                        text: 'Proceed',
                         type: 'button-assertive',
                         onTap: function (e) {
                             return true;
