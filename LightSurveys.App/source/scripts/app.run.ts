@@ -75,8 +75,8 @@ interface Navigator {
                 if (!mediaService.isCaptureInProgress()) {
                     userService.getExistingProfiles().then((profiles) => {
                         var profile = profiles[0];
-                        var autoLockoutEnabled = profile.settings.autoLockoutEnabled;
-                        if (autoLockoutEnabled === true) {
+                        var autoLockoutDisabled = profile.settings.autoLockoutDisabled;
+                        if (autoLockoutDisabled === false) {
                             $ionicHistory.clearHistory();
                             $ionicHistory.clearCache();
                             userService.clearCurrent();
@@ -91,8 +91,8 @@ interface Navigator {
                 if (!mediaService.isCaptureInProgress()) {
                     userService.getExistingProfiles().then((profiles) => {
                         var profile = profiles[0];
-                        var autoLockoutEnabled = profile.settings.autoLockoutEnabled;
-                        if (autoLockoutEnabled === true) {
+                        var autoLockoutDisabled = profile.settings.autoLockoutDisabled;
+                        if (autoLockoutDisabled === false) {
                             $state.go('login');
                         }
                     });

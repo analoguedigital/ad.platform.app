@@ -68,7 +68,7 @@ module App.Services {
     interface ISettings {
         passcodeEnabled: boolean;
         fingerprintEnabled: boolean;
-        autoLockoutEnabled: boolean;
+        autoLockoutDisabled: boolean;
         passcodeText: string;
         noStoreEnabled: boolean;
         confirmSignOut: boolean;
@@ -193,7 +193,7 @@ module App.Services {
                         settings: <ISettings>{
                             passcodeEnabled: false,
                             fingerprintEnabled: false,
-                            autoLockoutEnabled: true,
+                            autoLockoutDisabled: false,
                             passcodeText: '',
                             noStoreEnabled: false,
                             confirmSignOut: true
