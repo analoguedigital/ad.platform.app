@@ -190,7 +190,7 @@
                     $scope.formTemplates = [].concat(templates);
 
                     if (!$scope.formTemplates.length) {
-                        if (userService.current.project.createdBy.id === userService.current.userId) {
+                        if (userService.current.project.createdBy !== null && userService.current.project.createdBy.id === userService.current.userId) {
                             $scope.noThreadsFound = true;
                         }
                     }

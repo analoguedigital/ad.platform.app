@@ -3,6 +3,7 @@
     angular.module('lm.surveys').controller('selectProjectController', ['$scope', '$rootScope', '$ionicHistory', '$state',
         'userService', 'surveyService', 'alertService', 'gettext', 'toastr', '$ionicLoading',
         function ($scope, $rootScope, $ionicHistory, $state, userService, surveyService, alertService, gettext, toastr, $ionicLoading) {
+            $scope.searchTerm = '';
             $scope.projects = [];
             $scope.isBackAvailable = (userService.current.project != null);
 
