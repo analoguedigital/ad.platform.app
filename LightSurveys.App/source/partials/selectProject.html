@@ -8,7 +8,12 @@
 <ion-view>
     <ion-content class="content has-subheader padding" ng-cloak>
         <div class="list">
-            <a class="item item-icon-{{getLeft()}}" ng-repeat="project in projects" ng-click="selectProject(project)">
+            <label class="item item-input">
+                <input type="text" placeholder="Search by name" ng-model="model.searchTerm">
+            </label>
+        </div>
+        <div class="list">
+            <a class="item item-icon-{{getLeft()}}" ng-repeat="project in projects | filter:{name:model.searchTerm} | orderBy:'name'" ng-click="selectProject(project)">
                 <i class="icon ion-folder"></i>
                 {{project.name}}
             </a>
