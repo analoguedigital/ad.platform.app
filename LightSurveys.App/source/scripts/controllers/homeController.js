@@ -2,8 +2,9 @@
     'use strict';
     angular.module('lm.surveys').controller('homeController', ['$scope', '$rootScope', '$q', '$state', '$ionicPopup', 'surveyService',
         'userService', 'localStorageService', 'toastr', '$timeout',
-        'feedbackService', '$ionicLoading', '$ionicScrollDelegate',
-        function ($scope, $rootScope, $q, $state, $ionicPopup, surveyService, userService, localStorageService, toastr, $timeout, feedbackService, $ionicLoading, $ionicScrollDelegate) {
+        'feedbackService', '$ionicLoading', '$ionicScrollDelegate', '$ionicPlatform',
+        function ($scope, $rootScope, $q, $state, $ionicPopup, surveyService, userService, localStorageService, 
+            toastr, $timeout, feedbackService, $ionicLoading, $ionicScrollDelegate, $ionicPlatform) {
 
             var FIRST_TIME_LOGIN_KEY = 'FIRST_TIME_LOGIN';
 
@@ -406,6 +407,14 @@
                             profile: $scope.userInfo.profile,
                             notifications: $scope.userInfo.notifications
                         });
+
+                        // update the app badge
+                        var adviceCount = $scope.userInfo.notifications.adviceRecords;
+                        if (adviceCount !== null) {
+                            $ionicPlatform.ready(function () {
+                                cordova.plugins.notification.badge.set(adviceCount);
+                            });
+                        }
                     }
                 });
 

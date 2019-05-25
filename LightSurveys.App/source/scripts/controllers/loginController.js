@@ -1,9 +1,9 @@
 ﻿(function () {
     'use strict';
-    angular.module('lm.surveys').controller('loginController', ['$scope', '$state', '$stateParams', 'userService',
-        'surveyService', 'fingerprintService', 'passcodeModalService', 'md5', 'toastr', 'localStorageService', '$ionicLoading',
-        function ($scope, $state, $stateParams, userService, surveyService,
-            fingerprintService, passcodeModalService, md5, toastr, localStorageService, $ionicLoading) {
+    angular.module('lm.surveys').controller('loginController', ['$scope', '$state', '$stateParams', 'userService', 'httpService', 
+        'surveyService', 'fingerprintService', 'passcodeModalService', 'md5', 'toastr', 'localStorageService', '$ionicLoading', '$ionicPlatform',
+        function ($scope, $state, $stateParams, userService, httpService, surveyService,
+            fingerprintService, passcodeModalService, md5, toastr, localStorageService, $ionicLoading, $ionicPlatform) {
 
             $scope.existingProfiles = [];
             $scope.profile = undefined;
@@ -85,24 +85,39 @@
                     if (hashed === $scope.profile.settings.passcodeText) {
                         toastr.clear();
                         $scope.loginValidated = true;
-
                         passcodeModalService.hideDialog();
-                        userService.activateProfile($scope.profile);
-                        localStorageService.remove('APP_BOOTSTRAPPED');
 
                         $ionicLoading.show({
                             template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Getting things ready...'
                         });
 
-                        surveyService.refreshData()
-                            .then(function () {
-                                $state.go('projects');
-                            }, function (err) {
-                                console.error('could not refresh data', err);
-                                toastr.error(err);
-                            }).finally(function () {
-                                $ionicLoading.hide();
+                        userService.activateProfile($scope.profile);
+                        localStorageService.remove('APP_BOOTSTRAPPED');
+
+                        httpService.getUserInfo().then(function (freshUserInfo) {
+                            $scope.profile.userInfo = freshUserInfo;
+
+                            userService.saveProfile($scope.profile).then(function () {
+                                // profile saved to local storage.
+                                // update the app badge.
+                                var adviceCount = freshUserInfo.notifications.adviceRecords;
+                                if (adviceCount !== null) {
+                                    $ionicPlatform.ready(function () {
+                                        cordova.plugins.notification.badge.set(adviceCount);
+                                    });
+                                }
+
+                                surveyService.refreshData()
+                                    .then(function () {
+                                        $state.go('projects');
+                                    }, function (err) {
+                                        console.error('could not refresh data', err);
+                                        toastr.error(err);
+                                    }).finally(function () {
+                                        $ionicLoading.hide();
+                                    });
                             });
+                        });
                     } else {
                         toastr.error('Invalid PING code. Please try again.');
                         passcodeModalService.reset();
@@ -145,19 +160,35 @@
                                                                 template: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Getting things ready...'
                                                             });
 
-                                                            $scope.loginValidated = true;
-                                                            userService.activateProfile($scope.profile);
-                                                            localStorageService.remove('APP_BOOTSTRAPPED');
+                                                            // update user info
+                                                            httpService.getUserInfo().then(function(freshUserInfo) {
+                                                                $scope.profile.userInfo = freshUserInfo;
 
-                                                            surveyService.refreshData()
-                                                                .then(function () {
-                                                                    $state.go('projects');
-                                                                }, function (err) {
-                                                                    console.error('could not refresh data', err);
-                                                                    toastr.error(err);
-                                                                }).finally(function () {
-                                                                    $ionicLoading.hide();
+                                                                userService.saveProfile($scope.profile).then(function () {
+                                                                    // profile saved to local storage.
+                                                                    // update the app badge.
+                                                                    var adviceCount = freshUserInfo.notifications.adviceRecords;
+                                                                    if (adviceCount !== null) {
+                                                                        $ionicPlatform.ready(function () {
+                                                                            cordova.plugins.notification.badge.set(adviceCount);
+                                                                        });
+                                                                    }
+
+                                                                    $scope.loginValidated = true;
+                                                                    userService.activateProfile($scope.profile);
+                                                                    localStorageService.remove('APP_BOOTSTRAPPED');
+
+                                                                    surveyService.refreshData()
+                                                                        .then(function () {
+                                                                            $state.go('projects');
+                                                                        }, function (err) {
+                                                                            console.error('could not refresh data', err);
+                                                                            toastr.error(err);
+                                                                        }).finally(function () {
+                                                                            $ionicLoading.hide();
+                                                                        });
                                                                 });
+                                                            });
                                                         } else {
                                                             userService.logOut();
                                                             $scope.fallbackToPasscode();

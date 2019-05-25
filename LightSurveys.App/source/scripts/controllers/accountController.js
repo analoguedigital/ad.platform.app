@@ -1,7 +1,8 @@
 ﻿(function () {
     'use strict';
-    angular.module('lm.surveys').controller('accountController', ['$scope', '$rootScope', 'userService', 'moment', 'httpService', 'toastr', '$ionicLoading',
-        function ($scope, $rootScope, userService, moment, httpService, toastr, $ionicLoading) {
+    angular.module('lm.surveys').controller('accountController', ['$scope', '$rootScope', 'userService', 'moment', 
+        'httpService', 'toastr', '$ionicLoading', '$ionicPlatform', 
+        function ($scope, $rootScope, userService, moment, httpService, toastr, $ionicLoading, $ionicPlatform) {
             $scope.profile = {};
             $scope.userInfo = {};
 
@@ -105,6 +106,12 @@
 
                         userService.saveProfile($scope.profile).then(function () {
                             // profile data updated
+
+                            // update the app badge
+                            var adviceCount = data.notifications.adviceRecords;
+                            $ionicPlatform.ready(function () {
+                                cordova.plugins.notification.badge.set(adviceCount);
+                            });
                         });
                     }, function (err) {
                         console.error(err);

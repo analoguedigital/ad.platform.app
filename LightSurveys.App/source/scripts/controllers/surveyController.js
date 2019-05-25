@@ -1,10 +1,10 @@
 (function () {
     'use strict';
     angular.module('lm.surveys').controller('surveyController', ['$rootScope', '$scope', '$ionicHistory', '$stateParams',
-        '$state', 'userService', 'surveyService', 'gettext', '$timeout', 'httpService', '$ionicPopup', 'toastr',
+        '$state', 'userService', 'surveyService', 'gettext', '$timeout', 'httpService', '$ionicPopup', 'toastr', '$ionicPlatform', 
         '$ionicLoading', 'locationService', 'localStorageService', 
         function ($rootScope, $scope, $ionicHistory, $stateParams, $state, userService, surveyService,
-            gettext, $timeout, httpService, $ionicPopup, toastr, $ionicLoading, locationService, localStorageService) {
+            gettext, $timeout, httpService, $ionicPopup, toastr, $ionicPlatform, $ionicLoading, locationService, localStorageService) {
 
             $scope.surveyId = $stateParams.id;
             $scope.surveyIndex = $stateParams.index;
@@ -540,6 +540,12 @@
                                             $rootScope.$broadcast('update-menu-profile', {
                                                 profile: profile.userInfo.profile,
                                                 notifications: profile.userInfo.notifications
+                                            });
+
+                                            // update the app badge
+                                            var adviceCount = profile.userInfo.notifications.adviceRecords;
+                                            $ionicPlatform.ready(function () {
+                                                cordova.plugins.notification.badge.set(adviceCount);
                                             });
                                         });
                                     }
